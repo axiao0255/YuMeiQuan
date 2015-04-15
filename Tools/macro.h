@@ -23,5 +23,11 @@
 #define VIEW_WIDTH (self.view.bounds.size.width)
 #define VIEW_HEIGHT [UIScreen mainScreen].bounds.size.height - 64 // 64是导航的高度
 
+//判断系统是否为大于7的
+#define IsIOS7 ([[[[UIDevice currentDevice] systemVersion] substringToIndex:1] intValue]>=7)
+//判断是否为4或者3.5寸屏
+#define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
+
+
 
 #endif

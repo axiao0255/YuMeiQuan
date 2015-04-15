@@ -7,7 +7,6 @@
 //
 
 #import "RYLoginViewController.h"
-#import "RYRegisterViewController.h"
 #import "RYRetrievePasswordViewController.h"
 #import "RYRegisterSelectViewController.h"
 
@@ -93,8 +92,6 @@
 #pragma mark 注册
 -(void)registerUser
 {
-//    RYRegisterViewController *registerVC = [[RYRegisterViewController alloc] init];
-//    [self.navigationController pushViewController:registerVC animated:YES];
     RYRegisterSelectViewController *registerSelectVC = [[RYRegisterSelectViewController alloc] init];
     [self.navigationController pushViewController:registerSelectVC animated:YES];
 }

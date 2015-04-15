@@ -9,6 +9,14 @@
 #import "RYBaseViewController.h"
 #import "TextFieldWithLabel.h"
 
+typedef enum : NSUInteger {
+    typePersonal = 0,   // 个人
+    typeCollective,     // 企业
+} registerType;         // 注册类型
+
 @interface RYRegisterViewController : RYBaseViewController
+
+
+- (id)initWithRefisterType:(registerType) type;
 
 @end

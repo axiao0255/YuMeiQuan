@@ -15,12 +15,23 @@
     UITextField *emailText;
     UITextField *securityCodeText;
     
-    NSInteger currentTime;
-    NSTimer *myTimer;
+    NSInteger   currentTime;
+    NSTimer     *myTimer;
+    
+    registerType myType;
 }
 @end
 
 @implementation RYRegisterViewController
+
+- (id)initWithRefisterType:(registerType) type
+{
+    self = [super init];
+    if ( self ) {
+        myType = type;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
