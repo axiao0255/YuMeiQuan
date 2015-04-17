@@ -120,18 +120,41 @@
 }
 
 +(UIButton *)getCustomLongButton:(NSString *)string{
-    UIImage *image = [UIImage imageNamed:@"button_up.png"];
-    UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, image.size.width, image.size.height)];
+//    UIImage *image = [UIImage imageNamed:@"button_up.png"];
+//    UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, image.size.width, image.size.height)];
+    UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(10, 0, SCREEN_WIDTH - 20, 44)];
     baseButton.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     [baseButton setTitle:string forState:UIControlStateNormal];
     //    [baseButton setTitleColor:[Utils getMiddleColor] forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateNormal];
-    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateHighlighted];
+    baseButton.backgroundColor = [Utils getRGBColor:0x04 g:0xcb b:0x3c a:1.0];
+    baseButton.layer.cornerRadius = 4.0;
+//    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateNormal];
+//    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateHighlighted];
     [baseButton setExclusiveTouch:YES];
     return baseButton;
 }
+
++(UITextField *)getCustomLongTextField:(NSString *)string{
+    UIImage *image = [UIImage imageNamed:@"input_text_bk_long.png"];
+    UITextField *baseTextField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
+    [baseTextField setBackgroundColor:[UIColor clearColor]];
+    [baseTextField setFont:[UIFont systemFontOfSize:12]];
+//    [baseTextField setTextColor:[Utils getLightDarkColor]];
+    [baseTextField setPlaceholder:string];
+    baseTextField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
+    [baseTextField setBorderStyle:UITextBorderStyleNone];
+    baseTextField.background = image;
+    [baseTextField setClearButtonMode:UITextFieldViewModeWhileEditing];
+    UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
+    baseTextField.leftView = paddingView;
+    baseTextField.leftViewMode = UITextFieldViewModeAlways;
+    baseTextField.returnKeyType = UIReturnKeyDone;
+    
+    return baseTextField;
+}
+
 
 
 

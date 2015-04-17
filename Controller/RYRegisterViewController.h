@@ -8,6 +8,8 @@
 
 #import "RYBaseViewController.h"
 #import "TextFieldWithLabel.h"
+#import "imagesView.h"
+#import "DaiDodgeKeyboard.h"
 
 typedef enum : NSUInteger {
     typePersonal = 0,   // 个人

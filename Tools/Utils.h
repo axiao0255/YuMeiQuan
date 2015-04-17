@@ -47,6 +47,9 @@
 #pragma mark 定制长的按钮
 +(UIButton *)getCustomLongButton:(NSString *)string;
 
+#pragma mark 定制长的输入框
++(UITextField *)getCustomLongTextField:(NSString *)string;
+
 
 
 
