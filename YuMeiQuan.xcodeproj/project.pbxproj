@@ -39,6 +39,10 @@
 		96C3A9F71ADFBF26008011D3 /* DaiDodgeKeyboard+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9F11ADFBF26008011D3 /* DaiDodgeKeyboard+Animation.m */; };
 		96C3A9F81ADFBF26008011D3 /* DaiDodgeKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9F31ADFBF26008011D3 /* DaiDodgeKeyboard.m */; };
 		96C3A9F91ADFBF26008011D3 /* UIView+FirstResponderNotify.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9F51ADFBF26008011D3 /* UIView+FirstResponderNotify.m */; };
+		96C3CC6B1AE0AC44007266A0 /* arrows_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3CC6A1AE0AC44007266A0 /* arrows_right@2x.png */; };
+		96C3CC6E1AE0B2A8007266A0 /* ic_checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3CC6C1AE0B2A8007266A0 /* ic_checked@2x.png */; };
+		96C3CC6F1AE0B2A8007266A0 /* ic_unchecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3CC6D1AE0B2A8007266A0 /* ic_unchecked@2x.png */; };
+		96C3CC741AE110A9007266A0 /* RYRegisterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3CC731AE110A9007266A0 /* RYRegisterTableViewCell.m */; };
 		96C51A681AD75FC700C5374D /* button_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C51A671AD75FC700C5374D /* button_up@2x.png */; };
 		96C51A6D1AD76D7900C5374D /* RYRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C51A6C1AD76D7900C5374D /* RYRegisterViewController.m */; };
 		96C610821ADCDBF900862E0E /* RYRegisterSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C610811ADCDBF900862E0E /* RYRegisterSelectViewController.m */; };
@@ -173,6 +177,11 @@
 		96C3A9F31ADFBF26008011D3 /* DaiDodgeKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DaiDodgeKeyboard.m; sourceTree = "<group>"; };
 		96C3A9F41ADFBF26008011D3 /* UIView+FirstResponderNotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+FirstResponderNotify.h"; sourceTree = "<group>"; };
 		96C3A9F51ADFBF26008011D3 /* UIView+FirstResponderNotify.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+FirstResponderNotify.m"; sourceTree = "<group>"; };
+		96C3CC6A1AE0AC44007266A0 /* arrows_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrows_right@2x.png"; sourceTree = "<group>"; };
+		96C3CC6C1AE0B2A8007266A0 /* ic_checked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_checked@2x.png"; sourceTree = "<group>"; };
+		96C3CC6D1AE0B2A8007266A0 /* ic_unchecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_unchecked@2x.png"; sourceTree = "<group>"; };
+		96C3CC721AE110A9007266A0 /* RYRegisterTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterTableViewCell.h; sourceTree = "<group>"; };
+		96C3CC731AE110A9007266A0 /* RYRegisterTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYRegisterTableViewCell.m; sourceTree = "<group>"; };
 		96C51A671AD75FC700C5374D /* button_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_up@2x.png"; sourceTree = "<group>"; };
 		96C51A691AD7612F00C5374D /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		96C51A6A1AD7675D00C5374D /* macro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = macro.h; sourceTree = "<group>"; };
@@ -395,6 +404,15 @@
 			path = DaiDodgeKeyboard;
 			sourceTree = "<group>";
 		};
+		96C3CC711AE11047007266A0 /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				96C3CC721AE110A9007266A0 /* RYRegisterTableViewCell.h */,
+				96C3CC731AE110A9007266A0 /* RYRegisterTableViewCell.m */,
+			);
+			path = TableViewCells;
+			sourceTree = SOURCE_ROOT;
+		};
 		96C610831ADCE0D400862E0E /* NYSegmentedControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -526,6 +544,7 @@
 				96C7ACC11AD6141200FA2E22 /* Net */,
 				96F3215D1AD5209900CAFC51 /* model */,
 				96F321541AD50AD700CAFC51 /* Controller */,
+				96C3CC711AE11047007266A0 /* TableViewCells */,
 				96F3214A1AD50A6700CAFC51 /* RefreshView */,
 				96F3213D1AD50A2700CAFC51 /* images */,
 				96CC39611AD4DDF100D5D157 /* AppDelegate.h */,
@@ -610,6 +629,9 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96C3CC6C1AE0B2A8007266A0 /* ic_checked@2x.png */,
+				96C3CC6D1AE0B2A8007266A0 /* ic_unchecked@2x.png */,
+				96C3CC6A1AE0AC44007266A0 /* arrows_right@2x.png */,
 				96C3A99C1ADF9564008011D3 /* input_text_bk_long.png */,
 				965A0F921ADD1E0F0078FF81 /* register_line@2x.png */,
 				96C610941ADCFF7500862E0E /* register_image_1@2x.png */,
@@ -777,10 +799,13 @@
 				96C7ACCE1AD679F200FA2E22 /* back_btn_icon_sel@2x.png in Resources */,
 				96CC39C81AD4FF3900D5D157 /* Images-2.xcassets in Resources */,
 				96C3A9BE1ADFB84D008011D3 /* unselectedImg@2x.png in Resources */,
+				96C3CC6B1AE0AC44007266A0 /* arrows_right@2x.png in Resources */,
 				96CC396E1AD4DDF100D5D157 /* LaunchScreen.xib in Resources */,
 				96C3A9BD1ADFB84D008011D3 /* selectedImg@2x.png in Resources */,
 				96CC396B1AD4DDF100D5D157 /* Images.xcassets in Resources */,
 				96C3A9BB1ADFB84D008011D3 /* imgsectionright.png in Resources */,
+				96C3CC6E1AE0B2A8007266A0 /* ic_checked@2x.png in Resources */,
+				96C3CC6F1AE0B2A8007266A0 /* ic_unchecked@2x.png in Resources */,
 				96C3A9BC1ADFB84D008011D3 /* imgtakephoto.png in Resources */,
 				96C610961ADCFF7500862E0E /* register_image_1@2x.png in Resources */,
 				96C610911ADCE95700862E0E /* register_slider@2x.png in Resources */,
@@ -831,6 +856,7 @@
 				96F321601AD5210500CAFC51 /* newsBarData.m in Sources */,
 				96C7ACB31AD611FA00FA2E22 /* AFSecurityPolicy.m in Sources */,
 				96C7ACBD1AD611FA00FA2E22 /* UIProgressView+AFNetworking.m in Sources */,
+				96C3CC741AE110A9007266A0 /* RYRegisterTableViewCell.m in Sources */,
 				96C3A9F81ADFBF26008011D3 /* DaiDodgeKeyboard.m in Sources */,
 				96CC39661AD4DDF100D5D157 /* ViewController.m in Sources */,
 				96C7ACBB1AD611FA00FA2E22 /* UIButton+AFNetworking.m in Sources */,

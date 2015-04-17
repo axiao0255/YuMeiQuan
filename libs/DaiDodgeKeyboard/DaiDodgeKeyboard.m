@@ -13,7 +13,9 @@
 #import "DaiDodgeKeyboard+Animation.h"
 
 @interface DaiDodgeKeyboard ()
-
+{
+    BOOL isSpread;      // 判断键盘是否展开 yes 未展开
+}
 +(void) keyboardWillShow : (NSNotification*) notification;
 +(void) keyboardWillHide : (NSNotification*) notification;
 +(void) addObservers;
@@ -30,18 +32,19 @@
     [self setIsKeyboardShow:YES];
     
     NSDictionary *userInfo = [notification userInfo];
-    [self setKeyboardAnimationDutation:[[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]];
+    double a = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    if ( a <= 0.0 ) {
+        return;
+    }
+    [self setKeyboardAnimationDutation:a];
     [self setKeyboardRect:[[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue]];
-    
     [self dodgeKeyboardAnimation];
-    
 }
 
-+(void) keyboardWillHide : (NSNotification*) notification {
++ (void) keyboardWillHide : (NSNotification*) notification {
     
     [self setIsKeyboardShow:NO];
     [self dodgeKeyboardAnimation];
-    
 }
 
 +(void) addObservers {

@@ -10,6 +10,7 @@
 #import "TextFieldWithLabel.h"
 #import "imagesView.h"
 #import "DaiDodgeKeyboard.h"
+#import "RYRegisterTableViewCell.h"
 
 typedef enum : NSUInteger {
     typePersonal = 0,   // 个人

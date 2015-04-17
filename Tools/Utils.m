@@ -140,8 +140,9 @@
     UIImage *image = [UIImage imageNamed:@"input_text_bk_long.png"];
     UITextField *baseTextField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, image.size.width, image.size.height)];
     [baseTextField setBackgroundColor:[UIColor clearColor]];
-    [baseTextField setFont:[UIFont systemFontOfSize:12]];
+    [baseTextField setFont:[UIFont systemFontOfSize:14]];
 //    [baseTextField setTextColor:[Utils getLightDarkColor]];
+    [baseTextField setTextColor:[Utils getRGBColor:70.0 g:70.0 b:70.0 a:1.0]];
     [baseTextField setPlaceholder:string];
     baseTextField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
     [baseTextField setBorderStyle:UITextBorderStyleNone];

@@ -29,7 +29,6 @@
 
     CGRect currentKeyboardRect = [[self observerView] convertRect:[self keyboardRect]
                                                          fromView:nil];
-
     CGPoint objectLeftBottom = [currentFirstResponder convertPoint:CGPointMake(0, currentFirstResponder.frame.size.height)
                                                             toView:[self observerView]];
     
@@ -40,7 +39,6 @@
     }
     
     float shiftHeight = objectLeftBottom.y - currentKeyboardRect.origin.y;
-    
     if (shiftHeight > 0) {
         [UIView animateWithDuration:[self keyboardAnimationDutation]
                          animations:^{
@@ -54,7 +52,6 @@
                              [[self observerView] setFrame:[self originalViewFrame]];
                          }];
     }
-    
 }
 
 #pragma mark - private
