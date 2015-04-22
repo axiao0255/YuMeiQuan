@@ -13,7 +13,7 @@
 /**
  * get 方式 请求   返回 JSON 数据
  */
-+ (void)JSONDataWithUrl:(NSString *)url success:(void (^)(id json))success fail:(void (^)(id error))fail;
++ (void)JSONDataWithUrl:(NSString *)url parameters:(id)parameters success:(void (^)(id json))success fail:(void (^)(id error))fail;
 
 /**
  * post提交json数据

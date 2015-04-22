@@ -50,6 +50,8 @@
 #pragma mark 定制长的输入框
 +(UITextField *)getCustomLongTextField:(NSString *)string;
 
+#pragma mark cell 分割线
++ (UIView *)getCellPartingLine;
 
 
 

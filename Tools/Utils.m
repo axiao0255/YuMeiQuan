@@ -156,6 +156,17 @@
     return baseTextField;
 }
 
++ (UIView *)getCellPartingLine
+{
+//    UIImageView *line = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH,0.5)];
+//    line.backgroundColor = [UIColor clearColor];
+//    line.image = [UIImage imageNamed:@"cell_partingLine.png"];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(20, 0, SCREEN_WIDTH - 20, 0.5)];
+    line.backgroundColor = [Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0];
+    
+    return line;
+}
+
 
 
 

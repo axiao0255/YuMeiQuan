@@ -154,6 +154,43 @@
     [_sharedClient.reachabilityManager startMonitoring];
 }
 
++(BOOL)checkCurrentNetwork
+{
+    BOOL isExistenceNetwork;
+    //此处优化，避免多次创建网络的监听，
+    static Reachability *r;
+    if (r == nil)
+    {
+        struct sockaddr_in zeroAddress;
+        bzero(&zeroAddress,sizeof(zeroAddress));
+        zeroAddress.sin_len = sizeof(zeroAddress);
+        zeroAddress.sin_family = AF_INET;
+        r = [Reachability reachabilityWithAddress:&zeroAddress];
+//        r = [Reachability reachabilityWithHostname:@"www.apple.com"];
+    }
+    switch ([r currentReachabilityStatus]) {
+        case NotReachable:
+            isExistenceNetwork=FALSE;
+            break;
+        case ReachableViaWWAN:
+            isExistenceNetwork=TRUE;
+            break;
+        case ReachableViaWiFi:
+            isExistenceNetwork=TRUE;
+            break;
+    }
+    if (!isExistenceNetwork) {
+        UIAlertView *myalert = [[UIAlertView alloc] initWithTitle:@"网络错误"
+                                                          message:@"Whoops！网络不给力，快找个信号满满的地方再刷新一下吧！"
+                                                         delegate:self
+                                                cancelButtonTitle:@"确认"
+                                                otherButtonTitles:nil,nil];
+        [myalert show];
+    }
+    return isExistenceNetwork;
+
+}
+
 
 
 

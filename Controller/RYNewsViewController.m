@@ -196,11 +196,11 @@
 - (void)net
 {
     NSString *url = @"http://api2.rongyi.com/app/v5/home/index.htm;jsessionid=?type=latest&areaName=%E4%B8%8A%E6%B5%B7&cityId=51f9d7f231d6559b7d000002&lng=121.439659&lat=31.194059&currentPage=1&pageSize=20&version=v5_6";
-    [NetManager JSONDataWithUrl:url success:^(id json) {
-         NSLog(@" 成功 %@",json);
-    } fail:^(id error) {
-        NSLog(@"错误 %@",error);
-    }];
+//    [NetManager JSONDataWithUrl:url success:^(id json) {
+//         NSLog(@" 成功 %@",json);
+//    } fail:^(id error) {
+//        NSLog(@"错误 %@",error);
+//    }];
 }
 
 - (void)freshContentTableAtIndex:(NSInteger)aIndex isHead:(BOOL)isHead

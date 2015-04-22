@@ -11,13 +11,13 @@
 @implementation NetManager
 
 
-+ (void)JSONDataWithUrl:(NSString *)url success:(void (^)(id json))success fail:(void (^)(id error))fail
++ (void)JSONDataWithUrl:(NSString *)url parameters:(id)parameters success:(void (^)(id json))success fail:(void (^)(id error))fail
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
   
-    NSDictionary *dict = @{@"format": @"json"};
+//    NSDictionary *dict = @{@"format": @"json"};
     // 网络访问是异步的,回调是主线程的,因此程序员不用管在主线程更新UI的事情
-    [manager GET:url parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [manager GET:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (success) {
             success(responseObject);
         }
@@ -41,7 +41,7 @@
     // 设置返回格式
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+//        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
         if (success) {
             success(responseObject);
         }

@@ -17,6 +17,7 @@
 #import "NetManager.h"
 #import "macro.h"
 #import "AFNetworking.h"
+#import "NSDictionary+Additions.h"
 
 
 #endif

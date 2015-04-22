@@ -12,7 +12,7 @@
 #import <Foundation/Foundation.h>
 
 #define RELEASEADDRESS @""            // 正式服地址
-#define DEBUGADDRESS   @""            // 测试服地址
+#define DEBUGADDRESS   @"http://121.40.151.63"            // 测试服地址
 
 #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
 #define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)

@@ -33,6 +33,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc {
+    NSLog(@"%@ dealloc", [self class]);
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 /*
 #pragma mark - Navigation
 

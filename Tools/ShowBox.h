@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "Reachability.h"
+
 
 
 @interface ShowBox : NSObject
@@ -29,5 +31,8 @@
 
 #pragma mark 检查网络
 +(void)checknetwork:(void(^)(BOOL status))netStatus;
+
+#pragma mark 检测是否当前是否有网络
++(BOOL)checkCurrentNetwork;
 
 @end

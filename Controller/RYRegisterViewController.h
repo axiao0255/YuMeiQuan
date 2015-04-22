@@ -9,7 +9,7 @@
 #import "RYBaseViewController.h"
 #import "TextFieldWithLabel.h"
 #import "imagesView.h"
-#import "DaiDodgeKeyboard.h"
+//#import "DaiDodgeKeyboard.h"
 #import "RYRegisterTableViewCell.h"
 
 typedef enum : NSUInteger {
