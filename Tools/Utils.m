@@ -123,13 +123,12 @@
 //    UIImage *image = [UIImage imageNamed:@"button_up.png"];
 //    UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, image.size.width, image.size.height)];
     UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(10, 0, SCREEN_WIDTH - 20, 44)];
-    baseButton.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+    baseButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     [baseButton setTitle:string forState:UIControlStateNormal];
-    //    [baseButton setTitleColor:[Utils getMiddleColor] forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     baseButton.backgroundColor = [Utils getRGBColor:0x04 g:0xcb b:0x3c a:1.0];
-    baseButton.layer.cornerRadius = 4.0;
+    baseButton.layer.cornerRadius = 5.0;
 //    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateNormal];
 //    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateHighlighted];
     [baseButton setExclusiveTouch:YES];
@@ -167,6 +166,43 @@
     return line;
 }
 
++(NSInteger)getTextFieldActualLengthWithTextField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    
+    NSInteger textLength = 0;
+    UITextRange *selectedRange = [textField markedTextRange];
+    //获取高亮部分
+    UITextPosition *position = [textField positionFromPosition:selectedRange.start offset:0];
+    if (!position) {
+        textLength = textField.text.length;
+    }
+    if (string.length > 0) {
+        //输入状态
+        if (textField.text.length > range.location) {       //候选词替换高亮拼音时
+            NSString *newStr = [NSString stringWithFormat:@"%@%@",[textField.text substringToIndex:range.location],
+                                string];
+            textLength = newStr.length;
+        }else {
+            textLength += string.length;
+        }
+    }else {
+        //删除状态
+        if (textField.text.length > 0) {
+            textLength = [[textField.text substringToIndex:range.location]length];
+        }
+    }
+    
+    return textLength;
+    
+}
+
+
++(void)setExtraCellLineHidden: (UITableView *)tableView
+{
+    UIView *view = [UIView new];
+    view.backgroundColor = [UIColor clearColor];
+    [tableView setTableFooterView:view];
+}
 
 
 

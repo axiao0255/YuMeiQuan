@@ -140,7 +140,8 @@ typedef void (*send_type)(void *, SEL, UIView *);
     if (self.state == MJRefreshStateRefreshing) {
         // 回调
         if ([self.beginRefreshingTaget respondsToSelector:self.beginRefreshingAction]) {
-            msgSend((__bridge void *)(self.beginRefreshingTaget), self.beginRefreshingAction, self);
+            msgSend((__bridge_retained void *)(self.beginRefreshingTaget), self.beginRefreshingAction, self);
+//             objc_msgSend(self.beginRefreshingTaget, self.beginRefreshingAction, self);
         }
         
         if (self.beginRefreshingCallback) {
@@ -257,7 +258,7 @@ typedef void (*send_type)(void *, SEL, UIView *);
             // 回调
             if ([self.beginRefreshingTaget respondsToSelector:self.beginRefreshingAction]) {
 //                objc_msgSend(self.beginRefreshingTaget, self.beginRefreshingAction, self);
-                msgSend((__bridge void *)(self.beginRefreshingTaget), self.beginRefreshingAction, self);
+                msgSend((__bridge_retained void *)(self.beginRefreshingTaget), self.beginRefreshingAction, self);
             }
             
             if (self.beginRefreshingCallback) {

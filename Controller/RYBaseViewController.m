@@ -19,7 +19,7 @@
     // Do any additional setup after loading the view.
     
 //    self.view.backgroundColor = [UIColor colorWithRed:232/255.0f green:235/255.0f blue:240/255.0f alpha:1];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
     if([[[UIDevice currentDevice] systemVersion] doubleValue]>=7.0) {
         self.edgesForExtendedLayout= UIRectEdgeNone;
         ////        self.extendedLayoutIncludesOpaqueBars = NO;
@@ -36,6 +36,11 @@
 - (void)dealloc {
     NSLog(@"%@ dealloc", [self class]);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 /*

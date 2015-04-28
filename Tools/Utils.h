@@ -51,7 +51,15 @@
 +(UITextField *)getCustomLongTextField:(NSString *)string;
 
 #pragma mark cell 分割线
-+ (UIView *)getCellPartingLine;
++(UIView *)getCellPartingLine;
+
+#pragma mark textField 输入长度 计算
++(NSInteger)getTextFieldActualLengthWithTextField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
+
+#pragma mark  隐藏 UITableViewCell 多余部分的 分割线
++(void)setExtraCellLineHidden: (UITableView *)tableView;
+
+
 
 
 

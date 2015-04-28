@@ -170,6 +170,7 @@
     }
 
 }
+
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
     NSInteger page = (_scrollView.contentOffset.x+self.frame.size.width/2.0) / self.frame.size.width;
@@ -189,6 +190,7 @@
 
 }
 
+#pragma mark -设置 UITableView 代理方法
 -  (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [self.delegate mScreollTabel:tableView numberOfRowsInSection:section];

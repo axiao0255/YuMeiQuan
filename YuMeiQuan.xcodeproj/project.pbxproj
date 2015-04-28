@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		965A0F931ADD1E0F0078FF81 /* register_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 965A0F921ADD1E0F0078FF81 /* register_line@2x.png */; };
-		96C3A99D1ADF9564008011D3 /* input_text_bk_long.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3A99C1ADF9564008011D3 /* input_text_bk_long.png */; };
 		96C3A9B31ADFB84D008011D3 /* imagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A01ADFB84D008011D3 /* imagesView.m */; };
 		96C3A9B41ADFB84D008011D3 /* albumListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A31ADFB84D008011D3 /* albumListsViewController.m */; };
 		96C3A9B51ADFB84D008011D3 /* albumlistTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A51ADFB84D008011D3 /* albumlistTableViewCell.m */; };
@@ -54,8 +53,21 @@
 		96C4C4051AE77CC700151A84 /* IQUIView+IQKeyboardToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C4C3F71AE77CC700151A84 /* IQUIView+IQKeyboardToolbar.m */; };
 		96C4C4061AE77CC700151A84 /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 96C4C3FA1AE77CC700151A84 /* IQKeyboardManager.bundle */; };
 		96C4C40A1AE7ABF600151A84 /* NSDictionary+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C4C4091AE7ABF600151A84 /* NSDictionary+Additions.m */; };
+		96C4C6AD1AE9E03800D2C1C8 /* UINavigationBar+JSDropShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C4C6AC1AE9E03800D2C1C8 /* UINavigationBar+JSDropShadow.m */; };
+		96C4C6AF1AE9F5FF00D2C1C8 /* input_text_bk_long@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C4C6AE1AE9F5FF00D2C1C8 /* input_text_bk_long@2x.png */; };
+		96C4C6C01AEA321500D2C1C8 /* RYMyCollectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C4C6BF1AEA321500D2C1C8 /* RYMyCollectViewController.m */; };
 		96C51A681AD75FC700C5374D /* button_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C51A671AD75FC700C5374D /* button_up@2x.png */; };
 		96C51A6D1AD76D7900C5374D /* RYRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C51A6C1AD76D7900C5374D /* RYRegisterViewController.m */; };
+		96C56CFC1AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF11AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m */; };
+		96C56CFD1AEE158400B127FF /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF31AEE158400B127FF /* SWCellScrollView.m */; };
+		96C56CFE1AEE158400B127FF /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF51AEE158400B127FF /* SWLongPressGestureRecognizer.m */; };
+		96C56CFF1AEE158400B127FF /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF71AEE158400B127FF /* SWTableViewCell.m */; };
+		96C56D001AEE158400B127FF /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF91AEE158400B127FF /* SWUtilityButtonTapGestureRecognizer.m */; };
+		96C56D011AEE158400B127FF /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CFB1AEE158400B127FF /* SWUtilityButtonView.m */; };
+		96C56D071AEE16F400B127FF /* RYMyEnshrineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56D061AEE16F400B127FF /* RYMyEnshrineViewController.m */; };
+		96C56D0A1AEE254000B127FF /* RYEnshrineTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56D091AEE254000B127FF /* RYEnshrineTableViewCell.m */; };
+		96C56D0C1AEE291400B127FF /* ico_default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C56D0B1AEE291400B127FF /* ico_default@2x.png */; };
+		96C56D0E1AEE3D4E00B127FF /* icon_select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C56D0D1AEE3D4E00B127FF /* icon_select@2x.png */; };
 		96C610821ADCDBF900862E0E /* RYRegisterSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C610811ADCDBF900862E0E /* RYRegisterSelectViewController.m */; };
 		96C6108C1ADCE0D400862E0E /* NYSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C610851ADCE0D400862E0E /* NYSegment.m */; };
 		96C6108D1ADCE0D400862E0E /* NYSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C610871ADCE0D400862E0E /* NYSegmentedControl.m */; };
@@ -106,6 +118,9 @@
 		96CC39BE1AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39B31AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m */; };
 		96CC39BF1AD4E3BB00D5D157 /* UIView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39B51AD4E3BB00D5D157 /* UIView+MJExtension.m */; };
 		96CC39C81AD4FF3900D5D157 /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96CC39C71AD4FF3900D5D157 /* Images-2.xcassets */; };
+		96CD79561AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */; };
+		96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */; };
+		96CD795B1AE8EE1E00DDC1D8 /* navigationbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */; };
 		96D9C9881AE49A7500997430 /* RYRegisterSpecialtyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C9871AE49A7500997430 /* RYRegisterSpecialtyViewController.m */; };
 		96D9C98C1AE4CD4200997430 /* RYRegisterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C98B1AE4CD4200997430 /* RYRegisterData.m */; };
 		96D9C98F1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C98E1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m */; };
@@ -136,7 +151,6 @@
 
 /* Begin PBXFileReference section */
 		965A0F921ADD1E0F0078FF81 /* register_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "register_line@2x.png"; sourceTree = "<group>"; };
-		96C3A99C1ADF9564008011D3 /* input_text_bk_long.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = input_text_bk_long.png; sourceTree = "<group>"; };
 		96C3A99F1ADFB84D008011D3 /* imagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imagesView.h; sourceTree = "<group>"; };
 		96C3A9A01ADFB84D008011D3 /* imagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = imagesView.m; sourceTree = "<group>"; };
 		96C3A9A21ADFB84D008011D3 /* albumListsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = albumListsViewController.h; sourceTree = "<group>"; };
@@ -222,11 +236,34 @@
 		96C4C3FA1AE77CC700151A84 /* IQKeyboardManager.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IQKeyboardManager.bundle; sourceTree = "<group>"; };
 		96C4C4081AE7ABF600151A84 /* NSDictionary+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Additions.h"; sourceTree = "<group>"; };
 		96C4C4091AE7ABF600151A84 /* NSDictionary+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Additions.m"; sourceTree = "<group>"; };
+		96C4C6AB1AE9E03800D2C1C8 /* UINavigationBar+JSDropShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+JSDropShadow.h"; sourceTree = "<group>"; };
+		96C4C6AC1AE9E03800D2C1C8 /* UINavigationBar+JSDropShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+JSDropShadow.m"; sourceTree = "<group>"; };
+		96C4C6AE1AE9F5FF00D2C1C8 /* input_text_bk_long@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "input_text_bk_long@2x.png"; sourceTree = "<group>"; };
+		96C4C6BE1AEA321500D2C1C8 /* RYMyCollectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyCollectViewController.h; sourceTree = "<group>"; };
+		96C4C6BF1AEA321500D2C1C8 /* RYMyCollectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyCollectViewController.m; sourceTree = "<group>"; };
 		96C51A671AD75FC700C5374D /* button_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_up@2x.png"; sourceTree = "<group>"; };
 		96C51A691AD7612F00C5374D /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		96C51A6A1AD7675D00C5374D /* macro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = macro.h; sourceTree = "<group>"; };
 		96C51A6B1AD76D7900C5374D /* RYRegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterViewController.h; sourceTree = "<group>"; };
 		96C51A6C1AD76D7900C5374D /* RYRegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYRegisterViewController.m; sourceTree = "<group>"; };
+		96C56CF01AEE158400B127FF /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
+		96C56CF11AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
+		96C56CF21AEE158400B127FF /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
+		96C56CF31AEE158400B127FF /* SWCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWCellScrollView.m; sourceTree = "<group>"; };
+		96C56CF41AEE158400B127FF /* SWLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLongPressGestureRecognizer.h; sourceTree = "<group>"; };
+		96C56CF51AEE158400B127FF /* SWLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWLongPressGestureRecognizer.m; sourceTree = "<group>"; };
+		96C56CF61AEE158400B127FF /* SWTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTableViewCell.h; sourceTree = "<group>"; };
+		96C56CF71AEE158400B127FF /* SWTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTableViewCell.m; sourceTree = "<group>"; };
+		96C56CF81AEE158400B127FF /* SWUtilityButtonTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonTapGestureRecognizer.h; sourceTree = "<group>"; };
+		96C56CF91AEE158400B127FF /* SWUtilityButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
+		96C56CFA1AEE158400B127FF /* SWUtilityButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonView.h; sourceTree = "<group>"; };
+		96C56CFB1AEE158400B127FF /* SWUtilityButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonView.m; sourceTree = "<group>"; };
+		96C56D051AEE16F400B127FF /* RYMyEnshrineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyEnshrineViewController.h; sourceTree = "<group>"; };
+		96C56D061AEE16F400B127FF /* RYMyEnshrineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyEnshrineViewController.m; sourceTree = "<group>"; };
+		96C56D081AEE254000B127FF /* RYEnshrineTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYEnshrineTableViewCell.h; sourceTree = "<group>"; };
+		96C56D091AEE254000B127FF /* RYEnshrineTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYEnshrineTableViewCell.m; sourceTree = "<group>"; };
+		96C56D0B1AEE291400B127FF /* ico_default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ico_default@2x.png"; sourceTree = "<group>"; };
+		96C56D0D1AEE3D4E00B127FF /* icon_select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_select@2x.png"; sourceTree = "<group>"; };
 		96C610801ADCDBF900862E0E /* RYRegisterSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterSelectViewController.h; sourceTree = "<group>"; };
 		96C610811ADCDBF900862E0E /* RYRegisterSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYRegisterSelectViewController.m; sourceTree = "<group>"; };
 		96C610841ADCE0D400862E0E /* NYSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYSegment.h; sourceTree = "<group>"; };
@@ -323,6 +360,11 @@
 		96CC39B41AD4E3BB00D5D157 /* UIView+MJExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MJExtension.h"; sourceTree = "<group>"; };
 		96CC39B51AD4E3BB00D5D157 /* UIView+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MJExtension.m"; sourceTree = "<group>"; };
 		96CC39C71AD4FF3900D5D157 /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-2.xcassets"; sourceTree = "<group>"; };
+		96CD79541AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYPasswordAttestationViewController.h; sourceTree = "<group>"; };
+		96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYPasswordAttestationViewController.m; sourceTree = "<group>"; };
+		96CD79571AE8D63000DDC1D8 /* RYNewPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYNewPasswordViewController.h; sourceTree = "<group>"; };
+		96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYNewPasswordViewController.m; sourceTree = "<group>"; };
+		96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigationbar@2x.png"; sourceTree = "<group>"; };
 		96D9C9861AE49A7500997430 /* RYRegisterSpecialtyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterSpecialtyViewController.h; sourceTree = "<group>"; };
 		96D9C9871AE49A7500997430 /* RYRegisterSpecialtyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYRegisterSpecialtyViewController.m; sourceTree = "<group>"; };
 		96D9C98A1AE4CD4200997430 /* RYRegisterData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterData.h; sourceTree = "<group>"; };
@@ -440,8 +482,11 @@
 		96C3CC711AE11047007266A0 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				96C56CEF1AEE158400B127FF /* SWTableViewCell */,
 				96C3CC721AE110A9007266A0 /* RYRegisterTableViewCell.h */,
 				96C3CC731AE110A9007266A0 /* RYRegisterTableViewCell.m */,
+				96C56D081AEE254000B127FF /* RYEnshrineTableViewCell.h */,
+				96C56D091AEE254000B127FF /* RYEnshrineTableViewCell.m */,
 				96D9C98D1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.h */,
 				96D9C98E1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m */,
 			);
@@ -549,6 +594,25 @@
 			path = "NSDictionary+Additions";
 			sourceTree = "<group>";
 		};
+		96C56CEF1AEE158400B127FF /* SWTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				96C56CF01AEE158400B127FF /* NSMutableArray+SWUtilityButtons.h */,
+				96C56CF11AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m */,
+				96C56CF21AEE158400B127FF /* SWCellScrollView.h */,
+				96C56CF31AEE158400B127FF /* SWCellScrollView.m */,
+				96C56CF41AEE158400B127FF /* SWLongPressGestureRecognizer.h */,
+				96C56CF51AEE158400B127FF /* SWLongPressGestureRecognizer.m */,
+				96C56CF61AEE158400B127FF /* SWTableViewCell.h */,
+				96C56CF71AEE158400B127FF /* SWTableViewCell.m */,
+				96C56CF81AEE158400B127FF /* SWUtilityButtonTapGestureRecognizer.h */,
+				96C56CF91AEE158400B127FF /* SWUtilityButtonTapGestureRecognizer.m */,
+				96C56CFA1AEE158400B127FF /* SWUtilityButtonView.h */,
+				96C56CFB1AEE158400B127FF /* SWUtilityButtonView.m */,
+			);
+			path = SWTableViewCell;
+			sourceTree = "<group>";
+		};
 		96C610831ADCE0D400862E0E /* NYSegmentedControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -626,6 +690,8 @@
 			children = (
 				96C7ACC91AD665EE00FA2E22 /* TextFieldWithLabel.h */,
 				96C7ACCA1AD665EE00FA2E22 /* TextFieldWithLabel.m */,
+				96C4C6AB1AE9E03800D2C1C8 /* UINavigationBar+JSDropShadow.h */,
+				96C4C6AC1AE9E03800D2C1C8 /* UINavigationBar+JSDropShadow.m */,
 			);
 			path = Common;
 			sourceTree = SOURCE_ROOT;
@@ -767,12 +833,15 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96C56D0B1AEE291400B127FF /* ico_default@2x.png */,
+				96C56D0D1AEE3D4E00B127FF /* icon_select@2x.png */,
+				96C4C6AE1AE9F5FF00D2C1C8 /* input_text_bk_long@2x.png */,
+				96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */,
 				96D9C9921AE4F28F00997430 /* arrow_add@2x.png */,
 				96D9C9901AE4EFCD00997430 /* cell_partingLine@2x.png */,
 				96C3CC6C1AE0B2A8007266A0 /* ic_checked@2x.png */,
 				96C3CC6D1AE0B2A8007266A0 /* ic_unchecked@2x.png */,
 				96C3CC6A1AE0AC44007266A0 /* arrows_right@2x.png */,
-				96C3A99C1ADF9564008011D3 /* input_text_bk_long.png */,
 				965A0F921ADD1E0F0078FF81 /* register_line@2x.png */,
 				96C610941ADCFF7500862E0E /* register_image_1@2x.png */,
 				96C610951ADCFF7500862E0E /* register_image_0@2x.png */,
@@ -822,6 +891,10 @@
 		96F321541AD50AD700CAFC51 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				96C4C6BE1AEA321500D2C1C8 /* RYMyCollectViewController.h */,
+				96C4C6BF1AEA321500D2C1C8 /* RYMyCollectViewController.m */,
+				96C56D051AEE16F400B127FF /* RYMyEnshrineViewController.h */,
+				96C56D061AEE16F400B127FF /* RYMyEnshrineViewController.m */,
 				96F321551AD50CC600CAFC51 /* RYNewsViewController.h */,
 				96F321561AD50CC600CAFC51 /* RYNewsViewController.m */,
 				96C7ACC51AD656E000FA2E22 /* RYLoginViewController.h */,
@@ -834,6 +907,10 @@
 				96C610811ADCDBF900862E0E /* RYRegisterSelectViewController.m */,
 				96C664FD1ADBA0A900C35310 /* RYRetrievePasswordViewController.h */,
 				96C664FE1ADBA0A900C35310 /* RYRetrievePasswordViewController.m */,
+				96CD79541AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.h */,
+				96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */,
+				96CD79571AE8D63000DDC1D8 /* RYNewPasswordViewController.h */,
+				96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */,
 				96F321581AD50F8900CAFC51 /* RYBaseViewController.h */,
 				96F321591AD50F8900CAFC51 /* RYBaseViewController.m */,
 			);
@@ -936,7 +1013,6 @@
 				96F321491AD50A2700CAFC51 /* Default@2x.png in Resources */,
 				96F321451AD50A2700CAFC51 /* Icon-114@2x.png in Resources */,
 				96F321461AD50A2700CAFC51 /* Icon-72@2x.png in Resources */,
-				96C3A99D1ADF9564008011D3 /* input_text_bk_long.png in Resources */,
 				96F321471AD50A2700CAFC51 /* Default-568h@2x.png in Resources */,
 				96C7ACCF1AD679F200FA2E22 /* back_btn_icon@2x.png in Resources */,
 				96C610971ADCFF7500862E0E /* register_image_0@2x.png in Resources */,
@@ -946,7 +1022,9 @@
 				96C3A9BE1ADFB84D008011D3 /* unselectedImg@2x.png in Resources */,
 				96C3CC6B1AE0AC44007266A0 /* arrows_right@2x.png in Resources */,
 				96CC396E1AD4DDF100D5D157 /* LaunchScreen.xib in Resources */,
+				96C56D0E1AEE3D4E00B127FF /* icon_select@2x.png in Resources */,
 				96C3A9BD1ADFB84D008011D3 /* selectedImg@2x.png in Resources */,
+				96C56D0C1AEE291400B127FF /* ico_default@2x.png in Resources */,
 				96D9C9931AE4F28F00997430 /* arrow_add@2x.png in Resources */,
 				96CC396B1AD4DDF100D5D157 /* Images.xcassets in Resources */,
 				96C3A9BB1ADFB84D008011D3 /* imgsectionright.png in Resources */,
@@ -954,10 +1032,12 @@
 				96C3CC6F1AE0B2A8007266A0 /* ic_unchecked@2x.png in Resources */,
 				96C4C4061AE77CC700151A84 /* IQKeyboardManager.bundle in Resources */,
 				96C3A9BC1ADFB84D008011D3 /* imgtakephoto.png in Resources */,
+				96C4C6AF1AE9F5FF00D2C1C8 /* input_text_bk_long@2x.png in Resources */,
 				96C610961ADCFF7500862E0E /* register_image_1@2x.png in Resources */,
 				96C610911ADCE95700862E0E /* register_slider@2x.png in Resources */,
 				96CC39B71AD4E3BB00D5D157 /* MJRefresh.bundle in Resources */,
 				96F321481AD50A2700CAFC51 /* Default.png in Resources */,
+				96CD795B1AE8EE1E00DDC1D8 /* navigationbar@2x.png in Resources */,
 				96C610931ADCF41200862E0E /* slider_isolate@2x.png in Resources */,
 				96C51A681AD75FC700C5374D /* button_up@2x.png in Resources */,
 				965A0F931ADD1E0F0078FF81 /* register_line@2x.png in Resources */,
@@ -994,7 +1074,11 @@
 				96C7ACB11AD611FA00FA2E22 /* AFHTTPSessionManager.m in Sources */,
 				96C7ACB21AD611FA00FA2E22 /* AFNetworkReachabilityManager.m in Sources */,
 				96D9C98F1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m in Sources */,
+				96C56D011AEE158400B127FF /* SWUtilityButtonView.m in Sources */,
+				96C4C6AD1AE9E03800D2C1C8 /* UINavigationBar+JSDropShadow.m in Sources */,
+				96C56D071AEE16F400B127FF /* RYMyEnshrineViewController.m in Sources */,
 				96F321511AD50A6700CAFC51 /* MJRefreshTableView.m in Sources */,
+				96CD79561AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m in Sources */,
 				96C6108D1ADCE0D400862E0E /* NYSegmentedControl.m in Sources */,
 				96C3A9DE1ADFB89A008011D3 /* NSData+GIF.m in Sources */,
 				96CC39BA1AD4E3BB00D5D157 /* MJRefreshFooterView.m in Sources */,
@@ -1005,6 +1089,9 @@
 				96C51A6D1AD76D7900C5374D /* RYRegisterViewController.m in Sources */,
 				96CC39BF1AD4E3BB00D5D157 /* UIView+MJExtension.m in Sources */,
 				96F321601AD5210500CAFC51 /* newsBarData.m in Sources */,
+				96C4C6C01AEA321500D2C1C8 /* RYMyCollectViewController.m in Sources */,
+				96C56CFF1AEE158400B127FF /* SWTableViewCell.m in Sources */,
+				96C56CFE1AEE158400B127FF /* SWLongPressGestureRecognizer.m in Sources */,
 				96C7ACB31AD611FA00FA2E22 /* AFSecurityPolicy.m in Sources */,
 				96C7ACBD1AD611FA00FA2E22 /* UIProgressView+AFNetworking.m in Sources */,
 				96C4C4041AE77CC700151A84 /* IQToolbar.m in Sources */,
@@ -1022,6 +1109,8 @@
 				96CC39BB1AD4E3BB00D5D157 /* MJRefreshHeaderView.m in Sources */,
 				96C7ACB01AD611FA00FA2E22 /* AFHTTPRequestOperationManager.m in Sources */,
 				96C3A9DF1ADFB89A008011D3 /* SDImageCache.m in Sources */,
+				96C56CFC1AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m in Sources */,
+				96C56D001AEE158400B127FF /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				96CC39631AD4DDF100D5D157 /* AppDelegate.m in Sources */,
 				96C4C4051AE77CC700151A84 /* IQUIView+IQKeyboardToolbar.m in Sources */,
 				96C4C4031AE77CC700151A84 /* IQTitleBarButtonItem.m in Sources */,
@@ -1032,11 +1121,13 @@
 				96C3A9E01ADFB89A008011D3 /* SDWebImageCompat.m in Sources */,
 				96C4C4021AE77CC700151A84 /* IQBarButtonItem.m in Sources */,
 				96C4A5CC1AE62236008DCC5B /* ReachabilityManager.m in Sources */,
+				96C56CFD1AEE158400B127FF /* SWCellScrollView.m in Sources */,
 				96C3A9B31ADFB84D008011D3 /* imagesView.m in Sources */,
 				96C7ACBA1AD611FA00FA2E22 /* UIAlertView+AFNetworking.m in Sources */,
 				96C3A9B41ADFB84D008011D3 /* albumListsViewController.m in Sources */,
 				96CC39BE1AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m in Sources */,
 				96C664FF1ADBA0A900C35310 /* RYRetrievePasswordViewController.m in Sources */,
+				96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */,
 				96C7ACDC1AD683E500FA2E22 /* ShowBox.m in Sources */,
 				96C3A9EA1ADFB89A008011D3 /* UIImageView+WebCache.m in Sources */,
 				96C7ACC41AD6142D00FA2E22 /* NetManager.m in Sources */,
@@ -1062,6 +1153,7 @@
 				96C3A9E41ADFB89A008011D3 /* SDWebImageManager.m in Sources */,
 				96C3A9B91ADFB84D008011D3 /* imgCollectionViewCell.m in Sources */,
 				96CC39B91AD4E3BB00D5D157 /* MJRefreshConst.m in Sources */,
+				96C56D0A1AEE254000B127FF /* RYEnshrineTableViewCell.m in Sources */,
 				96C3A9E51ADFB89A008011D3 /* SDWebImagePrefetcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

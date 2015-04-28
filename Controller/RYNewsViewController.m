@@ -11,6 +11,9 @@
 #import "NetManager.h"
 #import "RYLoginViewController.h"
 
+#import "RYMyCollectViewController.h"
+#import "RYMyEnshrineViewController.h"
+
 /**
  *  随机数据
  */
@@ -38,6 +41,7 @@
     // Do any additional setup after loading the view.
     [self commInit];
     [self setNavigationItem];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -47,15 +51,16 @@
 
 - (void)setNavigationItem
 {
-    UIButton *loginButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 44)];
+    UIButton *loginButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
     [loginButton setExclusiveTouch:YES];
-    [loginButton setTitle:@"登陆/注册" forState:UIControlStateNormal];
+    [loginButton setTitle:@"登陆" forState:UIControlStateNormal];
     [loginButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
     [loginButton addTarget:self action:@selector(loginButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    [loginButton setBackgroundColor:[UIColor redColor]];
+    [loginButton setBackgroundColor:[UIColor clearColor]];
     
     UIBarButtonItem *loginItem = [[UIBarButtonItem alloc] initWithCustomView:loginButton];
     self.navigationItem.rightBarButtonItem = loginItem;
+    
 }
 
 /**
@@ -63,7 +68,6 @@
  */
 - (void)loginButtonClick:(id)sender
 {
-    NSLog(@"登陆按钮");
     RYLoginViewController *loginVC = [[RYLoginViewController alloc] init];
     [self.navigationController pushViewController:loginVC animated:YES];
 }
@@ -239,6 +243,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if ( !cell ) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     }
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
     NSArray *dataSource = [scrollPageView.dataSources objectAtIndex:aIndex];
@@ -251,7 +256,16 @@
 - (void)mScreollTabel:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"indexPath :: %@",indexPath);
-}
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ( indexPath.row == 0 ) {
+        RYMyCollectViewController *vc = [[RYMyCollectViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if ( indexPath.row == 1 ){
+        RYMyEnshrineViewController *vc = [[RYMyEnshrineViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+ }
 
 
 @end

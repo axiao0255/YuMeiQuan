@@ -8,6 +8,9 @@
 
 #import "AppDelegate.h"
 #import "RYNewsViewController.h"
+#import "UINavigationBar+JSDropShadow.h"
+
+#import "RYLoginViewController.h"
 
 @interface AppDelegate ()<UINavigationControllerDelegate>
 
@@ -18,9 +21,32 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    RYNewsViewController *newsVC = [[RYNewsViewController alloc] init];
     
-    self.nav = [[UINavigationController alloc] initWithRootViewController:newsVC];
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+    UIImage *topbkimg= [UIImage imageNamed:@"navigationbar.png"];
+    [[UINavigationBar appearance] setBackgroundImage:topbkimg forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{UITextAttributeTextColor : [UIColor whiteColor] , UITextAttributeFont : [UIFont boldSystemFontOfSize:18]}];
+    [UINavigationBar appearance].shadowImage = [UIImage new];
+    
+    
+    RYNewsViewController *newsVC = [[RYNewsViewController alloc] init];
+//    RYlalViewController *laVC = [[RYlalViewController alloc] init];
+//    RYLoginViewController *loginVC = [[RYLoginViewController alloc] init];
+//    self.nav = [[UINavigationController alloc] initWithRootViewController:rootVC];
+    
+    
+   
+  
+     self.nav = [[UINavigationController alloc] initWithRootViewController:newsVC];
+    
+    
+    
+
+    // 增加阴影
+    [self.nav.navigationBar dropShadowWithOffset:CGSizeMake(0, 4) radius:1 color:[UIColor blackColor] opacity:0.1];
     self.nav.delegate = self;
     
     [self.window setRootViewController:self.nav];
@@ -55,13 +81,26 @@
     UIBarButtonItem *back=[[UIBarButtonItem alloc] init];
     
     back.title = @" ";
-    UIImage *backbtn = [UIImage imageNamed:@"back_btn_icon_sel.png"];
+    UIImage *backbtn = [UIImage imageNamed:@"back_btn_icon.png"];
     [back setBackButtonBackgroundImage:backbtn forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    [back setBackButtonBackgroundImage:[UIImage imageNamed:@"back_btn_icon_sel.png"] forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
+    [back setBackButtonBackgroundImage:[UIImage imageNamed:@"back_btn_icon.png"] forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
     [back setStyle:UIBarButtonItemStylePlain];
     
     viewController.navigationItem.backBarButtonItem = back;
 }
+
+//-(UIStatusBarStyle)preferredStatusBarStyle
+//{
+//    return UIStatusBarStyleLightContent;
+//}
+//
+//- (BOOL)prefersStatusBarHidden
+//
+//{
+//    
+//    return YES;
+//    
+//}
 
 
 @end

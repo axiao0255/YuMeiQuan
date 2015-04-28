@@ -40,7 +40,6 @@
     UIButton    *positionBtn;         // 职务选择按钮
     UIButton    *securityCodeBtn;     // 获取验证码 按钮
     
-    
     // 数据
     RYRegisterData *registerData;
 }
@@ -624,7 +623,7 @@
 }
 
 #pragma mark -------------------------------------
-
+// 企业类型选择
 - (void)companySelect
 {
     RYRegisterSpecialtyViewController *vc = [[RYRegisterSpecialtyViewController alloc] initWIthSpecialtyArray:registerData.companyTypeArray isFillout:NO andTitle:@"企业类型"];
@@ -633,6 +632,7 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+// 专业和职务选择
 - (void)identityAndPositionSelect:(id)sender
 {
     UIButton *btn = (UIButton *)sender;
@@ -671,16 +671,15 @@
 
 }
 
+// 是否医生按钮点击
 - (void)checkedBtnClick:(id)sender
 {
-    NSLog(@"是医生");
     UIButton *btn = (UIButton *)sender;
     if ( btn.tag == 1300 ) {
         isDoctor = YES;
     }else{
         isDoctor = NO;
     }
-    NSLog(@"btn :: %@",btn);
     [theTableView beginUpdates];
     NSMutableArray *indexPaths = [NSMutableArray array];
     for ( int i = 4 ; i <= 5; i ++ ) {
@@ -695,6 +694,7 @@
     [theTableView endUpdates];
 }
 
+// 提交注册 按钮点击
 - (void)submitDidClick:(id)sender
 {
     if ( myType == typePersonal ) {
@@ -824,22 +824,22 @@
         }];
     }
 }
-
+// 重获验证码 时间 调整
 - (void)runTimer:(id)sender
 {
-    NSLog(@"%d",currentTime);
     currentTime -- ;
-    NSString *timeString = [NSString stringWithFormat:@"%i s重发",currentTime];
-    [securityCodeBtn setTitle:timeString forState:UIControlStateDisabled];
-    if (currentTime <= 0)
-    {
-        [myTimer invalidate];
+    if ( currentTime < 0 ) {
         [self securityCodeBtnTypeChangeWithBool:YES];
         [securityCodeBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
+        [myTimer invalidate];
+    }
+    else{
+        NSString *timeString = [NSString stringWithFormat:@"%i s重发",currentTime];
+        [securityCodeBtn setTitle:timeString forState:UIControlStateDisabled];
     }
 }
 
-
+// 获取验证码按钮是否 可以点击
 - (void)securityCodeBtnTypeChangeWithBool:(BOOL)canUsed
 {
     if ( canUsed ) {
@@ -857,6 +857,29 @@
 }
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
+    return YES;
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSUInteger textLength = [Utils getTextFieldActualLengthWithTextField:textField shouldChangeCharactersInRange:range replacementString:string];
+    if ( textField == userPhoneText || textField == commanyPhoneText ) {
+        if ( textLength > 11 ) {
+            return NO;
+        }
+    }
+    
+    if ( textField == securityCodeText ) {
+        if ( textLength > 6 ) {
+            return NO;
+        }
+    }
+    
+    if ( textField == passWordText || textField == repetPasswordText ) {
+        if ( textLength > 20 ) {
+            return NO;
+        }
+    }
     return YES;
 }
 - (void)textFieldDidEndEditing:(UITextField *)textField
