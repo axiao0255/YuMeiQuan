@@ -8,6 +8,7 @@
 
 #import "RYMyEnshrineViewController.h"
 #import "RYEnshrineTableViewCell.h"
+#import "RYEnshrineClassifyViewController.h"
 
 @interface RYMyEnshrineViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate>
 {
@@ -115,9 +116,19 @@
     UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - selectImg.size.width, 0, selectImg.size.width, 35)];
     btn.backgroundColor = [UIColor clearColor];
     [btn setBackgroundImage:selectImg forState:UIControlStateNormal];
+    [btn setAdjustsImageWhenHighlighted:NO];
+    [btn addTarget:self action:@selector(goToClassify) forControlEvents:UIControlEventTouchUpInside];
     [headView addSubview:btn];
     
     return headView;
+}
+
+#pragma mark - 进入分类界面
+- (void)goToClassify
+{
+    NSLog(@"分类");
+    RYEnshrineClassifyViewController *vc = [[RYEnshrineClassifyViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark -UISearchBar 代理方法

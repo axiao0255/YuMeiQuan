@@ -56,7 +56,7 @@
 {
     theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
     [theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    theTableView.backgroundColor = [Utils getRGBColor:0xe3 g:0xee b:0xf8 a:1.0];
+    theTableView.backgroundColor = [UIColor clearColor];
     theTableView.delegate = self;
     theTableView.dataSource = self;
     [self.view addSubview:theTableView];
@@ -71,7 +71,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 40;
+    return 36;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -84,6 +84,8 @@
     
     if ( specialtyArray.count ) {
         cell.contentLabel.text = [specialtyArray objectAtIndex:indexPath.row];
+        cell.highlightImage = [UIImage imageNamed:@"ic_cell_selected.png"];
+        cell.normalImage = [UIImage imageNamed:@"ic_cell_unselected.png"];
     }
     
     if ( isFillout && indexPath.row == specialtyArray.count - 1 ) {
@@ -104,7 +106,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
- 
+    NSLog(@"aaa : %ld",indexPath.row);
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ( [self.delegate respondsToSelector:@selector(selectSpecialtyTypeWithTag:didStr:)] ) {
         RYRegisterSpecialtyTableViewCell *cell = (RYRegisterSpecialtyTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         if ( isFillout && indexPath.row == specialtyArray.count - 1 ) {

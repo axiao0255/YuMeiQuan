@@ -14,6 +14,9 @@
 @property (nonatomic , strong) UIImageView *arrowImageView;
 @property (nonatomic , strong) UIView      *partingLine;
 
+@property (nonatomic , strong) UIImage     *highlightImage;
+@property (nonatomic , strong) UIImage     *normalImage;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 
 @end

@@ -127,7 +127,7 @@
     [baseButton setTitle:string forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    baseButton.backgroundColor = [Utils getRGBColor:0x04 g:0xcb b:0x3c a:1.0];
+    baseButton.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
     baseButton.layer.cornerRadius = 5.0;
 //    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateNormal];
 //    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateHighlighted];
@@ -203,6 +203,17 @@
     view.backgroundColor = [UIColor clearColor];
     [tableView setTableFooterView:view];
 }
+
++(NSArray *)getImageArrWithImgName:(NSString *)imgName andMaxIndex:(NSUInteger )index
+{
+    NSMutableArray * imgs = [NSMutableArray array];
+    for ( NSUInteger i = 0 ; i <= index ; i ++ ) {
+        NSString *imgStr = [NSString stringWithFormat:@"%@%lu.png",imgName,(unsigned long)i];
+        [imgs addObject:imgStr];
+    }
+    return imgs;
+}
+
 
 
 

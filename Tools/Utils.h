@@ -59,6 +59,10 @@
 #pragma mark  隐藏 UITableViewCell 多余部分的 分割线
 +(void)setExtraCellLineHidden: (UITableView *)tableView;
 
+#pragma mark 连续的获取本地图片数组
++(NSArray *)getImageArrWithImgName:(NSString *)imgName andMaxIndex:(NSUInteger )index;
+
+
 
 
 

@@ -13,6 +13,9 @@
 
 #import "RYMyCollectViewController.h"
 #import "RYMyEnshrineViewController.h"
+#import "RYMyShareViewController.h"
+#import "RYMyJiFenViewController.h"
+#import "RYMyInformViewController.h"
 
 /**
  *  随机数据
@@ -61,6 +64,23 @@
     UIBarButtonItem *loginItem = [[UIBarButtonItem alloc] initWithCustomView:loginButton];
     self.navigationItem.rightBarButtonItem = loginItem;
     
+    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    [leftButton setTitle:@"我的" forState:UIControlStateNormal];
+    [leftButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
+    leftButton.backgroundColor = [UIColor clearColor];
+    [leftButton addTarget:self action:@selector(leftButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+    self.navigationItem.leftBarButtonItem = leftItem;
+}
+
+- (void)leftButtonClick:(id)sender
+{
+    NSLog(@"我的");
+    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication]delegate];
+    YRSideViewController *sideViewController=[delegate sideViewController];
+    [sideViewController showLeftViewController:true];
+
 }
 
 /**
@@ -79,66 +99,66 @@
                                     TITLEKEY:@"头条",
                                     TITLEWIDTH:[NSNumber numberWithFloat:60]
                                     },
-                                  @{NOMALKEY: @"normal.png",
-                                    HEIGHTKEY:@"helight.png",
-                                    TITLEKEY:@"推荐",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"娱乐",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"体育",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"科技",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"轻松一刻",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:40*2]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"新闻",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"美女",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"帅哥",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"帅哥",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"帅哥",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"帅哥",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
-                                  @{NOMALKEY: @"normal",
-                                    HEIGHTKEY:@"helight",
-                                    TITLEKEY:@"帅哥",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-                                    },
+//                                  @{NOMALKEY: @"normal.png",
+//                                    HEIGHTKEY:@"helight.png",
+//                                    TITLEKEY:@"推荐",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"娱乐",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"体育",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"科技",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"轻松一刻",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:40*2]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"新闻",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"美女",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"帅哥",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"帅哥",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"帅哥",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"帅哥",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
+//                                  @{NOMALKEY: @"normal",
+//                                    HEIGHTKEY:@"helight",
+//                                    TITLEKEY:@"帅哥",
+//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+//                                    },
                                   ];
     
     newsData = [[newsBarData alloc] init];
@@ -183,7 +203,6 @@
     if (currentIndex != index ) {
         currentIndex = index;
         [scrollPageView moveScrollowViewAthIndex:currentIndex];
-        
     }
 }
 
@@ -263,6 +282,18 @@
     }
     else if ( indexPath.row == 1 ){
         RYMyEnshrineViewController *vc = [[RYMyEnshrineViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if ( indexPath.row == 2 ){
+        RYMyShareViewController *vc = [[RYMyShareViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if ( indexPath.row == 3 ){
+        RYMyJiFenViewController *vc = [[RYMyJiFenViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else if ( indexPath.row == 4 ){
+        RYMyInformViewController *vc = [[RYMyInformViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
  }

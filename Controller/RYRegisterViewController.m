@@ -9,6 +9,8 @@
 #import "RYRegisterViewController.h"
 #import "RYRegisterData.h"
 #import "RYRegisterSpecialtyViewController.h"
+#import "TextFieldWithLabel.h"
+#import "NYSegmentedControl.h"
 
 @interface RYRegisterViewController ()<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,RYRegisterSpecialtyDelegate>
 {
@@ -99,9 +101,9 @@
     
     //登录按钮
     UIButton *btnNextStep = [Utils getCustomLongButton:@"完成注册"];
-    CGRect r = CGRectMake(SCREEN_WIDTH / 2.0 - 250/2.0 , \
+    CGRect r = CGRectMake(SCREEN_WIDTH / 2.0 - 240/2.0 , \
                           7, \
-                          250, 35);
+                          240, 35);
     btnNextStep.frame = r;
     [btnNextStep addTarget:self action:@selector(submitDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btnNextStep];
@@ -110,12 +112,11 @@
 - (void)initSubviews
 {
     theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT - 50)];
-    theTableView.backgroundColor = [Utils getRGBColor:0xe3 g:0xee b:0xf8 a:1.0];
+    theTableView.backgroundColor = [UIColor clearColor];
     theTableView.delegate = self;
     theTableView.dataSource = self;
     [theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.view addSubview:theTableView];
-//    [DaiDodgeKeyboard addRegisterTheViewNeedDodgeKeyboard:theTableView];
 }
 
 #pragma mark 选中后更新数据
@@ -192,8 +193,6 @@
     if ( indexPath.section == 0 ) {
         switch ( indexPath.row ) {
             case 0:
-                return 100;
-                break;
             case 1:
             case 2:
             case 3:
@@ -202,7 +201,7 @@
             case 6:
             case 7:
             case 8:
-                return 50;
+                return 42;
                 break;
             default:
                 return 0;
@@ -221,7 +220,7 @@
             case 0:
             {
                 if ( myType == typePersonal ) {
-                    return [self topCellWithTableView:tableView indexPath:indexPath];
+                    return [self customTableView:tableView indexPath:indexPath];
                 }
                 else{
                     return [self company_cell_top_tableView:tableView indexPath:indexPath];
@@ -229,6 +228,15 @@
             }
                 break;
             case 1:
+            {
+                if ( myType == typePersonal ) {
+                    return [self securityCodeTableView:tableView indexPath:indexPath];
+                }
+                else{
+                    return [self company_cell_tableView:tableView indexPath:indexPath];
+                }
+            }
+                break;
             case 2:
             case 3:
             case 6:
@@ -271,39 +279,44 @@
 - (UITableViewCell *)company_cell_top_tableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
 {
     NSString *company_cell_top = @"company_cell_top";
-    RYRegisterTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:company_cell_top];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:company_cell_top];
     if ( !cell ) {
-        cell = [[RYRegisterTableViewCell alloc] initWithTopStyle:UITableViewCellStyleDefault reuseIdentifier:company_cell_top];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:company_cell_top];
+        cell.backgroundColor = [UIColor clearColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
+        textField.font = [UIFont systemFontOfSize:14];
+        textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        [textField seperatorWidth:14];
+        textField.backgroundColor = [UIColor whiteColor];
+        textField.delegate = self;
+        textField.tag = 101;
+        [cell.contentView addSubview:textField];
+        
+        UIView *rigth_view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 40)];
+        rigth_view.tag = 2020;
+        rigth_view.backgroundColor = [UIColor clearColor];
+        UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 25, 40)];
+        arrow.backgroundColor = [UIColor clearColor];
+        arrow.image = [UIImage imageNamed:@"arrows_right.png"];
+        [rigth_view addSubview:arrow];
+        textField.rightView = rigth_view;
+        textField.rightViewMode = UITextFieldViewModeAlways;
+        
+        UIButton *button = (UIButton *)[cell.contentView viewWithTag:1313];
+        [button removeFromSuperview];
+        button = [[UIButton alloc] initWithFrame:textField.frame];
+        [button setTitle:@"" forState:UIControlStateNormal];
+        button.tag = 1313;
+        button.backgroundColor = [UIColor clearColor];
+        [button addTarget:self action:@selector(companySelect) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:button];
     }
-    UILabel *topLabel = (UILabel *)[cell.contentView viewWithTag:1212];
-    topLabel.text = @"请填写以下信息，完成注册";
-    
     companyTypeText = (UITextField *)[cell.contentView viewWithTag:101];
-    companyTypeText.delegate = self;
     companyTypeText.placeholder = @"企业类型";
     companyTypeText.text = registerData.companyType;
     [companyTypeText setEnabled:NO];
-    
-    UIView *rigth_view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 40)];
-    rigth_view.tag = 2020;
-    rigth_view.backgroundColor = [UIColor clearColor];
-    UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 25, 40)];
-    arrow.backgroundColor = [UIColor clearColor];
-    arrow.image = [UIImage imageNamed:@"arrows_right.png"];
-    [rigth_view addSubview:arrow];
-    
-    UIButton *button = (UIButton *)[cell.contentView viewWithTag:1313];
-    [button removeFromSuperview];
-    button = [[UIButton alloc] initWithFrame:companyTypeText.frame];
-    [button setTitle:@"" forState:UIControlStateNormal];
-    button.tag = 1313;
-    button.backgroundColor = [UIColor clearColor];
-    [button addTarget:self action:@selector(companySelect) forControlEvents:UIControlEventTouchUpInside];
-    [cell.contentView addSubview:button];
-    
-    companyTypeText.rightView = rigth_view;
-    companyTypeText.rightViewMode = UITextFieldViewModeAlways;
-    
     return cell;
 }
 
@@ -316,9 +329,12 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UITextField *textField = [Utils getCustomLongTextField:@""];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
         textField.font = [UIFont systemFontOfSize:14];
-        textField.frame = CGRectMake(SCREEN_WIDTH / 2.0 - 250/2.0 ,0, 250, 40);
+        textField.backgroundColor = [UIColor whiteColor];
+        textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        [textField seperatorWidth:14];
+        textField.backgroundColor = [UIColor whiteColor];
         textField.delegate = self;
         textField.tag = 110 + indexPath.row;
         [cell.contentView addSubview:textField];
@@ -371,18 +387,20 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UITextField *textField = [Utils getCustomLongTextField:@""];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
         textField.font = [UIFont systemFontOfSize:14];
-        textField.frame = CGRectMake(SCREEN_WIDTH / 2.0 - 250/2.0 ,0, 250, 40);
+        [textField seperatorWidth:15];
+        textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        textField.backgroundColor = [UIColor whiteColor];
         textField.delegate = self;
         textField.tag = 40;
         [textField setEnabled:NO];
         [cell.contentView addSubview:textField];
         
-        UIView *rigth_view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 40)];
+        UIView *rigth_view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 34)];
         rigth_view.tag = 2020;
         rigth_view.backgroundColor = [UIColor clearColor];
-        UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 25, 40)];
+        UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 25, 34)];
         arrow.backgroundColor = [UIColor clearColor];
         arrow.image = [UIImage imageNamed:@"arrows_right.png"];
         [rigth_view addSubview:arrow];
@@ -432,62 +450,30 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:doctor_cell];
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        UITextField *textField = [Utils getCustomLongTextField:@"是否医生"];
+                
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
         textField.font = [UIFont systemFontOfSize:14];
-        textField.frame = CGRectMake(SCREEN_WIDTH / 2.0 - 250/2.0 ,0, 250, 40);
+        [textField seperatorWidth:15];
+        textField.backgroundColor = [UIColor whiteColor];
+        textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         textField.delegate = self;
         textField.tag = 1110;
+        textField.placeholder = @"用户类型";
         textField.enabled = NO;
         [cell.contentView addSubview:textField];
-    }
-    UITextField *textField = (UITextField *)[cell.contentView viewWithTag:1110];
-    for ( int i  = 0 ;  i < 2; i ++ ) {
-        UIButton * btn = (UIButton *)[cell.contentView viewWithTag:1300 + i];
-        if ( !btn ) {
-            btn = [[UIButton alloc] initWithFrame:CGRectMake(textField.frame.origin.x + 70 + i * 75, 0, 100, 40)];
-            btn.backgroundColor = [UIColor clearColor];
-            [btn addTarget:self action:@selector(checkedBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-            btn.tag = 1300 + i;
-            [cell.contentView addSubview:btn];
-            
-            UIImageView *checkImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-            checkImage.backgroundColor = [UIColor clearColor];
-            checkImage.tag = 111;
-            [btn addSubview:checkImage];
-            
-            UILabel *checkLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, btn.frame.size.width - 40, 40)];
-            checkLabel.font = [UIFont systemFontOfSize:14];
-            checkLabel.backgroundColor = [UIColor clearColor];
-            checkLabel.tag = 112;
-            [btn addSubview:checkLabel];
-        }
         
-        UIImageView *tempImage = (UIImageView *)[btn viewWithTag:111];
-        UILabel     *tempLabel = (UILabel *)[btn viewWithTag:112];
-        
-        if ( btn.tag == 1300 ) {
-            tempLabel.text = @"是医生";
-            if ( isDoctor ) {
-                tempImage.image = [UIImage imageNamed:@"ic_checked.png"];
-                tempLabel.textColor = [Utils getRGBColor:70.0 g:70.0 b:70.0 a:1.0];
-            }
-            else{
-                tempImage.image = [UIImage imageNamed:@"ic_unchecked.png"];
-                tempLabel.textColor = [Utils getRGBColor:160.0 g:160.0 b:160.0 a:1.0];
-            }
-        }
-        else{
-            tempLabel.text = @"不是医生";
-            if ( isDoctor ) {
-                tempImage.image = [UIImage imageNamed:@"ic_unchecked.png"];
-                tempLabel.textColor = [Utils getRGBColor:160.0 g:160.0 b:160.0 a:1.0];
-            }
-            else{
-                tempImage.image = [UIImage imageNamed:@"ic_checked.png"];
-                tempLabel.textColor = [Utils getRGBColor:70.0 g:70.0 b:70.0 a:1.0];
-            }
-        }
+        NYSegmentedControl *segmentedControl = [[NYSegmentedControl alloc] initWithItems:@[@"医生",@"非医生"]];
+        [segmentedControl addTarget:self action:@selector(segmentSelectedControl:) forControlEvents:UIControlEventValueChanged];
+        segmentedControl.borderColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];// 边界的颜色
+        segmentedControl.borderWidth = 0.8;
+        segmentedControl.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0]; // 底部的颜色
+        segmentedControl.segmentIndicatorBackgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0]; // 所选按钮颜色
+        segmentedControl.segmentIndicatorInset = 0; // 按钮缩小
+        segmentedControl.titleTextColor = [UIColor whiteColor]; // 字体颜色
+        segmentedControl.selectedTitleTextColor = [UIColor whiteColor];  // 选择时的字体颜色
+        segmentedControl.segmentIndicatorBorderColor = [UIColor whiteColor]; // 所选按钮的字体颜色
+        segmentedControl.frame = CGRectMake(SCREEN_WIDTH - 15 - 184, 8, 184 , 34);
+        [cell.contentView addSubview:segmentedControl];
     }
     return cell;
 }
@@ -501,19 +487,21 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH / 2.0 - 250/2.0 ,0, 250, 40)];
-        label.font = [UIFont systemFontOfSize:14];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(30 ,0, 250, 30)];
+        label.font = [UIFont systemFontOfSize:10];
+        label.backgroundColor = [UIColor clearColor];
         label.textColor = [Utils getRGBColor:0xaa g:0xaa b:0xaa a:1.0];
         label.text = @"证件资料，点击选择图片";
         [cell.contentView addSubview:label];
         
         imagesView *a = [[imagesView alloc] initWithMaxNum:1];
-        a.frame = CGRectMake(SCREEN_WIDTH / 2.0 - 250/2.0 - 10, 0, 0 , 0);
-        [a fixFrameH:25];
+        a.frame = CGRectMake(20, 0, 0 , 0);
+        [a fixFrameH:18];
         [a seteidtEnable:couldEdit];           //可编辑
         [a setMainVC:self];                    //设置所在viewcontroller
         [a setPickerType:AlbumCollectionType]; //设置照片获取方式
         [a setTag:666];
+        a.backgroundColor = [UIColor clearColor];
         [a show];
         [cell.contentView addSubview:a];
     }
@@ -530,9 +518,11 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UITextField *textField = [Utils getCustomLongTextField:@""];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
         textField.font = [UIFont systemFontOfSize:14];
-        textField.frame = CGRectMake(SCREEN_WIDTH / 2.0 - 250/2.0 ,0, 250, 40);
+        textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        [textField seperatorWidth:15];
+        textField.backgroundColor = [UIColor whiteColor];
         textField.delegate = self;
         textField.tag = 110 + indexPath.row;
         [cell.contentView addSubview:textField];
@@ -541,11 +531,11 @@
     [textField setSecureTextEntry:NO];
     [textField setEnabled:YES];
     switch ( indexPath.row ) {
-        case 1:
+        case 0:
         {
-            securityCodeText = textField;
-            securityCodeText.text = registerData.userSecurityCode;
-            securityCodeText.placeholder = @"输入验证码";
+            userPhoneText = textField;
+            userPhoneText.text = registerData.userPhone;
+            userPhoneText.placeholder = @"请输入手机号";
         }
             break;
         case 2:
@@ -586,40 +576,39 @@
     return cell;
 }
 
-// 个人注册     第一个cell
-- (UITableViewCell *)topCellWithTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)securityCodeTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
 {
-    NSString *cell_0 = @"cell_0";    
-    RYRegisterTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cell_0];
+    NSString *indentifier = @"securityCode";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:indentifier];
     if ( !cell ) {
-        cell = [[RYRegisterTableViewCell alloc] initWithTopStyle:UITableViewCellStyleDefault reuseIdentifier:cell_0];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indentifier];
+        cell.backgroundColor = [UIColor clearColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
+        textField.font = [UIFont systemFontOfSize:14];
+        [textField seperatorWidth:15];
+        textField.backgroundColor = [UIColor whiteColor];
+        textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        textField.delegate = self;
+        textField.tag = 110 + indexPath.row;
+        [cell.contentView addSubview:textField];
+        
+        securityCodeBtn = [Utils getCustomLongButton:@"获取验证码"];
+        securityCodeBtn.frame = CGRectMake(0, 0, 92, 34);
+        securityCodeBtn.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
+        securityCodeBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [securityCodeBtn addTarget:self action:@selector(getSecurityCode) forControlEvents:UIControlEventTouchUpInside];
+        textField.rightView = securityCodeBtn;
+        textField.rightViewMode = UITextFieldViewModeAlways;
     }
-    UILabel *topLabel = (UILabel *)[cell.contentView viewWithTag:1212];
-    topLabel.text = @"请填写以下信息，完成注册";
+    UITextField *textField = (UITextField *)[cell.contentView viewWithTag:110 + indexPath.row];
+    securityCodeText = textField;
+    securityCodeText.text = registerData.userSecurityCode;
+    securityCodeText.placeholder = @"输入验证码";
     
-    UITextField *textField = (UITextField *)[cell.contentView viewWithTag:101];
-    textField.delegate = self;
-    textField.placeholder = @"请输入手机号码";
-    userPhoneText = textField;
-    userPhoneText.text = registerData.userPhone;
-    
-    if ( securityCodeBtn ) {
-        [securityCodeBtn removeFromSuperview];
-    }
-    securityCodeBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
-    securityCodeBtn.backgroundColor = [UIColor clearColor];
-    [securityCodeBtn setTitleColor:[Utils getRGBColor:70.0 g:70.0 b:70.0 a:1.0] forState:UIControlStateNormal];
-    [securityCodeBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
-    [securityCodeBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
-    [securityCodeBtn addTarget:self action:@selector(getSecurityCode) forControlEvents:UIControlEventTouchUpInside];
-    [textField setRightView:securityCodeBtn];
-    textField.rightViewMode = UITextFieldViewModeAlways;
-    
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, securityCodeBtn.frame.size.height)];
-    line.backgroundColor = [Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0];
-    [securityCodeBtn addSubview:line];
-
     return cell;
+
 }
 
 #pragma mark -------------------------------------
@@ -670,6 +659,35 @@
     [self.navigationController pushViewController:vc animated:YES];
 
 }
+// 是否医生按钮点击
+- (void)segmentSelectedControl:(NYSegmentedControl *)sender
+{
+//    currentIndex = sender.selectedSegmentIndex;
+//    [self setSubviewWithIndex:currentIndex];
+    NSUInteger index = sender.selectedSegmentIndex;
+    if ( index == 0 ) {
+        isDoctor = YES;
+    }
+    else{
+        isDoctor = NO;
+    }
+    [theTableView beginUpdates];
+    NSMutableArray *indexPaths = [NSMutableArray array];
+//    for ( int i = 4 ; i <= 5; i ++ ) {
+//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+//        [indexPaths addObject:indexPath];
+//    }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:5 inSection:0];
+    [indexPaths addObject:indexPath];
+    NSIndexPath *index_path = [NSIndexPath indexPathForRow:7 inSection:0];
+    [indexPaths addObject:index_path];
+    if ( indexPaths.count ) {
+        [theTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    }
+    [theTableView endUpdates];
+
+}
+
 
 // 是否医生按钮点击
 - (void)checkedBtnClick:(id)sender
@@ -814,7 +832,7 @@
                 return;
             }
             currentTime = 60;
-            NSString *timeString = [NSString stringWithFormat:@"%i s重发",currentTime];
+            NSString *timeString = [NSString stringWithFormat:@"%li s重发",(long)currentTime];
             [securityCodeBtn setTitle:timeString forState:UIControlStateDisabled];
             [myTimer invalidate];
             myTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(runTimer:) userInfo:nil repeats:YES];
@@ -834,7 +852,7 @@
         [myTimer invalidate];
     }
     else{
-        NSString *timeString = [NSString stringWithFormat:@"%i s重发",currentTime];
+        NSString *timeString = [NSString stringWithFormat:@"%li s重发",(long)currentTime];
         [securityCodeBtn setTitle:timeString forState:UIControlStateDisabled];
     }
 }

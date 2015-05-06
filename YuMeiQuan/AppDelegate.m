@@ -12,6 +12,8 @@
 
 #import "RYLoginViewController.h"
 
+#import "RYMyHomeLeftViewController.h"
+
 @interface AppDelegate ()<UINavigationControllerDelegate>
 
 @end
@@ -33,23 +35,21 @@
     
     
     RYNewsViewController *newsVC = [[RYNewsViewController alloc] init];
-//    RYlalViewController *laVC = [[RYlalViewController alloc] init];
-//    RYLoginViewController *loginVC = [[RYLoginViewController alloc] init];
-//    self.nav = [[UINavigationController alloc] initWithRootViewController:rootVC];
-    
-    
-   
-  
-     self.nav = [[UINavigationController alloc] initWithRootViewController:newsVC];
-    
-    
-    
-
+    self.nav = [[UINavigationController alloc] initWithRootViewController:newsVC];
     // 增加阴影
     [self.nav.navigationBar dropShadowWithOffset:CGSizeMake(0, 4) radius:1 color:[UIColor blackColor] opacity:0.1];
     self.nav.delegate = self;
+
+    RYMyHomeLeftViewController *homeLeftVC = [[RYMyHomeLeftViewController alloc] init];
+    _sideViewController=[[YRSideViewController alloc]initWithNibName:nil bundle:nil];
+    _sideViewController.rootViewController = self.nav;
+    _sideViewController.leftViewController = homeLeftVC;
+    _sideViewController.leftViewShowWidth=220;
+    _sideViewController.showBoundsShadow = YES;
+    _sideViewController.needSwipeShowMenu=YES;//默认开启的可滑动展示
+
     
-    [self.window setRootViewController:self.nav];
+    [self.window setRootViewController:_sideViewController];
     [self.window makeKeyAndVisible];
     return YES;
 }
