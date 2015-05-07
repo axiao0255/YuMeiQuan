@@ -26,12 +26,13 @@
 
 @end
 
-@interface MJScrollBarView : UIView
+@interface MJScrollBarView : UIView<UIScrollViewDelegate>
 {
     UIScrollView        *mScrollView;
     NSMutableArray      *mItemInfoArray;
     NSMutableArray      *mButtonArray;
     float               mTotalWidth;
+    
 }
 @property (nonatomic,weak) id<MJScrollBarViewDelegate>delegate;
 

@@ -64,7 +64,6 @@
 		96C56D0E1AEE3D4E00B127FF /* icon_select@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C56D0D1AEE3D4E00B127FF /* icon_select@2x.png */; };
 		96C5AEEB1AF0744400F9195A /* ic_edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C5AEE91AF0744400F9195A /* ic_edit@2x.png */; };
 		96C5AEEC1AF0744400F9195A /* ic_wasteBasket@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C5AEEA1AF0744400F9195A /* ic_wasteBasket@2x.png */; };
-		96C5AEF41AF0B8D400F9195A /* YRSideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C5AEF31AF0B8D400F9195A /* YRSideViewController.m */; };
 		96C5AEF71AF0BAA700F9195A /* RYMyHomeLeftViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C5AEF61AF0BAA700F9195A /* RYMyHomeLeftViewController.m */; };
 		96C5AEFA1AF0C18000F9195A /* RYMyHomeLeftTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C5AEF91AF0C18000F9195A /* RYMyHomeLeftTableViewCell.m */; };
 		96C610821ADCDBF900862E0E /* RYRegisterSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C610811ADCDBF900862E0E /* RYRegisterSelectViewController.m */; };
@@ -143,6 +142,23 @@
 		96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */; };
 		96CD795B1AE8EE1E00DDC1D8 /* navigationbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */; };
 		96CF17E71AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CF17E61AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m */; };
+		96CFB3B21AF9B9180078C225 /* RYMyInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3B11AF9B9180078C225 /* RYMyInviteViewController.m */; };
+		96CFB3B41AF9BC9A0078C225 /* ic_Invite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3B31AF9BC9A0078C225 /* ic_Invite@2x.png */; };
+		96CFB3B81AF9C0090078C225 /* GridMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3B71AF9C0090078C225 /* GridMenuView.m */; };
+		96CFB3BE1AF9C51C0078C225 /* ic_invite_share0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3B91AF9C51C0078C225 /* ic_invite_share0@2x.png */; };
+		96CFB3BF1AF9C51C0078C225 /* ic_invite_share1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3BA1AF9C51C0078C225 /* ic_invite_share1@2x.png */; };
+		96CFB3C01AF9C51C0078C225 /* ic_invite_share2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3BB1AF9C51C0078C225 /* ic_invite_share2@2x.png */; };
+		96CFB3C11AF9C51C0078C225 /* ic_invite_share3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3BC1AF9C51C0078C225 /* ic_invite_share3@2x.png */; };
+		96CFB3C21AF9C51C0078C225 /* ic_invite_share4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3BD1AF9C51C0078C225 /* ic_invite_share4@2x.png */; };
+		96CFB3C81AF9FAE00078C225 /* RYMyLiteratureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3C71AF9FAE00078C225 /* RYMyLiteratureViewController.m */; };
+		96CFB3DB1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3CD1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorFade.m */; };
+		96CFB3DC1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3CF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.m */; };
+		96CFB3DD1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3D11AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScaleAndFade.m */; };
+		96CFB3DE1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3D31AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlide.m */; };
+		96CFB3DF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3D51AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m */; };
+		96CFB3E01AFA2AF70078C225 /* menu-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3D71AFA2AF70078C225 /* menu-button.png */; };
+		96CFB3E11AFA2AF70078C225 /* menu-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3D81AFA2AF70078C225 /* menu-button@2x.png */; };
+		96CFB3E21AFA2AF70078C225 /* SlideNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3DA1AFA2AF70078C225 /* SlideNavigationController.m */; };
 		96D2380D1AF721ED00936721 /* ic_cell_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D2380B1AF721ED00936721 /* ic_cell_selected@2x.png */; };
 		96D2380E1AF721ED00936721 /* ic_cell_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D2380C1AF721ED00936721 /* ic_cell_unselected@2x.png */; };
 		96D238111AF74AA000936721 /* register_company@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D2380F1AF74AA000936721 /* register_company@2x.png */; };
@@ -294,8 +310,6 @@
 		96C56D0D1AEE3D4E00B127FF /* icon_select@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_select@2x.png"; sourceTree = "<group>"; };
 		96C5AEE91AF0744400F9195A /* ic_edit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_edit@2x.png"; sourceTree = "<group>"; };
 		96C5AEEA1AF0744400F9195A /* ic_wasteBasket@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_wasteBasket@2x.png"; sourceTree = "<group>"; };
-		96C5AEF21AF0B8D400F9195A /* YRSideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YRSideViewController.h; sourceTree = "<group>"; };
-		96C5AEF31AF0B8D400F9195A /* YRSideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YRSideViewController.m; sourceTree = "<group>"; };
 		96C5AEF51AF0BAA700F9195A /* RYMyHomeLeftViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyHomeLeftViewController.h; sourceTree = "<group>"; };
 		96C5AEF61AF0BAA700F9195A /* RYMyHomeLeftViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyHomeLeftViewController.m; sourceTree = "<group>"; };
 		96C5AEF81AF0C18000F9195A /* RYMyHomeLeftTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyHomeLeftTableViewCell.h; sourceTree = "<group>"; };
@@ -429,6 +443,33 @@
 		96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigationbar@2x.png"; sourceTree = "<group>"; };
 		96CF17E51AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYEnshrineClassifyTableViewCell.h; sourceTree = "<group>"; };
 		96CF17E61AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYEnshrineClassifyTableViewCell.m; sourceTree = "<group>"; };
+		96CFB3B01AF9B9180078C225 /* RYMyInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyInviteViewController.h; sourceTree = "<group>"; };
+		96CFB3B11AF9B9180078C225 /* RYMyInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyInviteViewController.m; sourceTree = "<group>"; };
+		96CFB3B31AF9BC9A0078C225 /* ic_Invite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_Invite@2x.png"; sourceTree = "<group>"; };
+		96CFB3B61AF9C0090078C225 /* GridMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridMenuView.h; sourceTree = "<group>"; };
+		96CFB3B71AF9C0090078C225 /* GridMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridMenuView.m; sourceTree = "<group>"; };
+		96CFB3B91AF9C51C0078C225 /* ic_invite_share0@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_invite_share0@2x.png"; sourceTree = "<group>"; };
+		96CFB3BA1AF9C51C0078C225 /* ic_invite_share1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_invite_share1@2x.png"; sourceTree = "<group>"; };
+		96CFB3BB1AF9C51C0078C225 /* ic_invite_share2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_invite_share2@2x.png"; sourceTree = "<group>"; };
+		96CFB3BC1AF9C51C0078C225 /* ic_invite_share3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_invite_share3@2x.png"; sourceTree = "<group>"; };
+		96CFB3BD1AF9C51C0078C225 /* ic_invite_share4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_invite_share4@2x.png"; sourceTree = "<group>"; };
+		96CFB3C61AF9FAE00078C225 /* RYMyLiteratureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyLiteratureViewController.h; sourceTree = "<group>"; };
+		96CFB3C71AF9FAE00078C225 /* RYMyLiteratureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyLiteratureViewController.m; sourceTree = "<group>"; };
+		96CFB3CB1AFA2AF70078C225 /* SlideNavigationContorllerAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimator.h; sourceTree = "<group>"; };
+		96CFB3CC1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorFade.h; sourceTree = "<group>"; };
+		96CFB3CD1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorFade.m; sourceTree = "<group>"; };
+		96CFB3CE1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorScale.h; sourceTree = "<group>"; };
+		96CFB3CF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorScale.m; sourceTree = "<group>"; };
+		96CFB3D01AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScaleAndFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorScaleAndFade.h; sourceTree = "<group>"; };
+		96CFB3D11AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScaleAndFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorScaleAndFade.m; sourceTree = "<group>"; };
+		96CFB3D21AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorSlide.h; sourceTree = "<group>"; };
+		96CFB3D31AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorSlide.m; sourceTree = "<group>"; };
+		96CFB3D41AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationContorllerAnimatorSlideAndFade.h; sourceTree = "<group>"; };
+		96CFB3D51AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationContorllerAnimatorSlideAndFade.m; sourceTree = "<group>"; };
+		96CFB3D71AFA2AF70078C225 /* menu-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-button.png"; sourceTree = "<group>"; };
+		96CFB3D81AFA2AF70078C225 /* menu-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-button@2x.png"; sourceTree = "<group>"; };
+		96CFB3D91AFA2AF70078C225 /* SlideNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideNavigationController.h; sourceTree = "<group>"; };
+		96CFB3DA1AFA2AF70078C225 /* SlideNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideNavigationController.m; sourceTree = "<group>"; };
 		96D2380B1AF721ED00936721 /* ic_cell_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_cell_selected@2x.png"; sourceTree = "<group>"; };
 		96D2380C1AF721ED00936721 /* ic_cell_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_cell_unselected@2x.png"; sourceTree = "<group>"; };
 		96D2380F1AF74AA000936721 /* register_company@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "register_company@2x.png"; sourceTree = "<group>"; };
@@ -708,15 +749,6 @@
 			path = SWTableViewCell;
 			sourceTree = "<group>";
 		};
-		96C5AEF11AF0B8D400F9195A /* YRSideViewController */ = {
-			isa = PBXGroup;
-			children = (
-				96C5AEF21AF0B8D400F9195A /* YRSideViewController.h */,
-				96C5AEF31AF0B8D400F9195A /* YRSideViewController.m */,
-			);
-			path = YRSideViewController;
-			sourceTree = "<group>";
-		};
 		96C610831ADCE0D400862E0E /* NYSegmentedControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -803,6 +835,8 @@
 		96C7ACD01AD67B3400FA2E22 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				96CFB3B61AF9C0090078C225 /* GridMenuView.h */,
+				96CFB3B71AF9C0090078C225 /* GridMenuView.m */,
 				96C7ACD11AD67BD200FA2E22 /* Utils.h */,
 				96C7ACD21AD67BD200FA2E22 /* Utils.m */,
 				96C7ACDA1AD683E500FA2E22 /* ShowBox.h */,
@@ -896,7 +930,7 @@
 		96CC39831AD4DE2F00D5D157 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				96C5AEF11AF0B8D400F9195A /* YRSideViewController */,
+				96CFB3C91AFA2AF70078C225 /* SlideViewController */,
 				96C4C4071AE7ABF600151A84 /* NSDictionary+Additions */,
 				96C4C3DA1AE77CC700151A84 /* IQKeyBoardManager */,
 				96C4A5C61AE62236008DCC5B /* Reachability */,
@@ -935,6 +969,44 @@
 			path = MJRefresh;
 			sourceTree = "<group>";
 		};
+		96CFB3C91AFA2AF70078C225 /* SlideViewController */ = {
+			isa = PBXGroup;
+			children = (
+				96CFB3CA1AFA2AF70078C225 /* Animations */,
+				96CFB3D61AFA2AF70078C225 /* Assets */,
+				96CFB3D91AFA2AF70078C225 /* SlideNavigationController.h */,
+				96CFB3DA1AFA2AF70078C225 /* SlideNavigationController.m */,
+			);
+			path = SlideViewController;
+			sourceTree = "<group>";
+		};
+		96CFB3CA1AFA2AF70078C225 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				96CFB3CB1AFA2AF70078C225 /* SlideNavigationContorllerAnimator.h */,
+				96CFB3CC1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorFade.h */,
+				96CFB3CD1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorFade.m */,
+				96CFB3CE1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.h */,
+				96CFB3CF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.m */,
+				96CFB3D01AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScaleAndFade.h */,
+				96CFB3D11AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScaleAndFade.m */,
+				96CFB3D21AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlide.h */,
+				96CFB3D31AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlide.m */,
+				96CFB3D41AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.h */,
+				96CFB3D51AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m */,
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
+		96CFB3D61AFA2AF70078C225 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				96CFB3D71AFA2AF70078C225 /* menu-button.png */,
+				96CFB3D81AFA2AF70078C225 /* menu-button@2x.png */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		96D238131AF759F700936721 /* MyOperation */ = {
 			isa = PBXGroup;
 			children = (
@@ -956,6 +1028,10 @@
 				96CAEDA51AF89FFC0067BC2F /* RYMyInformViewController.m */,
 				96CAEDAA1AF8BBFF0067BC2F /* RYMyInformListViewController.h */,
 				96CAEDAB1AF8BBFF0067BC2F /* RYMyInformListViewController.m */,
+				96CFB3B01AF9B9180078C225 /* RYMyInviteViewController.h */,
+				96CFB3B11AF9B9180078C225 /* RYMyInviteViewController.m */,
+				96CFB3C61AF9FAE00078C225 /* RYMyLiteratureViewController.h */,
+				96CFB3C71AF9FAE00078C225 /* RYMyLiteratureViewController.m */,
 			);
 			path = MyOperation;
 			sourceTree = "<group>";
@@ -963,6 +1039,12 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96CFB3B91AF9C51C0078C225 /* ic_invite_share0@2x.png */,
+				96CFB3BA1AF9C51C0078C225 /* ic_invite_share1@2x.png */,
+				96CFB3BB1AF9C51C0078C225 /* ic_invite_share2@2x.png */,
+				96CFB3BC1AF9C51C0078C225 /* ic_invite_share3@2x.png */,
+				96CFB3BD1AF9C51C0078C225 /* ic_invite_share4@2x.png */,
+				96CFB3B31AF9BC9A0078C225 /* ic_Invite@2x.png */,
 				96CAED9E1AF899100067BC2F /* jifen_img0@2x.png */,
 				96CAED9F1AF899100067BC2F /* jifen_img1@2x.png */,
 				96CAEDA01AF899100067BC2F /* jifen_img2@2x.png */,
@@ -1162,12 +1244,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96CFB3E01AFA2AF70078C225 /* menu-button.png in Resources */,
 				96CAB6171AF1DD4000ECD350 /* user_head_yes@2x.png in Resources */,
 				96D9C9911AE4EFCD00997430 /* cell_partingLine@2x.png in Resources */,
 				96F321491AD50A2700CAFC51 /* Default@2x.png in Resources */,
 				96F321451AD50A2700CAFC51 /* Icon-114@2x.png in Resources */,
 				96F321461AD50A2700CAFC51 /* Icon-72@2x.png in Resources */,
+				96CFB3C11AF9C51C0078C225 /* ic_invite_share3@2x.png in Resources */,
 				96D2382A1AF75E5500936721 /* ic_read_num@2x.png in Resources */,
+				96CFB3BE1AF9C51C0078C225 /* ic_invite_share0@2x.png in Resources */,
 				96CAB6121AF1CE6D00ECD350 /* ic_normalImage_6@2x.png in Resources */,
 				96F321471AD50A2700CAFC51 /* Default-568h@2x.png in Resources */,
 				96C7ACCF1AD679F200FA2E22 /* back_btn_icon@2x.png in Resources */,
@@ -1177,6 +1262,7 @@
 				96C7ACCE1AD679F200FA2E22 /* back_btn_icon_sel@2x.png in Resources */,
 				96CC39C81AD4FF3900D5D157 /* Images-2.xcassets in Resources */,
 				96CAEDA11AF899100067BC2F /* jifen_img0@2x.png in Resources */,
+				96CFB3B41AF9BC9A0078C225 /* ic_Invite@2x.png in Resources */,
 				96CAB6081AF1CE6D00ECD350 /* ic_highlighted_4@2x.png in Resources */,
 				96CAB60B1AF1CE6D00ECD350 /* ic_highlighted_7@2x.png in Resources */,
 				96CAB6111AF1CE6D00ECD350 /* ic_normalImage_5@2x.png in Resources */,
@@ -1196,7 +1282,9 @@
 				96CAB60E1AF1CE6D00ECD350 /* ic_normalImage_2@2x.png in Resources */,
 				96D238311AF76AC000936721 /* ic_showJifen_bg@2x.png in Resources */,
 				96CAB6061AF1CE6D00ECD350 /* ic_highlighted_2@2x.png in Resources */,
+				96CFB3E11AFA2AF70078C225 /* menu-button@2x.png in Resources */,
 				96CAB6071AF1CE6D00ECD350 /* ic_highlighted_3@2x.png in Resources */,
+				96CFB3BF1AF9C51C0078C225 /* ic_invite_share1@2x.png in Resources */,
 				96D238121AF74AA000936721 /* register_personal@2x.png in Resources */,
 				96C4C4061AE77CC700151A84 /* IQKeyboardManager.bundle in Resources */,
 				96C3A9BC1ADFB84D008011D3 /* imgtakephoto.png in Resources */,
@@ -1206,6 +1294,7 @@
 				96C610911ADCE95700862E0E /* register_slider@2x.png in Resources */,
 				96CC39B71AD4E3BB00D5D157 /* MJRefresh.bundle in Resources */,
 				96CAB6091AF1CE6D00ECD350 /* ic_highlighted_5@2x.png in Resources */,
+				96CFB3C01AF9C51C0078C225 /* ic_invite_share2@2x.png in Resources */,
 				96CAB60D1AF1CE6D00ECD350 /* ic_normalImage_1@2x.png in Resources */,
 				96D238331AF77AD600936721 /* ic_bulge@2x.png in Resources */,
 				96F321481AD50A2700CAFC51 /* Default.png in Resources */,
@@ -1218,6 +1307,7 @@
 				96C5AEEC1AF0744400F9195A /* ic_wasteBasket@2x.png in Resources */,
 				96D238111AF74AA000936721 /* register_company@2x.png in Resources */,
 				96CAB60F1AF1CE6D00ECD350 /* ic_normalImage_3@2x.png in Resources */,
+				96CFB3C21AF9C51C0078C225 /* ic_invite_share4@2x.png in Resources */,
 				96CAB6041AF1CE6D00ECD350 /* ic_highlighted_0@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1238,6 +1328,7 @@
 			files = (
 				96C7ACB71AD611FA00FA2E22 /* AFURLSessionManager.m in Sources */,
 				96C7ACD91AD6823E00FA2E22 /* GTMBase64.m in Sources */,
+				96CFB3B21AF9B9180078C225 /* RYMyInviteViewController.m in Sources */,
 				96C5AEFA1AF0C18000F9195A /* RYMyHomeLeftTableViewCell.m in Sources */,
 				96C7ACBC1AD611FA00FA2E22 /* UIImageView+AFNetworking.m in Sources */,
 				96C3A9B51ADFB84D008011D3 /* albumlistTableViewCell.m in Sources */,
@@ -1246,6 +1337,7 @@
 				96C4A5CB1AE62236008DCC5B /* Reachability.m in Sources */,
 				96C7ACBE1AD611FA00FA2E22 /* UIRefreshControl+AFNetworking.m in Sources */,
 				96C7ACB41AD611FA00FA2E22 /* AFURLConnectionOperation.m in Sources */,
+				96CFB3DB1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorFade.m in Sources */,
 				96F321571AD50CC600CAFC51 /* RYNewsViewController.m in Sources */,
 				96C7ACBF1AD611FA00FA2E22 /* UIWebView+AFNetworking.m in Sources */,
 				96D2381E1AF759F700936721 /* RYEditClassifyViewController.m in Sources */,
@@ -1262,6 +1354,7 @@
 				96C4C6AD1AE9E03800D2C1C8 /* UINavigationBar+JSDropShadow.m in Sources */,
 				96F321511AD50A6700CAFC51 /* MJRefreshTableView.m in Sources */,
 				96CD79561AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m in Sources */,
+				96CFB3DE1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlide.m in Sources */,
 				96C6108D1ADCE0D400862E0E /* NYSegmentedControl.m in Sources */,
 				96C3A9DE1ADFB89A008011D3 /* NSData+GIF.m in Sources */,
 				96CC39BA1AD4E3BB00D5D157 /* MJRefreshFooterView.m in Sources */,
@@ -1280,6 +1373,7 @@
 				96C4C4041AE77CC700151A84 /* IQToolbar.m in Sources */,
 				96CC39661AD4DDF100D5D157 /* ViewController.m in Sources */,
 				96D9C9881AE49A7500997430 /* RYRegisterSpecialtyViewController.m in Sources */,
+				96CFB3DF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */,
 				96C7ACBB1AD611FA00FA2E22 /* UIButton+AFNetworking.m in Sources */,
 				96F321531AD50A6700CAFC51 /* MJScrollPageView.m in Sources */,
 				96C3A9DD1ADFB89A008011D3 /* MKAnnotationView+WebCache.m in Sources */,
@@ -1307,8 +1401,8 @@
 				96C56CFD1AEE158400B127FF /* SWCellScrollView.m in Sources */,
 				96D238281AF75BB500936721 /* RYMyShareTableViewCell.m in Sources */,
 				96C3A9B31ADFB84D008011D3 /* imagesView.m in Sources */,
+				96CFB3B81AF9C0090078C225 /* GridMenuView.m in Sources */,
 				96C7ACBA1AD611FA00FA2E22 /* UIAlertView+AFNetworking.m in Sources */,
-				96C5AEF41AF0B8D400F9195A /* YRSideViewController.m in Sources */,
 				96C3A9B41ADFB84D008011D3 /* albumListsViewController.m in Sources */,
 				96CAEDA91AF8A7470067BC2F /* RYMyInformTableViewCell.m in Sources */,
 				96CC39BE1AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m in Sources */,
@@ -1328,7 +1422,9 @@
 				96CAEDAC1AF8BBFF0067BC2F /* RYMyInformListViewController.m in Sources */,
 				96F321521AD50A6700CAFC51 /* MJScrollBarView.m in Sources */,
 				96C4C3FF1AE77CC700151A84 /* IQKeyboardReturnKeyHandler.m in Sources */,
+				96CFB3DD1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */,
 				96C7ACB51AD611FA00FA2E22 /* AFURLRequestSerialization.m in Sources */,
+				96CFB3E21AFA2AF70078C225 /* SlideNavigationController.m in Sources */,
 				96C3A9E21ADFB89A008011D3 /* SDWebImageDownloader.m in Sources */,
 				96C4C40A1AE7ABF600151A84 /* NSDictionary+Additions.m in Sources */,
 				96D9C98C1AE4CD4200997430 /* RYRegisterData.m in Sources */,
@@ -1338,9 +1434,11 @@
 				96C7ACAF1AD611FA00FA2E22 /* AFHTTPRequestOperation.m in Sources */,
 				96C7ACCB1AD665EE00FA2E22 /* TextFieldWithLabel.m in Sources */,
 				96C7ACB91AD611FA00FA2E22 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
+				96CFB3C81AF9FAE00078C225 /* RYMyLiteratureViewController.m in Sources */,
 				96C7ACB61AD611FA00FA2E22 /* AFURLResponseSerialization.m in Sources */,
 				96C3A9E41ADFB89A008011D3 /* SDWebImageManager.m in Sources */,
 				96C3A9B91ADFB84D008011D3 /* imgCollectionViewCell.m in Sources */,
+				96CFB3DC1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.m in Sources */,
 				96CC39B91AD4E3BB00D5D157 /* MJRefreshConst.m in Sources */,
 				96C56D0A1AEE254000B127FF /* RYEnshrineTableViewCell.m in Sources */,
 				96D238201AF759F700936721 /* RYEnshrineSubClassifyViewController.m in Sources */,

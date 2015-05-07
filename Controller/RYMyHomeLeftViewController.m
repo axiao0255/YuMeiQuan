@@ -9,6 +9,16 @@
 #import "RYMyHomeLeftViewController.h"
 #import "RYMyHomeLeftTableViewCell.h"
 
+
+#import "RYMyCollectViewController.h"
+#import "RYMyEnshrineViewController.h"
+#import "RYMyShareViewController.h"
+#import "RYMyJiFenViewController.h"
+#import "RYMyInformViewController.h"
+#import "RYMyInviteViewController.h"
+#import "RYMyLiteratureViewController.h"
+
+
 @interface RYMyHomeLeftViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
     UITableView      *theTableView;
@@ -125,7 +135,41 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ( indexPath.row != 0 ) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        UIViewController *vc;
+        switch ( indexPath.row ) {
+            case 1: // 通知
+                vc = [[RYMyInformViewController alloc] init];
+                break;
+            case 2: // 收藏
+                vc = [[RYMyEnshrineViewController alloc] init];
+                break;
+            case 3: // 关注
+                vc = [[RYMyCollectViewController alloc] init];
+                break;
+            case 4: // 积分
+                vc = [[RYMyJiFenViewController alloc] init];
+                break;
+            case 5: // 分享记录
+                vc = [[RYMyShareViewController alloc] init];
+                break;
+            case 6: // 邀请注册
+                vc = [[RYMyInviteViewController alloc] init];
+                break;
+            case 7: // 文献查询
+                vc = [[RYMyLiteratureViewController alloc] init];
+                break;
+            case 8: // 问答记录
+                vc = [[UIViewController alloc] init];
+                break;
+            default:
+                break;
+        }
+        [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:vc
+                                                                 withSlideOutAnimation:NO
+                                                                         andCompletion:nil];
+    }
 }
 
 #pragma mark ----- 按钮点击事件

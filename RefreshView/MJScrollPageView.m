@@ -42,6 +42,10 @@
         _totlePages = [[NSMutableArray alloc] init];
     }
     mCurrentPage = 0;
+    // ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
+    _scrollView.bounces = NO;
+    [_scrollView.panGestureRecognizer addTarget:self action:@selector(paningGestureReceive:)];
+    // ---------------- 为了解决 滚动出侧边拦的手势冲突 end——————————————————————
     [self addSubview:_scrollView];
     
 }
@@ -60,7 +64,6 @@
         [_dataSources addObject:[NSMutableArray array]];
     }
     [self headerRereshingData];
-    
     [_scrollView setContentSize:CGSizeMake(self.frame.size.width * aNumerOfTables, self.frame.size.height)];
 }
 
@@ -124,7 +127,33 @@
     [_scrollView setContentOffset:point animated:YES];
 }
 
+// ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
+- (void)paningGestureReceive:(UIPanGestureRecognizer *)recoginzer
+{
+    if ( canShowView ) {
+        if ( [self.delegate respondsToSelector:@selector(handlePanGesture:)] ) {
+            [self.delegate handlePanGesture:recoginzer];
+        }
+    }
+}
+// ---------------- 为了解决 滚动出侧边拦的手势冲突 end——————————————————————
+
+
 #pragma mark - UIScrollViewDelegate
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+     // ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
+    CGFloat offx = scrollView.contentOffset.x;
+    if ( offx <= 0 && offx >= lastOffx ) {
+        canShowView = YES;
+    }
+    else{
+        canShowView = NO;
+    }
+    // ---------------- 为了解决 滚动出侧边拦的手势冲突 end——————————————————————
+}
+
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
 //    NSInteger page = (_scrollView.contentOffset.x+self.frame.size.width/2.0) / self.frame.size.width;
@@ -146,7 +175,23 @@
 //    if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
 //        [self.delegate freshContentTableAtIndex:mCurrentPage isHead:YES];
 //    }
+    // ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
+    CGFloat offx = scrollView.contentOffset.x;
+    if ( offx <= 0 ) {
+        canShowView = YES;
+    }
+    else{
+        canShowView = NO;
+    }
+    lastOffx = offx;
+    // ----------------为了解决 滚动出侧边拦的手势冲突 end——————————————————————
 }
+
+-(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+//    NSLog(@"结束 ：%ld",self.panGesture.state);
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     NSInteger page = (_scrollView.contentOffset.x+self.frame.size.width/2.0) / self.frame.size.width;

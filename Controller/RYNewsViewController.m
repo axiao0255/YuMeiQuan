@@ -11,11 +11,8 @@
 #import "NetManager.h"
 #import "RYLoginViewController.h"
 
-#import "RYMyCollectViewController.h"
-#import "RYMyEnshrineViewController.h"
-#import "RYMyShareViewController.h"
-#import "RYMyJiFenViewController.h"
-#import "RYMyInformViewController.h"
+#import "RYMyHomeLeftViewController.h"
+#import "SlideNavigationController.h"
 
 /**
  *  随机数据
@@ -23,13 +20,16 @@
 #define MJRandomData [NSString stringWithFormat:@"随机数据---%d", arc4random_uniform(1000000)]
 
 
-@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate>
+@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate>
 {
     MJScrollBarView    *scrollBarView;
     MJScrollPageView   *scrollPageView;
     NSInteger          currentIndex;
     
     newsBarData        *newsData;
+    
+
+    
     
 }
 
@@ -74,13 +74,11 @@
     self.navigationItem.leftBarButtonItem = leftItem;
 }
 
+#pragma mark 点击滑出侧边拦
 - (void)leftButtonClick:(id)sender
 {
     NSLog(@"我的");
-    AppDelegate *delegate=(AppDelegate*)[[UIApplication sharedApplication]delegate];
-    YRSideViewController *sideViewController=[delegate sideViewController];
-    [sideViewController showLeftViewController:true];
-
+    [[SlideNavigationController sharedInstance] openMenu:MenuLeft withCompletion:nil];
 }
 
 /**
@@ -99,66 +97,66 @@
                                     TITLEKEY:@"头条",
                                     TITLEWIDTH:[NSNumber numberWithFloat:60]
                                     },
-//                                  @{NOMALKEY: @"normal.png",
-//                                    HEIGHTKEY:@"helight.png",
-//                                    TITLEKEY:@"推荐",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"娱乐",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"体育",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"科技",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"轻松一刻",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:40*2]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"新闻",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"美女",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"帅哥",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"帅哥",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"帅哥",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"帅哥",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
-//                                  @{NOMALKEY: @"normal",
-//                                    HEIGHTKEY:@"helight",
-//                                    TITLEKEY:@"帅哥",
-//                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
-//                                    },
+                                  @{NOMALKEY: @"normal.png",
+                                    HEIGHTKEY:@"helight.png",
+                                    TITLEKEY:@"推荐",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"娱乐",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"体育",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"科技",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"轻松一刻",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:40*2]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"新闻",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"美女",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"帅哥",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"帅哥",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"帅哥",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"帅哥",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
+                                  @{NOMALKEY: @"normal",
+                                    HEIGHTKEY:@"helight",
+                                    TITLEKEY:@"帅哥",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:60]
+                                    },
                                   ];
     
     newsData = [[newsBarData alloc] init];
@@ -248,6 +246,7 @@
     });
 }
 
+
 - (NSInteger)mScreollTabel:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
@@ -276,27 +275,24 @@
 {
     NSLog(@"indexPath :: %@",indexPath);
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if ( indexPath.row == 0 ) {
-        RYMyCollectViewController *vc = [[RYMyCollectViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if ( indexPath.row == 1 ){
-        RYMyEnshrineViewController *vc = [[RYMyEnshrineViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if ( indexPath.row == 2 ){
-        RYMyShareViewController *vc = [[RYMyShareViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if ( indexPath.row == 3 ){
-        RYMyJiFenViewController *vc = [[RYMyJiFenViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if ( indexPath.row == 4 ){
-        RYMyInformViewController *vc = [[RYMyInformViewController alloc] init];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
- }
+}
+
+#pragma mark    滑出侧边拦，需要实现该代理方法
+-(BOOL)slideNavigationControllerShouldDisplayLeftMenu
+{
+    return YES;
+}
+
+#pragma mark MJScrollPageView 手势代理
+// ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
+- (void)handlePanGesture:(UIPanGestureRecognizer *)gesture
+{
+    [[SlideNavigationController sharedInstance]panDetected:gesture];
+}
+// ---------------- 为了解决 滚动出侧边拦的手势冲突 end——————————————————————
+
+
+
 
 
 @end

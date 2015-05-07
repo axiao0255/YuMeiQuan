@@ -24,11 +24,17 @@
 @optional
 - (void)mScreollTabel:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 
+// ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
+- (void)handlePanGesture:(UIPanGestureRecognizer *)gesture;
+// ---------------- 为了解决 滚动出侧边拦的手势冲突 end——————————————————————
+
 @end
 
 @interface MJScrollPageView : UIView <UIScrollViewDelegate,MJRefershTableViewDelegate>
 {
-     NSInteger mCurrentPage;
+    NSInteger  mCurrentPage;
+    BOOL       canShowView;
+    CGFloat    lastOffx;
 }
 
 @property (nonatomic,strong) NSMutableArray              *totlePages;

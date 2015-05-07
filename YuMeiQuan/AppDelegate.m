@@ -14,6 +14,8 @@
 
 #import "RYMyHomeLeftViewController.h"
 
+#import "SlideNavigationContorllerAnimatorSlide.h"
+
 @interface AppDelegate ()<UINavigationControllerDelegate>
 
 @end
@@ -35,21 +37,25 @@
     
     
     RYNewsViewController *newsVC = [[RYNewsViewController alloc] init];
-    self.nav = [[UINavigationController alloc] initWithRootViewController:newsVC];
-    // 增加阴影
-    [self.nav.navigationBar dropShadowWithOffset:CGSizeMake(0, 4) radius:1 color:[UIColor blackColor] opacity:0.1];
-    self.nav.delegate = self;
-
     RYMyHomeLeftViewController *homeLeftVC = [[RYMyHomeLeftViewController alloc] init];
-    _sideViewController=[[YRSideViewController alloc]initWithNibName:nil bundle:nil];
-    _sideViewController.rootViewController = self.nav;
-    _sideViewController.leftViewController = homeLeftVC;
-    _sideViewController.leftViewShowWidth=220;
-    _sideViewController.showBoundsShadow = YES;
-    _sideViewController.needSwipeShowMenu=YES;//默认开启的可滑动展示
 
+    self.slideNav = [[SlideNavigationController alloc] initWithRootViewController:newsVC];
+    // 增加阴影
+    [self.slideNav.navigationBar dropShadowWithOffset:CGSizeMake(0, 4) radius:1 color:[UIColor blackColor] opacity:0.1];
+
+    // 设置侧边栏的宽度
+    self.slideNav.portraitSlideOffset = 100;
+    self.slideNav.leftMenu = homeLeftVC;
+    self.slideNav.delegate = self;
     
-    [self.window setRootViewController:_sideViewController];
+    id <SlideNavigationContorllerAnimator> revealAnimator = [[SlideNavigationContorllerAnimatorSlide alloc] init];
+    self.slideNav.menuRevealAnimator = revealAnimator;
+    self.slideNav.menuRevealAnimationDuration = 0.19;
+    self.slideNav.enableShadow = YES;
+    self.slideNav.enableSwipeGesture = YES;
+    
+    [self.window setRootViewController:self.slideNav];
+    
     [self.window makeKeyAndVisible];
     return YES;
 }

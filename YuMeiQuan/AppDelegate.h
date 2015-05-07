@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YRSideViewController.h"
+#import "SlideNavigationController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow               *window;
-@property (strong, nonatomic) UINavigationController *nav;
-@property (strong, nonatomic) YRSideViewController *sideViewController;
+
+@property (strong, nonatomic) SlideNavigationController *slideNav;
 
 
 @end

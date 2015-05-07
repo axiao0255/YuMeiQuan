@@ -42,7 +42,7 @@
             mScrollView.showsHorizontalScrollIndicator = NO;
             mScrollView.showsVerticalScrollIndicator = NO;
             mScrollView.backgroundColor = [UIColor redColor];
-        }
+           }
         // 初始化 itemArray
         if (mItemInfoArray == nil) {
             mItemInfoArray = [[NSMutableArray alloc]init];
@@ -52,6 +52,8 @@
     }
     return self;
 }
+
+
 /**
  *  创建菜单
  *
@@ -152,6 +154,5 @@
 -(void)dealloc{
     [mButtonArray removeAllObjects],mButtonArray = nil;
 }
-
 
 @end
