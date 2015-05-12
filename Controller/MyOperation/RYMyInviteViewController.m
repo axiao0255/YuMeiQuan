@@ -8,7 +8,8 @@
 
 #import "RYMyInviteViewController.h"
 
-@interface RYMyInviteViewController ()<GridMenuViewDelegate>
+
+@interface RYMyInviteViewController ()<GridMenuViewDelegate,UMSocialUIDelegate>
 {
     NSArray  *ic_invite_array;
 }
@@ -22,7 +23,6 @@
     self.title = @"邀请注册";
     self.view.backgroundColor = [Utils  getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
     ic_invite_array = [self setIcons];
-    NSLog(@"%@",ic_invite_array);
     [self initSubviews];
 }
 
@@ -73,7 +73,7 @@
                                                           imgUpArray:[ic_invite_array objectAtIndex:0]
                                                         imgDownArray:[ic_invite_array objectAtIndex:0]
                                                            perRowNum:3];
-    invite_View1.tag = 200;
+    invite_View1.tag = 100;
     invite_View1.delegate = self;
     invite_View1.backgroundColor = [UIColor clearColor];
     [view addSubview:invite_View1];
@@ -91,12 +91,55 @@
 #pragma mark - GridMenuViewDelegate
 -(void)GridMenuViewButtonSelected:(int)btntag selfTag:(int)selftag
 {
+     NSUInteger index;
     if ( selftag == 100 ) {
-        NSLog(@"%d",btntag);
+        index = btntag;
     }
-    else if ( selftag == 200 ){
-        NSLog(@"%d",btntag);
+    else {
+        if ( btntag == 0 ) {
+            index = 3;
+        }
+        else{
+            index = 4;
+        }
     }
+    [self shareWithIndex:index];
 }
+
+-(void)shareWithIndex:(NSUInteger) index
+{    
+    //设置微信好友或者朋友圈的分享url,下面是微信好友，微信朋友圈对应wechatTimelineData
+    NSString *snsType = UMShareToWechatSession;
+    switch ( index ) {
+        case 0:
+            snsType = UMShareToWechatSession;
+            break;
+        case 1:
+            snsType = UMShareToWechatTimeline;
+            break;
+        case 2:
+            snsType = UMShareToQQ;
+            break;
+
+        case 3:
+            snsType = UMShareToSms;
+            break;
+
+        case 4:
+            snsType = UMShareToSina;
+            break;
+        default:
+            break;
+    }
+//    NSString *contentText = [NSString stringWithFormat:@" %@ %@ （医美圈·医学美容时讯）",self.bodyModel.subject,shareUrl];
+    NSString *contentText = @"分享哈哈哈";
+    [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[snsType] content:contentText image:nil location:nil urlResource:nil presentedController:self completion:^(UMSocialResponseEntity *response){
+        if (response.responseCode == UMSResponseCodeSuccess) {
+            [ShowBox showSuccess:@"分享成功"];
+        }
+    }];
+}
+
+
 
 @end

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "SlideNavigationController.h"
 
+#define    UMAPPKEY  @"55501bca67e58eb401006e3a"
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow               *window;

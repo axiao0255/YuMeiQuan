@@ -11,13 +11,23 @@
 #import "UINavigationBar+JSDropShadow.h"
 
 #import "RYLoginViewController.h"
-
 #import "RYMyHomeLeftViewController.h"
-
 #import "SlideNavigationContorllerAnimatorSlide.h"
 
-@interface AppDelegate ()<UINavigationControllerDelegate>
+#import <TencentOpenAPI/TencentOAuth.h>
+#import "UMSocialWechatHandler.h"
+#import "UMSocialQQHandler.h"
+#import "UMSocialSinaHandler.h"
+#import "UMSocialSnsService.h"
+#import "UMSocialData.h"
 
+
+@interface AppDelegate ()<UINavigationControllerDelegate>
+{
+    NSString         *appNewVersionUrl;
+//    TencentOAuth     *_tencentOAuth;
+//    NSMutableArray   *_permissions;
+}
 @end
 
 @implementation AppDelegate
@@ -26,8 +36,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
-    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     UIImage *topbkimg= [UIImage imageNamed:@"navigationbar.png"];
@@ -35,6 +43,8 @@
     [[UINavigationBar appearance] setTitleTextAttributes:@{UITextAttributeTextColor : [UIColor whiteColor] , UITextAttributeFont : [UIFont boldSystemFontOfSize:18]}];
     [UINavigationBar appearance].shadowImage = [UIImage new];
     
+    //注册友盟
+    [self setupUM];
     
     RYNewsViewController *newsVC = [[RYNewsViewController alloc] init];
     RYMyHomeLeftViewController *homeLeftVC = [[RYMyHomeLeftViewController alloc] init];
@@ -42,18 +52,15 @@
     self.slideNav = [[SlideNavigationController alloc] initWithRootViewController:newsVC];
     // 增加阴影
     [self.slideNav.navigationBar dropShadowWithOffset:CGSizeMake(0, 4) radius:1 color:[UIColor blackColor] opacity:0.1];
-
     // 设置侧边栏的宽度
     self.slideNav.portraitSlideOffset = 100;
     self.slideNav.leftMenu = homeLeftVC;
     self.slideNav.delegate = self;
-    
     id <SlideNavigationContorllerAnimator> revealAnimator = [[SlideNavigationContorllerAnimatorSlide alloc] init];
     self.slideNav.menuRevealAnimator = revealAnimator;
     self.slideNav.menuRevealAnimationDuration = 0.19;
     self.slideNav.enableShadow = YES;
     self.slideNav.enableSwipeGesture = YES;
-    
     [self.window setRootViewController:self.slideNav];
     
     [self.window makeKeyAndVisible];
@@ -95,18 +102,60 @@
     viewController.navigationItem.backBarButtonItem = back;
 }
 
-//-(UIStatusBarStyle)preferredStatusBarStyle
-//{
-//    return UIStatusBarStyleLightContent;
-//}
-//
-//- (BOOL)prefersStatusBarHidden
-//
-//{
-//    
-//    return YES;
-//    
-//}
+- (void)setupUM
+{
+    [UMSocialData setAppKey:UMAPPKEY];
+    [MobClick startWithAppkey:UMAPPKEY];
+//    [MobClick checkUpdate];
+//    [MobClick checkUpdateWithDelegate:self selector:@selector(update:)];
+    [MobClick setBackgroundTaskEnabled:NO];
+    [UMSocialWechatHandler setWXAppId:@"wxed55f1b1544af9d0" appSecret:@"34a68e0b156af2cc96dda2de53e03702" url:nil];
+    [UMSocialQQHandler setQQWithAppId:@"1101846072" appKey:@"yNSk5taezBe4HUOB" url:nil];
+    [UMSocialSinaHandler openSSOWithRedirectURL:nil];
+    [UMSocialQQHandler setSupportWebView:YES];
+}
+
+/**
+ 这里处理新浪微博SSO授权之后跳转回来，和微信分享完成之后跳转回来
+ */
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    return  [UMSocialSnsService handleOpenURL:url];
+}
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation
+{
+    return  [UMSocialSnsService handleOpenURL:url];
+}
+
+
+#pragma mark - 程序更新的处理
+- (void)update:(NSDictionary *)info
+{
+    if (info == nil || ![info isKindOfClass:[NSDictionary class]])
+    {
+        return;
+    }
+    BOOL isNeedUpdate = [info getBoolValueForKey:@"update" defaultValue:NO];
+    if (isNeedUpdate)//需要跟新的情况
+    {
+        NSString *currentVersion = [info getStringValueForKey:@"current_version" defaultValue:@""];//当前的版本
+        NSString *updateLog = [info getStringValueForKey:@"update_log" defaultValue:@""];//更新日志
+        NSString *newVersion = [info getStringValueForKey:@"version" defaultValue:@""];//最新版本
+        appNewVersionUrl = [info getStringValueForKey:@"path" defaultValue:@""];
+        
+        NSString *message = [NSString stringWithFormat:@"最新版本：%@\n当前版本：%@\n更新内容：%@",newVersion,currentVersion,updateLog];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"发现新版本！" message:message delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去更新", nil];
+        [alertView setTag:1000];
+        [alertView show];
+    }
+    else//
+    {
+        
+    }
+}
 
 
 @end

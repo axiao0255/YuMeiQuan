@@ -14,6 +14,9 @@
 #import "RYMyHomeLeftViewController.h"
 #import "SlideNavigationController.h"
 
+#import "RYArticleViewController.h"
+#import "RYCorporateHomePageViewController.h"
+
 /**
  *  随机数据
  */
@@ -25,12 +28,7 @@
     MJScrollBarView    *scrollBarView;
     MJScrollPageView   *scrollPageView;
     NSInteger          currentIndex;
-    
     newsBarData        *newsData;
-    
-
-    
-    
 }
 
 @property (strong, nonatomic) NSMutableArray *fakeData;
@@ -273,8 +271,15 @@
 
 - (void)mScreollTabel:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"indexPath :: %@",indexPath);
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ( indexPath.row <= 3 ) {
+        RYArticleViewController *vc = [[RYArticleViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 #pragma mark    滑出侧边拦，需要实现该代理方法
