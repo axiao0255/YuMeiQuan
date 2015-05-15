@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MJRefresh.h"
 
-@protocol MJRefershTableViewDelegate <UITableViewDelegate,UITableViewDataSource>
+@protocol MJRefershTableViewDelegate <NSObject>
 
 @required
 /**
@@ -26,7 +26,7 @@
 
 @interface MJRefreshTableView : UITableView
 
-@property (weak  ,nonatomic)id<MJRefershTableViewDelegate>delegate;
+@property (weak  ,nonatomic)id<MJRefershTableViewDelegate>delegateRefersh;
 
 /**
  *  初始化方法

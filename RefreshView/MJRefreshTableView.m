@@ -49,8 +49,8 @@
 - (void)footerRereshing
 {
      NSLog(@"脚 开始刷新");
-    if ( [self.delegate respondsToSelector:@selector(footerRereshingData)] ) {
-        [self.delegate footerRereshingData];
+    if ( [self.delegateRefersh respondsToSelector:@selector(footerRereshingData)] ) {
+        [self.delegateRefersh footerRereshingData];
     }
 }
 /**
@@ -59,8 +59,8 @@
 - (void)headerRereshing
 {
     NSLog(@"头 开始刷新");
-    if ( [self.delegate respondsToSelector:@selector(headerRereshingData)] ) {
-        [self.delegate headerRereshingData];
+    if ( [self.delegateRefersh respondsToSelector:@selector(headerRereshingData)] ) {
+        [self.delegateRefersh headerRereshingData];
     }
 }
 

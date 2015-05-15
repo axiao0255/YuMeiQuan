@@ -76,6 +76,9 @@
 		96C4C6AF1AE9F5FF00D2C1C8 /* input_text_bk_long@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C4C6AE1AE9F5FF00D2C1C8 /* input_text_bk_long@2x.png */; };
 		96C51A681AD75FC700C5374D /* button_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C51A671AD75FC700C5374D /* button_up@2x.png */; };
 		96C51A6D1AD76D7900C5374D /* RYRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C51A6C1AD76D7900C5374D /* RYRegisterViewController.m */; };
+		96C52FCA1B05E01C007BC747 /* RYPodcastPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C52FC91B05E01C007BC747 /* RYPodcastPage.m */; };
+		96C52FCD1B05EAED007BC747 /* RYMoviePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C52FCC1B05EAED007BC747 /* RYMoviePlayerViewController.m */; };
+		96C52FCF1B05EB54007BC747 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C52FCE1B05EB54007BC747 /* MediaPlayer.framework */; };
 		96C56CFC1AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF11AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m */; };
 		96C56CFD1AEE158400B127FF /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF31AEE158400B127FF /* SWCellScrollView.m */; };
 		96C56CFE1AEE158400B127FF /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF51AEE158400B127FF /* SWLongPressGestureRecognizer.m */; };
@@ -161,6 +164,12 @@
 		96CAEDA91AF8A7470067BC2F /* RYMyInformTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CAEDA81AF8A7470067BC2F /* RYMyInformTableViewCell.m */; };
 		96CAEDAC1AF8BBFF0067BC2F /* RYMyInformListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CAEDAB1AF8BBFF0067BC2F /* RYMyInformListViewController.m */; };
 		96CAEDAF1AF8BF490067BC2F /* RYMyInformListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CAEDAE1AF8BF490067BC2F /* RYMyInformListTableViewCell.m */; };
+		96CC354C1B0442DC00EFA27A /* RYNewsPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC354B1B0442DC00EFA27A /* RYNewsPage.m */; };
+		96CC35501B0450D300EFA27A /* RYNewsPageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC354F1B0450D300EFA27A /* RYNewsPageTableViewCell.m */; };
+		96CC35521B04713600EFA27A /* ic_bigPic_defaule@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CC35511B04713600EFA27A /* ic_bigPic_defaule@2x.png */; };
+		96CC35541B0473CB00EFA27A /* ic_transparency@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CC35531B0473CB00EFA27A /* ic_transparency@2x.png */; };
+		96CC35571B048DD700EFA27A /* RYHuiXun.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC35561B048DD700EFA27A /* RYHuiXun.m */; };
+		96CC355A1B04938800EFA27A /* RYHuiXunTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC35591B04938800EFA27A /* RYHuiXunTableViewCell.m */; };
 		96CC39601AD4DDF100D5D157 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC395F1AD4DDF100D5D157 /* main.m */; };
 		96CC39631AD4DDF100D5D157 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39621AD4DDF100D5D157 /* AppDelegate.m */; };
 		96CC39661AD4DDF100D5D157 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39651AD4DDF100D5D157 /* ViewController.m */; };
@@ -177,6 +186,18 @@
 		96CC39BE1AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39B31AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m */; };
 		96CC39BF1AD4E3BB00D5D157 /* UIView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39B51AD4E3BB00D5D157 /* UIView+MJExtension.m */; };
 		96CC39C81AD4FF3900D5D157 /* Images-2.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96CC39C71AD4FF3900D5D157 /* Images-2.xcassets */; };
+		96CD08AE1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD08AD1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.m */; };
+		96CD08B01B02E81100088B1E /* ic_arrow_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD08AF1B02E81100088B1E /* ic_arrow_right@2x.png */; };
+		96CD08B31B03001300088B1E /* ic_answer_pic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD08B11B03001300088B1E /* ic_answer_pic@2x.png */; };
+		96CD08B41B03001300088B1E /* ic_integrator_pic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD08B21B03001300088B1E /* ic_integrator_pic@2x.png */; };
+		96CD08B71B0324F300088B1E /* RYCorporateHomePageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD08B61B0324F300088B1E /* RYCorporateHomePageData.m */; };
+		96CD08B91B032BDE00088B1E /* ic_logo_default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD08B81B032BDE00088B1E /* ic_logo_default@2x.png */; };
+		96CD08BB1B0331AC00088B1E /* ic_direct@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD08BA1B0331AC00088B1E /* ic_direct@2x.png */; };
+		96CD08BD1B0335B000088B1E /* ic_pic_default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD08BC1B0335B000088B1E /* ic_pic_default@2x.png */; };
+		96CD08C01B033CD300088B1E /* RYCorporateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD08BF1B033CD300088B1E /* RYCorporateViewController.m */; };
+		96CD08C31B03438F00088B1E /* RYCorporateTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD08C21B03438F00088B1E /* RYCorporateTableViewCell.m */; };
+		96CD08C61B03497800088B1E /* RYCorporateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD08C51B03497800088B1E /* RYCorporateModel.m */; };
+		96CD08C81B035D9D00088B1E /* ic_helight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD08C71B035D9D00088B1E /* ic_helight@2x.png */; };
 		96CD79561AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */; };
 		96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */; };
 		96CD795B1AE8EE1E00DDC1D8 /* navigationbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */; };
@@ -374,6 +395,11 @@
 		96C51A6A1AD7675D00C5374D /* macro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = macro.h; sourceTree = "<group>"; };
 		96C51A6B1AD76D7900C5374D /* RYRegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterViewController.h; sourceTree = "<group>"; };
 		96C51A6C1AD76D7900C5374D /* RYRegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYRegisterViewController.m; sourceTree = "<group>"; };
+		96C52FC81B05E01C007BC747 /* RYPodcastPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYPodcastPage.h; sourceTree = "<group>"; };
+		96C52FC91B05E01C007BC747 /* RYPodcastPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYPodcastPage.m; sourceTree = "<group>"; };
+		96C52FCB1B05EAED007BC747 /* RYMoviePlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMoviePlayerViewController.h; sourceTree = "<group>"; };
+		96C52FCC1B05EAED007BC747 /* RYMoviePlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMoviePlayerViewController.m; sourceTree = "<group>"; };
+		96C52FCE1B05EB54007BC747 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		96C56CF01AEE158400B127FF /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
 		96C56CF11AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
 		96C56CF21AEE158400B127FF /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
@@ -521,6 +547,16 @@
 		96CAEDAB1AF8BBFF0067BC2F /* RYMyInformListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyInformListViewController.m; sourceTree = "<group>"; };
 		96CAEDAD1AF8BF490067BC2F /* RYMyInformListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyInformListTableViewCell.h; sourceTree = "<group>"; };
 		96CAEDAE1AF8BF490067BC2F /* RYMyInformListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyInformListTableViewCell.m; sourceTree = "<group>"; };
+		96CC354A1B0442DC00EFA27A /* RYNewsPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYNewsPage.h; sourceTree = "<group>"; };
+		96CC354B1B0442DC00EFA27A /* RYNewsPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYNewsPage.m; sourceTree = "<group>"; };
+		96CC354E1B0450D300EFA27A /* RYNewsPageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYNewsPageTableViewCell.h; sourceTree = "<group>"; };
+		96CC354F1B0450D300EFA27A /* RYNewsPageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYNewsPageTableViewCell.m; sourceTree = "<group>"; };
+		96CC35511B04713600EFA27A /* ic_bigPic_defaule@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_bigPic_defaule@2x.png"; sourceTree = "<group>"; };
+		96CC35531B0473CB00EFA27A /* ic_transparency@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_transparency@2x.png"; sourceTree = "<group>"; };
+		96CC35551B048DD700EFA27A /* RYHuiXun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYHuiXun.h; sourceTree = "<group>"; };
+		96CC35561B048DD700EFA27A /* RYHuiXun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYHuiXun.m; sourceTree = "<group>"; };
+		96CC35581B04938800EFA27A /* RYHuiXunTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYHuiXunTableViewCell.h; sourceTree = "<group>"; };
+		96CC35591B04938800EFA27A /* RYHuiXunTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYHuiXunTableViewCell.m; sourceTree = "<group>"; };
 		96CC395A1AD4DDF100D5D157 /* YuMeiQuan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YuMeiQuan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96CC395E1AD4DDF100D5D157 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96CC395F1AD4DDF100D5D157 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -551,6 +587,23 @@
 		96CC39B41AD4E3BB00D5D157 /* UIView+MJExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MJExtension.h"; sourceTree = "<group>"; };
 		96CC39B51AD4E3BB00D5D157 /* UIView+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MJExtension.m"; sourceTree = "<group>"; };
 		96CC39C71AD4FF3900D5D157 /* Images-2.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Images-2.xcassets"; sourceTree = "<group>"; };
+		96CD08AC1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCorporateHomePageTableViewCell.h; sourceTree = "<group>"; };
+		96CD08AD1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCorporateHomePageTableViewCell.m; sourceTree = "<group>"; };
+		96CD08AF1B02E81100088B1E /* ic_arrow_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_arrow_right@2x.png"; sourceTree = "<group>"; };
+		96CD08B11B03001300088B1E /* ic_answer_pic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_answer_pic@2x.png"; sourceTree = "<group>"; };
+		96CD08B21B03001300088B1E /* ic_integrator_pic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_integrator_pic@2x.png"; sourceTree = "<group>"; };
+		96CD08B51B0324F300088B1E /* RYCorporateHomePageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCorporateHomePageData.h; sourceTree = "<group>"; };
+		96CD08B61B0324F300088B1E /* RYCorporateHomePageData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCorporateHomePageData.m; sourceTree = "<group>"; };
+		96CD08B81B032BDE00088B1E /* ic_logo_default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_logo_default@2x.png"; sourceTree = "<group>"; };
+		96CD08BA1B0331AC00088B1E /* ic_direct@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_direct@2x.png"; sourceTree = "<group>"; };
+		96CD08BC1B0335B000088B1E /* ic_pic_default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_pic_default@2x.png"; sourceTree = "<group>"; };
+		96CD08BE1B033CD300088B1E /* RYCorporateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCorporateViewController.h; sourceTree = "<group>"; };
+		96CD08BF1B033CD300088B1E /* RYCorporateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCorporateViewController.m; sourceTree = "<group>"; };
+		96CD08C11B03438F00088B1E /* RYCorporateTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCorporateTableViewCell.h; sourceTree = "<group>"; };
+		96CD08C21B03438F00088B1E /* RYCorporateTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCorporateTableViewCell.m; sourceTree = "<group>"; };
+		96CD08C41B03497800088B1E /* RYCorporateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCorporateModel.h; sourceTree = "<group>"; };
+		96CD08C51B03497800088B1E /* RYCorporateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCorporateModel.m; sourceTree = "<group>"; };
+		96CD08C71B035D9D00088B1E /* ic_helight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_helight@2x.png"; sourceTree = "<group>"; };
 		96CD79541AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYPasswordAttestationViewController.h; sourceTree = "<group>"; };
 		96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYPasswordAttestationViewController.m; sourceTree = "<group>"; };
 		96CD79571AE8D63000DDC1D8 /* RYNewPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYNewPasswordViewController.h; sourceTree = "<group>"; };
@@ -640,6 +693,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96C52FCF1B05EB54007BC747 /* MediaPlayer.framework in Frameworks */,
 				96C404CD1B019EAD0066E5D4 /* libSocialQQ.a in Frameworks */,
 				96C404CE1B019EAD0066E5D4 /* TencentOpenAPI.framework in Frameworks */,
 				967500071B0090FA00CCD80C /* libsqlite3.dylib in Frameworks */,
@@ -807,6 +861,14 @@
 				96CAEDA81AF8A7470067BC2F /* RYMyInformTableViewCell.m */,
 				96CAEDAD1AF8BF490067BC2F /* RYMyInformListTableViewCell.h */,
 				96CAEDAE1AF8BF490067BC2F /* RYMyInformListTableViewCell.m */,
+				96CD08AC1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.h */,
+				96CD08AD1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.m */,
+				96CD08C11B03438F00088B1E /* RYCorporateTableViewCell.h */,
+				96CD08C21B03438F00088B1E /* RYCorporateTableViewCell.m */,
+				96CC354E1B0450D300EFA27A /* RYNewsPageTableViewCell.h */,
+				96CC354F1B0450D300EFA27A /* RYNewsPageTableViewCell.m */,
+				96CC35581B04938800EFA27A /* RYHuiXunTableViewCell.h */,
+				96CC35591B04938800EFA27A /* RYHuiXunTableViewCell.m */,
 			);
 			path = TableViewCells;
 			sourceTree = SOURCE_ROOT;
@@ -859,6 +921,8 @@
 			children = (
 				96C404D51B01F82D0066E5D4 /* RYCorporateHomePageViewController.h */,
 				96C404D61B01F82D0066E5D4 /* RYCorporateHomePageViewController.m */,
+				96CD08BE1B033CD300088B1E /* RYCorporateViewController.h */,
+				96CD08BF1B033CD300088B1E /* RYCorporateViewController.m */,
 			);
 			path = Corporate;
 			sourceTree = "<group>";
@@ -1138,9 +1202,23 @@
 			path = GTMBase64;
 			sourceTree = "<group>";
 		};
+		96CC35491B04422700EFA27A /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				96CC354A1B0442DC00EFA27A /* RYNewsPage.h */,
+				96CC354B1B0442DC00EFA27A /* RYNewsPage.m */,
+				96CC35551B048DD700EFA27A /* RYHuiXun.h */,
+				96CC35561B048DD700EFA27A /* RYHuiXun.m */,
+				96C52FC81B05E01C007BC747 /* RYPodcastPage.h */,
+				96C52FC91B05E01C007BC747 /* RYPodcastPage.m */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		96CC39511AD4DDF100D5D157 = {
 			isa = PBXGroup;
 			children = (
+				96C52FCE1B05EB54007BC747 /* MediaPlayer.framework */,
 				967500061B0090FA00CCD80C /* libsqlite3.dylib */,
 				9667D82F1B0085110099C424 /* libz.1.1.3.dylib */,
 				9667D82D1B0084DF0099C424 /* libstdc++.dylib */,
@@ -1330,6 +1408,15 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96CC35531B0473CB00EFA27A /* ic_transparency@2x.png */,
+				96CC35511B04713600EFA27A /* ic_bigPic_defaule@2x.png */,
+				96CD08C71B035D9D00088B1E /* ic_helight@2x.png */,
+				96CD08BC1B0335B000088B1E /* ic_pic_default@2x.png */,
+				96CD08BA1B0331AC00088B1E /* ic_direct@2x.png */,
+				96CD08B81B032BDE00088B1E /* ic_logo_default@2x.png */,
+				96CD08B11B03001300088B1E /* ic_answer_pic@2x.png */,
+				96CD08B21B03001300088B1E /* ic_integrator_pic@2x.png */,
+				96CD08AF1B02E81100088B1E /* ic_arrow_right@2x.png */,
 				96C5BFC01AFB52BE00BC5744 /* body_bg@2x.png */,
 				96CFB3B91AF9C51C0078C225 /* ic_invite_share0@2x.png */,
 				96CFB3BA1AF9C51C0078C225 /* ic_invite_share1@2x.png */,
@@ -1419,6 +1506,7 @@
 		96F321541AD50AD700CAFC51 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				96CC35491B04422700EFA27A /* Home */,
 				96C404D41B01F7E80066E5D4 /* Corporate */,
 				96D238131AF759F700936721 /* MyOperation */,
 				96F321551AD50CC600CAFC51 /* RYNewsViewController.h */,
@@ -1443,6 +1531,8 @@
 				96F321591AD50F8900CAFC51 /* RYBaseViewController.m */,
 				96C5AEF51AF0BAA700F9195A /* RYMyHomeLeftViewController.h */,
 				96C5AEF61AF0BAA700F9195A /* RYMyHomeLeftViewController.m */,
+				96C52FCB1B05EAED007BC747 /* RYMoviePlayerViewController.h */,
+				96C52FCC1B05EAED007BC747 /* RYMoviePlayerViewController.m */,
 			);
 			path = Controller;
 			sourceTree = SOURCE_ROOT;
@@ -1458,6 +1548,10 @@
 				96D9C98B1AE4CD4200997430 /* RYRegisterData.m */,
 				96C5BFC21AFB5B9C00BC5744 /* RYArticleData.h */,
 				96C5BFC31AFB5B9C00BC5744 /* RYArticleData.m */,
+				96CD08B51B0324F300088B1E /* RYCorporateHomePageData.h */,
+				96CD08B61B0324F300088B1E /* RYCorporateHomePageData.m */,
+				96CD08C41B03497800088B1E /* RYCorporateModel.h */,
+				96CD08C51B03497800088B1E /* RYCorporateModel.m */,
 			);
 			path = model;
 			sourceTree = SOURCE_ROOT;
@@ -1561,15 +1655,21 @@
 				9667D8271B00600F0099C424 /* UMSocialSDKResourcesNew.bundle in Resources */,
 				9667D8231B00600F0099C424 /* UMShareEditViewControlleriPad.xib in Resources */,
 				96CC39691AD4DDF100D5D157 /* Main.storyboard in Resources */,
+				96CD08B91B032BDE00088B1E /* ic_logo_default@2x.png in Resources */,
 				96CAEDA21AF899100067BC2F /* jifen_img1@2x.png in Resources */,
 				96C404CF1B019EAD0066E5D4 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				96C5AEEB1AF0744400F9195A /* ic_edit@2x.png in Resources */,
 				96C7ACCE1AD679F200FA2E22 /* back_btn_icon_sel@2x.png in Resources */,
+				96CD08BD1B0335B000088B1E /* ic_pic_default@2x.png in Resources */,
 				96CC39C81AD4FF3900D5D157 /* Images-2.xcassets in Resources */,
 				96CAEDA11AF899100067BC2F /* jifen_img0@2x.png in Resources */,
 				9667D81F1B00600F0099C424 /* UMSCommentDetailController.xib in Resources */,
 				96CFB3B41AF9BC9A0078C225 /* ic_Invite@2x.png in Resources */,
+				96CD08B01B02E81100088B1E /* ic_arrow_right@2x.png in Resources */,
+				96CD08B41B03001300088B1E /* ic_integrator_pic@2x.png in Resources */,
 				96CAB6081AF1CE6D00ECD350 /* ic_highlighted_4@2x.png in Resources */,
+				96CD08C81B035D9D00088B1E /* ic_helight@2x.png in Resources */,
+				96CC35521B04713600EFA27A /* ic_bigPic_defaule@2x.png in Resources */,
 				96CAB60B1AF1CE6D00ECD350 /* ic_highlighted_7@2x.png in Resources */,
 				96CAB6111AF1CE6D00ECD350 /* ic_normalImage_5@2x.png in Resources */,
 				96C3A9BE1ADFB84D008011D3 /* unselectedImg@2x.png in Resources */,
@@ -1577,6 +1677,7 @@
 				96CAB6101AF1CE6D00ECD350 /* ic_normalImage_4@2x.png in Resources */,
 				96C3CC6B1AE0AC44007266A0 /* arrows_right@2x.png in Resources */,
 				96CC396E1AD4DDF100D5D157 /* LaunchScreen.xib in Resources */,
+				96CD08B31B03001300088B1E /* ic_answer_pic@2x.png in Resources */,
 				96C56D0E1AEE3D4E00B127FF /* icon_select@2x.png in Resources */,
 				96C5BFC11AFB52BE00BC5744 /* body_bg@2x.png in Resources */,
 				96C3A9BD1ADFB84D008011D3 /* selectedImg@2x.png in Resources */,
@@ -1587,6 +1688,7 @@
 				96CAB60C1AF1CE6D00ECD350 /* ic_normalImage_0@2x.png in Resources */,
 				96C3A9BB1ADFB84D008011D3 /* imgsectionright.png in Resources */,
 				96CAB6161AF1DD4000ECD350 /* user_head_no@2x.png in Resources */,
+				96CD08BB1B0331AC00088B1E /* ic_direct@2x.png in Resources */,
 				9667D8211B00600F0099C424 /* UMSCommentInputControlleriPad.xib in Resources */,
 				96CAB60E1AF1CE6D00ECD350 /* ic_normalImage_2@2x.png in Resources */,
 				96D238311AF76AC000936721 /* ic_showJifen_bg@2x.png in Resources */,
@@ -1594,6 +1696,7 @@
 				96CFB3E11AFA2AF70078C225 /* menu-button@2x.png in Resources */,
 				96CAB6071AF1CE6D00ECD350 /* ic_highlighted_3@2x.png in Resources */,
 				96CFB3BF1AF9C51C0078C225 /* ic_invite_share1@2x.png in Resources */,
+				96CC35541B0473CB00EFA27A /* ic_transparency@2x.png in Resources */,
 				96D238121AF74AA000936721 /* register_personal@2x.png in Resources */,
 				96C4C4061AE77CC700151A84 /* IQKeyboardManager.bundle in Resources */,
 				9667D8261B00600F0099C424 /* UMSShareListController.xib in Resources */,
@@ -1639,12 +1742,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				96C7ACB71AD611FA00FA2E22 /* AFURLSessionManager.m in Sources */,
+				96C52FCA1B05E01C007BC747 /* RYPodcastPage.m in Sources */,
 				96C7ACD91AD6823E00FA2E22 /* GTMBase64.m in Sources */,
 				96CFB3B21AF9B9180078C225 /* RYMyInviteViewController.m in Sources */,
 				96C5AEFA1AF0C18000F9195A /* RYMyHomeLeftTableViewCell.m in Sources */,
 				96C7ACBC1AD611FA00FA2E22 /* UIImageView+AFNetworking.m in Sources */,
 				96C3A9B51ADFB84D008011D3 /* albumlistTableViewCell.m in Sources */,
 				96C4C3FC1AE77CC700151A84 /* IQUIView+Hierarchy.m in Sources */,
+				96CC35571B048DD700EFA27A /* RYHuiXun.m in Sources */,
 				96CAEDAF1AF8BF490067BC2F /* RYMyInformListTableViewCell.m in Sources */,
 				96C4A5CB1AE62236008DCC5B /* Reachability.m in Sources */,
 				96C7ACBE1AD611FA00FA2E22 /* UIRefreshControl+AFNetworking.m in Sources */,
@@ -1658,6 +1763,7 @@
 				96D2381F1AF759F700936721 /* RYEnshrineClassifyViewController.m in Sources */,
 				96C7ACB11AD611FA00FA2E22 /* AFHTTPSessionManager.m in Sources */,
 				96CAEDA61AF89FFC0067BC2F /* RYMyInformViewController.m in Sources */,
+				96CD08AE1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.m in Sources */,
 				96C7ACB21AD611FA00FA2E22 /* AFNetworkReachabilityManager.m in Sources */,
 				96D2382D1AF7664F00936721 /* RYMyJiFenViewController.m in Sources */,
 				96D238251AF75AE100936721 /* RYMyShareViewController.m in Sources */,
@@ -1685,6 +1791,7 @@
 				96C56CFE1AEE158400B127FF /* SWLongPressGestureRecognizer.m in Sources */,
 				96C7ACB31AD611FA00FA2E22 /* AFSecurityPolicy.m in Sources */,
 				96C5BFE01AFB648600BC5744 /* CXPhotoLoadingView.m in Sources */,
+				96CC35501B0450D300EFA27A /* RYNewsPageTableViewCell.m in Sources */,
 				96C5AEF71AF0BAA700F9195A /* RYMyHomeLeftViewController.m in Sources */,
 				96C7ACBD1AD611FA00FA2E22 /* UIProgressView+AFNetworking.m in Sources */,
 				96C4C4041AE77CC700151A84 /* IQToolbar.m in Sources */,
@@ -1695,6 +1802,7 @@
 				96CFB3DF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */,
 				96C7ACBB1AD611FA00FA2E22 /* UIButton+AFNetworking.m in Sources */,
 				96F321531AD50A6700CAFC51 /* MJScrollPageView.m in Sources */,
+				96CD08C61B03497800088B1E /* RYCorporateModel.m in Sources */,
 				96C3A9DD1ADFB89A008011D3 /* MKAnnotationView+WebCache.m in Sources */,
 				96C4C4001AE77CC700151A84 /* IQSegmentedNextPrevious.m in Sources */,
 				96C3A9E91ADFB89A008011D3 /* UIImage+WebP.m in Sources */,
@@ -1706,6 +1814,7 @@
 				96C3A9DF1ADFB89A008011D3 /* SDImageCache.m in Sources */,
 				96C56CFC1AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				96C56D001AEE158400B127FF /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
+				96CD08C31B03438F00088B1E /* RYCorporateTableViewCell.m in Sources */,
 				96CC39631AD4DDF100D5D157 /* AppDelegate.m in Sources */,
 				96C4C4051AE77CC700151A84 /* IQUIView+IQKeyboardToolbar.m in Sources */,
 				96C4C4031AE77CC700151A84 /* IQTitleBarButtonItem.m in Sources */,
@@ -1724,14 +1833,17 @@
 				96C5BFDE1AFB648600BC5744 /* CXPhoto.m in Sources */,
 				96D238281AF75BB500936721 /* RYMyShareTableViewCell.m in Sources */,
 				96C3A9B31ADFB84D008011D3 /* imagesView.m in Sources */,
+				96CD08C01B033CD300088B1E /* RYCorporateViewController.m in Sources */,
 				96CFB3B81AF9C0090078C225 /* GridMenuView.m in Sources */,
 				96C7ACBA1AD611FA00FA2E22 /* UIAlertView+AFNetworking.m in Sources */,
 				96C3A9B41ADFB84D008011D3 /* albumListsViewController.m in Sources */,
 				96CAEDA91AF8A7470067BC2F /* RYMyInformTableViewCell.m in Sources */,
 				96C5BFDD1AFB648600BC5744 /* CXBrowserToolBarView.m in Sources */,
 				96CC39BE1AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m in Sources */,
+				96CD08B71B0324F300088B1E /* RYCorporateHomePageData.m in Sources */,
 				96C664FF1ADBA0A900C35310 /* RYRetrievePasswordViewController.m in Sources */,
 				96CF17E71AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m in Sources */,
+				96CC354C1B0442DC00EFA27A /* RYNewsPage.m in Sources */,
 				96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */,
 				96C7ACDC1AD683E500FA2E22 /* ShowBox.m in Sources */,
 				96C3A9EA1ADFB89A008011D3 /* UIImageView+WebCache.m in Sources */,
@@ -1749,12 +1861,14 @@
 				96F321521AD50A6700CAFC51 /* MJScrollBarView.m in Sources */,
 				96C4C3FF1AE77CC700151A84 /* IQKeyboardReturnKeyHandler.m in Sources */,
 				96CFB3DD1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScaleAndFade.m in Sources */,
+				96CC355A1B04938800EFA27A /* RYHuiXunTableViewCell.m in Sources */,
 				96C7ACB51AD611FA00FA2E22 /* AFURLRequestSerialization.m in Sources */,
 				96CFB3E21AFA2AF70078C225 /* SlideNavigationController.m in Sources */,
 				96C3A9E21ADFB89A008011D3 /* SDWebImageDownloader.m in Sources */,
 				96C4C40A1AE7ABF600151A84 /* NSDictionary+Additions.m in Sources */,
 				96D9C98C1AE4CD4200997430 /* RYRegisterData.m in Sources */,
 				96C5BFE31AFB648600BC5744 /* CXZoomingScrollView.m in Sources */,
+				96C52FCD1B05EAED007BC747 /* RYMoviePlayerViewController.m in Sources */,
 				96C7ACB81AD611FA00FA2E22 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				96C3A9E71ADFB89A008011D3 /* UIImage+GIF.m in Sources */,
 				96D238211AF759F700936721 /* RYMyCollectViewController.m in Sources */,
@@ -1906,8 +2020,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: HAO YU (427AG9Y5Z2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: HAO YU (427AG9Y5Z2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -1928,7 +2042,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "a186c990-1038-4b82-b0b4-6c2af61581b7";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
@@ -1937,8 +2051,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: HAO YU (427AG9Y5Z2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: HAO YU (427AG9Y5Z2)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -1959,7 +2073,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "a186c990-1038-4b82-b0b4-6c2af61581b7";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;

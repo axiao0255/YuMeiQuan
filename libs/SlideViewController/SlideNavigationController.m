@@ -882,4 +882,15 @@ static SlideNavigationController *singletonInstance;
     _rightMenu = rightMenu;
 }
 
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    //  return UIInterfaceOrientationMaskAll &
+    //         (~UIInterfaceOrientationMaskPortraitUpsideDown);
+    return UIInterfaceOrientationMaskPortrait;//UIInterfaceOrientationMaskLandscape;
+}
+
+
 @end

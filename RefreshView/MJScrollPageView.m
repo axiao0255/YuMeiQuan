@@ -54,10 +54,13 @@
 {
     for ( int i = 0;  i < aNumerOfTables; i ++ ) {
         MJRefreshTableView *refreshTableV = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(self.frame.size.width * i , 0, self.bounds.size.width, self.bounds.size.height)];
-        refreshTableV.delegate = self;
-        refreshTableV.dataSource = self;
+        refreshTableV.backgroundColor = [UIColor clearColor];
+        refreshTableV.delegateRefersh = self;
+        [Utils setExtraCellLineHidden:refreshTableV];
         [_contentItems addObject:refreshTableV];
         [_scrollView addSubview:refreshTableV];
+//        MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
+//        [refreshTableV headerBeginRefreshing];
         
         [_totlePages addObject:[NSNumber numberWithInt:1]];
         [_currentPages addObject:[NSNumber numberWithInt:0]];
@@ -230,28 +233,36 @@
         return ;
     }
     if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
+//        MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
+//        [v headerBeginRefreshing];
         [self.delegate freshContentTableAtIndex:mCurrentPage isHead:YES];
     }
 
 }
 
-#pragma mark -设置 UITableView 代理方法
--  (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [self.delegate mScreollTabel:tableView numberOfRowsInSection:section];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return [self.delegate mScreollTabel:tableView cellForRowAtIndexPath:indexPath];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ( [self.delegate respondsToSelector:@selector(mScreollTabel:didSelectRowAtIndexPath:)] ) {
-        [self.delegate mScreollTabel:tableView didSelectRowAtIndexPath:indexPath];
-    }
-}
-
+//#pragma mark -设置 UITableView 代理方法
+//-  (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+//{
+//    return [self.delegate mScreollTabel:tableView numberOfRowsInSection:section];
+//}
+//
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return [self.delegate mScreollTabel:tableView cellForRowAtIndexPath:indexPath];
+//}
+//
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return [self.delegate msScreollTabel:tableView heightForRowAtIndexPath:indexPath];
+//}
+//
+//
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if ( [self.delegate respondsToSelector:@selector(mScreollTabel:didSelectRowAtIndexPath:)] ) {
+//        [self.delegate mScreollTabel:tableView didSelectRowAtIndexPath:indexPath];
+//    }
+//}
+//
 
 @end

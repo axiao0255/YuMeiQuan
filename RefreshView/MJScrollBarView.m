@@ -41,7 +41,11 @@
             mScrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
             mScrollView.showsHorizontalScrollIndicator = NO;
             mScrollView.showsVerticalScrollIndicator = NO;
-            mScrollView.backgroundColor = [UIColor redColor];
+            mScrollView.backgroundColor = [UIColor whiteColor];
+            
+            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.frame)-0.5, CGRectGetWidth(self.frame), 0.5)];
+            line.backgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
+            [mScrollView addSubview:line];
            }
         // 初始化 itemArray
         if (mItemInfoArray == nil) {
@@ -69,11 +73,13 @@
         NSString *vTitleStr = [dict objectForKey:TITLEKEY];
         float vButtonWidth = [[dict objectForKey:TITLEWIDTH] floatValue];
         UIButton *vButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        vButton.titleLabel.font = [UIFont boldSystemFontOfSize:14];
         [vButton setBackgroundImage:[UIImage imageNamed:vNormalImageStr] forState:UIControlStateNormal];
         [vButton setBackgroundImage:[UIImage imageNamed:vHeligtImageStr] forState:UIControlStateSelected];
         [vButton setTitle:vTitleStr forState:UIControlStateNormal];
-        [vButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [vButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [vButton setTitleColor:[Utils   getRGBColor:0x66 g:0x66 b:0x66 a:1.0] forState:UIControlStateNormal];
+        [vButton setTitleColor:[Utils   getRGBColor:0x00 g:0x91 b:0xea a:1.0] forState:UIControlStateHighlighted];
+        [vButton setTitleColor:[Utils   getRGBColor:0x00 g:0x91 b:0xea a:1.0] forState:UIControlStateSelected];
         [vButton setTag:i];
         [vButton addTarget:self action:@selector(menuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [vButton setFrame:CGRectMake(menuWidth, 0, vButtonWidth, self.frame.size.height)];

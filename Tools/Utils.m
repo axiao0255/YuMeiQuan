@@ -110,7 +110,7 @@
     }
     if ([[UIApplication sharedApplication]canOpenURL:[NSURL URLWithString:@"tel://"]]) {
         //NSString *str = [telePhone stringByReplacingOccurrencesOfString:@"-" withString:@""];
-        NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"-－ （）()商场电话            "];
+        NSCharacterSet *doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"-－ （）()联系方式            "];
         NSString *str = [[telePhone componentsSeparatedByCharactersInSet: doNotWant]componentsJoinedByString:@""];
         NSLog(@"makeTelephoneCall:%@",str);
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@",str]]];

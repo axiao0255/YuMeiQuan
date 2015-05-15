@@ -57,5 +57,15 @@
     [MobClick endLogPageView:NSStringFromClass([self class])];
 }
 
+- (BOOL)shouldAutorotate {
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    //  return UIInterfaceOrientationMaskAll &
+    //         (~UIInterfaceOrientationMaskPortraitUpsideDown);
+    return UIInterfaceOrientationMaskPortrait;//UIInterfaceOrientationMaskLandscape;
+}
+
 
 @end
