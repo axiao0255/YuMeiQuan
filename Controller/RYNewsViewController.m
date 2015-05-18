@@ -10,6 +10,7 @@
 #import "newsBarData.h"
 #import "NetManager.h"
 #import "RYLoginViewController.h"
+#import "RFSegmentView.h"
 
 #import "RYMyHomeLeftViewController.h"
 #import "SlideNavigationController.h"
@@ -17,10 +18,12 @@
 #import "RYArticleViewController.h"
 #import "RYCorporateHomePageViewController.h"
 #import "RYMoviePlayerViewController.h"
+#import "RYAuthorArticleViewController.h"
 
 #import "RYNewsPage.h"
 #import "RYHuiXun.h"
 #import "RYPodcastPage.h"
+#import "RYBaiJiaPage.h"
 
 /**
  *  随机数据
@@ -28,7 +31,7 @@
 #define MJRandomData [NSString stringWithFormat:@"随机数据---%d", arc4random_uniform(1000000)]
 
 
-@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate>
 {
     MJScrollBarView    *scrollBarView;
     MJScrollPageView   *scrollPageView;
@@ -41,6 +44,9 @@
 @property (strong, nonatomic) RYNewsPage     *newsPage;
 @property (strong, nonatomic) RYHuiXun       *huiXun;
 @property (strong, nonatomic) RYPodcastPage  *podcastPage;
+@property (strong, nonatomic) RYBaiJiaPage   *baiJiaPage;
+
+@property (assign, nonatomic) NSInteger      baiJiaCurrentSelectIndex;
 
 @end
 
@@ -134,6 +140,7 @@
     newsData = [[newsBarData alloc] init];
     newsData.dataArray = vButtonItemArray;
     self.title = [newsData currentTitleWithIndex:0];
+    self.baiJiaCurrentSelectIndex = 0;
     
     if ( scrollBarView == nil ) {
         scrollBarView = [[MJScrollBarView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 35) ButtonItems:vButtonItemArray];
@@ -150,12 +157,28 @@
                 MJRefreshTableView *tableView = (MJRefreshTableView *)view;
                 tableView.delegate = self;
                 tableView.dataSource = self;
+                
+                NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
+                if ( aIndex == 5 ) {
+                    tableView.tableHeaderView = [self baiJiaTableViewHeadView];
+                    [tableView setSectionIndexColor:[Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0]];
+                }
             }
         }
     }
     [self.view addSubview:scrollBarView];
     [self.view addSubview:scrollPageView];
-    
+}
+
+-(UIView *)baiJiaTableViewHeadView
+{
+    UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 35)];
+    headView.backgroundColor = [UIColor whiteColor];
+    RFSegmentView *segmentView = [[RFSegmentView alloc] initWithFrame:CGRectMake(0, 3, SCREEN_WIDTH, 28) items:@[@"文章",@"作者"]];
+    segmentView.tintColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
+    segmentView.delegate = self;
+    [headView addSubview:segmentView];
+    return headView;
 }
 
 #pragma mark - 初始化
@@ -196,6 +219,14 @@
         _podcastPage = [[RYPodcastPage alloc] init];
     }
     return _podcastPage;
+}
+
+- (RYBaiJiaPage *)baiJiaPage
+{
+    if ( _baiJiaPage == nil ) {
+        _baiJiaPage = [[RYBaiJiaPage alloc] init];
+    }
+    return _baiJiaPage;
 }
 
 -(void)didMenuClickedButtonAtIndex:(NSInteger)index
@@ -291,7 +322,34 @@
         }
         
         self.podcastPage.listData = arr;
+    }
+    else if ( aIndex == 5 )
+    {
+        NSMutableDictionary *tmpDic = [NSMutableDictionary dictionary];
+        [tmpDic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
+        [tmpDic setObject:@"段涛：移动互联网精神已医学专业移动互联网精神已医学专业移动互联网精神已" forKey:@"title"];
+        self.baiJiaPage.adverData = tmpDic;
         
+        NSMutableArray *arr = [NSMutableArray array];
+        for ( int i = 0; i < 10; i ++ ) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            [dic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
+            [dic setObject:@"护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，" forKey:@"title"];
+            [arr addObject:dic];
+        }
+        self.baiJiaPage.listData = arr;
+        
+        NSMutableArray *authorArr = [NSMutableArray array];
+        
+        for ( char c = 'A'; c <= 'Z'; c ++  ) {
+            
+            NSArray *subArr = @[@"赛诺龙",@"赛诺秀"];
+            NSString *key = [NSString stringWithFormat:@"%c",c];
+            NSDictionary *dic = [NSDictionary dictionaryWithObject:subArr forKey:key];
+            
+            [authorArr addObject:dic];
+        }
+        self.baiJiaPage.authorList = authorArr;
     }
     
     // 2.2秒后刷新表格UI
@@ -330,6 +388,9 @@
     else if ( aIndex == 4 ){
         return  [self.podcastPage podcastNumberOfSectionsInTableView:tableView];
     }
+    else if ( aIndex == 5 ){
+        return [self.baiJiaPage baiJiaNumberOfSectionsInTableView:tableView];
+    }
     return 1;
 }
 
@@ -344,6 +405,9 @@
     }
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView numberOfRowsInSection:section];
+    }
+    else if ( aIndex == 5 ){
+        return [self.baiJiaPage baiJiaTableView:tableView numberOfRowsInSection:section];
     }
     NSArray *dataSource = [scrollPageView.dataSources objectAtIndex:aIndex];
     return dataSource.count;
@@ -360,6 +424,9 @@
     }
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView heightForRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 5 ){
+        return [self.baiJiaPage baiJiaTableView:tableView heightForRowAtIndexPath:indexPath];
     }
     else{
         return 100;
@@ -378,6 +445,9 @@
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView cellForRowAtIndexPath:indexPath];
     }
+    else if ( aIndex == 5 ){
+        return [self.baiJiaPage baiJiaTableView:tableView cellForRowAtIndexPath:indexPath];
+    }
     else{
         return [UITableViewCell new];
     }
@@ -387,8 +457,11 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 4 ) {
+    if ( aIndex == 4 ) { // 播客点击，进入播放
         [self podcastTableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 5 ){
+        [self baiJiaTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
     else{
         if ( indexPath.row <= 3 ) {
@@ -411,6 +484,9 @@
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView heightForFooterInSection:section];
     }
+    else if ( aIndex == 5 ){
+        return [self.baiJiaPage baiJiaTableView:tableView heightForFooterInSection:section];
+    }
     else{
         return 0;
     }
@@ -425,11 +501,60 @@
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView heightForHeaderInSection:section];
     }
+    else if ( aIndex == 5 ){
+        return [self.baiJiaPage baiJiaTableView:tableView heightForHeaderInSection:section];
+    }
     else{
         return 0;
     }
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
+    if ( aIndex == 5 ) {
+        return [self.baiJiaPage baiJiaTableView:tableView viewForHeaderInSection:section];
+    }
+    else{
+        return nil;
+    }
+}
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
+    if ( aIndex == 5 ) {
+        return [self.baiJiaPage baiJiaSectionIndexTitlesForTableView:tableView];
+    }
+    else{
+        return nil;
+    }
+}
+
+// 右边选择拦 点击选择
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
+    if ( aIndex == 5 ) {
+        return [self.baiJiaPage baiJiaTableView:tableView sectionForSectionIndexTitle:title atIndex:index];
+    }
+    else {
+        return 0;
+    }
+}
+
+#pragma mark - 百家cell的点击方法
+- (void)baiJiaTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ( self.baiJiaPage.currentType == articleType ) {
+        RYArticleViewController *vc = [[RYArticleViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        RYAuthorArticleViewController *vc = [[RYAuthorArticleViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
 
 #pragma mark - 播客点击播放视频
 - (void)podcastTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -513,7 +638,16 @@
 }
 // ---------------- 为了解决 滚动出侧边拦的手势冲突 end——————————————————————
 
-
+#pragma mark - RFSegmentView delegate
+- (void)segmentViewSelectIndex:(NSInteger)index
+{
+    if ( self.baiJiaCurrentSelectIndex != index ) {
+        self.baiJiaCurrentSelectIndex = index;
+        self.baiJiaPage.currentType = self.baiJiaCurrentSelectIndex;
+        MJRefreshTableView *tableView = [scrollPageView.contentItems objectAtIndex:5];
+        [tableView reloadData];
+    }
+}
 
 
 

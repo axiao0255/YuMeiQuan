@@ -23,6 +23,11 @@
 		9667D82E1B0084DF0099C424 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9667D82D1B0084DF0099C424 /* libstdc++.dylib */; };
 		9667D8301B0085110099C424 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9667D82F1B0085110099C424 /* libz.1.1.3.dylib */; };
 		967500071B0090FA00CCD80C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 967500061B0090FA00CCD80C /* libsqlite3.dylib */; };
+		96AB36C81B09B189002EB3E2 /* RYBaiJiaPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AB36C71B09B189002EB3E2 /* RYBaiJiaPage.m */; };
+		96AB36CD1B09C026002EB3E2 /* RFSegmentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AB36CC1B09C026002EB3E2 /* RFSegmentView.m */; };
+		96AB36D01B09C9D1002EB3E2 /* RYBaiJiaPageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AB36CF1B09C9D1002EB3E2 /* RYBaiJiaPageTableViewCell.m */; };
+		96AB36D21B09CCB2002EB3E2 /* ic_default_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96AB36D11B09CCB2002EB3E2 /* ic_default_small@2x.png */; };
+		96AB36D51B09E22F002EB3E2 /* RYAuthorArticleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96AB36D41B09E22F002EB3E2 /* RYAuthorArticleViewController.m */; };
 		96C3A9B31ADFB84D008011D3 /* imagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A01ADFB84D008011D3 /* imagesView.m */; };
 		96C3A9B41ADFB84D008011D3 /* albumListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A31ADFB84D008011D3 /* albumListsViewController.m */; };
 		96C3A9B51ADFB84D008011D3 /* albumlistTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A51ADFB84D008011D3 /* albumlistTableViewCell.m */; };
@@ -293,6 +298,15 @@
 		9667D82D1B0084DF0099C424 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		9667D82F1B0085110099C424 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		967500061B0090FA00CCD80C /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		96AB36C61B09B189002EB3E2 /* RYBaiJiaPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYBaiJiaPage.h; sourceTree = "<group>"; };
+		96AB36C71B09B189002EB3E2 /* RYBaiJiaPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYBaiJiaPage.m; sourceTree = "<group>"; };
+		96AB36CB1B09C026002EB3E2 /* RFSegmentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFSegmentView.h; sourceTree = "<group>"; };
+		96AB36CC1B09C026002EB3E2 /* RFSegmentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFSegmentView.m; sourceTree = "<group>"; };
+		96AB36CE1B09C9D1002EB3E2 /* RYBaiJiaPageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYBaiJiaPageTableViewCell.h; sourceTree = "<group>"; };
+		96AB36CF1B09C9D1002EB3E2 /* RYBaiJiaPageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYBaiJiaPageTableViewCell.m; sourceTree = "<group>"; };
+		96AB36D11B09CCB2002EB3E2 /* ic_default_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_default_small@2x.png"; sourceTree = "<group>"; };
+		96AB36D31B09E22F002EB3E2 /* RYAuthorArticleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYAuthorArticleViewController.h; sourceTree = "<group>"; };
+		96AB36D41B09E22F002EB3E2 /* RYAuthorArticleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYAuthorArticleViewController.m; sourceTree = "<group>"; };
 		96C3A99F1ADFB84D008011D3 /* imagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imagesView.h; sourceTree = "<group>"; };
 		96C3A9A01ADFB84D008011D3 /* imagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = imagesView.m; sourceTree = "<group>"; };
 		96C3A9A21ADFB84D008011D3 /* albumListsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = albumListsViewController.h; sourceTree = "<group>"; };
@@ -774,6 +788,15 @@
 			path = SocialSDKXib;
 			sourceTree = "<group>";
 		};
+		96AB36CA1B09C026002EB3E2 /* RFSegmentView */ = {
+			isa = PBXGroup;
+			children = (
+				96AB36CB1B09C026002EB3E2 /* RFSegmentView.h */,
+				96AB36CC1B09C026002EB3E2 /* RFSegmentView.m */,
+			);
+			path = RFSegmentView;
+			sourceTree = "<group>";
+		};
 		96C3A99E1ADFB84D008011D3 /* imageChoose */ = {
 			isa = PBXGroup;
 			children = (
@@ -869,6 +892,8 @@
 				96CC354F1B0450D300EFA27A /* RYNewsPageTableViewCell.m */,
 				96CC35581B04938800EFA27A /* RYHuiXunTableViewCell.h */,
 				96CC35591B04938800EFA27A /* RYHuiXunTableViewCell.m */,
+				96AB36CE1B09C9D1002EB3E2 /* RYBaiJiaPageTableViewCell.h */,
+				96AB36CF1B09C9D1002EB3E2 /* RYBaiJiaPageTableViewCell.m */,
 			);
 			path = TableViewCells;
 			sourceTree = SOURCE_ROOT;
@@ -1211,6 +1236,8 @@
 				96CC35561B048DD700EFA27A /* RYHuiXun.m */,
 				96C52FC81B05E01C007BC747 /* RYPodcastPage.h */,
 				96C52FC91B05E01C007BC747 /* RYPodcastPage.m */,
+				96AB36C61B09B189002EB3E2 /* RYBaiJiaPage.h */,
+				96AB36C71B09B189002EB3E2 /* RYBaiJiaPage.m */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1293,6 +1320,7 @@
 		96CC39831AD4DE2F00D5D157 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				96AB36CA1B09C026002EB3E2 /* RFSegmentView */,
 				96C404BD1B019EAD0066E5D4 /* UMSocial_Sdk_Extra_Frameworks */,
 				9667D7F61B00600F0099C424 /* UMSocial_Sdk_4.2.2 */,
 				9667D7EE1B00559A0099C424 /* UMAnalytics_Sdk_3.4.8 */,
@@ -1408,6 +1436,7 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96AB36D11B09CCB2002EB3E2 /* ic_default_small@2x.png */,
 				96CC35531B0473CB00EFA27A /* ic_transparency@2x.png */,
 				96CC35511B04713600EFA27A /* ic_bigPic_defaule@2x.png */,
 				96CD08C71B035D9D00088B1E /* ic_helight@2x.png */,
@@ -1533,6 +1562,8 @@
 				96C5AEF61AF0BAA700F9195A /* RYMyHomeLeftViewController.m */,
 				96C52FCB1B05EAED007BC747 /* RYMoviePlayerViewController.h */,
 				96C52FCC1B05EAED007BC747 /* RYMoviePlayerViewController.m */,
+				96AB36D31B09E22F002EB3E2 /* RYAuthorArticleViewController.h */,
+				96AB36D41B09E22F002EB3E2 /* RYAuthorArticleViewController.m */,
 			);
 			path = Controller;
 			sourceTree = SOURCE_ROOT;
@@ -1662,6 +1693,7 @@
 				96C7ACCE1AD679F200FA2E22 /* back_btn_icon_sel@2x.png in Resources */,
 				96CD08BD1B0335B000088B1E /* ic_pic_default@2x.png in Resources */,
 				96CC39C81AD4FF3900D5D157 /* Images-2.xcassets in Resources */,
+				96AB36D21B09CCB2002EB3E2 /* ic_default_small@2x.png in Resources */,
 				96CAEDA11AF899100067BC2F /* jifen_img0@2x.png in Resources */,
 				9667D81F1B00600F0099C424 /* UMSCommentDetailController.xib in Resources */,
 				96CFB3B41AF9BC9A0078C225 /* ic_Invite@2x.png in Resources */,
@@ -1749,6 +1781,7 @@
 				96C7ACBC1AD611FA00FA2E22 /* UIImageView+AFNetworking.m in Sources */,
 				96C3A9B51ADFB84D008011D3 /* albumlistTableViewCell.m in Sources */,
 				96C4C3FC1AE77CC700151A84 /* IQUIView+Hierarchy.m in Sources */,
+				96AB36CD1B09C026002EB3E2 /* RFSegmentView.m in Sources */,
 				96CC35571B048DD700EFA27A /* RYHuiXun.m in Sources */,
 				96CAEDAF1AF8BF490067BC2F /* RYMyInformListTableViewCell.m in Sources */,
 				96C4A5CB1AE62236008DCC5B /* Reachability.m in Sources */,
@@ -1778,6 +1811,7 @@
 				96CFB3DE1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlide.m in Sources */,
 				96C6108D1ADCE0D400862E0E /* NYSegmentedControl.m in Sources */,
 				96C3A9DE1ADFB89A008011D3 /* NSData+GIF.m in Sources */,
+				96AB36C81B09B189002EB3E2 /* RYBaiJiaPage.m in Sources */,
 				96CC39BA1AD4E3BB00D5D157 /* MJRefreshFooterView.m in Sources */,
 				96C4C3FE1AE77CC700151A84 /* IQKeyboardManager.m in Sources */,
 				96C3A9E31ADFB89A008011D3 /* SDWebImageDownloaderOperation.m in Sources */,
@@ -1787,6 +1821,7 @@
 				96CC39BF1AD4E3BB00D5D157 /* UIView+MJExtension.m in Sources */,
 				96F321601AD5210500CAFC51 /* newsBarData.m in Sources */,
 				96C5BFDC1AFB648600BC5744 /* CXBrowserNavBarView.m in Sources */,
+				96AB36D01B09C9D1002EB3E2 /* RYBaiJiaPageTableViewCell.m in Sources */,
 				96C56CFF1AEE158400B127FF /* SWTableViewCell.m in Sources */,
 				96C56CFE1AEE158400B127FF /* SWLongPressGestureRecognizer.m in Sources */,
 				96C7ACB31AD611FA00FA2E22 /* AFSecurityPolicy.m in Sources */,
@@ -1865,6 +1900,7 @@
 				96C7ACB51AD611FA00FA2E22 /* AFURLRequestSerialization.m in Sources */,
 				96CFB3E21AFA2AF70078C225 /* SlideNavigationController.m in Sources */,
 				96C3A9E21ADFB89A008011D3 /* SDWebImageDownloader.m in Sources */,
+				96AB36D51B09E22F002EB3E2 /* RYAuthorArticleViewController.m in Sources */,
 				96C4C40A1AE7ABF600151A84 /* NSDictionary+Additions.m in Sources */,
 				96D9C98C1AE4CD4200997430 /* RYRegisterData.m in Sources */,
 				96C5BFE31AFB648600BC5744 /* CXZoomingScrollView.m in Sources */,
@@ -2020,8 +2056,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: HAO YU (427AG9Y5Z2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: HAO YU (427AG9Y5Z2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -2042,7 +2078,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a186c990-1038-4b82-b0b4-6c2af61581b7";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
@@ -2051,8 +2087,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: HAO YU (427AG9Y5Z2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: HAO YU (427AG9Y5Z2)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -2073,7 +2109,7 @@
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a186c990-1038-4b82-b0b4-6c2af61581b7";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;

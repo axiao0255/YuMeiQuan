@@ -53,21 +53,21 @@
 -(void)setContentOfTables:(NSInteger)aNumerOfTables
 {
     for ( int i = 0;  i < aNumerOfTables; i ++ ) {
-        MJRefreshTableView *refreshTableV = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(self.frame.size.width * i , 0, self.bounds.size.width, self.bounds.size.height)];
+        MJRefreshTableView *refreshTableV = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(self.frame.size.width * i , i == 3 ? 20 : 0, self.bounds.size.width, i == 3 ? (self.bounds.size.height - 20) : self.bounds.size.height)];
         refreshTableV.backgroundColor = [UIColor clearColor];
         refreshTableV.delegateRefersh = self;
         [Utils setExtraCellLineHidden:refreshTableV];
         [_contentItems addObject:refreshTableV];
         [_scrollView addSubview:refreshTableV];
-//        MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
-//        [refreshTableV headerBeginRefreshing];
+        if ( i == 0 ) {
+            [refreshTableV headerBeginRefreshing];
+        }
         
         [_totlePages addObject:[NSNumber numberWithInt:1]];
         [_currentPages addObject:[NSNumber numberWithInt:0]];
         [_dataSources addObject:[NSMutableArray array]];
     }
-    [self headerRereshingData];
-    [_scrollView setContentSize:CGSizeMake(self.frame.size.width * aNumerOfTables, self.frame.size.height)];
+     [_scrollView setContentSize:CGSizeMake(self.frame.size.width * aNumerOfTables, self.frame.size.height)];
 }
 
 -(void)setTotlePageWithNum:(NSInteger)aTotlePage atIndex:(NSInteger)aIndex
@@ -92,7 +92,7 @@
     // 清空 数据
     NSMutableArray *arr = [_dataSources objectAtIndex:mCurrentPage];
     [arr removeAllObjects];
-    
+
     if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
         [self.delegate freshContentTableAtIndex:mCurrentPage isHead:YES];
     }
@@ -208,15 +208,14 @@
     }
     
     NSArray *dataSource = [self.dataSources objectAtIndex:mCurrentPage];
+    MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
     if ( dataSource.count > 0) {
-        MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
         [v reloadData];
         return ;
     }
     if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
-        [self.delegate freshContentTableAtIndex:mCurrentPage isHead:YES];
+        [v headerBeginRefreshing];
     }
-
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
@@ -227,17 +226,14 @@
     }
     mCurrentPage= page;
     NSArray *dataSource = [self.dataSources objectAtIndex:mCurrentPage];
+     MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
     if ( dataSource.count > 0) {
-        MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
         [v reloadData];
         return ;
     }
     if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
-//        MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
-//        [v headerBeginRefreshing];
-        [self.delegate freshContentTableAtIndex:mCurrentPage isHead:YES];
+        [v headerBeginRefreshing];
     }
-
 }
 
 //#pragma mark -设置 UITableView 代理方法
