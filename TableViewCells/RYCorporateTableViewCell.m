@@ -30,7 +30,11 @@
         self.corporateTitleLabel.numberOfLines = 0;
         [self.contentView addSubview:self.corporateTitleLabel];
         
-        self.corporateRecommendLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.corporateTitleLabel.bottom + 16, SCREEN_WIDTH - 30, 100)];
+        self.attentionBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, self.corporateTitleLabel.bottom + 16, 77, 28)];
+        self.attentionBtn.hidden = YES;
+        [self.contentView addSubview:self.attentionBtn];
+        
+        self.corporateRecommendLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.attentionBtn.bottom + 16, SCREEN_WIDTH - 30, 100)];
         self.corporateRecommendLabel.font = [UIFont systemFontOfSize:12];
         self.corporateRecommendLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         self.corporateRecommendLabel.numberOfLines = 0;
@@ -47,8 +51,15 @@
     
     self.corporateTitleLabel.text = model.corporateName;
     [self.corporateTitleLabel sizeToFit];
+    self.attentionBtn.hidden = NO;
+    self.attentionBtn.top = self.corporateTitleLabel.bottom + 16;
+    if (model.isAttention) {
+        [self.attentionBtn setImage:[UIImage imageNamed:@"ic_no_attention.png"] forState:UIControlStateNormal];
+    }else{
+        [self.attentionBtn setImage:[UIImage imageNamed:@"ic_attention.png"] forState:UIControlStateNormal];
+    }
     
-    self.corporateRecommendLabel.top = self.corporateTitleLabel.bottom + 16;
+    self.corporateRecommendLabel.top = self.attentionBtn.bottom + 16;
     self.corporateRecommendLabel.text = model.corporateRecommend;
     [self.corporateRecommendLabel sizeToFit];
 }

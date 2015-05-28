@@ -157,5 +157,40 @@
     }
 }
 
+-(void)shareWithIndex:(NSUInteger) index
+{
+    //设置微信好友或者朋友圈的分享url,下面是微信好友，微信朋友圈对应wechatTimelineData
+    NSString *snsType = UMShareToWechatSession;
+    switch ( index ) {
+        case 0:
+            snsType = UMShareToWechatSession;
+            break;
+        case 1:
+            snsType = UMShareToWechatTimeline;
+            break;
+        case 2:
+            snsType = UMShareToQQ;
+            break;
+            
+        case 3:
+            snsType = UMShareToSms;
+            break;
+            
+        case 4:
+            snsType = UMShareToSina;
+            break;
+        default:
+            break;
+    }
+    //    NSString *contentText = [NSString stringWithFormat:@" %@ %@ （医美圈·医学美容时讯）",self.bodyModel.subject,shareUrl];
+    NSString *contentText = @"分享哈哈哈";
+    [[UMSocialDataService defaultDataService]  postSNSWithTypes:@[snsType] content:contentText image:nil location:nil urlResource:nil presentedController:self.window.rootViewController completion:^(UMSocialResponseEntity *response){
+        if (response.responseCode == UMSResponseCodeSuccess) {
+            [ShowBox showSuccess:@"分享成功"];
+        }
+    }];
+}
+
+
 
 @end

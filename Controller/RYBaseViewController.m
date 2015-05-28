@@ -7,6 +7,7 @@
 //
 
 #import "RYBaseViewController.h"
+#import "IQKeyboardManager.h"
 
 @interface RYBaseViewController ()
 
@@ -17,6 +18,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    // 去掉键盘的 toolbar
+    [[IQKeyboardManager sharedManager] disableToolbarInViewControllerClass:[self class]];
     
 //    self.view.backgroundColor = [UIColor colorWithRed:232/255.0f green:235/255.0f blue:240/255.0f alpha:1];
     self.view.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];

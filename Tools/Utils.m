@@ -214,6 +214,45 @@
     return imgs;
 }
 
+#pragma mark - 定制数字高亮的attributedString
+/**
+ *  定制数字高亮的attributedString
+ *  采用默认设置的颜色
+ *  @param sourceStr 源文字
+ *  @param hightStr  高亮文字
+ *
+ *  @return
+ */
++ (NSAttributedString *)getAttributedString:(NSString *)sourceStr andHightlightString:(NSString *)hightStr
+{
+    NSMutableAttributedString *resultStr = [[NSMutableAttributedString alloc] initWithString:sourceStr];
+    [resultStr setAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} range:NSMakeRange(0, sourceStr.length)];
+    
+    NSRange range = [sourceStr rangeOfString:hightStr options:NSBackwardsSearch];
+    
+    if (range.location != NSNotFound)
+    {
+        [resultStr setAttributes:@{NSForegroundColorAttributeName:[Utils getRGBColor:0xff g:0x65 b:0x21 a:1.0]} range:range];
+    }
+    //设置字体
+    
+    
+    return resultStr;
+}
+
+#pragma mark - 定制特殊 状态的 高亮字段
++ (NSAttributedString *)getAttributedString:(NSString *)sourceStr hightlightString:(NSString *)hightStr hightlightColor:(UIColor *)color andFont:(UIFont*)font
+{
+     NSMutableAttributedString *resultStr = [[NSMutableAttributedString alloc] initWithString:sourceStr];
+    [resultStr setAttributes:@{NSFontAttributeName:font} range:NSMakeRange(0, sourceStr.length)];
+    NSRange range = [sourceStr rangeOfString:hightStr options:NSBackwardsSearch];
+    if (range.location != NSNotFound)
+    {
+        [resultStr setAttributes:@{NSForegroundColorAttributeName:color} range:range];
+    }
+    
+    return resultStr;
+}
 
 
 

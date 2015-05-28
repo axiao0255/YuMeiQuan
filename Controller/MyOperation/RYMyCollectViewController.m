@@ -35,7 +35,6 @@
 {
     theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
     theTableView.backgroundColor = [UIColor clearColor];
-//    [theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [theTableView setSectionIndexBackgroundColor:[UIColor clearColor]];
     [theTableView setSectionIndexColor:[Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0]];
     theTableView.delegate = self;
@@ -62,6 +61,8 @@
     searchBar.layer.cornerRadius = 5.0f;
     searchBar.layer.masksToBounds = YES;
     searchBar.placeholder = @"搜索关注企业";
+    UITextField *searchField = [searchBar valueForKey:@"_searchField"];
+    searchField.font = [UIFont systemFontOfSize:12];
     searchBar.delegate = self;
     searchBar.backgroundImage = [UIImage new];
     [headView addSubview:searchBar];

@@ -13,5 +13,6 @@
 @property (nonatomic , strong) NSString *corporateName;
 @property (nonatomic , strong) NSString *corporateRecommend;
 @property (nonatomic , strong) NSString *phone;
+@property (nonatomic , assign) BOOL     isAttention;
 
 @end

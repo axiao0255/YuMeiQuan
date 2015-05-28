@@ -17,6 +17,7 @@
 #import "RYMyInformViewController.h"
 #import "RYMyInviteViewController.h"
 #import "RYMyLiteratureViewController.h"
+#import "RYMyAnswersRecordViewController.h"
 
 
 @interface RYMyHomeLeftViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -161,7 +162,7 @@
                 vc = [[RYMyLiteratureViewController alloc] init];
                 break;
             case 8: // 问答记录
-                vc = [[UIViewController alloc] init];
+                vc = [[RYMyAnswersRecordViewController alloc] init];
                 break;
             default:
                 break;

@@ -19,11 +19,17 @@
 #import "RYCorporateHomePageViewController.h"
 #import "RYMoviePlayerViewController.h"
 #import "RYAuthorArticleViewController.h"
+#import "RYLiteratureDetailsViewController.h"
+#import "RYWeeklyViewController.h"
 
+#import "RYHomepage.h"
 #import "RYNewsPage.h"
 #import "RYHuiXun.h"
 #import "RYPodcastPage.h"
 #import "RYBaiJiaPage.h"
+#import "RYLiteraturePage.h"
+
+#import "RYLiteratureCategoryView.h"
 
 /**
  *  随机数据
@@ -31,7 +37,7 @@
 #define MJRandomData [NSString stringWithFormat:@"随机数据---%d", arc4random_uniform(1000000)]
 
 
-@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate>
+@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate,GridMenuViewDelegate,RYLiteratureCategoryViewDelegate,UISearchBarDelegate>
 {
     MJScrollBarView    *scrollBarView;
     MJScrollPageView   *scrollPageView;
@@ -39,14 +45,26 @@
     newsBarData        *newsData;
 }
 
-@property (strong, nonatomic) NSMutableArray *fakeData;
+@property (strong, nonatomic) NSMutableArray   *fakeData;
+@property (strong, nonatomic) NSArray          *categoryArray;
 
-@property (strong, nonatomic) RYNewsPage     *newsPage;
-@property (strong, nonatomic) RYHuiXun       *huiXun;
-@property (strong, nonatomic) RYPodcastPage  *podcastPage;
-@property (strong, nonatomic) RYBaiJiaPage   *baiJiaPage;
+@property (strong, nonatomic) UIButton         *selectCategoryBtn;
+@property (strong, nonatomic) UIView           *categoryGridView;
+@property (strong, nonatomic) UISearchBar      *searchBar;
+@property (strong, nonatomic) UILabel          *weeklyLabel;
 
-@property (assign, nonatomic) NSInteger      baiJiaCurrentSelectIndex;
+@property (strong, nonatomic) RYHomepage       *homePage;
+@property (strong, nonatomic) RYNewsPage       *newsPage;
+@property (strong, nonatomic) RYHuiXun         *huiXun;
+@property (strong, nonatomic) RYPodcastPage    *podcastPage;
+@property (strong, nonatomic) RYBaiJiaPage     *baiJiaPage;
+@property (strong, nonatomic) RYLiteraturePage *literaturePage;
+
+
+@property (assign, nonatomic) NSInteger        baiJiaCurrentSelectIndex;
+
+
+@property (strong, nonatomic) RYLiteratureCategoryView    *literatureCategoryView;
 
 @end
 
@@ -57,7 +75,6 @@
     // Do any additional setup after loading the view.
     [self commInit];
     [self setNavigationItem];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -91,7 +108,12 @@
 - (void)leftButtonClick:(id)sender
 {
     NSLog(@"我的");
-    [[SlideNavigationController sharedInstance] openMenu:MenuLeft withCompletion:nil];
+    if ( self.selectCategoryBtn.selected ) {
+        [self.literatureCategoryView dismissCategoryView];
+    }
+    else{
+        [[SlideNavigationController sharedInstance] openMenu:MenuLeft withCompletion:nil];
+    }
 }
 
 /**
@@ -99,8 +121,13 @@
  */
 - (void)loginButtonClick:(id)sender
 {
-    RYLoginViewController *loginVC = [[RYLoginViewController alloc] init];
-    [self.navigationController pushViewController:loginVC animated:YES];
+    if ( self.selectCategoryBtn.selected ) {
+        [self.literatureCategoryView dismissCategoryView];
+    }
+    else{
+        RYLoginViewController *loginVC = [[RYLoginViewController alloc] init];
+        [self.navigationController pushViewController:loginVC animated:YES];
+    }
 }
 
 #pragma mark UI初始化
@@ -163,6 +190,9 @@
                     tableView.tableHeaderView = [self baiJiaTableViewHeadView];
                     [tableView setSectionIndexColor:[Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0]];
                 }
+                else if ( aIndex == 3 ){
+                    [scrollPageView.scrollView addSubview:[self literatureCategory]];
+                }
             }
         }
     }
@@ -170,6 +200,51 @@
     [self.view addSubview:scrollPageView];
 }
 
+/**
+ * 文献 top 的分类选择
+ */
+- (UIView *)literatureCategory
+{
+    UIView   *view = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 3, 0, SCREEN_WIDTH, 20)];
+    view.backgroundColor = [UIColor whiteColor];
+    GridMenuView *gridMenu = [[GridMenuView alloc] initWithFrame:CGRectMake(0, 0, (SCREEN_WIDTH / 5.0 ) * 4, 20)
+                                                       imgUpName:@"ic_grid_default.png"
+                                                     imgDownName:@"ic_grid_highlighted.png"
+                                                      titleArray:@[@"鼻整形",@"眼整形",@"整形外科",@"乳房整形"]
+                                                  titleDownColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0]
+                                                    titleUpColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0]
+                                                       perRowNum:4
+                                             andCanshowHighlight:YES];
+    gridMenu.delegate = self;
+    gridMenu.backgroundColor = [UIColor redColor];
+    [view addSubview:gridMenu];
+    
+    [view addSubview:self.selectCategoryBtn];
+    return view;
+}
+
+#pragma mark - GridMenuViewDelegate
+-(void)GridMenuViewButtonSelected:(NSInteger)btntag selfTag:(NSInteger)selftag
+{
+    NSLog(@"btntag : %ld, selftag : %ld" ,btntag,selftag);
+    [self.literatureCategoryView dismissCategoryView];
+}
+
+#pragma  mark - RYLiteratureCategoryViewDelegate
+
+- (void)literatureCategorySelected:(NSInteger)btntag selfTag:(NSInteger)selftag
+{
+    NSLog(@"btntag : %ld, selftag : %ld" ,btntag,selftag);
+}
+
+- (void)dismissCompletion
+{
+    [self.selectCategoryBtn setSelected:NO];
+}
+
+/**
+ * 百家 top 的分段选择器
+ */
 -(UIView *)baiJiaTableViewHeadView
 {
     UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 35)];
@@ -195,6 +270,56 @@
         }
     }
     return _fakeData;
+}
+
+
+- (NSArray *)categoryArray
+{
+    if ( _categoryArray == nil ) {
+        _categoryArray = [NSArray array];
+    }
+    return _categoryArray;
+}
+
+/**
+ * 选择分类的按钮
+ */
+- (UIButton *)selectCategoryBtn
+{
+    if (_selectCategoryBtn == nil) {
+        _selectCategoryBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 64, 0, 64, 20)];
+        [_selectCategoryBtn setImage:[UIImage imageNamed:@"ic_adown_arrow.png"] forState:UIControlStateNormal];
+        [_selectCategoryBtn setImage:[UIImage imageNamed:@"ic_up_arrow.png"] forState:UIControlStateSelected];
+        [_selectCategoryBtn addTarget:self action:@selector(selectCategoryBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _selectCategoryBtn;
+}
+/**
+ *更多分类 的显示框
+ */
+- (UIView *)categoryGridView
+{
+    if ( _categoryGridView == nil ) {
+        _categoryGridView = [[UIView alloc] initWithFrame:CGRectZero];
+    }
+    return _categoryGridView;
+}
+
+- (RYLiteratureCategoryView *)literatureCategoryView
+{
+    if ( _literatureCategoryView == nil ) {
+        _literatureCategoryView = [[RYLiteratureCategoryView alloc] init];
+        _literatureCategoryView.delegate = self;
+    }
+    return _literatureCategoryView;
+}
+
+- (RYHomepage *)homePage
+{
+    if ( !_homePage ) {
+        _homePage = [[RYHomepage alloc] init];
+    }
+    return _homePage;
 }
 
 - (RYNewsPage *)newsPage
@@ -229,19 +354,51 @@
     return _baiJiaPage;
 }
 
+- (RYLiteraturePage *)literaturePage
+{
+    if ( _literaturePage == nil ) {
+        _literaturePage = [[RYLiteraturePage alloc] init];
+    }
+    return _literaturePage;
+}
+
+/**
+ * 文献更多按钮点击
+ */
+-(void)selectCategoryBtnClick:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+    if ( btn.selected ) {
+        [self.literatureCategoryView dismissCategoryView];
+    }
+    else{ // 展开
+        self.literatureCategoryView.hidden = NO;
+        [self.view addSubview:self.literatureCategoryView];
+        [self.literatureCategoryView showCategoryView];
+    }
+    [btn setSelected:!btn.selected];
+}
+
+#pragma mark 头部tabbar 分类 选择
 -(void)didMenuClickedButtonAtIndex:(NSInteger)index
 {
     NSLog(@" dianji %ld",(long)index);
+    if ( self.selectCategoryBtn.selected ) {
+        self.literatureCategoryView.hidden = YES;
+        [self.literatureCategoryView dismissCategoryView];
+    }
     self.title = [newsData currentTitleWithIndex:index];
     if (currentIndex != index ) {
         currentIndex = index;
         [scrollPageView moveScrollowViewAthIndex:currentIndex];
     }
-}
+ }
 
+#pragma mark 列表滚动后 设置 tabbar 的状态
 - (void)currentMoveToPageAtIndex:(NSInteger)aIndex
 {
     NSLog(@"滑动列表 %ld",(long)aIndex);
+   [self.literatureCategoryView dismissCategoryView];
     if ( currentIndex != aIndex ) {
         currentIndex = aIndex;
         [scrollBarView clickButtonAtIndex:currentIndex];
@@ -259,6 +416,7 @@
 //    }];
 }
 
+#pragma mark 获取数据
 - (void)freshContentTableAtIndex:(NSInteger)aIndex isHead:(BOOL)isHead
 {
     NSLog(@"%ld,%d",(long)aIndex, isHead);
@@ -267,8 +425,34 @@
     for ( int i = 0;  i < 5; i ++ ) {
         [self.fakeData addObject:MJRandomData];
     }
-    
-    if ( aIndex == 1 ) {
+    if ( aIndex == 0 ) {
+        
+        NSMutableDictionary *tmpDic = [NSMutableDictionary dictionary];
+        [tmpDic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
+        [tmpDic setObject:@"段涛：移动互联网精神已医学专业移动互联网精神已医学专业移动互联网精神已" forKey:@"title"];
+        self.homePage.adverData = tmpDic;
+        
+        NSMutableArray *arr = [NSMutableArray array];
+        for ( int i = 0 ; i < 6; i ++ ) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            [dic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
+            [dic setObject:@"2015-05-08" forKey:@"time"];
+            if ( i % 2 == 0 ) {
+                [dic setObject:@"电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影" forKey:@"title"];
+                [dic setObject:@"文献" forKey:@"belongs"];
+                [dic setObject:@"中国医生协会美容与整形医生分会。激光激光激光" forKey:@"subhead"];
+            }
+            else{
+                [dic setObject:@"视频视频视频视频视频视频视频视频视频视" forKey:@"title"];
+                [dic setObject:@"会讯" forKey:@"belongs"];
+                [dic setObject:@"" forKey:@"subhead"];
+            }
+            [arr addObject:dic];
+        }
+        
+        self.homePage.listData = arr;
+    }
+    else if ( aIndex == 1 ) {
         NSMutableDictionary *tmpDic = [NSMutableDictionary dictionary];
         [tmpDic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
         [tmpDic setObject:@"段涛：移动互联网精神已医学专业移动互联网精神已医学专业移动互联网精神已" forKey:@"title"];
@@ -303,6 +487,29 @@
             [arr addObject:dic];
         }
         self.huiXun.listData = arr;
+    }
+    else if ( aIndex == 3 )
+    {
+        NSMutableDictionary *tmpDic = [NSMutableDictionary dictionary];
+        [tmpDic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
+        [tmpDic setObject:@"段涛：移动互联网精神已医学专业移动互联网精神已医学专业移动互联网精神已" forKey:@"title"];
+        
+        self.literaturePage.adverData = tmpDic;
+        
+        NSMutableArray *arr = [NSMutableArray array];
+        for ( int i = 0 ; i < 10; i ++ ) {
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            [dic setObject:@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3661783255,1817185932&fm=116&gp=0.jpg" forKey:@"pic"];
+            [dic setObject:@"护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，" forKey:@"title"];
+            [dic setObject:@"2015-04-23" forKey:@"time"];
+            [arr addObject:dic];
+        }
+        self.literaturePage.listData = arr;
+        
+        self.categoryArray = @[@"身体塑形",@"面部塑形",@"毛发移植",@"皮肤外科",@"外科综合",@"激光物理",@"注射美容",@"生活美容",@"皮肤科综合",@"牙科美容",@"中医美容",@"护肤品",@"市场营销",@"口腔",@"书讯",@"图书馆",@"全部"];
+        self.literatureCategoryView.categoryData = self.categoryArray;
+        self.literatureCategoryView.offSetY = 55;
+
     }
     else if ( aIndex == 4 )
     {
@@ -365,25 +572,21 @@
     });
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    return 50;
-//}
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    UIView *view = [UIView new];
-//    view.backgroundColor = [UIColor redColor];
-//    return view;
-//}
-
+#pragma mark  UITableView delegate and dataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 1 ) {
+    if ( aIndex == 0 ) {
+        return [self.homePage homepageNumberOfSectionsInTableView:tableView];
+    }
+    else if ( aIndex == 1 ) {
         return [self.newsPage newsNumberOfSectionsInTableView:tableView];
     }
     else if ( aIndex == 2 ){
         return [self.huiXun huiXunNumberOfSectionsInTableView:tableView];
+    }
+    else if ( aIndex == 3 ){
+        return [self.literaturePage literatureNumberOfSectionsInTableView:tableView];
     }
     else if ( aIndex == 4 ){
         return  [self.podcastPage podcastNumberOfSectionsInTableView:tableView];
@@ -391,65 +594,75 @@
     else if ( aIndex == 5 ){
         return [self.baiJiaPage baiJiaNumberOfSectionsInTableView:tableView];
     }
-    return 1;
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 1 ) {
+    if ( aIndex == 0 ) {
+        return [self.homePage homepageTableView:tableView numberOfRowsInSection:section];
+    }
+    else if ( aIndex == 1 ) {
         return [self.newsPage newsTableView:tableView numberOfRowsInSection:section];
     }
     else if ( aIndex == 2 ){
         return [self.huiXun huiXunTableView:tableView numberOfRowsInSection:section];
     }
+    else if ( aIndex == 3 ){
+        return [self.literaturePage literatureTableView:tableView numberOfRowsInSection:section];
+    }
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView numberOfRowsInSection:section];
     }
-    else if ( aIndex == 5 ){
+    else {
         return [self.baiJiaPage baiJiaTableView:tableView numberOfRowsInSection:section];
     }
-    NSArray *dataSource = [scrollPageView.dataSources objectAtIndex:aIndex];
-    return dataSource.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 1 ) {
+    if ( aIndex == 0 ) {
+        return [self.homePage homepageTableView:tableView heightForRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 1 ) {
         return [self.newsPage newsTableView:tableView heightForRowAtIndexPath:indexPath];
     }
     else if ( aIndex == 2 ){
         return [self.huiXun huiXunTableView:tableView heightForRowAtIndexPath:indexPath];
     }
+    else if ( aIndex == 3 ){
+        return [self.literaturePage literatureTableView:tableView heightForRowAtIndexPath:indexPath];
+    }
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView heightForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 5 ){
-        return [self.baiJiaPage baiJiaTableView:tableView heightForRowAtIndexPath:indexPath];
-    }
     else{
-        return 100;
+        return [self.baiJiaPage baiJiaTableView:tableView heightForRowAtIndexPath:indexPath];
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 1 ) {
+    if ( aIndex == 0 ) {
+        return [self.homePage homepageTableView:tableView cellForRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 1 ) {
         return [self.newsPage newsTableView:tableView cellForRowAtIndexPath:indexPath];
     }
     else if ( aIndex == 2 ){
         return [self.huiXun huiXunTableView:tableView cellForRowAtIndexPath:indexPath];
     }
+    else if ( aIndex == 3 ){
+        return [self.literaturePage literatureTableView:tableView cellForRowAtIndexPath:indexPath];
+    }
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView cellForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 5 ){
+    else {
         return [self.baiJiaPage baiJiaTableView:tableView cellForRowAtIndexPath:indexPath];
-    }
-    else{
-        return [UITableViewCell new];
     }
 }
 
@@ -457,11 +670,18 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 4 ) { // 播客点击，进入播放
+    if ( aIndex == 0 ) {
+        [self weeklyTableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 4 ) { // 播客点击，进入播放
         [self podcastTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
     else if ( aIndex == 5 ){
         [self baiJiaTableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 3 ){
+        RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     }
     else{
         if ( indexPath.row <= 3 ) {
@@ -481,6 +701,9 @@
     if ( aIndex == 1 ) {
         return [self.newsPage newsTableView:tableView heightForFooterInSection:section];
     }
+    else if ( aIndex == 3 ){
+        return [self.literaturePage literatureTableView:tableView heightForFooterInSection:section];
+    }
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView heightForFooterInSection:section];
     }
@@ -495,8 +718,15 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 1 ) {
+    if ( aIndex == 0 ) {
+        if ( section == 1 )return 84;
+        else return 0;
+    }
+    else if ( aIndex == 1 ) {
         return [self.newsPage newsTableView:tableView heightForHeaderInSection:section];
+    }
+    else if ( aIndex == 3 ){
+        return [self.literaturePage literatureTableView:tableView heightForHeaderInSection:section];
     }
     else if ( aIndex == 4 ){
         return [self.podcastPage podcastTableView:tableView heightForHeaderInSection:section];
@@ -512,7 +742,10 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 5 ) {
+    if ( aIndex == 0 ) {
+        return [self homePageDirectSearchView];
+    }
+    else if ( aIndex == 5 ) {
         return [self.baiJiaPage baiJiaTableView:tableView viewForHeaderInSection:section];
     }
     else{
@@ -556,6 +789,14 @@
     }
 }
 
+#pragma mark 进入周报 进入周报页
+- (void)weeklyTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ( indexPath.section != 0 ) {
+        [self gotoweekly];
+    }
+}
+
 #pragma mark - 播客点击播放视频
 - (void)podcastTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -579,55 +820,95 @@
     //    [playerViewController dismissModalViewControllerAnimated:YES];
 }
 
+#pragma mark 直达号搜索框
+- (UIView *)homePageDirectSearchView
+{
+    UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 84)];
+    view.backgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
+    
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(10, 8, SCREEN_WIDTH - 20, 28)];
+    searchBar.layer.cornerRadius = 5.0f;
+    searchBar.layer.masksToBounds = YES;
+    searchBar.placeholder = @"输入企业直达号，例如：赛诺龙、赛诺秀";
+    searchBar.delegate = self;
+    searchBar.backgroundImage = [UIImage new];
+    UITextField *searchField = [searchBar valueForKey:@"_searchField"];
+    searchField.font = [UIFont systemFontOfSize:12];
+    self.searchBar = searchBar;
+    [view addSubview:searchBar];
+    
+    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, 40)];
+    btn.backgroundColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+    [btn addTarget:self action:@selector(gotoweekly) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:btn];
+    
+    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 12, 90, 16)];
+    imgView.image = [UIImage imageNamed:@"ic_weekly.png"];
+    [btn addSubview:imgView];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(imgView.right + 4, 12, 45, 16)];
+    label.font = [UIFont systemFontOfSize:10];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [Utils getRGBColor:0xff g:0x82 b:0x21 a:1.0];
+    label.backgroundColor = [UIColor whiteColor];
+    label.layer.cornerRadius = 5;
+    label.layer.masksToBounds = YES;
+    self.weeklyLabel = label;
+    self.weeklyLabel.text = @"第204期";
+    [btn addSubview:label];
+
+    return view;
+}
+
+#pragma mark -UISearchBar 代理方法
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    searchBar.text = @"";
+    UITextField *searchBarTextField = nil;
+    if([[[UIDevice currentDevice] systemVersion] doubleValue]>=7.0) {
+        for (UIView *subView in searchBar.subviews){
+            for (UIView *ndLeveSubView in subView.subviews){
+                if ([ndLeveSubView isKindOfClass:[UITextField class]]){
+                    searchBarTextField = (UITextField *)ndLeveSubView;
+                    break;
+                }
+            }
+        }
+    }else{
+        for (UIView *subView in searchBar.subviews){
+            if ([subView isKindOfClass:[UITextField class]]){
+                searchBarTextField = (UITextField *)subView;
+                break;
+            }
+        }
+    }
+    searchBarTextField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+    searchBarTextField.enablesReturnKeyAutomatically = NO;
+    searchBarTextField.returnKeyType = UIReturnKeyDone;
+}
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    [searchBar resignFirstResponder];
+}
+
+- (void)gotoweekly
+{
+    NSLog(@"周报");
+    RYWeeklyViewController *vc = [[RYWeeklyViewController alloc] init];
+    vc.listData = self.homePage.listData;
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 
-
-
-//- (NSInteger)mScreollTabel:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//{
-//    NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-//    NSArray *dataSource = [scrollPageView.dataSources objectAtIndex:aIndex];
-//    return dataSource.count;
-//}
-//
-//- (CGFloat)msScreollTabel:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return 100;
-//}
-//
-//- (UITableViewCell *)mScreollTabel:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    NSString *identifier = @"identifier";
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-//    if ( !cell ) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-//        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-//    }
-//    NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-//    NSArray *dataSource = [scrollPageView.dataSources objectAtIndex:aIndex];
-//    if ( dataSource.count ) {
-//        cell.textLabel.text = dataSource[indexPath.row];
-//    }
-//    return cell;
-//}
-//
-//- (void)mScreollTabel:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    if ( indexPath.row <= 3 ) {
-//        RYArticleViewController *vc = [[RYArticleViewController alloc] init];
-//        [self.navigationController pushViewController:vc animated:YES];
-//    }
-//    else{
-//        RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] init];
-//        [self.navigationController pushViewController:vc animated:YES];
-//    }
-//}
 
 #pragma mark    滑出侧边拦，需要实现该代理方法
 -(BOOL)slideNavigationControllerShouldDisplayLeftMenu
 {
-    return YES;
+    if ( self.selectCategoryBtn.selected ) {
+        return NO;
+    }
+    else{
+        return YES;
+    }
 }
 
 #pragma mark MJScrollPageView 手势代理

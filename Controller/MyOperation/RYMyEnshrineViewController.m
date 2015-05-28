@@ -109,6 +109,8 @@
     searchBar.layer.masksToBounds = YES;
     searchBar.placeholder = @"搜索收藏";
     searchBar.delegate = self;
+    UITextField *searchField = [searchBar valueForKey:@"_searchField"];
+    searchField.font = [UIFont systemFontOfSize:12];
     searchBar.backgroundImage = [UIImage new];
     [headView addSubview:searchBar];
     

@@ -11,23 +11,33 @@
 #import "RYArticleData.h"
 #import "CXPhoto.h"
 #import "GlobleModel.h"
+#import "RYCorporateHomePageViewController.h"
+
+#import "RYAnswerSheet.h"
+#import "RYShareSheet.h"
+#import "RYTokenView.h"
 
 #define BROWSER_TITLE_LBL_TAG 12731
-@interface RYArticleViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource>
+@interface RYArticleViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate>
 {
     CXBrowserNavBarView *navBarView;
-    BOOL                showButtonView;    // 用于判断 点击下载pdf是的
+    BOOL                showButtomView;    // 用于判断 点击下载pdf文件
 }
 @property (strong, nonatomic)  UIScrollView     *scrollView;
 @property (strong, nonatomic)  UIWebView        *webView;
-@property (strong, nonatomic)  UIImageView      *backgroundView;
+//@property (strong, nonatomic)  UIImageView      *backgroundView;
 
+@property (strong, nonatomic)  UIButton         *sourceButton;
 @property (strong, nonatomic)  UILabel          *sourceLabel;
 @property (strong, nonatomic)  UILabel          *dateLabel;
 @property (strong, nonatomic)  UILabel          *bodeyTitleLabel;
-@property (strong, nonatomic)  UIButton         *originalBtn;
+@property (strong, nonatomic)  UIView           *topTextDemarcation;       // 标题与正文的分界
+//@property (strong, nonatomic)  UIButton         *originalBtn;
+@property (strong, nonatomic)  UIButton         *textShareButton;          // 正文 头的分享 按钮
 
-@property (strong, nonatomic)  UIView           *buttomView;
+//@property (strong, nonatomic)  UIView           *buttomView;
+
+@property (strong, nonatomic)  RYAnswerSheet    *answerSheet;              // 答题 view
 
 @property (strong, nonatomic)  RYArticleData    *articleData;
 @property (nonatomic, strong)  NSMutableArray   *photoDataSource;
@@ -36,6 +46,13 @@
 @property (nonatomic, assign)  CGFloat          webViewHeight;
 
 @property (nonatomic, strong)  CXPhotoBrowser   *browser;
+
+// 收藏和分享
+@property (nonatomic, strong)   UIButton         *stowButton; // 收藏按钮
+@property (nonatomic, strong)   UIButton         *shareButton;// 分享按钮
+
+@property (nonatomic, strong)   RYShareSheet     *shareSheet; // 分享
+@property (nonatomic, strong)   RYTokenView      *tokenView;  // 标签view
 
 
 @end
@@ -46,7 +63,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"文章";
-    showButtonView = YES;
+    showButtomView = YES;
     [self setup];
 }
 
@@ -64,19 +81,31 @@
 {
     [self setupMainView];
     [self getBodyData];
+    [self setNavigationItem];
+}
+
+- (void)setNavigationItem
+{
+    UIBarButtonItem *stowItem = [[UIBarButtonItem alloc] initWithCustomView:self.stowButton];
+    UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:self.shareButton];
+    self.navigationItem.rightBarButtonItems = @[shareItem,stowItem];
 }
 
 - (void)setupMainView
 {
     [self addTapOnWebView];
-    [self.view addSubview:self.backgroundView];
+//    [self.view addSubview:self.backgroundView];
     self.webView.scrollView.scrollEnabled = NO;
     [self.scrollView addSubview:self.webView];
+    [self.scrollView addSubview:self.textShareButton];
     [self.scrollView addSubview:self.sourceLabel];
     [self.scrollView addSubview:self.dateLabel];
     [self.scrollView addSubview:self.bodeyTitleLabel];
-    [self.scrollView addSubview:self.originalBtn];
-    [self.scrollView addSubview:self.buttomView];
+    [self.scrollView addSubview:self.sourceButton];
+//    [self.scrollView addSubview:self.originalBtn];
+    [self.scrollView addSubview:self.topTextDemarcation];
+//    [self.scrollView addSubview:self.buttomView];
+    [self.scrollView addSubview:self.answerSheet];
     [self.view addSubview:self.scrollView];
     [self.webView.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
 }
@@ -84,6 +113,7 @@
 - (void)getBodyData
 {
     NSString *url = @"http://yimeiquan.cn/forum.php?mod=viewthread&tid=1016575&page=1&mobile=2&yy=1";
+//    NSString *url = @"http://121.40.151.63/ios.php?mod=forum&uid=2&tid=12";
     __weak typeof(self) wSelf = self;
     [NetManager JSONDataWithUrl:url parameters:nil success:^(id json) {
         NSDictionary *dic = (NSDictionary *)json;
@@ -111,16 +141,21 @@
     self.bodeyTitleLabel.text = self.articleData.subject;
     
     self.sourceLabel.text = self.articleData.author;
-    self.dateLabel.text = [NSString stringWithFormat:@"发布于：%@",self.articleData.dateline];
-
+    self.dateLabel.text = [NSString stringWithFormat:@"%@",self.articleData.dateline];
     
+    self.textShareButton.height = 35;
+
     CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(300, MAXFLOAT)];
     self.bodeyTitleLabel.text = self.articleData.subject;
     self.bodeyTitleLabel.height = size.height;
-    self.sourceLabel.top = self.bodeyTitleLabel.bottom + 10;
-    self.dateLabel.top = self.sourceLabel.bottom + 10;
-    self.originalBtn.top = self.sourceLabel.bottom;
-    self.webView.top = self.originalBtn.bottom;
+    self.bodeyTitleLabel.top = self.textShareButton.bottom + 6;
+    self.sourceLabel.top = self.bodeyTitleLabel.bottom + 6;
+    self.dateLabel.top = self.bodeyTitleLabel.bottom + 6;
+    self.sourceButton.top = self.bodeyTitleLabel.bottom;
+//    self.originalBtn.top = self.sourceLabel.bottom;
+    self.topTextDemarcation.top = self.dateLabel.bottom + 6;
+//    self.webView.top = self.originalBtn.bottom;
+    self.webView.top = self.topTextDemarcation.bottom;
     self.webView.height -= self.webView.top;
 
     //
@@ -129,7 +164,8 @@
     //        NSString *htmlString = [webviewText stringByAppendingFormat:@"%@", self.bodyModel.message];
     [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"http://yimeiquan.cn"]];
     UIEdgeInsets insets = self.webView.scrollView.contentInset;
-    insets.top = self.originalBtn.bottom;
+//    insets.top = self.originalBtn.bottom;
+    insets.top = self.topTextDemarcation.bottom;
 }
 
 -(void)addTapOnWebView
@@ -166,6 +202,44 @@
     }
 }
 
+- (UIButton *)stowButton
+{
+    if ( _stowButton == nil ) {
+        _stowButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+        [_stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
+        [_stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateHighlighted];
+        [_stowButton addTarget:self action:@selector(stowButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _stowButton;
+}
+
+- (UIButton *)shareButton
+{
+    if ( _shareButton == nil ) {
+        _shareButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+        [_shareButton setImage:[UIImage imageNamed:@"ic_share.png"] forState:UIControlStateNormal];
+        [_shareButton addTarget:self action:@selector(shareButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _shareButton;
+}
+
+- (RYShareSheet *)shareSheet
+{
+    if ( _shareSheet == nil ) {
+        _shareSheet = [[RYShareSheet alloc] init];
+    }
+    return _shareSheet;
+}
+
+- (RYTokenView *)tokenView
+{
+    if ( _tokenView == nil ) {
+        NSArray *arr = @[@"护肤品成分",@"新闻",@"护肤品成分护肤品成分",@"lalala",@"唷唷唷唷"];
+        _tokenView = [[RYTokenView alloc] initWithTokenArray:arr];
+    }
+    return _tokenView;
+}
+
 
 - (RYArticleData *)articleData
 {
@@ -196,7 +270,7 @@
 {
     if (_scrollView == nil) {
         _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-        _scrollView.backgroundColor = [UIColor clearColor];
+        _scrollView.backgroundColor = [UIColor whiteColor];
     }
     return _scrollView;
 }
@@ -209,33 +283,47 @@
         _webView.backgroundColor = [UIColor clearColor];
         _webView.opaque = NO;
         _webView.delegate = self;
-        _webView.layer.borderWidth = 1;
-        _webView.layer.borderColor = [UIColor blackColor].CGColor;
+//        _webView.layer.borderWidth = 1;
+//        _webView.layer.borderColor = [UIColor blackColor].CGColor;
     }
     return _webView;
 }
 
-- (UIImageView *)backgroundView
+//- (UIImageView *)backgroundView
+//{
+//    if (_backgroundView == nil) {
+//        UIImage *image = [UIImage imageNamed:@"body_bg"];
+//        image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+//        _backgroundView = [[UIImageView alloc] initWithImage:image];
+//        _backgroundView.frame = self.view.bounds;
+//    }
+//    return _backgroundView;
+//}
+
+- (UIButton *)sourceButton
 {
-    if (_backgroundView == nil) {
-        UIImage *image = [UIImage imageNamed:@"body_bg"];
-        image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-        _backgroundView = [[UIImageView alloc] initWithImage:image];
-        _backgroundView.frame = self.view.bounds;
+    if ( _sourceButton == nil ) {
+        _sourceButton = [[UIButton alloc] initWithFrame:CGRectZero];
+        _sourceButton.backgroundColor = [UIColor clearColor];
+        _sourceButton.width = 130;
+        _sourceButton.height = 20;
+        _sourceButton.left = SCREEN_WIDTH - 130 - 15;
+        [_sourceButton addTarget:self action:@selector(sourceButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _backgroundView;
+    return _sourceButton;
 }
 
 - (UILabel *)sourceLabel
 {
     if (_sourceLabel == nil) {
         _sourceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _sourceLabel.left = 10;
-        _sourceLabel.height = 15;
-        _sourceLabel.width = 200;
-        _sourceLabel.backgroundColor = [UIColor grayColor];
-        _sourceLabel.font = [UIFont systemFontOfSize:12];
-        _sourceLabel.textColor = [UIColor lightGrayColor];
+        _sourceLabel.left = SCREEN_WIDTH - 130 - 15;
+        _sourceLabel.height = 11;
+        _sourceLabel.width = 130;
+        _sourceLabel.textAlignment = NSTextAlignmentRight;
+        _sourceLabel.backgroundColor = [UIColor clearColor];
+        _sourceLabel.font = [UIFont systemFontOfSize:10];
+        _sourceLabel.textColor = [Utils getRGBColor:0x00 g:0xc3 b:0x8c a:1.0];
     }
     return _sourceLabel;
 }
@@ -244,12 +332,12 @@
 {
     if (_dateLabel == nil) {
         _dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _dateLabel.left = 10;
-        _dateLabel.height = 15;
-        _dateLabel.width = 200;
-        _dateLabel.backgroundColor = [UIColor blueColor];
-        _dateLabel.font = [UIFont systemFontOfSize:12];
-        _dateLabel.textColor = [UIColor lightGrayColor];
+        _dateLabel.left = 15;
+        _dateLabel.height = 11;
+        _dateLabel.width = 130;
+        _dateLabel.backgroundColor = [UIColor clearColor];
+        _dateLabel.font = [UIFont systemFontOfSize:10];
+        _dateLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     }
     return _dateLabel;
 }
@@ -258,46 +346,81 @@
 {
     if (_bodeyTitleLabel == nil) {
         UILabel *bodeyTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        bodeyTitleLabel.width = 300;
-        bodeyTitleLabel.left = 10;
+        bodeyTitleLabel.width = SCREEN_WIDTH - 30;
+        bodeyTitleLabel.left = 15;
         bodeyTitleLabel.top = 10;
         bodeyTitleLabel.numberOfLines = 2;
-        bodeyTitleLabel.backgroundColor = [UIColor yellowColor];
-        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:18];
-        bodeyTitleLabel.textColor = [UIColor blackColor];
+        bodeyTitleLabel.backgroundColor = [UIColor clearColor];
+        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:14];
+        bodeyTitleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         _bodeyTitleLabel = bodeyTitleLabel;
     }
     return _bodeyTitleLabel;
 }
 
-- (UIButton *)originalBtn
+- (UIView *)topTextDemarcation
 {
-    if (_originalBtn == nil) {
-        _originalBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _originalBtn.width = 80;
-        _originalBtn.backgroundColor = [UIColor redColor];
-        _originalBtn.height = 40;
-        _originalBtn.right = self.view.width - 10;
-        [_originalBtn setTitle:@"阅读原文>>" forState:UIControlStateNormal];
-        _originalBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-        [_originalBtn addTarget:self action:@selector(clickOriginalBtn:) forControlEvents:UIControlEventTouchUpInside];
-        [_originalBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    if ( _topTextDemarcation == nil ) {
+        _topTextDemarcation = [[UIView alloc] initWithFrame:CGRectZero];
+        _topTextDemarcation.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
+        _topTextDemarcation.left = 0;
+        _topTextDemarcation.width = SCREEN_WIDTH;
+        _topTextDemarcation.height = 8;
     }
-    return _originalBtn;
+    return _topTextDemarcation;
 }
 
-- (UIView *)buttomView
+- (UIButton *)textShareButton
 {
-    if (_buttomView == nil) {
-        _buttomView = [[UIView alloc]initWithFrame:CGRectZero];
-        _buttomView.backgroundColor = [UIColor orangeColor];
-        _buttomView.width = 300;
-        _buttomView.left = 10;
-        _buttomView.height = 200;
-        _buttomView.top = CGRectGetHeight(self.view.bounds);
-        _buttomView.hidden = YES;
+    if ( _textShareButton == nil ) {
+        _textShareButton = [[UIButton alloc] initWithFrame:CGRectZero];
+        _textShareButton.left = 15;
+        _textShareButton.top = 3;
+        _textShareButton.width = SCREEN_WIDTH - 30;
+        [_textShareButton setImage:[UIImage imageNamed:@"ic_textShare.png"] forState:UIControlStateNormal];
+        [_textShareButton addTarget:self action:@selector(shareButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
-    return _buttomView;
+    return _textShareButton;
+}
+
+//- (UIButton *)originalBtn
+//{
+//    if (_originalBtn == nil) {
+//        _originalBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//        _originalBtn.width = 80;
+//        _originalBtn.backgroundColor = [UIColor redColor];
+//        _originalBtn.height = 40;
+//        _originalBtn.right = self.view.width - 10;
+//        [_originalBtn setTitle:@"阅读原文>>" forState:UIControlStateNormal];
+//        _originalBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+//        [_originalBtn addTarget:self action:@selector(clickOriginalBtn:) forControlEvents:UIControlEventTouchUpInside];
+//        [_originalBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+//    }
+//    return _originalBtn;
+//}
+
+//- (UIView *)buttomView
+//{
+//    if (_buttomView == nil) {
+//        _buttomView = [[UIView alloc]initWithFrame:CGRectZero];
+//        _buttomView.backgroundColor = [UIColor orangeColor];
+//        _buttomView.width = 300;
+//        _buttomView.left = 10;
+//        _buttomView.height = 200;
+//        _buttomView.top = CGRectGetHeight(self.view.bounds);
+//        _buttomView.hidden = YES;
+//    }
+//    return _buttomView;
+//}
+
+- (RYAnswerSheet *)answerSheet
+{
+    if ( _answerSheet == nil ) {
+        _answerSheet = [[RYAnswerSheet alloc] initWithDataSource:nil];
+        _answerSheet.top = CGRectGetHeight(self.view.bounds);
+        _answerSheet.hidden = YES;
+    }
+    return _answerSheet;
 }
 
 - (void)clickOriginalBtn:(id)sender {
@@ -355,18 +478,26 @@
     
     NSString *htmlHeight = [webView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"webHeight\").offsetHeight;"];
     self.webViewHeight = htmlHeight.integerValue;
-    if ( showButtonView ) {
-        self.buttomView.hidden = NO;
+    if ( showButtomView ) {
+//        self.buttomView.hidden = NO;
+        self.answerSheet.hidden = NO;
+        self.answerSheet.height = [self.answerSheet getAnswerSheetHeight];
     }
     else{
-        self.buttomView.hidden = YES;
+//        self.buttomView.hidden = YES;
+        self.answerSheet.height = 0;
+        self.answerSheet.hidden = YES;
     }
    
-    self.buttomView.top = self.webViewHeight + self.originalBtn.bottom;
+//    self.buttomView.top = self.webViewHeight + self.originalBtn.bottom;
+//    self.buttomView.top = self.webViewHeight + self.topTextDemarcation.bottom;
+    self.answerSheet.top = self.webViewHeight + self.topTextDemarcation.bottom;
     CGSize scrollViewContentSize = self.scrollView.contentSize;
-    scrollViewContentSize.height = self.webViewHeight + self.originalBtn.bottom + self.buttomView.height;
+//    scrollViewContentSize.height = self.webViewHeight + self.originalBtn.bottom + self.buttomView.height;
+    scrollViewContentSize.height = self.webViewHeight + self.topTextDemarcation.bottom + self.answerSheet.height;
     self.scrollView.contentSize = scrollViewContentSize ;
-    self.webView.height = self.webViewHeight+self.buttomView.height + self.originalBtn.bottom;
+//    self.webView.height = self.webViewHeight+self.buttomView.height + self.originalBtn.bottom;
+    self.webView.height = self.webViewHeight+self.answerSheet.height + self.topTextDemarcation.bottom;
      NSLog(@"%f",scrollViewContentSize.height);
     NSLog(@"%f",self.webView.height);
 }
@@ -390,7 +521,7 @@
             return NO;
         }
         else{
-            showButtonView = NO;
+            showButtomView = NO;
         }
         
     } else if (navigationType == UIWebViewNavigationTypeOther) {
@@ -411,7 +542,8 @@
         CGSize  size = [[change valueForKey:NSKeyValueChangeNewKey] CGSizeValue];
         if (size.height > 0) {
             CGSize scrollViewContentSize = self.scrollView.contentSize;
-            scrollViewContentSize.height = size.height + self.originalBtn.bottom;
+//            scrollViewContentSize.height = size.height + self.originalBtn.bottom;
+             scrollViewContentSize.height = size.height + self.topTextDemarcation.bottom;
             self.scrollView.contentSize = scrollViewContentSize ;
             self.webView.height = size.height;
         }
@@ -455,7 +587,7 @@
         UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:12.]];
         [doneButton setTitle:NSLocalizedString(@"完成",@"Dismiss button title") forState:UIControlStateNormal];
-        [doneButton setFrame:CGRectMake(size.width - 60, 10, 50, 30)];
+        [doneButton setFrame:CGRectMake(size.width - 60, 20, 40, 25)];
         [doneButton addTarget:self action:@selector(photoBrowserDidTapDoneButton:) forControlEvents:UIControlEventTouchUpInside];
         [doneButton.layer setMasksToBounds:YES];
         [doneButton.layer setCornerRadius:4.0];
@@ -466,16 +598,20 @@
         doneButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [navBarView addSubview:doneButton];
         
+        UIView  * titleView = [[UIView alloc] initWithFrame:CGRectMake((size.width - 100)/2, 0, 100, size.height)];
+        titleView.backgroundColor = [UIColor clearColor];
+        [navBarView addSubview:titleView];
+        
         UILabel *titleLabel = [[UILabel alloc] init];
-        [titleLabel setFrame:CGRectMake((size.width - 100)/2, 10, 100, 40)];
-        [titleLabel setCenter:navBarView.center];
+        [titleLabel setFrame:CGRectMake(0, 20, 100, 20)];
+//        [titleLabel setCenter:navBarView.center];
         [titleLabel setTextAlignment:NSTextAlignmentCenter];
         [titleLabel setFont:[UIFont boldSystemFontOfSize:20.]];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [titleLabel setTag:BROWSER_TITLE_LBL_TAG];
-        [navBarView addSubview:titleLabel];
+        [titleView addSubview:titleLabel];
     }
     return navBarView;
 }
@@ -501,6 +637,26 @@
     }
 }
 
+- (void)sourceButtonClick:(id)sender
+{
+    NSLog(@"直达号");
+    RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)stowButtonClick:(id)sender
+{
+    NSLog(@"收藏");
+    [self.view addSubview:self.tokenView];
+    [self.tokenView showTokenView];
+}
+
+- (void)shareButtonClick:(id)sender
+{
+    NSLog(@"分享");
+    self.shareSheet.delegate = self;
+    [self.shareSheet showShareView];
+}
 
 
 

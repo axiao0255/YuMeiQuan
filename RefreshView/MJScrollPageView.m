@@ -62,7 +62,6 @@
         if ( i == 0 ) {
             [refreshTableV headerBeginRefreshing];
         }
-        
         [_totlePages addObject:[NSNumber numberWithInt:1]];
         [_currentPages addObject:[NSNumber numberWithInt:0]];
         [_dataSources addObject:[NSMutableArray array]];
@@ -235,30 +234,5 @@
         [v headerBeginRefreshing];
     }
 }
-
-//#pragma mark -设置 UITableView 代理方法
-//-  (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//{
-//    return [self.delegate mScreollTabel:tableView numberOfRowsInSection:section];
-//}
-//
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return [self.delegate mScreollTabel:tableView cellForRowAtIndexPath:indexPath];
-//}
-//
-//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return [self.delegate msScreollTabel:tableView heightForRowAtIndexPath:indexPath];
-//}
-//
-//
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if ( [self.delegate respondsToSelector:@selector(mScreollTabel:didSelectRowAtIndexPath:)] ) {
-//        [self.delegate mScreollTabel:tableView didSelectRowAtIndexPath:indexPath];
-//    }
-//}
-//
 
 @end

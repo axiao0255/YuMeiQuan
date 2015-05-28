@@ -14,6 +14,8 @@
 @property (nonatomic , strong) UILabel   *corporateTitleLabel;
 @property (nonatomic , strong) UILabel   *corporateRecommendLabel;
 
+@property (nonatomic , strong) UIButton  *attentionBtn;
+
 - (void)setValueWithModel:(RYCorporateModel *)model;
 
 @end

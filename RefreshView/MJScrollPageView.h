@@ -18,15 +18,7 @@
 // 当前滚动到 第几页
 -(void)currentMoveToPageAtIndex:(NSInteger)aIndex;
 
-//- (NSInteger)mScreollTabel:(UITableView *)tableView  numberOfRowsInSection:(NSInteger)section;
-//- (UITableViewCell *)mScreollTabel:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-
 @optional
-
-//- (UIView *)tableViewHeadView;
-//- (CGFloat)msScreollTabel:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-//- (void)mScreollTabel:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-
 // ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
 - (void)handlePanGesture:(UIPanGestureRecognizer *)gesture;
 // ---------------- 为了解决 滚动出侧边拦的手势冲突 end——————————————————————

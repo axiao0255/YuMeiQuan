@@ -75,7 +75,7 @@
         [dic setValue:title forKey:@"title"];
         NSString *content = @"移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，";
         [dic setValue:content forKey:@"content"];
-        [dic setValue:@"2.15-04-23" forKey:@"time"];
+        [dic setValue:@"2015-04-23" forKey:@"time"];
         [arr addObject:dic];
     }
     return arr;

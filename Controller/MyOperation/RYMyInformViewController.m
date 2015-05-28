@@ -9,6 +9,8 @@
 #import "RYMyInformViewController.h"
 #import "RYMyInformTableViewCell.h"
 #import "RYMyInformListViewController.h"
+#import "RYMyInformRewardListViewController.h"
+#import "RYCorporateHomePageViewController.h"
 
 @interface RYMyInformViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
@@ -95,14 +97,17 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ( indexPath.section == 0 || indexPath.section == 1 ) {
-        InformType        type;
         if ( indexPath.section == 0 ) {
-            type = InformSystem;
+            RYMyInformListViewController *vc = [[RYMyInformListViewController alloc] initWithInfomType:InformSystem];
+            [self.navigationController pushViewController:vc animated:YES];
         }
         else{
-            type = InformActivity;
+            RYMyInformRewardListViewController *vc = [[RYMyInformRewardListViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
         }
-        RYMyInformListViewController *vc = [[RYMyInformListViewController alloc] initWithInfomType:type];
+    }
+    else{
+        RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] init];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

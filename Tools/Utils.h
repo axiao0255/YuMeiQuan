@@ -62,7 +62,11 @@
 #pragma mark 连续的获取本地图片数组
 +(NSArray *)getImageArrWithImgName:(NSString *)imgName andMaxIndex:(NSUInteger )index;
 
+#pragma mark - 定制数字高亮的attributedString
++ (NSAttributedString *)getAttributedString:(NSString *)sourceStr andHightlightString:(NSString *)hightStr;
 
+#pragma mark - 定制特殊 状态的 高亮字段
++ (NSAttributedString *)getAttributedString:(NSString *)sourceStr hightlightString:(NSString *)hightStr hightlightColor:(UIColor *)color andFont:(UIFont*)font;
 
 
 

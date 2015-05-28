@@ -30,11 +30,13 @@
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         [self.contentView addSubview:self.titleLabel];
         
-        self.numLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 20, 0, 20, 36)];
-        self.numLabel.backgroundColor = [UIColor clearColor];
+        self.numLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 20, 8, 20, 20)];
+        self.numLabel.backgroundColor = [Utils getRGBColor:0xeb g:0x1d b:0x25 a:1.0];
         self.numLabel.font = [UIFont systemFontOfSize:10];
-        self.numLabel.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
-        self.numLabel.textAlignment = NSTextAlignmentRight;
+        self.numLabel.textColor = [UIColor whiteColor];
+        self.numLabel.textAlignment = NSTextAlignmentCenter;
+        self.numLabel.layer.cornerRadius = 10;
+        self.numLabel.layer.masksToBounds = YES;
         [self.contentView addSubview:self.numLabel];
     }
     return self;

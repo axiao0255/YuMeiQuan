@@ -17,6 +17,8 @@
 
 @property (strong, nonatomic) SlideNavigationController *slideNav;
 
+-(void)shareWithIndex:(NSUInteger) index;
+
 
 @end
 

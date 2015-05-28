@@ -238,6 +238,7 @@
             itemView.tag = i;
             [itemView setBackgroundImage:[UIImage imageNamed:imgupname] forState:UIControlStateNormal];
             [itemView setBackgroundImage:[UIImage imageNamed:imgdownname] forState:UIControlStateHighlighted];
+            [itemView setBackgroundImage:[UIImage imageNamed:imgdownname] forState:UIControlStateSelected];
             itemView.titleLabel.font = [UIFont systemFontOfSize:12];
             [itemView setTitle:[titlearray objectAtIndex:i] forState:UIControlStateNormal];
             [itemView setTitleColor:titleupcolor forState:UIControlStateNormal];
@@ -246,27 +247,27 @@
             [itemView setExclusiveTouch:YES];
             [itemViewsArray addObject:itemView];
             [self addSubview:itemView];
-            
-            if (i == 0)
-            {
-                UIView *spliteView = [[UIView alloc] initWithFrame:CGRectMake(0+1, 5, 1, 13)];
-                [self addSubview:spliteView];
-                [spliteView setBackgroundColor:[UIColor grayColor]];
-            }
-            else
-            {
-                UIView *spliteView = [[UIView alloc] initWithFrame:CGRectMake(i%colm*imgdis_w, 5, 1, 13)];
-                [self addSubview:spliteView];
-                [spliteView setBackgroundColor:[UIColor grayColor]];
-            }
-            
-            if (i == itemsnum - 1)
-            {
-                int k = (int)itemsnum;
-                UIView *spliteView = [[UIView alloc] initWithFrame:CGRectMake(k*imgdis_w - 1, 5, 1, 13)];
-                [self addSubview:spliteView];
-                [spliteView setBackgroundColor:[UIColor grayColor]];
-            }
+//            
+//            if (i == 0)
+//            {
+//                UIView *spliteView = [[UIView alloc] initWithFrame:CGRectMake(0+1, 5, 1, 13)];
+//                [self addSubview:spliteView];
+//                [spliteView setBackgroundColor:[UIColor grayColor]];
+//            }
+//            else
+//            {
+//                UIView *spliteView = [[UIView alloc] initWithFrame:CGRectMake(i%colm*imgdis_w, 5, 1, 13)];
+//                [self addSubview:spliteView];
+//                [spliteView setBackgroundColor:[UIColor grayColor]];
+//            }
+//            
+//            if (i == itemsnum - 1)
+//            {
+//                int k = (int)itemsnum;
+//                UIView *spliteView = [[UIView alloc] initWithFrame:CGRectMake(k*imgdis_w - 1, 5, 1, 13)];
+//                [self addSubview:spliteView];
+//                [spliteView setBackgroundColor:[UIColor grayColor]];
+//            }
             
         }
         myTitledowncolor = titledowncolor;
@@ -286,9 +287,11 @@
     [[itemViewsArray objectAtIndex:self.selectedbtnnum] setTitleColor:myTitleupcolor forState:UIControlStateNormal];
     self.selectedbtnnum = [sender tag];
     if (self.canshowdownimg) {
-
+        for ( UIButton *btn in itemViewsArray) {
+            [btn setSelected:NO];
+        }
+        [sender setSelected:YES];
         [[itemViewsArray objectAtIndex:self.selectedbtnnum] setTitleColor:myTitledowncolor forState:UIControlStateNormal];
-
     }
     [delegate GridMenuViewButtonSelected:sender.tag selfTag:self.tag];
 }

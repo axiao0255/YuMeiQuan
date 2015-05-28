@@ -10,6 +10,7 @@
 #import "RYCorporateHomePageTableViewCell.h"
 #import "RYCorporateHomePageData.h"
 #import "RYCorporateViewController.h"
+#import "RYCorporateProductCategoryViewController.h"
 
 @interface RYCorporateHomePageViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -26,6 +27,7 @@
     // Do any additional setup after loading the view.
     self.title = @"赛诺龙中国";
     [self setdata];
+    [self setNavigationItem];
     [self.view addSubview:self.tableView];
 }
 
@@ -33,6 +35,17 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+- (void)setNavigationItem
+{
+    UIButton *rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 18)];
+    [rightBtn setImage:[UIImage imageNamed:@"ic_default_select.png"] forState:UIControlStateNormal];
+    rightBtn.backgroundColor = [UIColor clearColor];
+    [rightBtn addTarget:self action:@selector(rightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
+    self.navigationItem.rightBarButtonItem = rightItem;
+}
+
 
 -(void)setdata
 {
@@ -174,6 +187,12 @@
     [self.tableView beginUpdates];
     [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView endUpdates];
+}
+
+- (void)rightBtnClick:(id)sender
+{
+    RYCorporateProductCategoryViewController *vc = [[RYCorporateProductCategoryViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

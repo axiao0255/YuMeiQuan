@@ -37,6 +37,7 @@
     self.corporateModel.corporateName = @"苏州赛诺龙医疗设备有限公司";
     self.corporateModel.corporateRecommend = @"赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点";
     self.corporateModel.phone = @"123456789";
+    self.corporateModel.isAttention = YES;
 }
 
 -(UITableView *)tableView
@@ -76,7 +77,7 @@
         CGSize nameSize = [self.corporateModel.corporateName sizeWithFont:[UIFont boldSystemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
         CGSize  recommendSize = [self.corporateModel.corporateRecommend sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByCharWrapping];
         
-        return nameSize.height + recommendSize.height + 80 + 16;
+        return nameSize.height + recommendSize.height + 80 + 16 + 16 + 28;
     }
     else{
          return 94;
@@ -92,6 +93,7 @@
     }
     if ( indexPath.section == 0 ) {
         [cell setValueWithModel:self.corporateModel];
+        [cell.attentionBtn addTarget:self action:@selector(attentionBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     else{
         cell.corporateTitleLabel.font = [UIFont systemFontOfSize:12];
@@ -117,6 +119,19 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 0;
+}
+
+
+- (void)attentionBtnClick:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+    self.corporateModel.isAttention = !self.corporateModel.isAttention;
+    if (self.corporateModel.isAttention) {
+        [btn setImage:[UIImage imageNamed:@"ic_no_attention.png"] forState:UIControlStateNormal];
+    }else{
+        [btn setImage:[UIImage imageNamed:@"ic_attention.png"] forState:UIControlStateNormal];
+    }
+
 }
 
 

@@ -35,4 +35,7 @@
 #pragma mark 检测是否当前是否有网络
 +(BOOL)checkCurrentNetwork;
 
+#pragma mark -过滤表情
++(BOOL)isContainsEmoji:(NSString *)string;
+
 @end
