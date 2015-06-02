@@ -24,8 +24,8 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.corporateTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, SCREEN_WIDTH - 30, 17)];
-        self.corporateTitleLabel.font = [UIFont boldSystemFontOfSize:14];
+        self.corporateTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, SCREEN_WIDTH - 30, 18)];
+        self.corporateTitleLabel.font = [UIFont boldSystemFontOfSize:18];
         self.corporateTitleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         self.corporateTitleLabel.numberOfLines = 0;
         [self.contentView addSubview:self.corporateTitleLabel];
@@ -35,7 +35,7 @@
         [self.contentView addSubview:self.attentionBtn];
         
         self.corporateRecommendLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.attentionBtn.bottom + 16, SCREEN_WIDTH - 30, 100)];
-        self.corporateRecommendLabel.font = [UIFont systemFontOfSize:12];
+        self.corporateRecommendLabel.font = [UIFont systemFontOfSize:16];
         self.corporateRecommendLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         self.corporateRecommendLabel.numberOfLines = 0;
         [self.contentView addSubview:self.corporateRecommendLabel];

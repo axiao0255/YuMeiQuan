@@ -119,10 +119,10 @@
                 NSDictionary *dict = [self.listData objectAtIndex:indexPath.row + 1];
                 NSString *subhead = [dict getStringValueForKey:@"subhead" defaultValue:@""];
                 if ( [ShowBox isEmptyString:subhead] ) {
-                    return 87;
+                    return 94;
                 }
                 else{
-                    return 105;
+                    return 114;
                 }
             }
             else
@@ -164,7 +164,7 @@
 {
     if ( self.listData.count > 1 ) {
         if ( section == 0 ) {
-            return 26;
+            return 28;
         }else{
             return 0;
         }
@@ -178,11 +178,11 @@
 {
     if ( self.listData.count > 1 ) {
         if ( section == 0 ) {
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 26)];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 28)];
             view.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
             
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 26)];
-            label.font = [UIFont systemFontOfSize:10];
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 28)];
+            label.font = [UIFont systemFontOfSize:12];
             label.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
             label.text = @"2015-04-18 总第219期";
             [view addSubview:label];

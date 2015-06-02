@@ -123,7 +123,7 @@
 //    UIImage *image = [UIImage imageNamed:@"button_up.png"];
 //    UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, image.size.width, image.size.height)];
     UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(10, 0, SCREEN_WIDTH - 20, 44)];
-    baseButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    baseButton.titleLabel.font = [UIFont boldSystemFontOfSize:18];
     [baseButton setTitle:string forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -254,7 +254,11 @@
     return resultStr;
 }
 
-
+#pragma mark 获取中文字符串转码utf8
++ (NSString*) getEncodingWithUTF8:(NSString *)_str
+{
+    return [_str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+}
 
 
 

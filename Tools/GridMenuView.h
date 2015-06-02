@@ -108,4 +108,9 @@
  */
 - (id)initWithFrame:(CGRect)frame imgUpName:(NSString *)imgupname imgDownName:(NSString *)imgdownname titleArray:(NSArray *)titlearray titleDownColor:(UIColor *)titledowncolor titleUpColor:(UIColor *)titleupcolor perRowNum:(int)perrownum andCanshowHighlight:(BOOL)showhight;
 
+/**
+ * 撤销 选择状态
+ */
+- (void)cancelSelectStates;
+
 @end

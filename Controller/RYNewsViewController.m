@@ -43,6 +43,8 @@
     MJScrollPageView   *scrollPageView;
     NSInteger          currentIndex;
     newsBarData        *newsData;
+    
+    GridMenuView       *gridMenu; // 文献页 分类 top 三个菜单
 }
 
 @property (strong, nonatomic) NSMutableArray   *fakeData;
@@ -84,24 +86,16 @@
 
 - (void)setNavigationItem
 {
-    UIButton *loginButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-    [loginButton setExclusiveTouch:YES];
-    [loginButton setTitle:@"登陆" forState:UIControlStateNormal];
-    [loginButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
-    [loginButton addTarget:self action:@selector(loginButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    [loginButton setBackgroundColor:[UIColor clearColor]];
-    
-    UIBarButtonItem *loginItem = [[UIBarButtonItem alloc] initWithCustomView:loginButton];
-    self.navigationItem.rightBarButtonItem = loginItem;
-    
-    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-    [leftButton setTitle:@"我的" forState:UIControlStateNormal];
-    [leftButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
-    leftButton.backgroundColor = [UIColor clearColor];
+    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 36, 24)];
+    [leftButton setImage:[UIImage imageNamed:@"ic_home_head.png"] forState:UIControlStateNormal];
     [leftButton addTarget:self action:@selector(leftButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftItem;
+    
+    UIImageView *logoView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 48, 20)];
+    logoView.image = [UIImage imageNamed:@"ic_yimeiquan_logo.png"];
+    self.navigationItem.titleView = logoView;
 }
 
 #pragma mark 点击滑出侧边拦
@@ -112,7 +106,9 @@
         [self.literatureCategoryView dismissCategoryView];
     }
     else{
-        [[SlideNavigationController sharedInstance] openMenu:MenuLeft withCompletion:nil];
+        [[SlideNavigationController sharedInstance] openMenu:MenuLeft withCompletion:^{
+            NSLog(@"222");
+        }];
     }
 }
 
@@ -144,7 +140,7 @@
                                     },
                                   @{NOMALKEY: @"normal.png",
                                     HEIGHTKEY:@"ic_helight",
-                                    TITLEKEY:@"会训",
+                                    TITLEKEY:@"会讯",
                                     TITLEWIDTH:[NSNumber numberWithFloat:53]
                                     },
                                   @{NOMALKEY: @"normal.png",
@@ -166,15 +162,15 @@
     
     newsData = [[newsBarData alloc] init];
     newsData.dataArray = vButtonItemArray;
-    self.title = [newsData currentTitleWithIndex:0];
+//    self.title = [newsData currentTitleWithIndex:0];
     self.baiJiaCurrentSelectIndex = 0;
     
     if ( scrollBarView == nil ) {
-        scrollBarView = [[MJScrollBarView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 35) ButtonItems:vButtonItemArray];
+        scrollBarView = [[MJScrollBarView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40) ButtonItems:vButtonItemArray];
         scrollBarView.delegate = self;
     }
     if ( scrollPageView == nil ) {
-        scrollPageView = [[MJScrollPageView alloc] initWithFrame:CGRectMake(0, 35, SCREEN_WIDTH, VIEW_HEIGHT - 35)];
+        scrollPageView = [[MJScrollPageView alloc] initWithFrame:CGRectMake(0, 40, SCREEN_WIDTH, VIEW_HEIGHT - 40)];
         scrollPageView.delegate = self;
         [scrollBarView changeButtonStateAtIndex:currentIndex];
         [scrollPageView setContentOfTables:vButtonItemArray.count];
@@ -205,15 +201,15 @@
  */
 - (UIView *)literatureCategory
 {
-    UIView   *view = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 3, 0, SCREEN_WIDTH, 20)];
+    UIView   *view = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 3, 0, SCREEN_WIDTH, 32)];
     view.backgroundColor = [UIColor whiteColor];
-    GridMenuView *gridMenu = [[GridMenuView alloc] initWithFrame:CGRectMake(0, 0, (SCREEN_WIDTH / 5.0 ) * 4, 20)
+    gridMenu = [[GridMenuView alloc] initWithFrame:CGRectMake(0, 0, (SCREEN_WIDTH / 4.0 ) * 3, 32)
                                                        imgUpName:@"ic_grid_default.png"
                                                      imgDownName:@"ic_grid_highlighted.png"
-                                                      titleArray:@[@"鼻整形",@"眼整形",@"整形外科",@"乳房整形"]
+                                                      titleArray:@[@"鼻整形",@"眼整形",@"整形外科"]
                                                   titleDownColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0]
                                                     titleUpColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0]
-                                                       perRowNum:4
+                                                       perRowNum:3
                                              andCanshowHighlight:YES];
     gridMenu.delegate = self;
     gridMenu.backgroundColor = [UIColor redColor];
@@ -228,6 +224,7 @@
 {
     NSLog(@"btntag : %ld, selftag : %ld" ,btntag,selftag);
     [self.literatureCategoryView dismissCategoryView];
+    [self.literatureCategoryView literatureCancelSelectStates];
 }
 
 #pragma  mark - RYLiteratureCategoryViewDelegate
@@ -235,6 +232,7 @@
 - (void)literatureCategorySelected:(NSInteger)btntag selfTag:(NSInteger)selftag
 {
     NSLog(@"btntag : %ld, selftag : %ld" ,btntag,selftag);
+    [gridMenu cancelSelectStates];
 }
 
 - (void)dismissCompletion
@@ -287,7 +285,7 @@
 - (UIButton *)selectCategoryBtn
 {
     if (_selectCategoryBtn == nil) {
-        _selectCategoryBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 64, 0, 64, 20)];
+        _selectCategoryBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80, 0, 80, 32)];
         [_selectCategoryBtn setImage:[UIImage imageNamed:@"ic_adown_arrow.png"] forState:UIControlStateNormal];
         [_selectCategoryBtn setImage:[UIImage imageNamed:@"ic_up_arrow.png"] forState:UIControlStateSelected];
         [_selectCategoryBtn addTarget:self action:@selector(selectCategoryBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -318,6 +316,7 @@
 {
     if ( !_homePage ) {
         _homePage = [[RYHomepage alloc] init];
+        _homePage.viewControll = self;
     }
     return _homePage;
 }
@@ -387,7 +386,7 @@
         self.literatureCategoryView.hidden = YES;
         [self.literatureCategoryView dismissCategoryView];
     }
-    self.title = [newsData currentTitleWithIndex:index];
+//    self.title = [newsData currentTitleWithIndex:index];
     if (currentIndex != index ) {
         currentIndex = index;
         [scrollPageView moveScrollowViewAthIndex:currentIndex];
@@ -425,6 +424,8 @@
     for ( int i = 0;  i < 5; i ++ ) {
         [self.fakeData addObject:MJRandomData];
     }
+    NSInteger currentPage = [[scrollPageView.currentPages objectAtIndex:aIndex] integerValue];
+    typeof(self) wSelf = self;
     if ( aIndex == 0 ) {
         
         NSMutableDictionary *tmpDic = [NSMutableDictionary dictionary];
@@ -453,40 +454,72 @@
         self.homePage.listData = arr;
     }
     else if ( aIndex == 1 ) {
-        NSMutableDictionary *tmpDic = [NSMutableDictionary dictionary];
-        [tmpDic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
-        [tmpDic setObject:@"段涛：移动互联网精神已医学专业移动互联网精神已医学专业移动互联网精神已" forKey:@"title"];
+//        NSMutableDictionary *tmpDic = [NSMutableDictionary dictionary];
+//        [tmpDic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
+//        [tmpDic setObject:@"段涛：移动互联网精神已医学专业移动互联网精神已医学专业移动互联网精神已" forKey:@"title"];
+//        
+//        self.newsPage.adverData = tmpDic;
+//        
+//        NSMutableArray *arr = [NSMutableArray array];
+//        for ( int i = 0 ; i < 10; i ++ ) {
+//            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//            [dic setObject:@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3661783255,1817185932&fm=116&gp=0.jpg" forKey:@"pic"];
+//            [dic setObject:@"护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，" forKey:@"title"];
+//            [dic setObject:@"2015-04-23" forKey:@"time"];
+//            [arr addObject:dic];
+//        }
+//        self.newsPage.listData = arr;
         
-        self.newsPage.adverData = tmpDic;
-        
-        NSMutableArray *arr = [NSMutableArray array];
-        for ( int i = 0 ; i < 10; i ++ ) {
-            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            [dic setObject:@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3661783255,1817185932&fm=116&gp=0.jpg" forKey:@"pic"];
-            [dic setObject:@"护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，" forKey:@"title"];
-            [dic setObject:@"2015-04-23" forKey:@"time"];
-            [arr addObject:dic];
-        }
-        self.newsPage.listData = arr;
+//        NSLog(@"currentPage : %li",(long)currentPage);
+        [NetRequestAPI getHomePageNewsListWithSessionId:[RYUserInfo sharedManager].session
+                                                    fid:@"2"
+                                                   page:currentPage
+                                                success:^(id responseDic) {
+//            NSLog(@"新闻 ：responseDic  %@",responseDic);
+            // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
+            [wSelf->scrollPageView refreshEnd];
+            [wSelf setValueWithDict:responseDic andIndex:aIndex];
+        } failure:^(id errorString) {
+            [ShowBox showError:@"获取数据失败，请稍候重试"];
+//            NSLog(@"新闻 ：errorString  %@",errorString);
+            // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
+             [wSelf->scrollPageView refreshEnd];
+        }];
     }
     else if ( aIndex == 2 )
     {
-        NSMutableArray *arr = [NSMutableArray array];
-        for ( int i = 0; i < 10; i ++ ) {
-            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            if ( i % 2 == 0 ) {
-                [dic setObject:@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3661783255,1817185932&fm=116&gp=0.jpg" forKey:@"pic"];
-            }
-            else{
-                [dic setObject:@"" forKey:@"pic"];
-            }
-            [dic setObject:@"2015-04-23" forKey:@"time"];
-            [dic setObject:@"第五届全国激光美容与面部年轻化学术大会" forKey:@"title"];
-            [dic setObject:@"中国医师协会美容仪整形医师分会.激光亚专业委员会" forKey:@"subhead"];
+//        NSMutableArray *arr = [NSMutableArray array];
+//        for ( int i = 0; i < 10; i ++ ) {
+//            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//            if ( i % 2 == 0 ) {
+//                [dic setObject:@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3661783255,1817185932&fm=116&gp=0.jpg" forKey:@"pic"];
+//            }
+//            else{
+//                [dic setObject:@"" forKey:@"pic"];
+//            }
+//            [dic setObject:@"2015-04-23" forKey:@"time"];
+//            [dic setObject:@"第五届全国激光美容与面部年轻化学术大会" forKey:@"title"];
+//            [dic setObject:@"中国医师协会美容仪整形医师分会.激光亚专业委员会" forKey:@"subhead"];
+//            
+//            [arr addObject:dic];
+//        }
+//        self.huiXun.listData = arr;
+        
+        [NetRequestAPI getHomePageNewsListWithSessionId:[RYUserInfo sharedManager].session
+                                                    fid:@"48"
+                                                   page:currentPage
+                                                success:^(id responseDic) {
+                                                   NSLog(@"会讯 ：responseDic  %@",responseDic);
+                                                    [wSelf->scrollPageView refreshEnd];
+                                                    [wSelf setValueWithDict:responseDic andIndex:aIndex];
+
             
-            [arr addObject:dic];
-        }
-        self.huiXun.listData = arr;
+        } failure:^(id errorString) {
+            NSLog(@"会讯 ： %@",errorString);
+            [ShowBox showError:@"获取数据失败，请稍候重试"];
+            [wSelf->scrollPageView refreshEnd];
+        }];
+        
     }
     else if ( aIndex == 3 )
     {
@@ -508,7 +541,7 @@
         
         self.categoryArray = @[@"身体塑形",@"面部塑形",@"毛发移植",@"皮肤外科",@"外科综合",@"激光物理",@"注射美容",@"生活美容",@"皮肤科综合",@"牙科美容",@"中医美容",@"护肤品",@"市场营销",@"口腔",@"书讯",@"图书馆",@"全部"];
         self.literatureCategoryView.categoryData = self.categoryArray;
-        self.literatureCategoryView.offSetY = 55;
+        self.literatureCategoryView.offSetY = 72;
 
     }
     else if ( aIndex == 4 )
@@ -559,17 +592,57 @@
         self.baiJiaPage.authorList = authorArr;
     }
     
-    // 2.2秒后刷新表格UI
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
-        [scrollPageView refreshEnd];
-        
-        //        [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
-        [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:self.fakeData];
-        [scrollPageView setTotlePageWithNum:10 atIndex:aIndex];
+//    // 2.2秒后刷新表格UI
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
+//        [scrollPageView refreshEnd];
+//        
+//        //        [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
+//        [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:self.fakeData];
+//        [scrollPageView setTotlePageWithNum:10 atIndex:aIndex];
+//        // 刷新表格
+//        [[scrollPageView.contentItems objectAtIndex:aIndex] reloadData];
+//    });
+}
+
+- (void)setValueWithDict:(NSDictionary *)responseDic andIndex:(NSInteger)aIndex
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"获取数据失败，请稍候重试"];
+        return ;
+    }
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( !meta ) {
+        [ShowBox showError:@"获取数据失败，请稍候重试"];
+        return ;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+        return;
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( !info ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+        return;
+    }
+    // 设置 总共多少 页
+    NSInteger totalPage = [info getIntValueForKey:@"total" defaultValue:1];
+    [scrollPageView setTotlePageWithNum:totalPage atIndex:aIndex];
+    
+    NSArray *dataArray = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
+    if ( dataArray.count ) {
+        [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:dataArray];
         // 刷新表格
         [[scrollPageView.contentItems objectAtIndex:aIndex] reloadData];
-    });
+    }
+    
+//    if ( aIndex == 1 ) {
+//         self.newsPage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
+//        // 刷新表格
+//        [[scrollPageView.contentItems objectAtIndex:aIndex] reloadData];
+//    }
 }
 
 #pragma mark  UITableView delegate and dataSource
@@ -580,9 +653,11 @@
         return [self.homePage homepageNumberOfSectionsInTableView:tableView];
     }
     else if ( aIndex == 1 ) {
+        self.newsPage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
         return [self.newsPage newsNumberOfSectionsInTableView:tableView];
     }
     else if ( aIndex == 2 ){
+        self.huiXun.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
         return [self.huiXun huiXunNumberOfSectionsInTableView:tableView];
     }
     else if ( aIndex == 3 ){
@@ -842,12 +917,12 @@
     [btn addTarget:self action:@selector(gotoweekly) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btn];
     
-    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 12, 90, 16)];
+    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 11, 106, 18)];
     imgView.image = [UIImage imageNamed:@"ic_weekly.png"];
     [btn addSubview:imgView];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(imgView.right + 4, 12, 45, 16)];
-    label.font = [UIFont systemFontOfSize:10];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(imgView.right + 4, 12, 55, 18)];
+    label.font = [UIFont systemFontOfSize:12];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [Utils getRGBColor:0xff g:0x82 b:0x21 a:1.0];
     label.backgroundColor = [UIColor whiteColor];

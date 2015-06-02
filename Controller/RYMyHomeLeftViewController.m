@@ -8,6 +8,7 @@
 
 #import "RYMyHomeLeftViewController.h"
 #import "RYMyHomeLeftTableViewCell.h"
+#import "RYLoginViewController.h"
 
 
 #import "RYMyCollectViewController.h"
@@ -26,6 +27,10 @@
     
     NSArray          *highlightedImgArrs;// 高亮图片组
     NSArray          *normalImageArrs;   // 普通图片组
+    
+    NSArray          *recusalImgeArrs;   // 不可选 图片数组
+    
+    BOOL             islogin;
 }
 @end
 
@@ -34,13 +39,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    islogin = [ShowBox isLogin];
     [self setdatas];
     [self initSubviews];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slideMenuDidOpen) name:SlideNavigationControllerDidOpen object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)slideMenuDidOpen
+{
+    NSLog(@"滑动 完成");
+    islogin = [ShowBox isLogin];
+    [theTableView reloadData];
 }
 
 // 获取图片数组
@@ -48,6 +64,8 @@
 {
     highlightedImgArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_highlighted_" andMaxIndex:7]];
     normalImageArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_normalImage_" andMaxIndex:7]];
+    
+    recusalImgeArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_recusalImge_" andMaxIndex:7]];
 }
 
 - (void)initSubviews
@@ -74,7 +92,12 @@
         return 9;
     }
     else{
-        return 1;
+        if ( islogin ) {
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 }
 
@@ -102,8 +125,15 @@
                 cell = [[RYMyHomeLeftTableViewCell alloc] initWithTopCellStyle:UITableViewCellStyleDefault reuseIdentifier:topCell];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            cell.headPortraitImageView.image = [UIImage imageNamed:@"user_head_yes.png"];
-            cell.userNameLabel.text = @"点击登录";
+            if ( !islogin ) {
+                cell.headPortraitImageView.image = [UIImage imageNamed:@"user_head_no.png"];
+                cell.userNameLabel.text = @"点击登录";
+            }
+            else{
+                cell.headPortraitImageView.image = [UIImage imageNamed:@"user_head_yes.png"];
+                cell.userNameLabel.text = [[RYUserInfo sharedManager] realname];
+            }
+            
             [cell.headPortraitButton addTarget:self action:@selector(headButtonClick) forControlEvents:UIControlEventTouchUpInside];
             return cell;
         }
@@ -114,12 +144,27 @@
                 cell = [[RYMyHomeLeftTableViewCell alloc] initWithCommonStyle:UITableViewCellStyleDefault reuseIdentifier:commonCell];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            //高亮图片的名字
-            NSString *highlightedImgName = [highlightedImgArrs objectAtIndex:indexPath.row-1];
-            //normal图片的名字
-            NSString *normalImageName = [normalImageArrs objectAtIndex:indexPath.row-1];
-            cell.normalImage = [UIImage imageNamed:normalImageName];
-            cell.highlightImage = [UIImage imageNamed:highlightedImgName];
+            if ( islogin  ) {
+                [cell setUserInteractionEnabled:YES];
+                if ( [[[RYUserInfo sharedManager] groupid] isEqualToString:@"10"] && indexPath.row != 2 ) {
+                    [cell setUserInteractionEnabled:NO];
+                    NSString *normalImageName = [recusalImgeArrs objectAtIndex:indexPath.row-1];
+                    cell.normalImage = [UIImage imageNamed:normalImageName];
+                }
+                else{
+                    //高亮图片的名字
+                    NSString *highlightedImgName = [highlightedImgArrs objectAtIndex:indexPath.row-1];
+                    //normal图片的名字
+                    NSString *normalImageName = [normalImageArrs objectAtIndex:indexPath.row-1];
+                    cell.normalImage = [UIImage imageNamed:normalImageName];
+                    cell.highlightImage = [UIImage imageNamed:highlightedImgName];
+                }
+            }
+            else{
+                [cell setUserInteractionEnabled:NO];
+                NSString *normalImageName = [recusalImgeArrs objectAtIndex:indexPath.row-1];
+                cell.normalImage = [UIImage imageNamed:normalImageName];
+            }
             return cell;
         }
     }else{
@@ -177,6 +222,12 @@
 - (void)headButtonClick
 {
     NSLog(@"头像点击");
+    if ( !islogin ) {
+        RYLoginViewController *loginVC = [[RYLoginViewController alloc] init];
+        [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:loginVC
+                                                                 withSlideOutAnimation:NO
+                                                                         andCompletion:nil];
+    }
 }
 
 - (void)exitButtonClick
@@ -190,7 +241,22 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ( buttonIndex == 1 ) {
-        NSLog(@"注销");
+        //  注销
+        [NetRequestAPI userLogoutWithSessionId:[RYUserInfo sharedManager].session
+                                       success:^(id responseDic) {
+        } failure:^(id errorString) {
+        }];
+        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        NSString *path = [docPath stringByAppendingPathComponent:LoginText];
+        
+        NSDictionary *savedDic = [NSDictionary dictionaryWithContentsOfFile:path];
+        [savedDic setValue:@"0" forKey:@"islogin"];
+        [savedDic writeToFile:path atomically:YES];
+        
+        [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:nil];
+        islogin = [ShowBox isLogin];
+        [theTableView reloadData];
+
     }
 }
 

@@ -16,6 +16,7 @@
 #import "Utils.h"
 #import "ShowBox.h"
 #import "NetManager.h"
+#import "NetRequestAPI.h"
 #import "macro.h"
 #import "AFNetworking.h"
 #import "NSDictionary+Additions.h"
@@ -26,6 +27,7 @@
 #import "MobClick.h"
 #import "UMSocial.h"
 #import "UIView+CJ_Extention.h"
+#import "RYUserInfo.h"
 
 
 

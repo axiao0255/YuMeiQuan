@@ -30,11 +30,11 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
         
-        self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 8, 30, 30)];
+        self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 8, 24, 24)];
         [self.contentView addSubview:self.leftImgView];
         
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftImgView.right + 15, 16, SCREEN_WIDTH - 75, 15)];
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftImgView.right + 15, 16, SCREEN_WIDTH - 69, 16)];
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
         self.titleLabel.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         self.titleLabel.numberOfLines = 0;
         [self.contentView addSubview:self.titleLabel];
@@ -48,7 +48,7 @@
     if ( [ShowBox isEmptyString:string] ) {
         return;
     }
-    CGSize size = [string sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 75, MAXFLOAT)];
+    CGSize size = [string sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 69, MAXFLOAT)];
     self.titleLabel.height = size.height;
     self.titleLabel.text = string;
     self.leftImgView.top = (size.height + 32)/2.0 - self.leftImgView.height/2.0;

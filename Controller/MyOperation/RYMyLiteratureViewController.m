@@ -87,7 +87,7 @@
 - (UIView *)tableViewHeadView
 {
     
-    UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 105)];
+    UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 140)];
     view.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
     
     UIView *searchBG = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 35)];
@@ -100,31 +100,31 @@
     searchBar.placeholder = @"请输入需要查询的DOI";
     searchBar.delegate = self;
     UITextField *searchField = [searchBar valueForKey:@"_searchField"];
-    searchField.font = [UIFont systemFontOfSize:12];
+    searchField.font = [UIFont systemFontOfSize:14];
     searchBar.backgroundImage = [UIImage new];
     self.searchBar = searchBar;
     [searchBG addSubview:searchBar];
     
-    UILabel *hintLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, searchBG.bottom + 8, SCREEN_WIDTH - 30, 10)];
-    hintLabel.font = [UIFont systemFontOfSize:10];
+    UILabel *hintLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, searchBG.bottom + 8, SCREEN_WIDTH - 30, 12)];
+    hintLabel.font = [UIFont systemFontOfSize:12];
     hintLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     hintLabel.text = @"每次查询需要使用100积分";
     self.hintLabel = hintLabel;
     [view addSubview:hintLabel];
     
     UIButton *submitBtn = [Utils getCustomLongButton:@"申请查询"];
-    submitBtn.frame = CGRectMake(40, hintLabel.bottom + 8, SCREEN_WIDTH - 80, 35);
+    submitBtn.frame = CGRectMake(15, hintLabel.bottom + 8, SCREEN_WIDTH - 30, 40);
     [submitBtn addTarget:self action:@selector(submitBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:submitBtn];
     
-    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 104.5, SCREEN_WIDTH, 0.5)];
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, submitBtn.bottom + 8, SCREEN_WIDTH, 0.5)];
     line.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
     [view addSubview:line];
     
-    UILabel *history = [[UILabel alloc] initWithFrame:CGRectMake(15, line.bottom + 8, SCREEN_WIDTH - 30, 10)];
+    UILabel *history = [[UILabel alloc] initWithFrame:CGRectMake(15, line.bottom + 8, SCREEN_WIDTH - 30, 12)];
     history.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     history.text = @"查询列表";
-    history.font = [UIFont systemFontOfSize:10];
+    history.font = [UIFont systemFontOfSize:12];
     [view addSubview:history];
     
     return view;
@@ -173,7 +173,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 66;
+    return 75;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -198,7 +198,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 26 + 105;
+    return 140;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section

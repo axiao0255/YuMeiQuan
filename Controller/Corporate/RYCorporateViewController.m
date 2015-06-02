@@ -74,8 +74,8 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( indexPath.section == 0 ) {
-        CGSize nameSize = [self.corporateModel.corporateName sizeWithFont:[UIFont boldSystemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
-        CGSize  recommendSize = [self.corporateModel.corporateRecommend sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByCharWrapping];
+        CGSize nameSize = [self.corporateModel.corporateName sizeWithFont:[UIFont boldSystemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
+        CGSize  recommendSize = [self.corporateModel.corporateRecommend sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByCharWrapping];
         
         return nameSize.height + recommendSize.height + 80 + 16 + 16 + 28;
     }
@@ -96,7 +96,7 @@
         [cell.attentionBtn addTarget:self action:@selector(attentionBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     else{
-        cell.corporateTitleLabel.font = [UIFont systemFontOfSize:12];
+        cell.corporateTitleLabel.font = [UIFont systemFontOfSize:16];
         cell.corporateTitleLabel.text = [NSString stringWithFormat:@"联系方式：%@",self.corporateModel.phone];
     }
     

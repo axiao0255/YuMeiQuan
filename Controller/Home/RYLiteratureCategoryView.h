@@ -13,6 +13,7 @@
 - (void)literatureCategorySelected:(NSInteger)btntag selfTag:(NSInteger)selftag;
 - (void)dismissCompletion;
 
+
 @end
 
 @interface RYLiteratureCategoryView : UIView
@@ -24,6 +25,7 @@
 
 @property (assign , nonatomic) CGFloat        offSetY;
 
+- (void)literatureCancelSelectStates;
 
 - (void)showCategoryView;
 - (void)dismissCategoryView;

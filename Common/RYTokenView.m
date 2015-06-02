@@ -135,18 +135,18 @@
 - (UIView *)submitView
 {
     if ( _submitView == nil ) {
-        _submitView = [[UIView alloc] initWithFrame:CGRectMake(0, VIEW_HEIGHT-45, SCREEN_WIDTH, 35)];
+        _submitView = [[UIView alloc] initWithFrame:CGRectMake(0, VIEW_HEIGHT-56, SCREEN_WIDTH, 40)];
         
         _submitView.backgroundColor = [UIColor clearColor];
         
         UIButton *submitBtn = [Utils getCustomLongButton:@"确定"];
         [submitBtn addTarget:self action:@selector(submitBtnClick) forControlEvents:UIControlEventTouchUpInside];
-        submitBtn.frame = CGRectMake(16, 0, 140, 35);
+        submitBtn.frame = CGRectMake(16, 0, 140, 40);
         [_submitView addSubview:submitBtn];
         
         UIButton *cancelBtn = [Utils getCustomLongButton:@"取消"];
-        cancelBtn.frame = CGRectMake(submitBtn.right + 8, 0, 140, 35);
-        cancelBtn.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
+        cancelBtn.frame = CGRectMake(submitBtn.right + 8, 0, 140, 40);
+        cancelBtn.backgroundColor = [Utils getRGBColor:0xd8 g:0xd8 b:0xd8 a:1.0];
         [cancelBtn addTarget:self action:@selector(dismissTokenView) forControlEvents:UIControlEventTouchUpInside];
         [_submitView addSubview:cancelBtn];
     }
@@ -244,7 +244,7 @@
 - (void)textFieldViewOffsetY:(CGFloat)offsetY
 {
     self.tableView.top = offsetY + 8 + 30;
-    self.tableView.height = VIEW_HEIGHT - 55 - (offsetY + 8 + 30);
+    self.tableView.height = VIEW_HEIGHT - 66 - (offsetY + 8 + 30);
     
 }
 
@@ -407,15 +407,15 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 22;
+    return 28;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 22)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 28)];
     view.backgroundColor = [UIColor whiteColor];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 7, SCREEN_WIDTH - 30, 12)];
-    label.font = [UIFont systemFontOfSize:10];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 28)];
+    label.font = [UIFont systemFontOfSize:12];
     label.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     if ( section == 0) {
         label.text = @"默认标签";

@@ -265,6 +265,27 @@
     
 }
 
+#pragma mark -检查是否登录
++(BOOL)isLogin
+{
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *path = [docPath stringByAppendingPathComponent:LoginText];
+    NSDictionary *texts = [NSDictionary dictionaryWithContentsOfFile:path];
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if([fm fileExistsAtPath:path])
+    {
+        if ([[texts objectForKey:@"islogin"] isEqualToString:@"1"]) {
+            return YES;
+        }
+        else{
+            return NO;
+        }
+    }
+    else{
+        return NO;
+    }
+}
 
 
 

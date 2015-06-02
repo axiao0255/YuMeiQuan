@@ -61,8 +61,8 @@
     iconImageView.image = [UIImage imageNamed:@"ic_Invite.png"];
     [view addSubview:iconImageView];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(55, 166, SCREEN_WIDTH - 110, 13)];
-    label.font = [UIFont systemFontOfSize:12];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(55, 166, SCREEN_WIDTH - 110, 14)];
+    label.font = [UIFont systemFontOfSize:14];
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];

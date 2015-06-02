@@ -27,14 +27,14 @@
         self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 20, 26, 26)];
         [self.contentView addSubview:self.leftImgView];
         
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(68, 8, SCREEN_WIDTH - 68 - 15, 36)];
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(68, 8, SCREEN_WIDTH - 68 - 15, 39)];
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         self.titleLabel.numberOfLines = 2;
         [self.contentView addSubview:self.titleLabel];
         
-        self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(68, 48, SCREEN_WIDTH - 68 - 15, 10)];
-        self.timeLabel.font = [UIFont systemFontOfSize:10];
+        self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(68, 55, SCREEN_WIDTH - 68 - 15, 12)];
+        self.timeLabel.font = [UIFont systemFontOfSize:12];
         self.timeLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         [self.contentView addSubview:self.timeLabel];
     }

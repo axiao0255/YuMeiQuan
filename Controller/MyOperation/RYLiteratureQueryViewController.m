@@ -68,7 +68,7 @@
     self.articleData.dateline = @"2015.5.5";
     self.articleData.message = @"adfaf";
     self.articleData.subject = @"低能量激光治疗低能量激光治疗低能量激光治疗低能量激光治疗";
-    self.articleData.subhead = @"adsjkfhakjdhfasdkjfhsadjkhfsakjhdfkaadlfjhaskdhfdalsk";
+    self.articleData.subhead = @"adsjkfha kjdhfas dkjfhsa djkhfsakj hdfkaadl fjhask dhfdalsk";
     self.articleData.periodical = @"jshfghsjghsfjhgsdjghewowtywug";
     self.articleData.DOI = @"1233816875698423756";
     self.articleData.originalAddress = @"http://pan.baidu.com/s/1o6qUur4";
@@ -127,7 +127,7 @@
             }
             else{
                 NSString *subject = self.articleData.subject;
-                CGSize size =  [subject sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+                CGSize size =  [subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
                 return size.height + 8 ;
             }
         }
@@ -138,7 +138,7 @@
             }
             else{
                 NSString *subhead = [NSString stringWithFormat:@"标题：%@",self.articleData.subhead];
-                CGSize size = [subhead sizeWithFont:[UIFont systemFontOfSize:10] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+                CGSize size = [subhead sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
                 return size.height + 8;
             }
         }
@@ -149,7 +149,7 @@
             }
             else{
                 NSString *author = [NSString stringWithFormat:@"作者：%@",self.articleData.author];
-                CGSize size =  [author sizeWithFont:[UIFont systemFontOfSize:10] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+                CGSize size =  [author sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
                 return size.height + 8;
             }
         }
@@ -160,7 +160,7 @@
             }
             else{
                 NSString *periodical = [NSString stringWithFormat:@"期刊：%@",self.articleData.periodical];
-                CGSize size =  [periodical sizeWithFont:[UIFont systemFontOfSize:10] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+                CGSize size =  [periodical sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
                 return size.height + 8;
             }
         }
@@ -171,7 +171,7 @@
             }
             else{
                 NSString *dateline = [NSString stringWithFormat:@"日期：%@",self.articleData.dateline];
-                CGSize size =  [dateline sizeWithFont:[UIFont systemFontOfSize:10] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+                CGSize size =  [dateline sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
                 return size.height + 8;
             }
         }
@@ -182,7 +182,7 @@
             }
             else{
                 NSString *doi = [NSString stringWithFormat:@"DOI：%@",self.articleData.DOI];
-                CGSize size =  [doi sizeWithFont:[UIFont systemFontOfSize:10] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+                CGSize size =  [doi sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
                 return size.height + 8;
             }
         }
@@ -191,7 +191,7 @@
         }
     }
     else{
-        return 200;
+        return 220;
     }
 }
 
@@ -287,7 +287,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:copy_cell];
             cell.backgroundColor = [UIColor clearColor];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            RYCopyAddressView *copyView = [[RYCopyAddressView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200) andArticleData:self.articleData];
+            RYCopyAddressView *copyView = [[RYCopyAddressView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 220) andArticleData:self.articleData];
             [cell.contentView addSubview:copyView];
         }
         return cell;

@@ -101,10 +101,10 @@
     
     //登录按钮
     UIButton *btnNextStep = [Utils getCustomLongButton:@"完成注册"];
-    CGRect r = CGRectMake(SCREEN_WIDTH / 2.0 - 240/2.0 , \
-                          7, \
-                          240, 35);
-    btnNextStep.frame = r;
+//    CGRect r = CGRectMake(SCREEN_WIDTH / 2.0 - 240/2.0 , \
+//                          7, \
+//                          240, 35);
+    btnNextStep.frame = CGRectMake(15, 5, SCREEN_WIDTH - 30, 40);
     [btnNextStep addTarget:self action:@selector(submitDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btnNextStep];
 }
@@ -201,7 +201,7 @@
             case 6:
             case 7:
             case 8:
-                return 42;
+                return 52;
                 break;
             default:
                 return 0;
@@ -285,7 +285,7 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 40)];
         textField.font = [UIFont systemFontOfSize:14];
         textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         [textField seperatorWidth:14];
@@ -329,9 +329,9 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 40)];
         textField.font = [UIFont systemFontOfSize:14];
-        textField.backgroundColor = [UIColor whiteColor];
+        textField.backgroundColor = [UIColor redColor];
         textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         [textField seperatorWidth:14];
         textField.backgroundColor = [UIColor whiteColor];
@@ -387,7 +387,7 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 40)];
         textField.font = [UIFont systemFontOfSize:14];
         [textField seperatorWidth:15];
         textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
@@ -397,10 +397,10 @@
         [textField setEnabled:NO];
         [cell.contentView addSubview:textField];
         
-        UIView *rigth_view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 34)];
+        UIView *rigth_view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 35, 40)];
         rigth_view.tag = 2020;
         rigth_view.backgroundColor = [UIColor clearColor];
-        UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 25, 34)];
+        UIImageView *arrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 25, 40)];
         arrow.backgroundColor = [UIColor clearColor];
         arrow.image = [UIImage imageNamed:@"arrows_right.png"];
         [rigth_view addSubview:arrow];
@@ -451,8 +451,8 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
-        textField.font = [UIFont systemFontOfSize:14];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 40)];
+        textField.font = [UIFont systemFontOfSize:16];
         [textField seperatorWidth:15];
         textField.backgroundColor = [UIColor whiteColor];
         textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
@@ -472,7 +472,7 @@
         segmentedControl.titleTextColor = [UIColor whiteColor]; // 字体颜色
         segmentedControl.selectedTitleTextColor = [UIColor whiteColor];  // 选择时的字体颜色
         segmentedControl.segmentIndicatorBorderColor = [UIColor whiteColor]; // 所选按钮的字体颜色
-        segmentedControl.frame = CGRectMake(SCREEN_WIDTH - 15 - 184, 8, 184 , 34);
+        segmentedControl.frame = CGRectMake(SCREEN_WIDTH - 15 - 184, 8, 184 , 40);
         [cell.contentView addSubview:segmentedControl];
     }
     return cell;
@@ -488,7 +488,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(30 ,0, 250, 30)];
-        label.font = [UIFont systemFontOfSize:10];
+        label.font = [UIFont systemFontOfSize:12];
         label.backgroundColor = [UIColor clearColor];
         label.textColor = [Utils getRGBColor:0xaa g:0xaa b:0xaa a:1.0];
         label.text = @"证件资料，点击选择图片";
@@ -518,8 +518,8 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
-        textField.font = [UIFont systemFontOfSize:14];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 40)];
+        textField.font = [UIFont systemFontOfSize:16];
         textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         [textField seperatorWidth:15];
         textField.backgroundColor = [UIColor whiteColor];
@@ -585,8 +585,8 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 34)];
-        textField.font = [UIFont systemFontOfSize:14];
+        UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 40)];
+        textField.font = [UIFont systemFontOfSize:16];
         [textField seperatorWidth:15];
         textField.backgroundColor = [UIColor whiteColor];
         textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
@@ -595,7 +595,7 @@
         [cell.contentView addSubview:textField];
         
         securityCodeBtn = [Utils getCustomLongButton:@"获取验证码"];
-        securityCodeBtn.frame = CGRectMake(0, 0, 92, 34);
+        securityCodeBtn.frame = CGRectMake(0, 0, 92, 40);
         securityCodeBtn.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
         securityCodeBtn.titleLabel.font = [UIFont systemFontOfSize:14];
         [securityCodeBtn addTarget:self action:@selector(getSecurityCode) forControlEvents:UIControlEventTouchUpInside];

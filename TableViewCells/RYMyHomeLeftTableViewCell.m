@@ -84,9 +84,8 @@
     if ( self ) {
         self.backgroundColor = [UIColor clearColor];
         self.exitButton = [Utils getCustomLongButton:@"退出账号"];
-        self.exitButton.frame = CGRectMake(20, 8, 180, 34);
-        self.exitButton.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
-        [self.exitButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+        self.exitButton.frame = CGRectMake(4, 8, 212, 40);
+        self.exitButton.backgroundColor = [Utils getRGBColor:0xd8 g:0xd8 b:0xd8 a:1.0];
         [self.contentView addSubview:self.exitButton];
     }
     return self;

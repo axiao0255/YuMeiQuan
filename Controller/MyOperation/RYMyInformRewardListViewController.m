@@ -86,7 +86,7 @@
     if ( self.listData.count ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
         NSString *title = [dict getStringValueForKey:@"title" defaultValue:@""];
-        CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+        CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
         return size.height + 16;
     }
     else{
@@ -103,7 +103,7 @@
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.left = 15;
         label.width = SCREEN_WIDTH - 30;
-        label.font = [UIFont systemFontOfSize:14];
+        label.font = [UIFont systemFontOfSize:16];
         label.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         label.numberOfLines = 0;
         label.tag = 1010;
@@ -113,7 +113,7 @@
     if ( self.listData.count ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
         NSString *title = [dict getStringValueForKey:@"title" defaultValue:@""];
-        CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+        CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
         label.height = size.height + 16;
         
         label.text = title;

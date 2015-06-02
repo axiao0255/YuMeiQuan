@@ -90,7 +90,7 @@
             }
         }
         else{
-            return 48;
+            return 75;
         }
     }
     else{
@@ -127,7 +127,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:authorCell];
         }
         cell.textLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
+        cell.textLabel.font = [UIFont systemFontOfSize:16];
         if ( self.authorList.count ) {
             
             NSDictionary *dict = [self.authorList objectAtIndex:indexPath.section];

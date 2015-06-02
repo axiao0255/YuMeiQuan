@@ -68,6 +68,9 @@
 #pragma mark - 定制特殊 状态的 高亮字段
 + (NSAttributedString *)getAttributedString:(NSString *)sourceStr hightlightString:(NSString *)hightStr hightlightColor:(UIColor *)color andFont:(UIFont*)font;
 
+#pragma mark 获取中文字符串转码utf8
++ (NSString*) getEncodingWithUTF8:(NSString *)_str;
+
 
 
 

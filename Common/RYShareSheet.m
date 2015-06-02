@@ -98,7 +98,7 @@
     [self addSubview:self.transparencyBtn];
     [self addSubview:self.tableView];
     [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.frame = CGRectMake(0, SCREEN_HEIGHT-227, SCREEN_WIDTH, 227);
+        self.tableView.frame = CGRectMake(0, SCREEN_HEIGHT-232, SCREEN_WIDTH, 232);
     } completion:^(BOOL finished) {
         
     }];
@@ -115,7 +115,7 @@
         return 160;
     }
     else{
-        return 67;
+        return 72;
     }
 }
 
@@ -159,7 +159,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cell_cancel];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             self.cancelButton = [Utils getCustomLongButton:@"取消"];
-            self.cancelButton.frame = CGRectMake(40, 16, SCREEN_WIDTH - 80, 35);
+            self.cancelButton.frame = CGRectMake(40, 16, SCREEN_WIDTH - 80, 40);
             self.cancelButton.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
             [self.cancelButton addTarget:self action:@selector(dismissShareView) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:self.cancelButton];

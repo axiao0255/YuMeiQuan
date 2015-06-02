@@ -24,19 +24,19 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.leftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 8, 50, 50)];
+        self.leftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 8, 58, 58)];
         [self.contentView addSubview:self.leftImageView];
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.leftImageView.frame) + 8,
-                                                                    8, SCREEN_WIDTH - 30 - 58, 35)];
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+                                                                    8, SCREEN_WIDTH - 30 - 58, 39)];
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         self.titleLabel.numberOfLines = 2;
         [self.contentView addSubview:self.titleLabel];
         
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.titleLabel.frame),
-                                                                   48, 100, 11)];
-        self.timeLabel.font = [UIFont systemFontOfSize:10];
+                                                                   55, 100, 12)];
+        self.timeLabel.font = [UIFont systemFontOfSize:12];
         self.timeLabel.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         [self.contentView addSubview:self.timeLabel];
     }
@@ -50,7 +50,7 @@
     }
     
     [self.leftImageView setImageWithURL:[NSURL URLWithString:[dict objectForKey:@"pic"]] placeholderImage:[UIImage imageNamed:@"ic_pic_default.png"]];
-    self.titleLabel.text = [dict getStringValueForKey:@"title" defaultValue:@""];
+    self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
     self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
 }
 
@@ -76,7 +76,7 @@
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, self.transparencyImageView.height)];
         self.titleLabel.textColor = [UIColor whiteColor];
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
         self.titleLabel.numberOfLines = 2;
         [self.transparencyImageView addSubview:self.titleLabel];
         
@@ -94,7 +94,7 @@
     }
     [self.adverImageView setImageWithURL:[NSURL URLWithString:[dict objectForKey:@"pic"]] placeholderImage:[UIImage imageNamed:@"ic_bigPic_defaule.png"]];
     NSString *title = [dict getStringValueForKey:@"title" defaultValue:@""];
-    CGSize size = [title sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, 36)];
+    CGSize size = [title sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, 40)];
     self.transparencyImageView.height = size.height + 8;
     self.transparencyImageView.top = 180 - self.transparencyImageView.height;
     self.titleLabel.frame = CGRectMake(15, 0, SCREEN_WIDTH - 30, self.transparencyImageView.height);

@@ -25,6 +25,7 @@ dispatch_once( &once, ^{ __singleton__ = [[__class alloc] init]; } ); \
 return __singleton__; \
 }
 
+#define LoginText @"loginnew.text"
 
 #define RELEASEADDRESS @""            // 正式服地址
 #define DEBUGADDRESS   @"http://121.40.151.63"            // 测试服地址

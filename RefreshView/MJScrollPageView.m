@@ -53,7 +53,7 @@
 -(void)setContentOfTables:(NSInteger)aNumerOfTables
 {
     for ( int i = 0;  i < aNumerOfTables; i ++ ) {
-        MJRefreshTableView *refreshTableV = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(self.frame.size.width * i , i == 3 ? 20 : 0, self.bounds.size.width, i == 3 ? (self.bounds.size.height - 20) : self.bounds.size.height)];
+        MJRefreshTableView *refreshTableV = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(self.frame.size.width * i , i == 3 ? 32 : 0, self.bounds.size.width, i == 3 ? (self.bounds.size.height - 32) : self.bounds.size.height)];
         refreshTableV.backgroundColor = [UIColor clearColor];
         refreshTableV.delegateRefersh = self;
         [Utils setExtraCellLineHidden:refreshTableV];

@@ -40,6 +40,7 @@
 @property (nonatomic , strong) UILabel       *contentLabel;
 @property (nonatomic , strong) UIImageView   *answerImgView;       // 问答
 @property (nonatomic , strong) UIImageView   *integratorImgView;   // 积分
+@property (nonatomic , strong) UILabel       *categoryLabel;       // 分类
 - (id)initWithPublishedArticlesStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 
 - (void)setValueWithPublishedArticlesDic:(NSDictionary *)dic;

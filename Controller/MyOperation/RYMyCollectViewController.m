@@ -39,7 +39,7 @@
     [theTableView setSectionIndexColor:[Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0]];
     theTableView.delegate = self;
     theTableView.dataSource = self;
-    theTableView.tableHeaderView = [self tableViewHeadView];
+//    theTableView.tableHeaderView = [self tableViewHeadView];
     [Utils setExtraCellLineHidden:theTableView];
     [self.view addSubview:theTableView];
 }
@@ -124,7 +124,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     }
     cell.textLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.font = [UIFont systemFontOfSize:16];
     cell.textLabel.text = @"赛诺龙";
     return cell;
 }

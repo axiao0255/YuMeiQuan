@@ -38,45 +38,45 @@
 
 - (void)setup
 {
-    UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 8, SCREEN_WIDTH - 80, 11)];
-    addressLabel.font = [UIFont systemFontOfSize:10];
+    UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 8, SCREEN_WIDTH - 80, 12)];
+    addressLabel.font = [UIFont systemFontOfSize:12];
     addressLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     addressLabel.text = @"原文地址";
     [self addSubview:addressLabel];
     
-    HTCopyableLabel *showAddressLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, addressLabel.bottom + 8, SCREEN_WIDTH - 80, 35)];
+    HTCopyableLabel *showAddressLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, addressLabel.bottom + 8, SCREEN_WIDTH - 80, 40)];
     showAddressLabel.copyableLabelDelegate = self;
     showAddressLabel.backgroundColor = [UIColor whiteColor];
-    showAddressLabel.font = [UIFont systemFontOfSize:12];
+    showAddressLabel.font = [UIFont systemFontOfSize:14];
     showAddressLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
     showAddressLabel.layer.cornerRadius = 5;
     showAddressLabel.layer.masksToBounds = YES;
     showAddressLabel.tag = 1000;
-    showAddressLabel.text = self.articleData.originalAddress;
+    showAddressLabel.text = [NSString stringWithFormat:@"   %@",self.articleData.originalAddress];
     [self addSubview:showAddressLabel];
     
-    UILabel *passwordLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, showAddressLabel.bottom + 8, SCREEN_WIDTH - 80, 11)];
-    passwordLabel.font = [UIFont systemFontOfSize:10];
+    UILabel *passwordLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, showAddressLabel.bottom + 8, SCREEN_WIDTH - 80, 12)];
+    passwordLabel.font = [UIFont systemFontOfSize:12];
     passwordLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     passwordLabel.text = @"密码";
     [self addSubview:passwordLabel];
 
-    HTCopyableLabel *showPasswordLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, passwordLabel.bottom + 8, SCREEN_WIDTH - 80, 35)];
+    HTCopyableLabel *showPasswordLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, passwordLabel.bottom + 8, SCREEN_WIDTH - 80, 40)];
     showPasswordLabel.copyableLabelDelegate = self;
     showPasswordLabel.backgroundColor = [UIColor whiteColor];
-    showPasswordLabel.font = [UIFont systemFontOfSize:12];
+    showPasswordLabel.font = [UIFont systemFontOfSize:14];
     showPasswordLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
     showPasswordLabel.layer.cornerRadius = 5;
     showPasswordLabel.layer.masksToBounds = YES;
     showPasswordLabel.tag = 1001;
-    showPasswordLabel.text = self.articleData.password;
+    showPasswordLabel.text = [NSString stringWithFormat:@"   %@",self.articleData.password];
     [self addSubview:showPasswordLabel];
 
-    HTCopyableLabel *copyAddressAndPassword = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, showPasswordLabel.bottom + 8, SCREEN_WIDTH - 80, 35)];
+    HTCopyableLabel *copyAddressAndPassword = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, showPasswordLabel.bottom + 8, SCREEN_WIDTH - 80, 40)];
     copyAddressAndPassword.copyableLabelDelegate = self;
     copyAddressAndPassword.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
     copyAddressAndPassword.textAlignment = NSTextAlignmentCenter;
-    copyAddressAndPassword.font = [UIFont boldSystemFontOfSize:14];
+    copyAddressAndPassword.font = [UIFont boldSystemFontOfSize:18];
     copyAddressAndPassword.textColor = [UIColor whiteColor];
     copyAddressAndPassword.text = @"复制地址和密码";
     copyAddressAndPassword.layer.cornerRadius = 5;
@@ -84,8 +84,8 @@
     copyAddressAndPassword.tag = 1002;
     [self addSubview:copyAddressAndPassword];
     
-     UILabel *suggestLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, copyAddressAndPassword.bottom + 8, SCREEN_WIDTH - 80, 11)];
-    suggestLabel.font = [UIFont systemFontOfSize:10];
+     UILabel *suggestLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, copyAddressAndPassword.bottom + 8, SCREEN_WIDTH - 80, 12)];
+    suggestLabel.font = [UIFont systemFontOfSize:12];
     suggestLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     suggestLabel.text = @"建议使用电脑设备浏览";
     suggestLabel.textAlignment = NSTextAlignmentCenter;

@@ -68,7 +68,7 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 36;
+    return 48;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -118,7 +118,7 @@
         return 8;
     }
     else{
-        return 26;
+        return 28;
     }
 }
 
@@ -130,10 +130,10 @@
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     if ( section == 1 ) {
-        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 26)];
+        UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 28)];
         bgView.backgroundColor = [UIColor clearColor];
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, SCREEN_WIDTH - 30, 26)];
-        titleLabel.font = [UIFont systemFontOfSize:10];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, SCREEN_WIDTH - 30, 28)];
+        titleLabel.font = [UIFont systemFontOfSize:12];
         titleLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         titleLabel.text = @"企业通知";
         [bgView addSubview:titleLabel];

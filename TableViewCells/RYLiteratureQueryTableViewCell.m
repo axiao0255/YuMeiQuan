@@ -63,10 +63,10 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 36)];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 39)];
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         self.titleLabel.numberOfLines = 0;
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        self.titleLabel.font = [UIFont systemFontOfSize:18];
         [self.contentView addSubview:self.titleLabel];
     }
     return self;
@@ -96,7 +96,7 @@
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 36)];
         self.titleLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         self.titleLabel.numberOfLines = 0;
-        self.titleLabel.font = [UIFont systemFontOfSize:10];
+        self.titleLabel.font = [UIFont systemFontOfSize:14];
         [self.contentView addSubview:self.titleLabel];
 
     }

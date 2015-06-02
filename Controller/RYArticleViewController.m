@@ -148,12 +148,12 @@
     CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(300, MAXFLOAT)];
     self.bodeyTitleLabel.text = self.articleData.subject;
     self.bodeyTitleLabel.height = size.height;
-    self.bodeyTitleLabel.top = self.textShareButton.bottom + 6;
-    self.sourceLabel.top = self.bodeyTitleLabel.bottom + 6;
-    self.dateLabel.top = self.bodeyTitleLabel.bottom + 6;
+    self.bodeyTitleLabel.top = self.textShareButton.bottom + 8;
+    self.sourceLabel.top = self.bodeyTitleLabel.bottom + 8;
+    self.dateLabel.top = self.bodeyTitleLabel.bottom + 8;
     self.sourceButton.top = self.bodeyTitleLabel.bottom;
 //    self.originalBtn.top = self.sourceLabel.bottom;
-    self.topTextDemarcation.top = self.dateLabel.bottom + 6;
+    self.topTextDemarcation.top = self.dateLabel.bottom + 8;
 //    self.webView.top = self.originalBtn.bottom;
     self.webView.top = self.topTextDemarcation.bottom;
     self.webView.height -= self.webView.top;
@@ -318,11 +318,11 @@
     if (_sourceLabel == nil) {
         _sourceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _sourceLabel.left = SCREEN_WIDTH - 130 - 15;
-        _sourceLabel.height = 11;
+        _sourceLabel.height = 12;
         _sourceLabel.width = 130;
         _sourceLabel.textAlignment = NSTextAlignmentRight;
         _sourceLabel.backgroundColor = [UIColor clearColor];
-        _sourceLabel.font = [UIFont systemFontOfSize:10];
+        _sourceLabel.font = [UIFont systemFontOfSize:12];
         _sourceLabel.textColor = [Utils getRGBColor:0x00 g:0xc3 b:0x8c a:1.0];
     }
     return _sourceLabel;
@@ -333,10 +333,10 @@
     if (_dateLabel == nil) {
         _dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _dateLabel.left = 15;
-        _dateLabel.height = 11;
+        _dateLabel.height = 12;
         _dateLabel.width = 130;
         _dateLabel.backgroundColor = [UIColor clearColor];
-        _dateLabel.font = [UIFont systemFontOfSize:10];
+        _dateLabel.font = [UIFont systemFontOfSize:12];
         _dateLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     }
     return _dateLabel;
@@ -351,7 +351,7 @@
         bodeyTitleLabel.top = 10;
         bodeyTitleLabel.numberOfLines = 2;
         bodeyTitleLabel.backgroundColor = [UIColor clearColor];
-        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:14];
+        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:18];
         bodeyTitleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         _bodeyTitleLabel = bodeyTitleLabel;
     }

@@ -70,7 +70,7 @@
     if ( !cell ) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:category_cell];
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 43)];
-        label.font = [UIFont systemFontOfSize:14];
+        label.font = [UIFont systemFontOfSize:16];
         label.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         label.tag = 121;
         [cell.contentView addSubview:label];

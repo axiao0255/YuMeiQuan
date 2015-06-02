@@ -46,14 +46,14 @@
         NSString *pic = [dic getStringValueForKey:@"pic" defaultValue:@""];
         CGFloat titleLabelWidth;
         if ( ![ShowBox isEmptyString:pic] ) {
-            titleLabelWidth = SCREEN_WIDTH - 30 - 58;
+            titleLabelWidth = SCREEN_WIDTH - 30 - 66;
         }else{
             titleLabelWidth = SCREEN_WIDTH - 30;
         }
-        NSString *title = [dic getStringValueForKey:@"title" defaultValue:@""];
-        CGSize titleSize = [title sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(titleLabelWidth, 35)];
+        NSString *title = [dic getStringValueForKey:@"subject" defaultValue:@""];
+        CGSize titleSize = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(titleLabelWidth, 39)];
         
-        return 8 + titleSize.height + 8 + 10 + 8 + 10 + 8;
+        return 8 + titleSize.height + 8 + 12 + 8 + 12 + 8;
     }
 }
 - (UITableViewCell *)huiXunTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

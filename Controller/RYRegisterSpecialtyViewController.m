@@ -71,7 +71,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 36;
+    return 40;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -84,8 +84,8 @@
     
     if ( specialtyArray.count ) {
         cell.contentLabel.text = [specialtyArray objectAtIndex:indexPath.row];
-        cell.highlightImage = [UIImage imageNamed:@"ic_cell_selected.png"];
-        cell.normalImage = [UIImage imageNamed:@"ic_cell_unselected.png"];
+//        cell.highlightImage = [UIImage imageNamed:@"ic_cell_selected.png"];
+//        cell.normalImage = [UIImage imageNamed:@"ic_cell_unselected.png"];
     }
     
     if ( isFillout && indexPath.row == specialtyArray.count - 1 ) {

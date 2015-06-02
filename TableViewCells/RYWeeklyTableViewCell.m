@@ -36,22 +36,22 @@
         self.belongsLabel.layer.mask = maskLayer;
         [self.contentView addSubview:self.belongsLabel];
         
-        self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, self.belongsLabel.bottom + 8, 50, 50)];
+        self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, self.belongsLabel.bottom + 8, 58, 58)];
         [self.contentView addSubview:self.leftImgView];
         
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftImgView.right + 8, self.leftImgView.top, SCREEN_WIDTH - 30 - 8 - self.leftImgView.width, 34)];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftImgView.right + 8, self.leftImgView.top, SCREEN_WIDTH - 30 - 8 - self.leftImgView.width, 39)];
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
         self.titleLabel.numberOfLines = 2;
         [self.contentView addSubview:self.titleLabel];
         
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.titleLabel.left, self.titleLabel.bottom + 8, self.titleLabel.width, 10)];
         self.timeLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        self.timeLabel.font = [UIFont systemFontOfSize:10];
+        self.timeLabel.font = [UIFont systemFontOfSize:12];
         [self.contentView addSubview:self.timeLabel];
         
         self.subheadLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.timeLabel.left, self.timeLabel.bottom + 8 , self.timeLabel.width, 10)];
-        self.subheadLabel.font = [UIFont systemFontOfSize:10];
+        self.subheadLabel.font = [UIFont systemFontOfSize:12];
         self.subheadLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         [self.contentView addSubview:self.subheadLabel];
         

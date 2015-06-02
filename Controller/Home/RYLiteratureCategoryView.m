@@ -10,10 +10,13 @@
 #import "GridMenuView.h"
 
 @interface RYLiteratureCategoryView ()<GridMenuViewDelegate,UITableViewDelegate,UITableViewDataSource>
-
+{
+    GridMenuView *gridMenu; // 菜单
+}
 @property (nonatomic , strong) UIButton     *transparencyBtn;
 
 @property (nonatomic , strong) UITableView  *tableView;
+
 
 @end
 
@@ -82,12 +85,12 @@
     self.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 0);
     [self addSubview:self.tableView];
     float itemsnum = self.categoryData.count;
-    NSInteger colm = 5;
+    NSInteger colm = 4;
     NSUInteger row = ceil(itemsnum / colm);
 
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, row * 20);
+        self.tableView.frame = CGRectMake(0, 0, SCREEN_WIDTH, row * 32);
     } completion:^(BOOL finished) {
         [self.superview addSubview:self];
     }];
@@ -105,10 +108,10 @@
 {
     if ( self.categoryData.count ) {
         float itemsnum = self.categoryData.count;
-        NSInteger colm = 5;
+        NSInteger colm = 4;
         NSUInteger row = ceil(itemsnum / colm);
 
-        return row * 20;
+        return row * 32;
     }
     return 0;
 }
@@ -122,7 +125,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
-    GridMenuView *gridMenu = (GridMenuView *)[cell.contentView viewWithTag:300];
+    gridMenu = (GridMenuView *)[cell.contentView viewWithTag:300];
     [gridMenu removeFromSuperview];
     gridMenu = [[GridMenuView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)
                                                        imgUpName:@"ic_grid_default.png"
@@ -130,7 +133,7 @@
                                                       titleArray:self.categoryData
                                                   titleDownColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0]
                                                     titleUpColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0]
-                                                       perRowNum:5
+                                                       perRowNum:4
                                              andCanshowHighlight:YES];
     gridMenu.tag = 300;
     gridMenu.delegate = self;
@@ -146,6 +149,11 @@
     if ( [self.delegate respondsToSelector:@selector(literatureCategorySelected:selfTag:)] ) {
         [self.delegate literatureCategorySelected:btntag selfTag:self.tag];
     }
+}
+
+- (void)literatureCancelSelectStates
+{
+    [gridMenu cancelSelectStates];
 }
 
 

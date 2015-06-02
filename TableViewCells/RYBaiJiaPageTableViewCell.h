@@ -12,6 +12,7 @@
 
 @property (nonatomic , strong) UIImageView      *leftImgView;
 @property (nonatomic , strong) UILabel          *titleLabel;
+@property (nonatomic , strong) UILabel          *authorLabel;
 
 - (void)setValueWithDict:(NSDictionary *)dict;
 

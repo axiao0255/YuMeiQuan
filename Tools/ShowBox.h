@@ -38,4 +38,7 @@
 #pragma mark -过滤表情
 +(BOOL)isContainsEmoji:(NSString *)string;
 
+#pragma mark -检查是否登录
++(BOOL)isLogin;
+
 @end

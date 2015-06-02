@@ -115,14 +115,14 @@
 {
     if ( indexPath.section == 0 ) {
         if ( indexPath.row == 0 ) {
-            return 60;
+            return 70;
         }
         else{
-            return 45;
+            return 56;
         }
     }
     else{
-        return 66;
+        return 75;
     }
 }
 

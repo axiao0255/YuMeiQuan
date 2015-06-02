@@ -239,7 +239,7 @@
             [itemView setBackgroundImage:[UIImage imageNamed:imgupname] forState:UIControlStateNormal];
             [itemView setBackgroundImage:[UIImage imageNamed:imgdownname] forState:UIControlStateHighlighted];
             [itemView setBackgroundImage:[UIImage imageNamed:imgdownname] forState:UIControlStateSelected];
-            itemView.titleLabel.font = [UIFont systemFontOfSize:12];
+            itemView.titleLabel.font = [UIFont systemFontOfSize:14];
             [itemView setTitle:[titlearray objectAtIndex:i] forState:UIControlStateNormal];
             [itemView setTitleColor:titleupcolor forState:UIControlStateNormal];
             [itemView setTitleColor:titledowncolor forState:UIControlStateHighlighted];
@@ -282,6 +282,14 @@
     }
     return self;
 }
+
+- (void)cancelSelectStates
+{
+    for ( UIButton *btn in itemViewsArray) {
+        [btn setSelected:NO];
+    }
+}
+
 
 - (void)itemPressedDelegate:(UIButton *)sender{
     [[itemViewsArray objectAtIndex:self.selectedbtnnum] setTitleColor:myTitleupcolor forState:UIControlStateNormal];

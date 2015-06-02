@@ -7,8 +7,8 @@
 //
 
 #import "RYMyAnswersRecordViewController.h"
-#import "RYBaiJiaPageTableViewCell.h"
 #import "RYArticleViewController.h"
+#import "RYAnswersRecordTableViewCell.h"
 
 @interface RYMyAnswersRecordViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -44,6 +44,7 @@
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
         [dic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
         [dic setObject:@"护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，" forKey:@"title"];
+        [dic setObject:@"1000" forKey:@"jifen"];
         [arr addObject:dic];
     }
     return arr;
@@ -68,15 +69,15 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 48;
+    return 75;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *answersRecord = @"AnswersRecord";
-    RYBaiJiaPageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:answersRecord];
+    RYAnswersRecordTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:answersRecord];
     if ( !cell ) {
-        cell = [[RYBaiJiaPageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:answersRecord];
+        cell = [[RYAnswersRecordTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:answersRecord];
     }
     if ( self.listData.count ) {
         [cell setValueWithDict:[self.listData objectAtIndex:indexPath.row]];

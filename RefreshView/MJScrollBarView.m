@@ -73,7 +73,7 @@
         NSString *vTitleStr = [dict objectForKey:TITLEKEY];
         float vButtonWidth = [[dict objectForKey:TITLEWIDTH] floatValue];
         UIButton *vButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        vButton.titleLabel.font = [UIFont boldSystemFontOfSize:14];
+        vButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
         [vButton setBackgroundImage:[UIImage imageNamed:vNormalImageStr] forState:UIControlStateNormal];
         [vButton setBackgroundImage:[UIImage imageNamed:vHeligtImageStr] forState:UIControlStateSelected];
         [vButton setTitle:vTitleStr forState:UIControlStateNormal];

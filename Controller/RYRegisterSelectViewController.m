@@ -60,22 +60,25 @@
     [self.view addSubview:bottomView];
     
     // 公司介绍
-    aboutUs = [[UILabel alloc] initWithFrame:CGRectMake(45,16,
-                                                        SCREEN_WIDTH - 45*2,
-                                                        100)];
+    aboutUs = [[UILabel alloc] initWithFrame:CGRectMake(0,0,
+                                                        SCREEN_WIDTH,
+                                                        bottomView.height)];
     aboutUs.backgroundColor = [UIColor clearColor];
-    aboutUs.font = [UIFont systemFontOfSize:12];
+    aboutUs.font = [UIFont systemFontOfSize:14];
+    aboutUs.textAlignment = NSTextAlignmentCenter;
     aboutUs.numberOfLines = 0;
     aboutUs.textColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0f];
     // 调整字体行间距
-    NSString *labelText = @"全球最大的医疗美容专业资讯中文网络媒体\n     医疗美容专业资讯与营销服务提供商";
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setLineSpacing:6.0];
-    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, labelText.length)];
-    aboutUs.attributedText = attributedString;
+   
+    NSString *labelText = @"全球最大的医疗美容专业资讯中文网络媒体";
+//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
+//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//    [paragraphStyle setLineSpacing:6.0];
+//    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, labelText.length)];
+//    aboutUs.attributedText = attributedString;
+    aboutUs.text = labelText;
     [bottomView addSubview:aboutUs];
-    [aboutUs sizeToFit];
+//    [aboutUs sizeToFit];
 }
 
 - (void)nextBtnClick:(id)sender

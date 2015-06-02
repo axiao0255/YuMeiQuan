@@ -7,11 +7,17 @@
 //
 
 #import "RYMyJiFenViewController.h"
+#import "RFSegmentView.h"
+#import "RYMyLiteratureViewController.h"
+#import "RYMyInviteViewController.h"
 
-@interface RYMyJiFenViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface RYMyJiFenViewController ()<UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate>
 {
     NSArray        *imgsArray;
 }
+
+@property (nonatomic , strong) UITableView    *tableView;
+@property (nonatomic , assign) NSInteger      currentIndex;
 @end
 
 @implementation RYMyJiFenViewController
@@ -21,8 +27,10 @@
     // Do any additional setup after loading the view.
     self.title = @"我的积分";
     self.view.backgroundColor = [UIColor whiteColor];
-    imgsArray = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"jifen_img" andMaxIndex:2]];
-    [self initSubviews];
+    self.currentIndex = 0;
+    imgsArray = [self getImgArrayWithIndex:self.currentIndex];
+    
+    [self.view addSubview:self.tableView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,104 +48,172 @@
 }
 */
 
-- (void)initSubviews
+- (NSArray *)getImgArrayWithIndex:(NSInteger )index
 {
-    UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(106, 24, 164, 164)];
-    iconImageView.image = [UIImage imageNamed:@"ic_jifen_jewel.png"];
-    [self.view addSubview:iconImageView];
-    
-    UILabel *jifenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 140, 100, 12)];
-    jifenTitleLabel.text = @"积分余额";
-    jifenTitleLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-    jifenTitleLabel.font = [UIFont systemFontOfSize:10];
-    [jifenTitleLabel sizeToFit];
-    [self.view addSubview:jifenTitleLabel];
-    
-    // 显示积分
-    UILabel *showJifenLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(jifenTitleLabel.frame) + 3 ,
-                                                                        CGRectGetMinY(jifenTitleLabel.frame),
-                                                                        140 - CGRectGetWidth(jifenTitleLabel.bounds) ,
-                                                                       34)];
-    showJifenLabel.backgroundColor = [UIColor clearColor];
-    showJifenLabel.font = [UIFont systemFontOfSize:35];
-    showJifenLabel.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
-    showJifenLabel.textAlignment = NSTextAlignmentRight;
-    showJifenLabel.text = @"99999";
-    [self.view addSubview:showJifenLabel];
-    
-    // 提现按钮
-    UIButton *withdrawDepositBtn = [Utils getCustomLongButton:@"提现（即将开通）"];
-    withdrawDepositBtn.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
-    [withdrawDepositBtn setEnabled:NO];
-    withdrawDepositBtn.frame = CGRectMake(90,
-                                          CGRectGetMaxY(showJifenLabel.frame) + 8,
-                                          140,
-                                          34);
-    [self.view addSubview:withdrawDepositBtn];
-    
-    // 赚积分
-    UIView    *backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(withdrawDepositBtn.frame) + (IS_IPHONE_5?33:20),
-                                                                         SCREEN_WIDTH,
-                                                                         VIEW_HEIGHT - CGRectGetMaxY(withdrawDepositBtn.frame) + (IS_IPHONE_5?33:20))];;
-    backgroundView.backgroundColor = [UIColor redColor];
-    [self.view addSubview:backgroundView];
-    
-    UIImageView *bulgeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 48)];
-    bulgeImageView.image = [UIImage imageNamed:@"ic_bulge.png"];
-    [backgroundView addSubview:bulgeImageView];
-    
-    UILabel  *gainJifenLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 48)];
-    gainJifenLabel.backgroundColor = [UIColor clearColor];
-    gainJifenLabel.font = [UIFont systemFontOfSize:14];
-    gainJifenLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-    gainJifenLabel.textAlignment = NSTextAlignmentCenter;
-    gainJifenLabel.text = @"赚积分";
-    [bulgeImageView addSubview:gainJifenLabel];
-    
-    UITableView *theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 48, SCREEN_WIDTH,
-                                                                              CGRectGetHeight(backgroundView.bounds) - 48)];
-    theTableView.backgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
-    [theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    theTableView.scrollEnabled = NO;
-    theTableView.delegate = self;
-    theTableView.dataSource = self;
-    [backgroundView addSubview:theTableView];
+    NSArray *arr;
+    if ( index==0 ) {
+        arr = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"jifen_img" andMaxIndex:2]];
+    }
+    else{
+        arr = @[@"jifen_img_literature.png"];
+    }
+    return arr;
 }
 
-#pragma mark - UITableView 代理方法
+- (UITableView *)tableView
+{
+    if ( _tableView == nil ) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        [Utils setExtraCellLineHidden:_tableView];
+    }
+    return _tableView;
+}
+
+#pragma mark  UITableView delegate and dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return imgsArray.count;
+    if ( section == 0 ) {
+        return 1;
+    }
+    else{
+         return imgsArray.count;
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 43;
+    if ( indexPath.section == 0 ) {
+        return 250;
+    }
+    else{
+        return 43;
+    }
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *identifier = @"identifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if ( !cell ) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.backgroundColor = [UIColor clearColor];
-    
-        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 43)];
-        imgView.tag = 1010;
-        [cell.contentView addSubview:imgView];
+    if ( indexPath.section == 0 ) {
+        return [self topCellTableView:tableView cellForRowAtIndexPath:indexPath];
     }
-    UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:1010];
-    NSString *imgName = [imgsArray objectAtIndex:indexPath.row];
-    imgView.image = [UIImage imageNamed:imgName];
-    return cell;
+    else{
+        NSString *identifier = @"identifier";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if ( !cell ) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.backgroundColor = [UIColor clearColor];
+            
+            UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 43)];
+            imgView.tag = 1010;
+            [cell.contentView addSubview:imgView];
+        }
+        UIImageView *imgView = (UIImageView *)[cell.contentView viewWithTag:1010];
+        NSString *imgName = [imgsArray objectAtIndex:indexPath.row];
+        imgView.image = [UIImage imageNamed:imgName];
+        return cell;
+    }
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSLog(@"%ld",(long)indexPath.row);
+    if ( self.currentIndex == 1 ) {
+        if ( indexPath.row == 0 ) {
+            RYMyLiteratureViewController *vc = [[RYMyLiteratureViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    }
+    else{
+        if ( indexPath.row == 2 ) {
+            RYMyInviteViewController *vc = [[RYMyInviteViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    }
 }
+
+- (UITableViewCell *)topCellTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *top_cell = @"top_cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:top_cell];
+    if ( !cell ) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:top_cell];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(106, 24, 164, 164)];
+        iconImageView.image = [UIImage imageNamed:@"ic_jifen_jewel.png"];
+        [cell.contentView addSubview:iconImageView];
+        
+        UILabel *jifenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 161, 100, 14)];
+        jifenTitleLabel.text = @"积分余额";
+        jifenTitleLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+        jifenTitleLabel.font = [UIFont systemFontOfSize:14];
+        [jifenTitleLabel sizeToFit];
+        [cell.contentView addSubview:jifenTitleLabel];
+        
+        // 显示积分
+        UILabel *showJifenLabel = [[UILabel alloc] initWithFrame:CGRectMake(90,
+                                                                            jifenTitleLabel.bottom + 8,
+                                                                            SCREEN_WIDTH - 180,
+                                                                            35)];
+        showJifenLabel.backgroundColor = [UIColor clearColor];
+        showJifenLabel.font = [UIFont systemFontOfSize:35];
+        showJifenLabel.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
+        showJifenLabel.textAlignment = NSTextAlignmentRight;
+        showJifenLabel.tag = 110;
+        [cell.contentView addSubview:showJifenLabel];
+    }
+    
+    UILabel *showJifenLabel= (UILabel *)[cell.contentView viewWithTag:110];
+    showJifenLabel.text = @"5000000";
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if ( section == 0 ) {
+        return 43;
+    }
+    else{
+        return 0;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if ( section == 0 ) {
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 36)];
+        view.backgroundColor = [UIColor whiteColor];
+        RFSegmentView *segmentView = [[RFSegmentView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 28) items:@[@"赚积分",@"使用积分"]];
+        segmentView.tintColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
+        segmentView.delegate = self;
+        [view addSubview:segmentView];
+        return view;
+    }
+    else{
+        return nil;
+    }
+}
+
+#pragma mark - RFSegmentView delegate
+- (void)segmentViewSelectIndex:(NSInteger)index
+{
+    if ( self.currentIndex != index ) {
+        self.currentIndex = index;
+        imgsArray = [self getImgArrayWithIndex:self.currentIndex];
+        [self.tableView beginUpdates];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:1];
+        [self.tableView reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+    }
+}
+
 
 @end

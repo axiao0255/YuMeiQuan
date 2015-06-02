@@ -68,7 +68,7 @@
         }
     }
     else{
-        return 66;
+        return 75;
     }
 }
 
@@ -95,7 +95,9 @@
         if ( !cell ) {
             cell = [[RYNewsPageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:listCell];
         }
-        [cell setValueWithDict:[self.listData objectAtIndex:indexPath.row]];
+        if ( self.listData.count ) {
+            [cell setValueWithDict:[self.listData objectAtIndex:indexPath.row]];
+        }
         return cell;
     }
 }

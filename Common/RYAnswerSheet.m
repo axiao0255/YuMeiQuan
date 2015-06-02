@@ -131,7 +131,7 @@
 {
     if ( _submitButton == nil ) {
         _submitButton = [Utils getCustomLongButton:@"提交"];
-        _submitButton.frame = CGRectMake(40, 8, SCREEN_WIDTH - 80, 35);
+        _submitButton.frame = CGRectMake(40, 8, SCREEN_WIDTH - 80, 40);
         [_submitButton addTarget:self action:@selector(submitButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _submitButton;
@@ -175,14 +175,14 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGSize size = [self.answerStr sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 75, MAXFLOAT)];
+    CGSize size = [self.answerStr sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 75, MAXFLOAT)];
     return size.height + 32;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     NSString *string = @"诺龙独有的eMatrix水滴阵替治疗";
-    CGSize size = [string sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+    CGSize size = [string sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
     return size.height + 16;
 }
 
@@ -194,7 +194,7 @@
     label.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
     label.numberOfLines = 0;
     label.text = @"诺龙独有的eMatrix水滴阵替治疗";
-    label.font = [UIFont systemFontOfSize:14];
+    label.font = [UIFont systemFontOfSize:18];
     [view addSubview:label];
     return view;
 }
@@ -210,12 +210,12 @@
     BOOL isExist = NO;
     if ( self.selectArr.count ) {
         for ( NSIndexPath *selectIndexPath in self.selectArr ) {
-            if ( selectIndexPath == indexPath ) {
+            if ( [selectIndexPath compare:indexPath] == NSOrderedSame ) {
                 isExist = YES;
             }
         }
     }
-    [cell changeSelectHighlighted:isExist]; 
+    [cell changeSelectHighlighted:isExist];
     return cell;
     
 //    if ( indexPath.row == 1 ) {

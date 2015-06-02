@@ -49,11 +49,12 @@
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
         NSString *title = @"护肤品中的生长因子安全吗。护肤品中的生长因子安全吗。护肤品中的生长因子安全吗。护肤品中的生长因子安全吗。护肤品中的生长因子安全吗。";
         [dic setValue:title forKey:@"title"];
+        [dic setValue:@"2015-04-08" forKey:@"time"];
         if ( i%2 == 0) {
-            [dic setValue:@"50" forKey:@"num"];
+            [dic setValue:@"50" forKey:@"jifen"];
         }
         else{
-            [dic setValue:@"100" forKey:@"num"];
+            [dic setValue:@"100" forKey:@"jifen"];
         }
         [arr addObject:dic];
     }
@@ -77,7 +78,7 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 66;
+    return 75;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

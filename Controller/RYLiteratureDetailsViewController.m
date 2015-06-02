@@ -326,7 +326,7 @@
 {
     if ( _subheadLabel == nil ) {
         _subheadLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _subheadLabel.font = [UIFont systemFontOfSize:10];
+        _subheadLabel.font = [UIFont systemFontOfSize:14];
         _subheadLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         _subheadLabel.left = 15;
         _subheadLabel.width = SCREEN_WIDTH - 30;
@@ -339,7 +339,7 @@
 {
     if ( _authorLabel == nil ) {
         _authorLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _authorLabel.font = [UIFont systemFontOfSize:10];
+        _authorLabel.font = [UIFont systemFontOfSize:14];
         _authorLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         _authorLabel.left = 15;
         _authorLabel.width = SCREEN_WIDTH - 30;
@@ -352,7 +352,7 @@
 {
     if ( _periodicalLabel == nil ) {
         _periodicalLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _periodicalLabel.font = [UIFont systemFontOfSize:10];
+        _periodicalLabel.font = [UIFont systemFontOfSize:14];
         _periodicalLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         _periodicalLabel.left = 15;
         _periodicalLabel.width = SCREEN_WIDTH - 30;
@@ -366,7 +366,7 @@
  
     if ( _DOILabel == nil ) {
         _DOILabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _DOILabel.font = [UIFont systemFontOfSize:10];
+        _DOILabel.font = [UIFont systemFontOfSize:14];
         _DOILabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         _DOILabel.left = 15;
         _DOILabel.width = SCREEN_WIDTH - 30;
@@ -382,9 +382,9 @@
         _dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _dateLabel.left = 15;
         _dateLabel.height = 11;
-        _dateLabel.width = 130;
+        _dateLabel.width = 200;
         _dateLabel.backgroundColor = [UIColor clearColor];
-        _dateLabel.font = [UIFont systemFontOfSize:10];
+        _dateLabel.font = [UIFont systemFontOfSize:14];
         _dateLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     }
     return _dateLabel;
@@ -399,7 +399,7 @@
         bodeyTitleLabel.top = 10;
         bodeyTitleLabel.numberOfLines = 2;
         bodeyTitleLabel.backgroundColor = [UIColor clearColor];
-        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:14];
+        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:18];
         bodeyTitleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         _bodeyTitleLabel = bodeyTitleLabel;
     }
@@ -439,8 +439,8 @@
         _originalAddressView.left = 0;
         _originalAddressView.width = SCREEN_WIDTH;
         
-        addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 8, SCREEN_WIDTH - 80, 11)];
-        addressLabel.font = [UIFont systemFontOfSize:10];
+        addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 8, SCREEN_WIDTH - 80, 12)];
+        addressLabel.font = [UIFont systemFontOfSize:12];
         addressLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         addressLabel.text = @"原文地址";
         addressLabel.hidden = YES;
@@ -449,8 +449,8 @@
         self.showAddressLabel.top = addressLabel.bottom + 8;
         [_originalAddressView addSubview:self.showAddressLabel];
         
-        passwordLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, self.showAddressLabel.bottom + 8, SCREEN_WIDTH - 80, 11)];
-        passwordLabel.font = [UIFont systemFontOfSize:10];
+        passwordLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, self.showAddressLabel.bottom + 8, SCREEN_WIDTH - 80, 12)];
+        passwordLabel.font = [UIFont systemFontOfSize:12];
         passwordLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         passwordLabel.text = @"密码";
         passwordLabel.hidden = YES;
@@ -471,10 +471,10 @@
 - (HTCopyableLabel *)showAddressLabel
 {
     if ( _showAddressLabel == nil ) {
-        _showAddressLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 35)];
+        _showAddressLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 40)];
         _showAddressLabel.copyableLabelDelegate = self;
         _showAddressLabel.backgroundColor = [UIColor whiteColor];
-        _showAddressLabel.font = [UIFont systemFontOfSize:12];
+        _showAddressLabel.font = [UIFont systemFontOfSize:14];
         _showAddressLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         _showAddressLabel.layer.cornerRadius = 5;
         _showAddressLabel.layer.masksToBounds = YES;
@@ -486,10 +486,10 @@
 - (HTCopyableLabel *)showPasswordLabel
 {
     if ( _showPasswordLabel == nil ) {
-        _showPasswordLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 35)];
+        _showPasswordLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 40)];
         _showPasswordLabel.copyableLabelDelegate = self;
         _showPasswordLabel.backgroundColor = [UIColor whiteColor];
-        _showPasswordLabel.font = [UIFont systemFontOfSize:12];
+        _showPasswordLabel.font = [UIFont systemFontOfSize:14];
         _showPasswordLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         _showPasswordLabel.layer.cornerRadius = 5;
         _showPasswordLabel.layer.masksToBounds = YES;
@@ -502,11 +502,11 @@
 - (HTCopyableLabel *)copyAddressAndPassword
 {
     if ( _copyAddressAndPassword == nil ) {
-        _copyAddressAndPassword = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 35)];
+        _copyAddressAndPassword = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 40)];
         _copyAddressAndPassword.copyableLabelDelegate = self;
         _copyAddressAndPassword.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
         _copyAddressAndPassword.textAlignment = NSTextAlignmentCenter;
-        _copyAddressAndPassword.font = [UIFont boldSystemFontOfSize:14];
+        _copyAddressAndPassword.font = [UIFont boldSystemFontOfSize:18];
         _copyAddressAndPassword.textColor = [UIColor whiteColor];
         _copyAddressAndPassword.text = @"复制地址和密码";
         _copyAddressAndPassword.layer.cornerRadius = 5;
@@ -520,8 +520,8 @@
 - (UILabel *)suggestLabel
 {
     if ( _suggestLabel == nil ) {
-        _suggestLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 11)];
-        _suggestLabel.font = [UIFont systemFontOfSize:10];
+        _suggestLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 12)];
+        _suggestLabel.font = [UIFont systemFontOfSize:12];
         _suggestLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         _suggestLabel.text = @"建议使用电脑设备浏览";
         _suggestLabel.textAlignment = NSTextAlignmentCenter;
@@ -579,11 +579,11 @@
     self.webViewHeight = htmlHeight.integerValue;
     if ( showButtomView ) {
         self.originalAddressView.hidden = NO;
-        self.originalAddressView.height = 200;
+        self.originalAddressView.height = 220;
         self.showAddressLabel.hidden = NO;
-        self.showAddressLabel.text = self.articleData.originalAddress;
+        self.showAddressLabel.text = [NSString stringWithFormat:@"   %@",self.articleData.originalAddress];
         self.showPasswordLabel.hidden = NO;
-        self.showPasswordLabel.text = self.articleData.password;
+        self.showPasswordLabel.text = [NSString stringWithFormat:@"   %@",self.articleData.password];;
 
         
         self.copyAddressAndPassword.hidden = NO;
