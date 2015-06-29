@@ -55,7 +55,7 @@
     }
     
     self.titleLabel.text = [dic getStringValueForKey:@"title" defaultValue:@""];
-    self.contentLabel.text = [dic getStringValueForKey:@"content" defaultValue:@""];
+    self.contentLabel.text = [dic getStringValueForKey:@"note" defaultValue:@""];
     self.timeLabel.text = [dic getStringValueForKey:@"time" defaultValue:@""];
 }
 

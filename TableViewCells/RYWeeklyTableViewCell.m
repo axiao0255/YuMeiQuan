@@ -64,13 +64,30 @@
     if ( !dict ) {
         return;
     }
-    self.belongsLabel.text = [dict getStringValueForKey:@"belongs" defaultValue:@""];
+//    self.belongsLabel.text = [dict getStringValueForKey:@"belongs" defaultValue:@""];
     NSString *pic = [dict getStringValueForKey:@"pic" defaultValue:@""];
     [self.leftImgView setImageWithURL:[NSURL URLWithString:pic] placeholderImage:[UIImage imageNamed:@"ic_pic_default.png"]];
-    self.titleLabel.text = [dict getStringValueForKey:@"title" defaultValue:@""];
+    self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
     self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
     self.subheadLabel.text = [dict getStringValueForKey:@"subhead" defaultValue:@""];
-   
+    
+    NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@""];
+    
+    NSString *belongsStr;
+    if ( [fid isEqualToString:@"136"] ) {
+        belongsStr = @"新闻";
+    }
+    else if ( [fid isEqualToString:@"137"] ){
+        belongsStr = @"文献";
+    }
+    else if ( [fid isEqualToString:@"143"] ){
+        belongsStr = @"会讯";
+    }
+    else{
+        belongsStr = @"百家";
+    }
+    
+    self.belongsLabel.text = belongsStr;
 }
 
 @end

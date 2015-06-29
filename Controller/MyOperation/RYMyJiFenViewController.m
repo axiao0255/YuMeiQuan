@@ -30,7 +30,7 @@
     self.currentIndex = 0;
     imgsArray = [self getImgArrayWithIndex:self.currentIndex];
     
-    [self.view addSubview:self.tableView];
+    [self getNetData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -47,6 +47,66 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)getNetData
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getMyCreditsWithSessionId:[RYUserInfo sharedManager].session
+                                         success:^(id responseDic) {
+                                             NSLog(@"我的积分 responseDic :: %@",responseDic);
+                                             [wSelf analysisDataWithDict:responseDic];
+            
+        } failure:^(id errorString) {
+            NSLog(@"我的积分 errorString :: %@",errorString);
+            [ShowBox showError:@"数据出错"];
+        }];
+    }
+}
+//
+- (void)analysisDataWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"获取数据失败，请稍候重试"];
+        return ;
+    }
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( !meta ) {
+        [ShowBox showError:@"获取数据失败，请稍候重试"];
+        return ;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+                if ( isLogin ) {
+                    NSLog(@"登录完成");
+                }
+            }];
+            [self.navigationController pushViewController:nextVC animated:YES];
+            return;
+        }
+        else{
+            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+            return;
+        }
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( !info ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+        return;
+    }
+    
+    // 刷新 userinfo的数据
+    NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
+    if ( usermassage ) {
+        [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:usermassage];
+    }
+    
+    [self.view addSubview:self.tableView];
+}
 
 - (NSArray *)getImgArrayWithIndex:(NSInteger )index
 {
@@ -126,7 +186,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSLog(@"%ld",(long)indexPath.row);
     if ( self.currentIndex == 1 ) {
-        if ( indexPath.row == 0 ) {
+        if ( indexPath.row == 0 && indexPath.section == 1 ) {
             RYMyLiteratureViewController *vc = [[RYMyLiteratureViewController alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
         }
@@ -172,7 +232,7 @@
     }
     
     UILabel *showJifenLabel= (UILabel *)[cell.contentView viewWithTag:110];
-    showJifenLabel.text = @"5000000";
+    showJifenLabel.text = [RYUserInfo sharedManager].credits;
     return cell;
 }
 

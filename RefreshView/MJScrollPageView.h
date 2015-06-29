@@ -13,8 +13,10 @@
 
 #pragma mark 刷新某个页面
 @required
-// 刷新数据 isHead      YES 为上拉刷新
--(void)freshContentTableAtIndex:(NSInteger)aIndex isHead:(BOOL)isHead;
+//// 刷新数据 isHead      YES 为上拉刷新  NO 脚刷新
+//-(void)freshContentTableAtIndex:(NSInteger)aIndex isHead:(BOOL)isHead;
+
+- (void)freshContentTableWithCurrentPage:(NSInteger)currentPage andTableIndex:(NSInteger)aIndex isHead:(BOOL)isHead;
 // 当前滚动到 第几页
 -(void)currentMoveToPageAtIndex:(NSInteger)aIndex;
 
@@ -27,13 +29,13 @@
 
 @interface MJScrollPageView : UIView <UIScrollViewDelegate,MJRefershTableViewDelegate>
 {
-    NSInteger  mCurrentPage;
+    NSInteger  tableIndex;
     BOOL       canShowView;
     CGFloat    lastOffx;
 }
 
-@property (nonatomic,strong) NSMutableArray              *totlePages;
-@property (nonatomic,strong) NSMutableArray              *currentPages;
+//@property (nonatomic,strong) NSMutableArray              *totlePages;
+//@property (nonatomic,strong) NSMutableArray              *currentPages;
 @property (nonatomic,strong) NSMutableArray              *dataSources;
 
 @property (nonatomic,strong) UIScrollView                *scrollView;
@@ -47,6 +49,9 @@
 #pragma mark 设置 totlePage
 -(void)setTotlePageWithNum:(NSInteger)aTotlePage atIndex:(NSInteger)aIndex;
 #pragma mark 刷新结束
--(void)refreshEnd;
+-(void)refreshEndAtTableViewIndex:(NSInteger) index;
+
+#pragma mark 清楚所有数据
+-(void)removeAlldataSources;
 
 @end

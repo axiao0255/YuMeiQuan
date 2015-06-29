@@ -10,6 +10,8 @@
 #import "RYMyHomeLeftTableViewCell.h"
 #import "RYLoginViewController.h"
 
+#import "RYMyNoticeModel.h"
+
 
 #import "RYMyCollectViewController.h"
 #import "RYMyEnshrineViewController.h"
@@ -19,7 +21,6 @@
 #import "RYMyInviteViewController.h"
 #import "RYMyLiteratureViewController.h"
 #import "RYMyAnswersRecordViewController.h"
-
 
 @interface RYMyHomeLeftViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
@@ -32,6 +33,10 @@
     
     BOOL             islogin;
 }
+
+@property (nonatomic , assign) NSInteger         noticeNumber;
+@property (nonatomic , strong) RYMyNoticeModel   *noticeModel;
+
 @end
 
 @implementation RYMyHomeLeftViewController
@@ -57,6 +62,10 @@
     NSLog(@"滑动 完成");
     islogin = [ShowBox isLogin];
     [theTableView reloadData];
+    
+    if ( islogin ) {
+        [self getNoticeData];
+    }
 }
 
 // 获取图片数组
@@ -77,6 +86,91 @@
     theTableView.backgroundColor = [UIColor clearColor];
     [theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.view addSubview:theTableView];
+}
+
+- (void)getNoticeData
+{
+    __weak typeof(self) wSelf = self;
+    [NetRequestAPI getMyNoticeHomePageListWithSessionId:[RYUserInfo sharedManager].session
+                                                success:^(id responseDic) {
+                                                    NSLog(@"responseDic 通知 ：%@",responseDic);
+                                                    [wSelf analysisDataWithDict:responseDic];
+        
+    } failure:^(id errorString) {
+        NSLog(@"errorString 通知 ：%@",errorString);
+    }];
+}
+
+-(void)analysisDataWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        return;
+    }
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        return;
+    }
+    self.noticeNumber = 0;
+    // 取系统消息
+    NSArray *noticesystemmessage = [info getArrayValueForKey:@"noticesystemmessage" defaultValue:nil];
+    self.noticeModel.systemNoticeArray = noticesystemmessage;
+    
+    for ( NSInteger i = 0; i < noticesystemmessage.count; i ++ ) {
+        
+        NSDictionary *dict = [noticesystemmessage objectAtIndex:i];
+        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
+        if ( number > 0 ) {
+            self.noticeNumber = self.noticeNumber + number;
+        }
+    }
+    
+    // 取有奖活动
+    NSArray *noticespreadmessage = [info getArrayValueForKey:@"noticespreadmessage" defaultValue:nil];
+    self.noticeModel.prizeNoticeArray = noticespreadmessage;
+    
+    for ( NSInteger i = 0; i < noticespreadmessage.count; i ++ ) {
+        
+        NSDictionary *dict = [noticespreadmessage objectAtIndex:i];
+        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
+        if ( number > 0 ) {
+            self.noticeNumber = self.noticeNumber + number;
+        }
+    }
+    
+    // 取 公司通知列表
+    NSArray      *noticethreadmessage = [info getArrayValueForKey:@"noticethreadmessage" defaultValue:nil];
+    self.noticeModel.companyNoticeArray = noticethreadmessage;
+    
+    for ( NSInteger i = 0; i < noticethreadmessage.count; i ++ ) {
+        
+        NSDictionary *dict = [noticethreadmessage objectAtIndex:i];
+        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
+        if ( number > 0 ) {
+            self.noticeNumber = self.noticeNumber + number;
+        }
+    }
+
+    if ( self.noticeNumber > 0 ) {
+        [theTableView reloadData];
+    }
+}
+
+- (RYMyNoticeModel *)noticeModel
+{
+    if ( _noticeModel == nil ) {
+        _noticeModel = [[RYMyNoticeModel alloc]init];
+    }
+    return _noticeModel;
 }
 
 #pragma mark - UITableView 代理方法
@@ -159,6 +253,14 @@
                     cell.normalImage = [UIImage imageNamed:normalImageName];
                     cell.highlightImage = [UIImage imageNamed:highlightedImgName];
                 }
+                if ( indexPath.row == 1 ) {
+                    if ( self.noticeNumber > 0 ) {
+                        cell.noticeLabel.text = [NSString stringWithFormat:@"%li",(long)self.noticeNumber];
+                    }
+                    else{
+                        cell.noticeLabel.text = @"";
+                    }
+                }
             }
             else{
                 [cell setUserInteractionEnabled:NO];
@@ -186,7 +288,7 @@
         UIViewController *vc;
         switch ( indexPath.row ) {
             case 1: // 通知
-                vc = [[RYMyInformViewController alloc] init];
+                vc = [[RYMyInformViewController alloc] initWithNoticeModel:self.noticeModel];
                 break;
             case 2: // 收藏
                 vc = [[RYMyEnshrineViewController alloc] init];
@@ -212,9 +314,17 @@
             default:
                 break;
         }
+        __weak typeof(self) wSelf = self;
         [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:vc
                                                                  withSlideOutAnimation:NO
-                                                                         andCompletion:nil];
+                                                                         andCompletion:^{
+                                                                             __strong typeof(wSelf) sSelf = wSelf;
+                                                                             if ( indexPath.row == 1 ) {
+                                                                                 wSelf.noticeNumber = 0;
+                                                                                 [sSelf->theTableView reloadData];
+                                                                             }
+            
+        }];
     }
 }
 
@@ -241,20 +351,8 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ( buttonIndex == 1 ) {
-        //  注销
-        [NetRequestAPI userLogoutWithSessionId:[RYUserInfo sharedManager].session
-                                       success:^(id responseDic) {
-        } failure:^(id errorString) {
-        }];
-        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        NSString *path = [docPath stringByAppendingPathComponent:LoginText];
-        
-        NSDictionary *savedDic = [NSDictionary dictionaryWithContentsOfFile:path];
-        [savedDic setValue:@"0" forKey:@"islogin"];
-        [savedDic writeToFile:path atomically:YES];
-        
-        [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:nil];
-        islogin = [ShowBox isLogin];
+        [RYUserInfo logout];
+        islogin = NO;
         [theTableView reloadData];
 
     }

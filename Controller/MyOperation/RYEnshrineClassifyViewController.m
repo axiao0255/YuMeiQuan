@@ -20,10 +20,9 @@ typedef enum : NSUInteger {
 @interface RYEnshrineClassifyViewController ()<UITableViewDelegate,UITableViewDataSource,SWTableViewCellDelegate>
 {
     UITableView         *theTableView;
-    TypeClassify        selectType;
+//    TypeClassify        selectType;
     
     NSMutableArray      *dataArray;
-    
 }
 @end
 
@@ -32,15 +31,18 @@ typedef enum : NSUInteger {
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"我的收藏";
-    selectType = type_one;
-    dataArray = [[self initdata]mutableCopy];
+    self.title = @"我的标签";
+//    selectType = type_one;
     [self initSubviews];
+    [self getNetData];
+    
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tallyChangeUpdate:) name:@"tallyChangeUpdate" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initSubviews
@@ -53,16 +55,59 @@ typedef enum : NSUInteger {
     [self.view addSubview:theTableView];
 }
 
-- (NSArray *)initdata
+-(void)tallyChangeUpdate:(NSNotification *)notic
 {
-    NSMutableArray *arr = [NSMutableArray array];
-    for ( int i = 0 ; i < 10 ; i ++ ) {
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        [dic setValue:@"新闻" forKey:@"title"];
-        [dic setValue:@"1" forKey:@"num"];
-        [arr addObject:dic];
+     [self getNetData];
+}
+
+- (void)getNetData
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getMyJSTLListWithSessionId:[RYUserInfo sharedManager].session
+                                          success:^(id responseDic) {
+                                              NSLog(@" 我的标签 responseDic : %@",responseDic);
+                                              [wSelf analysisDataWithDict:responseDic];
+            
+        } failure:^(id errorString) {
+            NSLog(@"  我的标签  errorString : %@",errorString);
+            
+        }];
     }
-    return arr;
+}
+
+- (void)analysisDataWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( !meta ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    
+    // 取标签列表
+    NSArray *favoritecatmessage = [info getArrayValueForKey:@"favoritecatmessage" defaultValue:nil];
+    if ( favoritecatmessage.count ) {
+        dataArray = favoritecatmessage.mutableCopy;
+        [theTableView reloadData];
+    }
+    
 }
 
 - (NSArray *)rightButtons
@@ -101,9 +146,20 @@ typedef enum : NSUInteger {
 //        cell.rightUtilityButtons = @[];
 //    }
 
+    NSDictionary *dic = [dataArray objectAtIndex:indexPath.row];
+    
+    NSString *idStr = [dic getStringValueForKey:@"id" defaultValue:@"0"];
+    if ( ![idStr isEqualToString:@"0"] ) {
+        cell.rightUtilityButtons = [self rightButtons];
+    }
+    else{
+        // id 为 0 的时候 说明时未定义的标签， 不可修改和删除
+        cell.rightUtilityButtons = @[];
+    }
+    
     if ( dataArray.count ) {
-        NSDictionary *dic = [dataArray objectAtIndex:indexPath.row];
-        cell.titleLabel.text = [dic getStringValueForKey:@"title" defaultValue:@""];
+        
+        cell.titleLabel.text = [dic getStringValueForKey:@"name" defaultValue:@""];
         [dic getIntValueForKey:@"num" defaultValue:0];
         cell.numLabel.text = [NSString stringWithFormat:@"%d篇文章",[dic getIntValueForKey:@"num" defaultValue:0]];
     }
@@ -113,32 +169,90 @@ typedef enum : NSUInteger {
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    RYEnshrineSubClassifyViewController *vc = [[RYEnshrineSubClassifyViewController alloc] initWithDataArray:nil];
+    RYEnshrineSubClassifyViewController *vc = [[RYEnshrineSubClassifyViewController alloc] initWithDataDict:[dataArray objectAtIndex:indexPath.row]];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)swipeableTableViewCell:(SWTableViewCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
 {
-    NSLog(@"%ld",index);
+    NSIndexPath *indexPath = [theTableView indexPathForCell:cell];
     switch (index) {
         case 0:
         {
             [cell hideUtilityButtonsAnimated:YES];
-            RYEditClassifyViewController *vc = [[RYEditClassifyViewController alloc] initWithDict:[dataArray objectAtIndex:index]];
+            RYEditClassifyViewController *vc = [[RYEditClassifyViewController alloc] initWithDict:[dataArray objectAtIndex:indexPath.row]];
             [self.navigationController pushViewController:vc animated:YES];
             break;
         }
         case 1:
         {
             // Delete button was pressed
-            NSIndexPath *cellIndexPath = [theTableView indexPathForCell:cell];
-            [dataArray removeObjectAtIndex:index];
-            [theTableView deleteRowsAtIndexPaths:@[cellIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+            [self deteleTallyWithIndex:indexPath.row];
             break;
         }
         default:
             break;
     }
+}
+
+- (BOOL)swipeableTableViewCellShouldHideUtilityButtonsOnSwipe:(SWTableViewCell *)cell
+{
+    return YES;
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    for ( NSInteger i = 0; i < dataArray.count; i ++ ) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        RYEnshrineClassifyTableViewCell *cell = (RYEnshrineClassifyTableViewCell *)[theTableView cellForRowAtIndexPath:indexPath];
+        [cell hideUtilityButtonsAnimated:YES];
+    }
+}
+
+// 删除标签
+- (void)deteleTallyWithIndex:(NSInteger)index
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        NSDictionary *dict = [dataArray objectAtIndex:index];
+        __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"提交中中..." maskType:SVProgressHUDMaskTypeGradient];
+        [NetRequestAPI deleteTallyWithSessionId:[RYUserInfo sharedManager].session
+                                        JSTL_ID:[dict objectForKey:@"id"]
+                                        success:^(id responseDic) {
+                                            [SVProgressHUD dismiss];
+                                            [wSelf verifyResultWithDict:responseDic withIndex:index];
+            
+        } failure:^(id errorString) {
+            [SVProgressHUD dismiss];
+            [ShowBox showError:@"删除标签失败，请稍候重试"];
+        }];
+    }
+    
+}
+
+- (void)verifyResultWithDict:(NSDictionary *)responseDic withIndex:(NSInteger)index
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"删除标签失败，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"删除标签失败，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"删除标签失败，请稍候重试"]];
+        return;
+    }
+   [dataArray removeObjectAtIndex:index];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+   [theTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+
+   [[NSNotificationCenter defaultCenter] postNotificationName:@"tallyChangeUpdate" object:nil];
 }
 
 

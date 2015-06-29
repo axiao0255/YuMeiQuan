@@ -724,44 +724,81 @@
 // 个人注册 判断
 - (void)personalRegister
 {
-    if ( [ShowBox alertPhoneNo:registerData.userPhone] ) {
-        return;
-    }
-    if ( [ShowBox isEmptyString:registerData.userSecurityCode] ) {
-        [ShowBox showError:@"请输入验证码"];
-        return;
-    }
-    if ( [ShowBox isEmptyString:registerData.userPassword] ) {
-        [ShowBox showError:@"请输入密码"];
-        return;
-    }
-    if ( [ShowBox isEmptyString:registerData.userRepetPassword] && ![registerData.userRepetPassword isEqualToString:registerData.userPassword] ) {
-        [ShowBox showError:@"两次密码不一致"];
-        return;
-    }
-    if ( [ShowBox isEmptyString:identityText.text] ) {
-        [ShowBox showError:@"请选择专业"];
-        return;
-    }
+//    if ( [ShowBox alertPhoneNo:registerData.userPhone] ) {
+//        return;
+//    }
+//    if ( [ShowBox isEmptyString:registerData.userSecurityCode] ) {
+//        [ShowBox showError:@"请输入验证码"];
+//        return;
+//    }
+//    if ( [ShowBox isEmptyString:registerData.userPassword] ) {
+//        [ShowBox showError:@"请输入密码"];
+//        return;
+//    }
+//    if ( [ShowBox isEmptyString:registerData.userRepetPassword] && ![registerData.userRepetPassword isEqualToString:registerData.userPassword] ) {
+//        [ShowBox showError:@"两次密码不一致"];
+//        return;
+//    }
+//    if ( [ShowBox isEmptyString:identityText.text] ) {
+//        [ShowBox showError:@"请选择专业"];
+//        return;
+//    }
+//    
+//    if ( [ShowBox isEmptyString:registerData.userName] ) {
+//        [ShowBox showError:@"请输入姓名"];
+//        return;
+//    }
+//    
+//    if ( [ShowBox isEmptyString:positionText.text] ) {
+//        [ShowBox showError:@"请选择职务"];
+//        return;
+//    }
+//    if ( [ShowBox isEmptyString:registerData.userCompany] ) {
+//        [ShowBox showError:@"请填写单位"];
+//        return;
+//    }
     
-    if ( [ShowBox isEmptyString:registerData.userName] ) {
-        [ShowBox showError:@"请输入姓名"];
-        return;
-    }
-    
-    if ( [ShowBox isEmptyString:positionText.text] ) {
-        [ShowBox showError:@"请选择职务"];
-        return;
-    }
-    if ( [ShowBox isEmptyString:registerData.userCompany] ) {
-        [ShowBox showError:@"请填写单位"];
-        return;
-    }
-    
-    [self personalRegisterNet];
-    
+//    [self personalRegisterNet];
+    [self uploadImage];
 }
 
+
+- (void)uploadImage
+{
+    NSArray * imgArray = [proofImgView getImgArray];
+    if ( imgArray.count <= 0 ) {
+        return;
+    }
+    NSLog(@"%@", imgArray);
+    ALAsset *alas = [imgArray objectAtIndex:0];
+    UIImage *img = [self fullResolutionImageFromALAsset:alas];
+    [NetRequestAPI uploadImageWithImage:img success:^(id responseDic) {
+        NSLog(@"上传图片 responseDic%@",responseDic);
+    } failure:^(id errorString) {
+        NSLog(@"上传图片 errorString%@",errorString);
+    }];
+}
+
+/**
+ *  取相册中 图片
+ *
+ *  @param asset 相册返回的 图片类型
+ *
+ *  @return 返回 UIImage
+ */
+- (UIImage *)fullResolutionImageFromALAsset:(ALAsset *)asset
+{
+    ALAssetRepresentation *assetRep = [asset defaultRepresentation];
+    CGImageRef imgRef = [assetRep fullResolutionImage];
+    UIImage *img = [UIImage imageWithCGImage:imgRef
+                                       scale:assetRep.scale
+                                 orientation:(UIImageOrientation)assetRep.orientation];
+    return img;
+}
+
+
+
+/*
 // 个人注册 提交网络
 - (void)personalRegisterNet
 {
@@ -803,7 +840,30 @@
     }
 }
 
+*/
 
+// 个人注册 提交网络
+- (void)personalRegisterNet
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        [NetRequestAPI submitRegisterDataWithUserName:registerData.userPhone
+                                                 code:registerData.userSecurityCode
+                                             password:registerData.userPassword
+                                               doctor:isDoctor
+                                         professional:registerData.userRofessional
+                                             realname:registerData.userName
+                                             position:registerData.userPosition
+                                              company:registerData.userCompany
+                                              success:^(id responseDic) {
+                                                  NSLog(@" 提交注册 responseDic: %@",responseDic);
+            
+        } failure:^(id errorString) {
+             NSLog(@" 提交注册 errorString: %@",errorString);
+        }];
+    }
+}
+
+// 获取验证码
 - (void)getSecurityCode
 {
     if ( [ShowBox alertPhoneNo:registerData.userPhone] ) {
@@ -812,36 +872,27 @@
     [securityCodeBtn setEnabled:NO];
     __weak typeof(self) wSelf = self;
     if ( [ShowBox checkCurrentNetwork] ) {
-        NSString *url = [NSString stringWithFormat:@"%@/ios.php?mod=duanxin&username=%@",DEBUGADDRESS,registerData.userPhone];
-        [NetManager JSONDataWithUrl:url parameters:nil success:^(id json) {
-            if ( !json && [json isKindOfClass:[NSNull class]] ) {
-                [ShowBox showError:@"请稍后重试"];
-                [wSelf securityCodeBtnTypeChangeWithBool:YES];
-                return ;
-            }
-            NSDictionary *dic = [json getDicValueForKey:@"meta" defaultValue:nil];
-            if ( !dic ) {
-                [ShowBox showError:@"请稍后重试"];
-                [wSelf securityCodeBtnTypeChangeWithBool:YES];
-                return;
-            }
-            BOOL success = [dic getBoolValueForKey:@"success" defaultValue:NO];
-            if ( !success ) {
-                [ShowBox showError:[dic getStringValueForKey:@"msg" defaultValue:@"请稍后重试"]];
-                [wSelf securityCodeBtnTypeChangeWithBool:YES];
-                return;
-            }
-            currentTime = 60;
-            NSString *timeString = [NSString stringWithFormat:@"%li s重发",(long)currentTime];
-            [securityCodeBtn setTitle:timeString forState:UIControlStateDisabled];
-            [myTimer invalidate];
-            myTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(runTimer:) userInfo:nil repeats:YES];
-           
-        } fail:^(id error) {
-            [wSelf securityCodeBtnTypeChangeWithBool:YES];
+        [NetRequestAPI getSMS_codeWithPhoneNumber:registerData.userPhone
+                                          success:^(id responseDic) {
+                                              NSLog(@"获取短信验证码：responseDic  %@",responseDic);
+                                              [wSelf startRuntime];
+                                              
+        } failure:^(id errorString) {
+            NSLog(@"获取短信验证码：errorString  %@",errorString);
+            [wSelf startRuntime];
         }];
     }
 }
+
+- (void)startRuntime
+{
+    currentTime = 60;
+    NSString *timeString = [NSString stringWithFormat:@"%li s重发",(long)currentTime];
+    [securityCodeBtn setTitle:timeString forState:UIControlStateDisabled];
+    [myTimer invalidate];
+    myTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(runTimer:) userInfo:nil repeats:YES];
+}
+
 // 重获验证码 时间 调整
 - (void)runTimer:(id)sender
 {

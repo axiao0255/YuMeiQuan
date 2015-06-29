@@ -29,6 +29,11 @@
     [self initSubviews];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+
 - (void)initSubviews
 {
 //    UIImage *image = [UIImage imageNamed:@"input_text_bk_long.png"];
@@ -125,42 +130,31 @@
     }
     
     if ( [ShowBox checkCurrentNetwork] ) {
-        
-        [NetRequestAPI userLoginWithUserName:userNameText.text password:passWordText.text success:^(id responseDic) {
-            NSLog(@"responseDic : %@",responseDic);
-            if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-                [ShowBox showError:@"登录失败，请稍候重试"];
-                return ;
-            }
-            NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-            if ( meta == nil || [meta isKindOfClass:[NSNull class]]) {
-                [ShowBox showError:@"登录失败，请稍候重试"];
-                return ;
-            }
-            
-            BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
-            if ( !success ) {
-                [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"登录失败，请稍候重试"]];
-                return;
-            }
-            // 登录成功后 记住用户名和密码
-            NSMutableDictionary *savedDic = [[NSMutableDictionary alloc] init];
-            [savedDic setObject:userNameText.text forKey:@"userName"];
-            [savedDic setObject:passWordText.text forKey:@"password"];
-            [savedDic setObject:@"1" forKey:@"islogin"];
-            
-            NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-            NSString *path = [docPath stringByAppendingPathComponent:LoginText];
-            [savedDic writeToFile:path atomically:YES];
-            
-            NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-            [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:info];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
+        __weak RYLoginViewController *wSelf = self;
+        [RYUserInfo loginWithUserName:userNameText.text
+                             password:passWordText.text
+                              success:^(BOOL isSucceed) {
+                                  if (isSucceed)
+                                  {
+                                      if (wSelf.finishBlock != nil) {
+                                          wSelf.finishBlock(YES, nil);
+                                      }
+                                     [[NSNotificationCenter defaultCenter] postNotificationName:@"loginStateChange" object:nil];
+                                     [wSelf.navigationController popViewControllerAnimated:YES];
+                                  }
+                                  else
+                                  {
+                                      [ShowBox showError:@"登录出错！"];
+                                      if (wSelf.finishBlock != nil) {
+                                          wSelf.finishBlock(NO, nil);
+                                      }
+                                  }
         } failure:^(id errorString) {
-            NSLog(@"errorString :13800%@",errorString);
+            [ShowBox showError:errorString];
+            if (wSelf.finishBlock != nil) {
+                wSelf.finishBlock(NO, nil);
+            }
         }];
-        
     }
 }
 
@@ -205,5 +199,16 @@
     }
     return YES;
 }
+
+- (id)initWithFinishBlock:(LoginCallBack)callBack
+{
+    self = [super init];
+    if (self)
+    {
+        self.finishBlock = callBack;
+    }
+    return self;
+}
+
 
 @end

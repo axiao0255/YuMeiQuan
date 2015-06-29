@@ -33,24 +33,30 @@
 
 - (NSInteger)homepageNumberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    if ( self.listData.count ) {
+        return 2;
+    }
+    else{
+        return 0;
+    }
 }
 - (NSInteger)homepageTableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
-        BOOL isLogin = YES;
-        if ( isLogin ) {
-            return 1;
-        }
-        else{
-            NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
-            if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
-                return 1;
-            }
-            else{
-                return 0;
-            }
-        }
+//        BOOL isLogin = YES;
+//        if ( isLogin ) {
+//            return 1;
+//        }
+//        else{
+//            NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
+//            if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
+//                return 1;
+//            }
+//            else{
+//                return 0;
+//            }
+//        }
+        return 1;
     }
     else{
         return 1;
@@ -60,19 +66,20 @@
 - (CGFloat)homepageTableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( indexPath.section == 0 ) {
-        BOOL isLogin = YES;
-        if ( isLogin ) {
-            return 180;
-        }
-        else{
-            NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
-            if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
-                return 180;
-            }
-            else{
-                return 0;
-            }
-        }
+//        BOOL isLogin = YES;
+//        if ( isLogin ) {
+//            return 180;
+//        }
+//        else{
+//            NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
+//            if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
+//                return 180;
+//            }
+//            else{
+//                return 0;
+//            }
+//        }
+        return 180;
      }
     else{
         return 180;
@@ -83,24 +90,37 @@
 {
     if ( indexPath.section == 0 ) {
         
-        BOOL isLogin = YES;
-        if ( isLogin ) {
-            return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
+//        BOOL isLogin = YES;
+//        if ( isLogin ) {
+//            return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
+//        }
+//        else{
+//            NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
+//            if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
+//                NSString *adverCell = @"adverCell";
+//                RYAdverTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:adverCell];
+//                if ( !cell ) {
+//                    cell = [[RYAdverTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:adverCell];
+//                }
+//                [cell setValueWithDict:self.adverData];
+//                return cell;
+//            }
+//            else{
+//                return [[UITableViewCell alloc] init];
+//            }
+//        }
+        NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
+        if ( self.adverData && ![ShowBox isEmptyString:adverPic] ) { // 判断是否有广告
+            NSString *adverCell = @"adverCell";
+            RYAdverTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:adverCell];
+            if ( !cell ) {
+                cell = [[RYAdverTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:adverCell];
+            }
+            [cell setValueWithDict:self.adverData];
+            return cell;
         }
         else{
-            NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
-            if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
-                NSString *adverCell = @"adverCell";
-                RYAdverTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:adverCell];
-                if ( !cell ) {
-                    cell = [[RYAdverTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:adverCell];
-                }
-                [cell setValueWithDict:self.adverData];
-                return cell;
-            }
-            else{
-                return [[UITableViewCell alloc] init];
-            }
+            return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
         }
     }
     else{
@@ -183,16 +203,21 @@
         [signInBtn addSubview:inviteHintLabel];
     }
     UILabel *integralLabel = (UILabel *)[cell.contentView viewWithTag:1212];
-    integralLabel.text = @"50000";
-    UILabel *hintLabel = (UILabel *)[cell.contentView viewWithTag:1313];
-    NSString *integralNum = @"1000";
-    NSString *str = [NSString stringWithFormat:@"首次注册可获得%@积分",integralNum];
-    [hintLabel setAttributedText:[Utils getAttributedString:str hightlightString:integralNum hightlightColor:[UIColor redColor] andFont:hintLabel.font]];
+    integralLabel.text = [RYUserInfo sharedManager].credits;
     
+    // 注册积分
+    UILabel *hintLabel = (UILabel *)[cell.contentView viewWithTag:1313];
+    NSString *originalStr = [self.descmessage getStringValueForKey:@"zhucejifen" defaultValue:@""];
+    NSInteger number = [Utils findNumFormOriginalStr:originalStr];
+    NSString *integralNum = [NSString stringWithFormat:@"%li",(long)number];
+    [hintLabel setAttributedText:[Utils getAttributedString:originalStr hightlightString:integralNum hightlightColor:[UIColor redColor] andFont:hintLabel.font]];
+
+    // 邀请注册 积分
     UILabel *inviteHintLabel = (UILabel *)[cell.contentView viewWithTag:1414];
-    NSString *inviteNum = @"2000";
-    NSString *inviteStr = [NSString stringWithFormat:@"邀请注册可获得%@积分",inviteNum];
-    [inviteHintLabel setAttributedText:[Utils getAttributedString:inviteStr hightlightString:inviteNum hightlightColor:[UIColor redColor] andFont:hintLabel.font]];
+    NSString *inviteStr = [self.descmessage getStringValueForKey:@"yaoqingjifen" defaultValue:@""];
+    NSInteger inviteNumber = [Utils findNumFormOriginalStr:inviteStr];
+    NSString *inviterStr = [NSString stringWithFormat:@"%li",(long)inviteNumber];
+    [inviteHintLabel setAttributedText:[Utils getAttributedString:inviteStr hightlightString:inviterStr hightlightColor:[UIColor redColor] andFont:hintLabel.font]];
     
     return cell;
 }

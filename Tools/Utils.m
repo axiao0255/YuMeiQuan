@@ -260,7 +260,64 @@
     return [_str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
+#pragma mark - 从NSString中 取出 数字
++ (NSInteger)findNumFormOriginalStr:(NSString *)originalStr
+{
+    NSMutableString *numberString = [[NSMutableString alloc] init];
+    NSString *tempStr;
+    NSScanner *scanner = [NSScanner scannerWithString:originalStr];
+    NSCharacterSet *numbers = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+    while ( ![scanner isAtEnd] ) {
+        [scanner scanUpToCharactersFromSet:numbers intoString:NULL];
+        // Collect numbers.
+        [scanner scanCharactersFromSet:numbers intoString:&tempStr];
+        [numberString appendString:tempStr];
+        tempStr = @"";
+    }
+    
+    NSInteger number = [numberString integerValue];
+    
+    return number;
+}
 
+#pragma mark - 从数组中取出 首字母相同key字典 归类
++ (NSArray *)findSameKeyWithArray:(NSArray *)originalArray
+{
+    // 1、对数组按firstcharter排序
+    NSArray *sortDesc = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"firstcharter" ascending:YES]];
+    NSArray *sortedArr = [originalArray sortedArrayUsingDescriptors:sortDesc];
+//    NSLog(@"排序后的数组:%@",sortedArr);
+    
+    // 2、对数组进行分组，按firstcharter
+    // 遍历,创建组数组,组数组中的每一个元素是一个模型数组
+    NSMutableArray *_groupArr = [NSMutableArray array];
+    NSMutableArray *currentArr = [NSMutableArray array];
+//    NSLog(@"class--%@",[currentArr class]);
+    // 因为肯定有一个字典返回,先添加一个
+    [currentArr addObject:sortedArr[0]];
+    [_groupArr addObject:currentArr];
+    // 如果不止一个,才要动态添加
+    if(sortedArr.count > 1){
+        for (int i = 1; i < sortedArr.count; i++) {
+            // 先取出组数组中  上一个模型数组的第一个字典模型的firstcharter
+            NSMutableArray *preModelArr = [_groupArr objectAtIndex:_groupArr.count-1];
+            NSString *preFirstchar = [[preModelArr objectAtIndex:0] objectForKey:@"firstcharter"];
+            // 取出当前字典,根据firstcharter比较,如果相同则添加到同一个模型数组;如果不相同,说明不是同一个组的
+            NSDictionary *currentDict = sortedArr[i];
+            NSString *firstchar = [currentDict objectForKey:@"firstcharter"];
+            if ( [firstchar isEqualToString:preFirstchar] ) {
+                [currentArr addObject:currentDict];
+            }else{
+                // 如果不相同,说明 有新的一组,那么创建一个模型数组,并添加到组数组_groupArr
+                currentArr = [NSMutableArray array];
+                [currentArr addObject:currentDict];
+                [_groupArr addObject:currentArr];
+            }
+        }
+    }
+//    NSLog(@"分组后的数组 %@",_groupArr);
+    return _groupArr;
+}
 
 
 

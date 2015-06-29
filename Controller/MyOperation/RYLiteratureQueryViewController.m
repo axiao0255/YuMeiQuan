@@ -36,10 +36,10 @@
     // Do any additional setup after loading the view.
     self.title = @"文献查询";
     
-    if ( self.literatureDict != nil ) {
-        [self setdata];
-    }
-    
+//    if ( self.literatureDict != nil ) {
+//        [self setdata];
+//    }
+    [self setdataWithDict:self.literatureDict];
     [self setup];
 }
 
@@ -62,17 +62,28 @@
     [self.view addSubview:self.tableView];
 }
 
-- (void)setdata
+- (void)setdataWithDict:(NSDictionary *)dict
 {
-    self.articleData.author = @"阿肯积分卡时间发货";
-    self.articleData.dateline = @"2015.5.5";
-    self.articleData.message = @"adfaf";
-    self.articleData.subject = @"低能量激光治疗低能量激光治疗低能量激光治疗低能量激光治疗";
-    self.articleData.subhead = @"adsjkfha kjdhfas dkjfhsa djkhfsakj hdfkaadl fjhask dhfdalsk";
-    self.articleData.periodical = @"jshfghsjghsfjhgsdjghewowtywug";
-    self.articleData.DOI = @"1233816875698423756";
-    self.articleData.originalAddress = @"http://pan.baidu.com/s/1o6qUur4";
-    self.articleData.password = @"3typ";
+//    self.articleData.author = @"阿肯积分卡时间发货";
+//    self.articleData.dateline = @"2015.5.5";
+//    self.articleData.message = @"adfaf";
+//    self.articleData.subject = @"低能量激光治疗低能量激光治疗低能量激光治疗低能量激光治疗";
+//    self.articleData.subhead = @"adsjkfha kjdhfas dkjfhsa djkhfsakj hdfkaadl fjhask dhfdalsk";
+//    self.articleData.periodical = @"jshfghsjghsfjhgsdjghewowtywug";
+//    self.articleData.DOI = @"1233816875698423756";
+//    self.articleData.originalAddress = @"http://pan.baidu.com/s/1o6qUur4";
+//    self.articleData.password = @"3typ";
+    
+    self.articleData.author = [dict getStringValueForKey:@"doiauthor" defaultValue:@""];
+    self.articleData.dateline = [dict getStringValueForKey:@"doidate" defaultValue:@""];
+    self.articleData.message = [dict getStringValueForKey:@"message" defaultValue:@""];
+    self.articleData.subject = [dict getStringValueForKey:@"subject" defaultValue:@""];
+    self.articleData.subhead = [dict getStringValueForKey:@"doititle" defaultValue:@""];
+    self.articleData.periodical = [dict getStringValueForKey:@"doijournal" defaultValue:@""];
+    self.articleData.DOI = [dict getStringValueForKey:@"doiresult" defaultValue:@""];
+    self.articleData.originalAddress = [dict getStringValueForKey:@"doiurl" defaultValue:@""];
+    self.articleData.password = [dict getStringValueForKey:@"doipassword" defaultValue:@""];
+
 
 }
 
@@ -110,7 +121,14 @@
         return 7;
     }
     else{
-        return 1;
+        NSInteger state = [self.literatureDict getIntValueForKey:@"result" defaultValue:0];  //doi 查询 结果 分类 result：1查询完成，2第三方查到，3留言，4失败
+        
+        if ( state == 1 ) {
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 }
 
@@ -205,8 +223,7 @@
                 cell = [[RYLiteratureQueryTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:query_state];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
-            NSDictionary *dic = [NSDictionary dictionaryWithObject:@"1" forKey:@"state"];
-            [cell setValueWithDict:dic];
+            [cell setValueWithDict:self.literatureDict];
             return cell;
         }
         else if ( indexPath.row == 1 )

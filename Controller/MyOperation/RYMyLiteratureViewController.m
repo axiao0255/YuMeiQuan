@@ -9,15 +9,17 @@
 #import "RYMyLiteratureViewController.h"
 #import "RYMyLiteratureTableViewCell.h"
 #import "RYLiteratureQueryViewController.h"
+#import "MJRefreshTableView.h"
 
 
-@interface RYMyLiteratureViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate>
+@interface RYMyLiteratureViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate,MJRefershTableViewDelegate,UIAlertViewDelegate>
 
-@property (strong , nonatomic) UITableView    *tableView;
-@property (strong , nonatomic) UISearchBar    *searchBar;
-@property (strong , nonatomic) UILabel        *hintLabel;     // 每次消耗多少积分 提示
+@property (strong , nonatomic) MJRefreshTableView    *tableView;
+@property (strong , nonatomic) UISearchBar           *searchBar;
+@property (strong , nonatomic) UILabel               *hintLabel;     // 每次消耗多少积分 提示
 
-@property (strong , nonatomic) NSArray        *dataArray;
+@property (strong , nonatomic) NSMutableArray        *dataArray;
+
 
 @end
 
@@ -27,7 +29,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"文献查询";
-    self.dataArray = [self setdata];
+    self.dataArray = [NSMutableArray array];
     [self setup];
 }
 
@@ -46,43 +48,91 @@
 }
 */
 
-- (NSArray *)setdata
-{
-    NSMutableArray *arr = [NSMutableArray array];
-    for ( NSUInteger i = 0 ; i < 10; i ++ ) {
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        NSString *title = @"移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，";
-        [dic setValue:title forKey:@"title"];
-        [dic setValue:@"2015-04-23" forKey:@"time"];
-        
-        BOOL state = NO;
-        if (i%2 == 0) {
-            state = YES;
-        }
-        [dic setObject:[NSNumber numberWithBool:state] forKey:@"state"];
-        
-        [arr addObject:dic];
-    }
-    return arr;
-}
-
 
 - (void) setup
 {
     [self.view addSubview:self.tableView];
-//    self.tableView.tableHeaderView = [self tableViewHeadView];
+    [self.tableView setTableHeaderView:[self tableViewHeadView]];
+    [self.tableView headerBeginRefreshing];
+}
+
+- (void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getMyLiteratureListWithSessionId:[RYUserInfo sharedManager].session
+                                                   page:currentPage
+                                                success:^(id responseDic) {
+                                                    NSLog(@"文献查询 responseDic : %@",responseDic);
+                                                    [wSelf.tableView endRefreshing];
+                                                    [wSelf analysisDataWithDict:responseDic isHeadRefresh:isHeaderReresh];
+                                                    
+                                                } failure:^(id errorString) {
+                                                    NSLog(@"文献查询 errorString : %@",errorString);
+                                                    [wSelf.tableView endRefreshing];
+                                                    if ( wSelf.dataArray.count ) {
+                                                        [ShowBox showError:@"数据出错"];
+                                                    }
+                                                }];
+    }
+
+    
+}
+
+- (void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRefresh:(BOOL)isHead
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    
+    self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
+    
+    
+    if ( isHead ) {
+        [self.dataArray removeAllObjects];
+    }
+    
+    NSArray *mydoimessage = [info getArrayValueForKey:@"mydoimessage" defaultValue:nil];
+    if ( mydoimessage.count ) {
+        [self.dataArray addObjectsFromArray:mydoimessage];
+    }
+    
+    self.hintLabel.text = [info getStringValueForKey:@"msg" defaultValue:@""];
+    [self.tableView reloadData];
+
 }
 
 - (UITableView *)tableView
 {
     if ( _tableView == nil ) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _tableView = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.delegateRefersh = self;
         [Utils setExtraCellLineHidden:_tableView];
     }
     return _tableView;
 }
+
 
 - (UIView *)tableViewHeadView
 {
@@ -108,7 +158,7 @@
     UILabel *hintLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, searchBG.bottom + 8, SCREEN_WIDTH - 30, 12)];
     hintLabel.font = [UIFont systemFontOfSize:12];
     hintLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-    hintLabel.text = @"每次查询需要使用100积分";
+//    hintLabel.text = @"每次查询需要使用100积分";
     self.hintLabel = hintLabel;
     [view addSubview:hintLabel];
     
@@ -133,6 +183,55 @@
 - (void)submitBtnClick:(id)sender
 {
     NSLog(@"申请查询");
+    [self.searchBar resignFirstResponder];
+    NSString *searchDoi = self.searchBar.text;
+    searchDoi = [searchDoi stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if ( [ShowBox isEmptyString:searchDoi] ) {
+        [ShowBox showError:@"doi不能为空"];
+        return;
+    }
+    if ( [ShowBox checkCurrentNetwork] ) {
+        [SVProgressHUD showWithStatus:@"查询中..." maskType:SVProgressHUDMaskTypeBlack];
+        [NetRequestAPI postSeekLiteratureWithSessionId:[RYUserInfo sharedManager].session
+                                                   doi:searchDoi
+                                               success:^(id responseDic) {
+                                                   NSLog(@"文献查询 responseDic :%@",responseDic);
+                                                   [SVProgressHUD dismiss];
+                                                   [self inspectSeekDoiDataWithDict:responseDic];
+            
+        } failure:^(id errorString) {
+             NSLog(@"文献查询 errorString :%@",errorString);
+            [SVProgressHUD dismiss];
+        }];
+    }
+}
+
+- (void)inspectSeekDoiDataWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info ) {
+        RYLiteratureQueryViewController *vc = [[RYLiteratureQueryViewController alloc] initWithLiteratureDict:info];
+        [self.navigationController pushViewController:vc animated:YES];
+        [self.dataArray addObject:info];
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark -UISearchBar 代理方法
@@ -196,14 +295,19 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 140;
-}
+//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 140;
+//}
+//
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    return [self tableViewHeadView];
+//}
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    return [self tableViewHeadView];
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+//{
+//    return 140;
+//}
 
 @end

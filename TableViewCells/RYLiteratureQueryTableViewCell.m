@@ -40,12 +40,12 @@
         return;
     }
     
-    NSInteger state = [dict getIntValueForKey:@"state" defaultValue:0];
+    NSInteger state = [dict getIntValueForKey:@"result" defaultValue:0];  //doi 查询 结果 分类 result：1查询完成，2第三方查到，3留言，4失败
     if ( state == 1 ) {
         self.leftImgView.image = [UIImage imageNamed:@"ic_successful.png"];
         self.titleLabel.text = @"查询完成";
     }
-    else if ( state == 2 ){
+    else if ( state == 2 || state == 3 ){
         self.leftImgView.image = [UIImage imageNamed:@"ic_query.png"];
         self.titleLabel.text = @"查询中";
     }

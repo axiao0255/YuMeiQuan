@@ -290,6 +290,17 @@
     }
 }
 
+- (void)changeSelectStatesWithIndex:(NSInteger)index
+{
+    for ( UIButton *btn in itemViewsArray) {
+        [btn setSelected:NO];
+    }
+    
+    UIButton *btn = [itemViewsArray objectAtIndex:index];
+    btn.selected = YES;
+    
+}
+
 
 - (void)itemPressedDelegate:(UIButton *)sender{
     [[itemViewsArray objectAtIndex:self.selectedbtnnum] setTitleColor:myTitleupcolor forState:UIControlStateNormal];

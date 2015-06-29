@@ -14,4 +14,11 @@
 
 @interface RYNewsViewController : RYBaseViewController
 
+
+/**
+ * 收到 云推送 后 的处理
+ */
+-(void)receivePushNoticeWithUserinfo:(NSDictionary *)userInfo;
+
+
 @end

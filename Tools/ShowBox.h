@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "Reachability.h"
+#import  "RYLoginViewController.h"
 
 
 
@@ -40,5 +41,14 @@
 
 #pragma mark -检查是否登录
 +(BOOL)isLogin;
+
+#pragma mark 判断是否登录，未登录则跳转到登录页面
++(BOOL)alertNoLoginWithPush:(UIViewController *) view;
+
+#pragma mark 保存 点击文献分类的tag字典
++(void)saveLiteratureTagDict:(NSDictionary *)dict;
+
+#pragma mark 取出 文献分类的tag字典
++(NSDictionary *)getLiteratureTagDict;
 
 @end

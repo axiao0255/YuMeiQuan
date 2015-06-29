@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RYCorporateModel.h"
+#import "RYCorporateHomePageData.h"
 
 @interface RYCorporateTableViewCell : UITableViewCell
 
@@ -16,6 +16,6 @@
 
 @property (nonatomic , strong) UIButton  *attentionBtn;
 
-- (void)setValueWithModel:(RYCorporateModel *)model;
+- (void)setValueWithModel:(RYCorporateHomePageData *)model;
 
 @end

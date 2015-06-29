@@ -59,7 +59,7 @@
         return;
     }
     
-    self.contentLabel.text = [dict getStringValueForKey:@"title" defaultValue:@""];
+    self.contentLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
     [self.contentLabel sizeToFit];
     
 //    self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
@@ -78,7 +78,7 @@
 //    icoRect.origin.x = CGRectGetMinX(self.tallyLabel.frame) - 2 - CGRectGetWidth(self.icoImageView.bounds);
 //    self.icoImageView.frame = icoRect;
     
-    self.tallyLabel.text = [dict getStringValueForKey:@"class" defaultValue:@""];
+    self.tallyLabel.text = [dict getStringValueForKey:@"name" defaultValue:@""];
 }
 
 

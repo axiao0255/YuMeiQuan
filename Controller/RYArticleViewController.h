@@ -10,4 +10,7 @@
 
 @interface RYArticleViewController : RYBaseViewController
 
+
+- (id)initWithTid:(NSString *)tid;
+
 @end

@@ -14,4 +14,7 @@
 @property (nonatomic , assign) BOOL           isAttention;
 @property (nonatomic , strong) NSMutableArray *corporateArticles;
 
+// 企业文章分类
+@property (nonatomic , strong) NSArray        *categoryArray;
+
 @end

@@ -8,14 +8,19 @@
 
 #import "RYMyInformListViewController.h"
 #import "RYMyInformListTableViewCell.h"
+#import "MJRefreshTableView.h"
 
-@interface RYMyInformListViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface RYMyInformListViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
 {
     InformType       informType;
-    UITableView      *theTableView;
-    
-    NSArray          *dadaArray;
+//    UITableView      *theTableView;
+//    
+//    NSArray          *dadaArray;
 }
+
+@property (nonatomic,  strong) MJRefreshTableView       *tableView;
+@property (strong , nonatomic) NSMutableArray           *listData;
+
 @end
 
 @implementation RYMyInformListViewController
@@ -31,14 +36,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.title = @"系统消息";
     
-    if ( informType == InformSystem ) {
-        self.title = @"系统消息";
-    }else{
-        self.title = @"有奖活动";
-    }
-    dadaArray = [self setdata];
-    [self initSubviews];
+//    dadaArray = [self setdata];
+//    [self initSubviews];
+    
+    [self.view addSubview:self.tableView];
+    [self.tableView headerBeginRefreshing];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -56,36 +61,107 @@
 }
 */
 
-- (void)initSubviews
+- (NSMutableArray *)listData
 {
-    theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT) style:UITableViewStyleGrouped];
-    theTableView.backgroundColor = [UIColor clearColor];
-    theTableView.delegate = self;
-    theTableView.dataSource = self;
-    [Utils setExtraCellLineHidden:theTableView];
-    [self.view addSubview:theTableView];
+    if ( _listData == nil ) {
+        _listData = [NSMutableArray array];
+    }
+    return _listData;
 }
 
-- (NSArray *)setdata
+
+-(MJRefreshTableView *)tableView
 {
-    NSMutableArray *arr = [NSMutableArray array];
-    for ( NSUInteger i = 0 ; i < 5; i ++ ) {
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        NSString *title = @"护肤品中的生长因子安全吗?";
-        [dic setValue:title forKey:@"title"];
-        NSString *content = @"移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，";
-        [dic setValue:content forKey:@"content"];
-        [dic setValue:@"2015-04-23" forKey:@"time"];
-        [arr addObject:dic];
+    if ( _tableView == nil ) {
+        _tableView = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.delegateRefersh = self;
+        [Utils setExtraCellLineHidden:_tableView];
     }
-    return arr;
+    return _tableView;
 }
+
+-(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getSystemAndAwardNoticeListWithSessionId:[RYUserInfo sharedManager].session
+                                                           type:@"system"
+                                                           page:currentPage
+                                                        success:^(id responseDic) {
+                                                            NSLog(@"系统消息 ： responseDic ：%@",responseDic);
+                                                            [wSelf.tableView endRefreshing];
+                                                            [wSelf analysisDataWithDict:responseDic isHeadRersh:isHeaderReresh];
+                                                            
+                                                        } failure:^(id errorString) {
+                                                            NSLog(@"系统消息 ： errorString ：%@",errorString);
+                                                            if(self.listData.count == 0)
+                                                            {
+                                                                [ShowBox showError:@"数据出错"];
+                                                            }
+                                                        }];
+    }
+}
+
+- (void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRersh:(BOOL)isHead
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    
+    self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
+    
+    NSArray *noticemessage = [info getArrayValueForKey:@"noticemessage" defaultValue:nil];
+    if ( noticemessage.count ) {
+        if ( isHead ) {
+            [self.listData removeAllObjects];
+        }
+        [self.listData addObjectsFromArray:noticemessage];
+    }
+    [self.tableView reloadData];
+    
+}
+
+//- (NSArray *)setdata
+//{
+//    NSMutableArray *arr = [NSMutableArray array];
+//    for ( NSUInteger i = 0 ; i < 5; i ++ ) {
+//        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//        NSString *title = @"护肤品中的生长因子安全吗?";
+//        [dic setValue:title forKey:@"title"];
+//        NSString *content = @"移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，";
+//        [dic setValue:content forKey:@"content"];
+//        [dic setValue:@"2015-04-23" forKey:@"time"];
+//        [arr addObject:dic];
+//    }
+//    return arr;
+//}
 
 
 #pragma mark - UITableView 代理方法
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return dadaArray.count;
+    return self.listData.count;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -105,7 +181,10 @@
     if ( !cell ) {
         cell = [[RYMyInformListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cell_identifier];
     }
-    [cell setValueWithDict:[dadaArray objectAtIndex:indexPath.section]];
+    if ( self.listData.count ) {
+         [cell setValueWithDict:[self.listData objectAtIndex:indexPath.section]];
+    }
+   
     return cell;
 }
 

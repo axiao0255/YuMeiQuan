@@ -14,7 +14,7 @@
 		<string>Icon-114@2x.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>ruiyang.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>com.yimeiquan.app</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -30,11 +30,13 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string>http://t.cn/R28vTLP</string>
 			<key>CFBundleURLName</key>
 			<string>weibo</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>sina.55501bca67e58eb401006e3a</string>
+				<string>sina.53d3b29956240bb2a101b045</string>
 			</array>
 		</dict>
 		<dict>
@@ -72,6 +74,10 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

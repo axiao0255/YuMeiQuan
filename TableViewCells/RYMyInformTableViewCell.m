@@ -24,20 +24,31 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 265, 48)];
+        
+        self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 55, 55)];
+        self.leftImgView.backgroundColor = [UIColor yellowColor];
+        [self.contentView addSubview:self.leftImgView];
+        
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftImgView.right + 10, 13, 225, 16)];
         self.titleLabel.backgroundColor = [UIColor clearColor];
         self.titleLabel.font = [UIFont systemFontOfSize:16];
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         [self.contentView addSubview:self.titleLabel];
         
-        self.numLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 20, 14, 20, 20)];
-        self.numLabel.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
-        self.numLabel.font = [UIFont systemFontOfSize:10];
+        self.numLabel = [[UILabel alloc] initWithFrame:CGRectMake(44, -5, 18, 18)];
+        self.numLabel.backgroundColor = [UIColor redColor];//[Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
+        self.numLabel.font = [UIFont boldSystemFontOfSize:12];
         self.numLabel.textColor = [UIColor whiteColor];
         self.numLabel.textAlignment = NSTextAlignmentCenter;
-        self.numLabel.layer.cornerRadius = 10;
+        self.numLabel.layer.cornerRadius = 9;
         self.numLabel.layer.masksToBounds = YES;
-        [self.contentView addSubview:self.numLabel];
+        [self.leftImgView addSubview:self.numLabel];
+        
+        self.subheadLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftImgView.right + 10, 45, 225, 14)];
+        self.subheadLabel.backgroundColor = [UIColor clearColor];
+        self.subheadLabel.font = [UIFont systemFontOfSize:14];
+        self.subheadLabel.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
+        [self.contentView addSubview:self.subheadLabel];
     }
     return self;
 }

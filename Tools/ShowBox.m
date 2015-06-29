@@ -288,7 +288,53 @@
 }
 
 
++(BOOL)alertNoLoginWithPush:(UIViewController *) view
+{
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *path = [docPath stringByAppendingPathComponent:LoginText];
+    NSDictionary *texts = [NSDictionary dictionaryWithContentsOfFile:path];
+    NSLog(@"alertNoLoginWithPushtexts=%@",texts);
+    NSFileManager *fm = [NSFileManager defaultManager];
+    
+    if([fm fileExistsAtPath:path])
+    {
+        if ([[texts objectForKey:@"islogin"] isEqualToString:@"0"]) {
+            RYLoginViewController *login=[[RYLoginViewController alloc]initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+            }];
+            [view.navigationController pushViewController:login animated:YES];
+            
+            return YES;
+        }
+        else
+            return NO;
+    }
+    else
+    {
+        RYLoginViewController *login=[[RYLoginViewController alloc]init];
+        [view.navigationController pushViewController:login animated:YES];
+        
+        return YES;
+    }
+}
 
+#pragma mark 保存 点击文献分类的tag字典
++(void)saveLiteratureTagDict:(NSDictionary *)dict
+{
+    if ( dict == nil ) {
+        return;
+    }
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    [ud setObject:dict forKey:@"literatureTag"];
+    [ud synchronize];
+}
+
+#pragma mark 取出 文献分类的tag字典
++(NSDictionary *)getLiteratureTagDict
+{
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *dict = [ud objectForKey:@"literatureTag"];
+    return dict;
+}
 
 
 @end

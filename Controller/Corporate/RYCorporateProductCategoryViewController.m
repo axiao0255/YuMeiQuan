@@ -11,15 +11,24 @@
 @interface RYCorporateProductCategoryViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , strong) UITableView  *tableView;
+@property (nonatomic , strong) RYCorporateHomePageData  *dataModel;
 
 @end
 
 @implementation RYCorporateProductCategoryViewController
 
+-(id)initWithCategoryData:(RYCorporateHomePageData *)data
+{
+    self = [super init];
+    if ( self ) {
+        self.dataModel = data;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"赛诺龙中国";
     [self setup];
 }
 
@@ -55,7 +64,7 @@
 #pragma mark  UITableView delegate and dataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return self.dataModel.categoryArray.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -80,22 +89,28 @@
         [cell.contentView addSubview:arrow];
     }
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:121];
-    if ( indexPath.row == 0 ) {
-        label.text = @"新闻";
+    if ( self.dataModel.categoryArray.count ) {
+        NSDictionary *dict = [self.dataModel.categoryArray objectAtIndex:indexPath.row];
+        label.text = [dict getStringValueForKey:@"name" defaultValue:@""];
     }
-    else if ( indexPath.row == 1 ){
-        label.text = @"会议";
-    }
-    else{
-        label.text = @"全部";
-    }
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.navigationController popViewControllerAnimated:YES];
+    if ( self.dataModel.categoryArray.count ) {
+        NSDictionary *dict = [self.dataModel.categoryArray objectAtIndex:indexPath.row];
+        NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@"0"];
+        if ( [self.delegate respondsToSelector:@selector(categorySelectDidWithFid:)] ) {
+            [self.delegate categorySelectDidWithFid:fid];
+        }
+      
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
+    
 }
 
 

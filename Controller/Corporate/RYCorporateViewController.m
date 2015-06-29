@@ -8,36 +8,37 @@
 
 #import "RYCorporateViewController.h"
 #import "RYCorporateTableViewCell.h"
-#import "RYCorporateModel.h"
 
 @interface RYCorporateViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , strong) UITableView      *tableView;
-@property (nonatomic , strong) RYCorporateModel *corporateModel;
+
+
+@property (nonatomic , strong) RYCorporateHomePageData *dataModel;
 
 @end
 
 @implementation RYCorporateViewController
 
+-(id)initWithCategoryData:(RYCorporateHomePageData *)data
+{
+    self = [super init];
+    if ( self ) {
+        self.dataModel = data;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"赛诺龙中国";
-    [self setdata];
+
     [self.view addSubview:self.tableView];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)setdata
-{
-    self.corporateModel.corporateName = @"苏州赛诺龙医疗设备有限公司";
-    self.corporateModel.corporateRecommend = @"赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点，赛诺龙独有的eMatrix水滴点";
-    self.corporateModel.phone = @"123456789";
-    self.corporateModel.isAttention = YES;
 }
 
 -(UITableView *)tableView
@@ -52,18 +53,12 @@
     return _tableView;
 }
 
--(RYCorporateModel *)corporateModel
-{
-    if ( _corporateModel == nil ) {
-        _corporateModel = [[RYCorporateModel alloc] init];
-    }
-    return _corporateModel;
-}
+
 
 #pragma mark - UITableView 代理方法
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -74,10 +69,21 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( indexPath.section == 0 ) {
-        CGSize nameSize = [self.corporateModel.corporateName sizeWithFont:[UIFont boldSystemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
-        CGSize  recommendSize = [self.corporateModel.corporateRecommend sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByCharWrapping];
+        NSString *realname = [self.dataModel.corporateBody getStringValueForKey:@"realname" defaultValue:@""];
+        CGSize nameSize = [realname sizeWithFont:[UIFont boldSystemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
         
-        return nameSize.height + recommendSize.height + 80 + 16 + 16 + 28;
+        NSString *desc = [self.dataModel.corporateBody getStringValueForKey:@"depict" defaultValue:@""];
+        CGSize  recommendSize = [desc sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByCharWrapping];
+        
+        CGFloat collectBntHeight;
+        if ( [ShowBox isLogin] ) {
+            collectBntHeight = 16 + 16 + 28;
+        }
+        else{
+            collectBntHeight = 16;
+        }
+
+        return nameSize.height + recommendSize.height + 80 + collectBntHeight;
     }
     else{
          return 94;
@@ -91,14 +97,9 @@
     if ( !cell ) {
         cell = [[RYCorporateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
-    if ( indexPath.section == 0 ) {
-        [cell setValueWithModel:self.corporateModel];
-        [cell.attentionBtn addTarget:self action:@selector(attentionBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    else{
-        cell.corporateTitleLabel.font = [UIFont systemFontOfSize:16];
-        cell.corporateTitleLabel.text = [NSString stringWithFormat:@"联系方式：%@",self.corporateModel.phone];
-    }
+    [cell setValueWithModel:self.dataModel];
+    [cell.attentionBtn addTarget:self action:@selector(attentionBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+
     
     return cell;
 }
@@ -106,9 +107,6 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if ( indexPath.section == 1 ) {
-        [Utils makeTelephoneCall:self.corporateModel.phone];
-    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -125,14 +123,58 @@
 - (void)attentionBtnClick:(id)sender
 {
     UIButton *btn = (UIButton *)sender;
-    self.corporateModel.isAttention = !self.corporateModel.isAttention;
-    if (self.corporateModel.isAttention) {
-        [btn setImage:[UIImage imageNamed:@"ic_no_attention.png"] forState:UIControlStateNormal];
-    }else{
-        [btn setImage:[UIImage imageNamed:@"ic_attention.png"] forState:UIControlStateNormal];
-    }
 
+    if ( [ShowBox checkCurrentNetwork] ) {
+        NSString *uid = [self.dataModel.corporateBody getStringValueForKey:@"uid" defaultValue:@""];
+        [btn setEnabled:NO];
+        __weak typeof(self) wSelf = self;
+        if ( self.dataModel.isAttention ) {
+            [NetRequestAPI delFriendactionWithSessionId:[RYUserInfo sharedManager].session
+                                                 foruid:uid
+                                                success:^(id responseDic) {
+                                                    [btn setEnabled:YES];
+
+                                                    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                                    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                                    if ( !success ) {
+                                                        [ShowBox showError:@"取消收藏失败,请稍候重试"];
+                                                    }
+                                                    else{
+                                                        wSelf.dataModel.isAttention = !wSelf.dataModel.isAttention;
+                                                        [btn setImage:[UIImage imageNamed:@"ic_attention.png"] forState:UIControlStateNormal];
+                                                        [wSelf.delegate statesChange];
+                                                    }
+                
+            } failure:^(id errorString) {
+                [ShowBox showError:@"取消收藏失败,请稍候重试"];
+                 [btn setEnabled:YES];
+            }];
+        }
+        else{
+            [NetRequestAPI addFriendactionWithSessionId:[RYUserInfo sharedManager].session
+                                                 foruid:uid
+                                                success:^(id responseDic) {
+                                                    [btn setEnabled:YES];
+                                                    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                                    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                                    if ( !success ) {
+                                                        [ShowBox showError:@"取消收藏失败,请稍候重试"];
+                                                    }
+                                                    else{
+                                                        wSelf.dataModel.isAttention = !wSelf.dataModel.isAttention;
+                                                        [btn setImage:[UIImage imageNamed:@"ic_no_attention.png"] forState:UIControlStateNormal];
+                                                        [wSelf.delegate statesChange];
+                                                    }
+            } failure:^(id errorString) {
+                [ShowBox showError:@"收藏失败，请稍候重试"];
+                [btn setEnabled:YES];
+
+            }];
+        }
+    }
 }
+
+
 
 
 @end

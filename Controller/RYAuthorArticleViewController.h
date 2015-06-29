@@ -12,4 +12,6 @@
 
 @property (nonatomic , strong) NSArray   *articleLists;
 
+-(id)initWithAuthorID:(NSString *)authorID;
+
 @end

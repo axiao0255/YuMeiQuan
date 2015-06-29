@@ -10,6 +10,11 @@
 
 @interface RYWeeklyViewController : RYBaseViewController
 
-@property (strong , nonatomic) NSArray   *listData;
+@property (strong , nonatomic) NSArray        *listData;
+@property (strong , nonatomic) NSDictionary   *weeklyTimeDict;
+
+
+@property (strong , nonatomic) NSDictionary   *weeklyDict;
+
 
 @end

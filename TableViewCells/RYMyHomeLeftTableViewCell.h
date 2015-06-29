@@ -21,6 +21,7 @@
 @property (nonatomic , strong) UIImageView   *commonImageView;
 @property (nonatomic , strong) UIImage       *highlightImage;
 @property (nonatomic , strong) UIImage       *normalImage;
+@property (nonatomic , strong) UILabel       *noticeLabel;
 //@property (nonatomic , strong) UIView        *separateLine;       // 分割线
 
 -(id)initWithCommonStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;

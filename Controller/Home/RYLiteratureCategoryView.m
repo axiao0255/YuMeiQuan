@@ -137,6 +137,22 @@
                                              andCanshowHighlight:YES];
     gridMenu.tag = 300;
     gridMenu.delegate = self;
+    
+    NSDictionary *saveDict = [ShowBox getLiteratureTagDict];
+    
+    NSInteger index = -1;
+    for ( int i = 0 ; i < self.categoryData.count; i ++ ) {
+        NSString *saveTitle = [saveDict getStringValueForKey:@"tagname" defaultValue:@""];
+        NSString *title = [self.categoryData objectAtIndex:i];
+        
+        if ( [saveTitle isEqualToString:title] ) {
+            index = i;
+        }
+    }
+    if ( index != -1 ) {
+        [gridMenu changeSelectStatesWithIndex:index];
+    }
+
     [cell.contentView addSubview:gridMenu];
 
     return cell;

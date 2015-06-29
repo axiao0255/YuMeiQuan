@@ -13,6 +13,7 @@
 @property (nonatomic , strong) UIViewController *viewControll;
 @property (nonatomic , strong) NSDictionary     *adverData;
 @property (nonatomic , strong) NSArray          *listData;
+@property (nonatomic , strong) NSDictionary     *descmessage;
 
 - (NSInteger)homepageNumberOfSectionsInTableView:(UITableView *)tableView;
 - (NSInteger)homepageTableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;

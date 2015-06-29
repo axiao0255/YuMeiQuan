@@ -11,24 +11,47 @@
 #import "RYCorporateHomePageData.h"
 #import "RYCorporateViewController.h"
 #import "RYCorporateProductCategoryViewController.h"
+#import "MJRefreshTableView.h"
+#import "RYArticleViewController.h"
 
-@interface RYCorporateHomePageViewController ()<UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic,strong) UITableView              *tableView;
+@interface RYCorporateHomePageViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,RYCorporateProductCategoryViewControllerDelegate,UIAlertViewDelegate,RYCorporateViewControllerDelegate>
+
+@property (nonatomic,strong) MJRefreshTableView       *tableView;
 
 @property (nonatomic,strong) RYCorporateHomePageData  *dataModel;
+
+@property (nonatomic,strong) NSString                 *corporateID;      // 直达号id
+@property (nonatomic,strong) NSString                 *corporateFid;     // 类别 id
 
 @end
 
 @implementation RYCorporateHomePageViewController
 
+- (id)initWithCorporateID:(NSString *)corporateID
+{
+    self = [super init];
+    if ( self ) {
+        self.corporateID = corporateID;
+    }
+   
+//    self.corporateFid = @"0";
+//    self.totlePage = 1;
+    return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:NO];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"赛诺龙中国";
-    [self setdata];
     [self setNavigationItem];
     [self.view addSubview:self.tableView];
+    [self.tableView headerBeginRefreshing];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,37 +69,86 @@
     self.navigationItem.rightBarButtonItem = rightItem;
 }
 
-
--(void)setdata
+-(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
 {
-    NSMutableDictionary *headDic = [NSMutableDictionary dictionary];
-    [headDic setObject:@"http://d.hiphotos.baidu.com/zhidao/pic/item/562c11dfa9ec8a13e028c4c0f603918fa0ecc0e4.jpg" forKey:@"pic"];
-    [headDic setObject:@"赛诺龙中国" forKey:@"name"];
-    [headDic setObject:@"全球医疗美容设备市场的领导者" forKey:@"declare"];
-    self.dataModel.corporateBody = headDic;
-    self.dataModel.isAttention = NO;
-    
-    NSMutableArray *tmpArr = [NSMutableArray array];
-    for ( int i = 0 ; i < 10; i ++ ) {
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        [tmpArr addObject:dic];
-        [dic setObject:@"护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，" forKey:@"content"];
-        if (i%2==0) {
-            [dic setObject:@"http://d.hiphotos.baidu.com/zhidao/pic/item/562c11dfa9ec8a13e028c4c0f603918fa0ecc0e4.jpg" forKey:@"pic"];
-        }else{
-            [dic setObject:@"" forKey:@"pic"];
-        }
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getCompanyHomePageWithSessionId:[RYUserInfo sharedManager].session
+                                                  cuid:self.corporateID
+                                                   fid:self.corporateFid
+                                                  page:currentPage
+                                               success:^(id responseDic) {
+                                                   NSLog(@"企业主页 ： responseDic ：%@",responseDic);
+                                                   [wSelf.tableView endRefreshing];
+                                                   [wSelf analysisDataWithDict:responseDic isHeadRersh:isHeaderReresh];
+                                                   
+                                               } failure:^(id errorString) {
+                                                   NSLog(@"企业主页 ： errorString ：%@",errorString);
+                                                   [wSelf.tableView endRefreshing];
+                                                   if ( wSelf.dataModel.corporateArticles.count == 0 ) {
+                                                       [ShowBox showError:@"数据出错"];
+                                                   }
+
+                                               }];
     }
-    self.dataModel.corporateArticles = tmpArr;
 }
 
--(UITableView *)tableView
+- (void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRersh:(BOOL)isHead
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    
+    self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
+    
+    // 文章分类
+    self.dataModel.categoryArray = [info getArrayValueForKey:@"fidmessage" defaultValue:nil];
+    
+    // 是否关注
+    NSDictionary *friendmessage = [info getDicValueForKey:@"friendmessage" defaultValue:nil];
+    self.dataModel.isAttention = [friendmessage getBoolValueForKey:@"friend" defaultValue:NO];
+    
+    // 取公司 名称等数据
+    self.dataModel.corporateBody = [info getDicValueForKey:@"companymessage" defaultValue:nil];
+    
+    // 取文章列表
+    NSArray *articles = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
+    if ( articles.count ) {
+        if ( isHead ) {
+            [self.dataModel.corporateArticles removeAllObjects];
+        }
+        [self.dataModel.corporateArticles addObjectsFromArray:articles];
+    }
+    [self.tableView reloadData];
+
+}
+
+-(MJRefreshTableView *)tableView
 {
     if ( _tableView == nil ) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT) style:UITableViewStyleGrouped];
+        _tableView = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.delegateRefersh = self;
         [Utils setExtraCellLineHidden:_tableView];
     }
     return _tableView;
@@ -99,11 +171,16 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ( section == 0 ) {
-        if (self.dataModel.isAttention) {
-            return 1;
+        if ( self.dataModel.corporateBody == nil || [self.dataModel.corporateBody allKeys].count == 0 ) {
+            return 0;
         }
         else{
-            return 2;
+            if (self.dataModel.isAttention) {
+                return 1;
+            }
+            else{
+                return 2;
+            }
         }
     }
     else{
@@ -115,7 +192,9 @@
 {
     if ( indexPath.section == 0 ) {
         if ( indexPath.row == 0 ) {
-            return 70;
+            NSString *titleStr = [self.dataModel.corporateBody getStringValueForKey:@"username" defaultValue:@""];
+            CGSize size = [titleStr sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(170, 39)];
+            return  size.height + 48;
         }
         else{
             return 56;
@@ -164,35 +243,125 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ( indexPath.section == 0 ) {
         if ( indexPath.row == 0 ) {
-            RYCorporateViewController *vc = [[RYCorporateViewController alloc] init];
+            RYCorporateViewController *vc = [[RYCorporateViewController alloc] initWithCategoryData:self.dataModel];
+            vc.delegate = self;
             [self.navigationController pushViewController:vc animated:YES];
         }
+    }
+    else{
+        NSDictionary *dict = [self.dataModel.corporateArticles  objectAtIndex:indexPath.row];
+        RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 8;
+    if ( section == 0 ) {
+        return 8;
+    }
+    else{
+        return 0;
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 0.1;
+    return 0;
 }
 
 
 - (void)attentionButtonClick:(id)sender
 {
-    self.dataModel.isAttention = YES;
-    [self.tableView beginUpdates];
-    [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView endUpdates];
+    if ( ![ShowBox isLogin] ) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"请先登录" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alertView show];
+    }
+    else{
+        
+        if ( [ShowBox checkCurrentNetwork] ) {
+            __weak typeof(self) wSelf = self;
+            [NetRequestAPI addFriendactionWithSessionId:[RYUserInfo sharedManager].session
+                                                 foruid:self.corporateID
+                                                success:^(id responseDic) {
+                                                    NSLog(@"收藏 : responseDic : %@",responseDic);
+                                                    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+                                                        [ShowBox showError:@"收藏失败，请稍候重试"];
+                                                        return ;
+                                                    }
+                                                    
+                                                    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                                    if (meta == nil) {
+                                                        [ShowBox showError:@"收藏失败，请稍候重试"];
+                                                        return ;
+                                                    }
+                                                    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                                    if ( !success ) {
+                                                        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"收藏失败，请稍候重试"]];
+                                                        return ;
+                                                    }
+                                                   
+                                                   wSelf.dataModel.isAttention = YES;
+                                                   [wSelf.tableView beginUpdates];
+                                                   [wSelf.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+                                                   [wSelf.tableView endUpdates];
+
+                                                   [wSelf afreshData];
+            } failure:^(id errorString) {
+                NSLog(@"收藏失败 %@",errorString);
+                [ShowBox showError:@"收藏失败，请稍候重试"];
+            }];
+        }
+        
+    }
 }
+
+- (void)afreshData
+{
+//    self.dataModel = nil;
+    [self.tableView headerBeginRefreshing];
+}
+
+#pragma mark RYCorporateViewControllerDelegate
+-(void)statesChange
+{
+    [self afreshData];
+}
+
+
 
 - (void)rightBtnClick:(id)sender
 {
-    RYCorporateProductCategoryViewController *vc = [[RYCorporateProductCategoryViewController alloc] init];
+    if ( self.dataModel.categoryArray.count == 0) {
+        [ShowBox showError:@"数据出错"];
+        return;
+    }
+    RYCorporateProductCategoryViewController *vc = [[RYCorporateProductCategoryViewController alloc] initWithCategoryData:self.dataModel];
+    vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
+
+-(void)categorySelectDidWithFid:(NSString *)fid
+{
+    if ( ![self.corporateFid isEqualToString:fid] ) {
+        self.corporateFid = fid;
+//        self.dataModel = nil;
+        [self.tableView headerBeginRefreshing];
+    }
+}
+
+#pragma mark UIAlertViewDelegate
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ( buttonIndex == 1 ) {
+        RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+            if ( isLogin ) {
+                NSLog(@"登录完成");
+            }
+        }];
+        [self.navigationController pushViewController:nextVC animated:YES];
+    }
+}
+
 
 @end

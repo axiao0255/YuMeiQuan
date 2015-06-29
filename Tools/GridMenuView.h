@@ -113,4 +113,6 @@
  */
 - (void)cancelSelectStates;
 
+- (void)changeSelectStatesWithIndex:(NSInteger)index;
+
 @end

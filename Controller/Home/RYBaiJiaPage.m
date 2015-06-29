@@ -65,13 +65,8 @@
         }
      }else{
          if ( self.authorList.count ) {
-             NSDictionary *dict = [self.authorList objectAtIndex:section];
-             NSArray *keyArr = [dict allKeys];
-             for (NSString *key in keyArr) {
-                 NSArray *subArr = [dict objectForKey:key];
-                 return subArr.count;
-             }
-             return 0;
+             NSArray *subArr = [self.authorList objectAtIndex:section];
+             return subArr.count;
          }
          else{
              return 0;
@@ -130,12 +125,9 @@
         cell.textLabel.font = [UIFont systemFontOfSize:16];
         if ( self.authorList.count ) {
             
-            NSDictionary *dict = [self.authorList objectAtIndex:indexPath.section];
-            NSArray *keyArr = [dict allKeys];
-            for (NSString *key in keyArr) {
-                NSArray *subArr = [dict objectForKey:key];
-                 cell.textLabel.text = [subArr objectAtIndex:indexPath.row];
-            }
+            NSArray *subArr = [self.authorList objectAtIndex:indexPath.section];
+            NSDictionary *subDict = [subArr objectAtIndex:indexPath.row];
+            cell.textLabel.text = [subDict getStringValueForKey:@"realname" defaultValue:@""];
         }
         return cell;
     }
@@ -176,11 +168,9 @@
         titleLabel.backgroundColor = [UIColor clearColor];
         [sectionView addSubview:titleLabel];
         
-        NSDictionary *dict = [self.authorList objectAtIndex:section];
-        NSArray *keyArr = [dict allKeys];
-        for (NSString *key in keyArr) {
-            titleLabel.text = key;
-        }
+        NSArray *subArr = [self.authorList objectAtIndex:section];
+        NSDictionary *subDict = [subArr objectAtIndex:0];
+        titleLabel.text = [subDict getStringValueForKey:@"firstcharter" defaultValue:@""];
         return sectionView;
     }
 }
@@ -191,11 +181,11 @@
         return nil;
     }else{
         NSMutableArray *arr = [NSMutableArray array];
-        for ( NSDictionary *dict in self.authorList ) {
-            NSArray *keyArr = [dict allKeys];
-            for (NSString *key in keyArr) {
-                [arr addObject:key];
-            }
+        for ( NSInteger i = 0; i < self.authorList.count; i ++ ) {
+            NSArray *subArr = [self.authorList objectAtIndex:i];
+            NSDictionary *subDict = [subArr objectAtIndex:0];
+            [arr addObject:[subDict getStringValueForKey:@"firstcharter" defaultValue:@""]];
+
         }
         self.arrayOfCharacters = arr;
         return self.arrayOfCharacters;

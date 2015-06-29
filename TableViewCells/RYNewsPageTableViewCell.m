@@ -93,13 +93,13 @@
         return;
     }
     [self.adverImageView setImageWithURL:[NSURL URLWithString:[dict objectForKey:@"pic"]] placeholderImage:[UIImage imageNamed:@"ic_bigPic_defaule.png"]];
-    NSString *title = [dict getStringValueForKey:@"title" defaultValue:@""];
+    NSString *title = [dict getStringValueForKey:@"subject" defaultValue:@""];
     CGSize size = [title sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, 40)];
     self.transparencyImageView.height = size.height + 8;
     self.transparencyImageView.top = 180 - self.transparencyImageView.height;
     self.titleLabel.frame = CGRectMake(15, 0, SCREEN_WIDTH - 30, self.transparencyImageView.height);
     self.transparencyImageView.image = [UIImage imageNamed:@"ic_transparency.png"];
-    self.titleLabel.text = [dict getStringValueForKey:@"title" defaultValue:@""];
+    self.titleLabel.text = title;//[dict getStringValueForKey:@"subject" defaultValue:@""];
     
 }
 

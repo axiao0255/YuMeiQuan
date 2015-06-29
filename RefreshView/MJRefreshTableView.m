@@ -41,6 +41,10 @@
     self.footerPullToRefreshText = @"上拉可以加载更多数据了";
     self.footerReleaseToRefreshText = @"松开马上加载更多数据了";
     self.footerRefreshingText = @"MJ哥正在帮你加载中,不客气";
+    
+    
+    self.currentPage = 0;
+    self.totlePage = 1;
 }
 
 /**
@@ -49,8 +53,21 @@
 - (void)footerRereshing
 {
      NSLog(@"脚 开始刷新");
-    if ( [self.delegateRefersh respondsToSelector:@selector(footerRereshingData)] ) {
-        [self.delegateRefersh footerRereshingData];
+    [self headerEndRefreshing];
+    
+    self.currentPage ++;
+    if ( self.currentPage >= self.totlePage ) {
+        self.currentPage --;
+        [self footerEndRefreshing];
+        return;
+    }
+    
+//    if ( [self.delegateRefersh respondsToSelector:@selector(footerRereshingData)] ) {
+//        [self.delegateRefersh footerRereshingData];
+//    }
+    
+    if ( [self.delegateRefersh respondsToSelector:@selector(getDataWithIsHeaderReresh:andCurrentPage:)] ) {
+        [self.delegateRefersh getDataWithIsHeaderReresh:NO andCurrentPage:self.currentPage];
     }
 }
 /**
@@ -59,8 +76,15 @@
 - (void)headerRereshing
 {
     NSLog(@"头 开始刷新");
-    if ( [self.delegateRefersh respondsToSelector:@selector(headerRereshingData)] ) {
-        [self.delegateRefersh headerRereshingData];
+    [self footerEndRefreshing];
+    self.currentPage = 0;
+    self.totlePage = 1;
+//    if ( [self.delegateRefersh respondsToSelector:@selector(headerRereshingData)] ) {
+//        [self.delegateRefersh headerRereshingData];
+//    }
+    
+    if ( [self.delegateRefersh respondsToSelector:@selector(getDataWithIsHeaderReresh:andCurrentPage:)] ) {
+        [self.delegateRefersh getDataWithIsHeaderReresh:YES andCurrentPage:self.currentPage];
     }
 }
 
@@ -72,6 +96,16 @@
 
 - (void)headerFinishRefreshing
 {
+    [self headerEndRefreshing];
+}
+
+
+/**
+ * 刷新 结束
+ */
+- (void)endRefreshing
+{
+    [self footerEndRefreshing];
     [self headerEndRefreshing];
 }
 

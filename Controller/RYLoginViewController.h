@@ -9,6 +9,12 @@
 #import "RYBaseViewController.h"
 #import "TextFieldWithLabel.h"
 
+typedef void(^LoginCallBack)(BOOL isLogin,NSError *error);
+
 @interface RYLoginViewController : RYBaseViewController
+//登录的回调
+@property (nonatomic, copy) LoginCallBack finishBlock;
+
+- (id)initWithFinishBlock:(LoginCallBack)callBack;
 
 @end

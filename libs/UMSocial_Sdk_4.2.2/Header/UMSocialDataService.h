@@ -24,7 +24,7 @@ typedef enum {
     UMSResponseCodeAccessTokenExpired = 5027,       //token过期
     UMSResponseCodeNetworkError       = 5050,       //网络错误
     UMSResponseCodeGetProfileFailed   = 5051,       //获取账户失败
-    UMSResponseCodeCancel             = 5052,        //用户取消授权
+    UMSResponseCodeCancel             = 5052,       //用户取消授权
     UMSResponseCodeNotLogin           = 5053,       //用户没有登录
     UMSResponseCodeNoApiAuthority     = 100031      //QQ空间应用没有在QQ互联平台上申请上传图片到相册的权限
 } UMSResponseCode;

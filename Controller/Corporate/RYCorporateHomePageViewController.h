@@ -10,4 +10,6 @@
 
 @interface RYCorporateHomePageViewController : RYBaseViewController
 
+- (id)initWithCorporateID:(NSString *)corporateID;
+
 @end

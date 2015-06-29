@@ -13,6 +13,9 @@
 {
     NSArray  *ic_invite_array;
 }
+
+@property (nonatomic , strong) NSDictionary *inviteData;
+
 @end
 
 @implementation RYMyInviteViewController
@@ -21,9 +24,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"邀请注册";
-    self.view.backgroundColor = [Utils  getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
     ic_invite_array = [self setIcons];
-    [self initSubviews];
+    [self getNetData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,6 +42,57 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)getNetData
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+//        [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeGradient];
+        [NetRequestAPI getMyInviteRegisterWithSessionId:[RYUserInfo sharedManager].session
+                                                success:^(id responseDic) {
+                                                    NSLog(@"邀请注册 responseDic :%@",responseDic);
+//                                                    [SVProgressHUD dismiss];
+                                                    [wSelf analysisDataWithDict:responseDic];
+            
+        } failure:^(id errorString) {
+            NSLog(@"邀请注册 errorString :%@",errorString);
+//            [SVProgressHUD dismiss];
+            [ShowBox showError:@"数据出错，请稍候重试"];
+        }];
+    }
+}
+
+- (void)analysisDataWithDict:(NSDictionary *)responseDic
+{
+    if (responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    
+    NSDictionary *invitemessage = [info getDicValueForKey:@"invitemessage" defaultValue:nil];
+    
+    self.inviteData = invitemessage;
+    
+    if ( self.inviteData ) {
+        self.view.backgroundColor = [Utils  getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
+        [self initSubviews];
+    }
+    
+}
 
 // 获取 邀请 icon
 - (NSArray *)setIcons
@@ -61,12 +114,13 @@
     iconImageView.image = [UIImage imageNamed:@"ic_Invite.png"];
     [view addSubview:iconImageView];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(55, 166, SCREEN_WIDTH - 110, 14)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 166, SCREEN_WIDTH - 30, 14)];
     label.font = [UIFont systemFontOfSize:14];
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
-    label.text = @"邀请同行注册，邀请成功可获得50积分";
+//    label.text = @"邀请同行注册，邀请成功可获得50积分";
+    label.text = [self.inviteData getStringValueForKey:@"slogan" defaultValue:@""];
     [view addSubview:label];
     
     GridMenuView *invite_View1 = [[GridMenuView alloc] initWithFrame:CGRectMake(62, CGRectGetMaxY(label.frame) + 32, SCREEN_WIDTH - 124, 60)
@@ -105,7 +159,12 @@
     }
     __weak AppDelegate *_appDelegate;
     _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [_appDelegate shareWithIndex:index];
+    [_appDelegate shareWithIndex:index
+                    shareContent:[self.inviteData getStringValueForKey:@"content" defaultValue:@""]
+                     sharePicUrl:[self.inviteData getStringValueForKey:@"logo" defaultValue:@""]
+                      callbackId:nil
+                        shareUrl:[self.inviteData getStringValueForKey:@"inviteurl" defaultValue:@""]
+                            thid:nil];
 }
 
 

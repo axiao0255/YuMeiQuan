@@ -13,13 +13,13 @@
 #import "CXPhoto.h"
 #import "GlobleModel.h"
 #import "RYCorporateHomePageViewController.h"
-#import "HTCopyableLabel.h"
 
 #import "RYShareSheet.h"
 #import "RYTokenView.h"
+#import "RYCopyAddressView.h"
 
 #define BROWSER_TITLE_LBL_TAG 12731
-@interface RYLiteratureDetailsViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate,HTCopyableLabelDelegate>
+@interface RYLiteratureDetailsViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate>
 
 {
     CXBrowserNavBarView *navBarView;
@@ -41,13 +41,6 @@
 
 @property (strong, nonatomic)  UIButton         *textShareButton;          // 正文 头的分享 按钮
 
-@property (strong, nonatomic)  UIView           *originalAddressView;       // 复制地址和密码 的view
-
-@property (strong, nonatomic)  HTCopyableLabel  *showAddressLabel;          // 显示url
-@property (strong, nonatomic)  HTCopyableLabel  *showPasswordLabel;         // 显示密码
-@property (strong, nonatomic)  HTCopyableLabel  *copyAddressAndPassword;    // 复制原文地址和密码
-@property (strong, nonatomic)  UILabel          *suggestLabel;              // 建议label
-
 @property (strong, nonatomic)  RYArticleData    *articleData;
 @property (nonatomic, strong)  NSMutableArray   *photoDataSource;
 @property (nonatomic, strong)  NSArray          *imageSourceArray;
@@ -56,6 +49,9 @@
 
 @property (nonatomic, strong)  CXPhotoBrowser   *browser;
 
+//@property (nonatomic, strong)  UIView           *lookOriginalView;
+@property (nonatomic, strong)  RYCopyAddressView *ryCopyView;   // copy 原文地址
+
 // 收藏和分享
 @property (nonatomic, strong)   UIButton         *stowButton; // 收藏按钮
 @property (nonatomic, strong)   UIButton         *shareButton;// 分享按钮
@@ -63,15 +59,73 @@
 @property (nonatomic, strong)   RYShareSheet     *shareSheet; // 分享
 @property (nonatomic, strong)   RYTokenView      *tokenView;  // 标签view
 
+
+// 帖子id
+@property (nonatomic, strong)   NSString         *tid;        // 帖子id
+@property (nonatomic, assign)   BOOL             iscollect;   // 收藏ID 没有收藏时 此id 为0
+@property (nonatomic, strong)   NSDictionary     *tagLibDict; // 标签库
+
+@property (nonatomic, assign)   BOOL             isAward;        // 是否有奖转发
+
+
+
+
+@property (nonatomic, strong)   UIView            *toobar;    // 下边工具条
+
 @end
 
 @implementation RYLiteratureDetailsViewController
 
+- (id)initWithTid:(NSString *)tid
+{
+    self = [super init];
+    if ( self ) {
+        self.tid = tid;
+    }
+#warning 53 为测试数据  应删除
+    //    self.tid = @"53";
+    return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+}
+
+
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;//隐藏为YES，显示为NO
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+//    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+//        // iOS 7
+//        [self prefersStatusBarHidden];
+//        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+//    }
+    
     showButtomView = YES;
     [self setup];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(collectStateChange:) name:@"collectStateChange" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -82,6 +136,11 @@
     [self.webView.scrollView removeObserver:self forKeyPath:@"contentSize"];
 }
 
+- (void)collectStateChange:(NSNotification *)notice
+{
+    self.iscollect = YES;
+    [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
+}
 
 - (void)setup
 {
@@ -101,6 +160,7 @@
 {
     // 添加手势
     [self addTapOnWebView];
+    
    
     self.webView.scrollView.scrollEnabled = NO;
     [self.scrollView addSubview:self.webView];
@@ -112,31 +172,139 @@
     [self.scrollView addSubview:self.dateLabel];
     [self.scrollView addSubview:self.DOILabel];
     [self.scrollView addSubview:self.topTextDemarcation];
-    [self.scrollView addSubview:self.originalAddressView];
     [self.view addSubview:self.scrollView];
+    [self.view addSubview:self.toobar];
+    
     [self.webView.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)getBodyData
 {
-    NSString *url = @"http://yimeiquan.cn/forum.php?mod=viewthread&tid=1016575&page=1&mobile=2&yy=1";
-    //    NSString *url = @"http://121.40.151.63/ios.php?mod=forum&uid=2&tid=12";
-    __weak typeof(self) wSelf = self;
-    [NetManager JSONDataWithUrl:url parameters:nil success:^(id json) {
-        NSDictionary *dic = (NSDictionary *)json;
-        [wSelf setBodDatayWithDict:dic];
-    } fail:^(id error) {
-        NSLog(@"error : %@",error);
-    }];
+//    NSString *url = @"http://yimeiquan.cn/forum.php?mod=viewthread&tid=1016575&page=1&mobile=2&yy=1";
+//    //    NSString *url = @"http://121.40.151.63/ios.php?mod=forum&uid=2&tid=12";
+//    __weak typeof(self) wSelf = self;
+//    [NetManager JSONDataWithUrl:url parameters:nil success:^(id json) {
+//        NSDictionary *dic = (NSDictionary *)json;
+//        [wSelf setBodDatayWithDict:dic];
+//    } fail:^(id error) {
+//        NSLog(@"error : %@",error);
+//    }];
+    
+    
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getArticleDetailWithSessionId:[RYUserInfo sharedManager].session
+                                                 tid:self.tid
+                                             success:^(id responseDic) {
+                                                 NSLog(@"帖子 ：responseDic %@",responseDic);
+                                                 [wSelf analysisDataWithDict:responseDic];
+                                             } failure:^(id errorString) {
+                                                 [ShowBox showError:@"网络"];
+                                                 NSLog(@"帖子 ：errorString %@",errorString);
+                                             }];
+    }
+
 }
+
+- (void)analysisDataWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"获取数据失败，请稍候重试"];
+        return ;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( !meta ) {
+        [ShowBox showError:@"获取数据失败，请稍候重试"];
+        return ;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            [RYUserInfo logout];
+            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+                if ( isLogin ) {
+                    NSLog(@"登录完成");
+                    // 登录完成 重新获取数据
+                    [self getBodyData];
+                }
+            }];
+            [self.navigationController pushViewController:nextVC animated:YES];
+            return;
+        }
+        else{
+            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+            return;
+        }
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( !info ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+        return;
+    }
+    
+    // 刷新 userinfo的数据
+    NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
+    if ( usermassage ) {
+        [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:usermassage];
+    }
+    
+    // 取收藏
+    self.iscollect = [info getIntValueForKey:@"favoritemessage" defaultValue:0];
+    
+    // 系统标签
+    NSMutableDictionary *tempTagsDict = [NSMutableDictionary dictionary];
+    NSArray *tagsmessage = [info getArrayValueForKey:@"tagsmessage" defaultValue:nil];
+    if (tagsmessage.count) {
+        [tempTagsDict setObject:tagsmessage forKey:@"official"];
+    }
+    // 自定义标签
+    NSArray *customTagsArray = [info getArrayValueForKey:@"favoritecatmessage" defaultValue:nil];
+    if ( customTagsArray.count ) {
+        [tempTagsDict setObject:customTagsArray forKey:@"custom"];
+    }
+    
+    if ( tempTagsDict.allKeys.count ) {
+        self.tagLibDict = tempTagsDict;
+    }
+    
+    // 是否有奖转发
+    self.isAward = [info getBoolValueForKey:@"spreadmessage" defaultValue:NO];
+    
+//    // 取 文章内容
+//    NSArray *threadmessage = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
+//    if ( !threadmessage.count ) {
+//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+//        return;
+//    }
+//    [self setBodDatayWithDict:[threadmessage objectAtIndex:0]];
+    NSDictionary *dataDict = [info getDicValueForKey:@"threadmessage" defaultValue:nil];
+    [self setBodDatayWithDict:dataDict];
+
+}
+
+
 
 - (void)setBodDatayWithDict:(NSDictionary *)dic
 {
     if ( !dic ) {
         return;
     }
+    
+    // 是否收藏
+    if ( self.iscollect ) {
+        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
+    }
+    else{
+        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
+    }
+
+    
     self.articleData.author = [dic getStringValueForKey:@"author" defaultValue:@""];
-    self.articleData.dateline = [dic getStringValueForKey:@"dateline" defaultValue:@""];
+    self.articleData.dateline = [dic getStringValueForKey:@"time" defaultValue:@""];
     self.articleData.message = [dic getStringValueForKey:@"message" defaultValue:@""];
     self.articleData.subject = [dic getStringValueForKey:@"subject" defaultValue:@""];
     self.articleData.subhead = @"adsjkfhakjdhfasdkjfhsadjkhfsakjhdfkas";
@@ -150,7 +318,13 @@
 
 - (void)refreshMainView
 {
-    self.textShareButton.height = 35;
+    // 是否显示有奖转发
+    if ( self.isAward ) {
+        self.textShareButton.height = 35;
+    }else{
+        self.textShareButton.height = 0;
+    }
+
     
     // 标题
     CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
@@ -242,7 +416,6 @@
     if ( _stowButton == nil ) {
         _stowButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
         [_stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
-        [_stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateHighlighted];
         [_stowButton addTarget:self action:@selector(stowButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _stowButton;
@@ -269,8 +442,7 @@
 - (RYTokenView *)tokenView
 {
     if ( _tokenView == nil ) {
-        NSArray *arr = @[@"护肤品成分",@"新闻",@"护肤品成分护肤品成分",@"lalala",@"唷唷唷唷"];
-        _tokenView = [[RYTokenView alloc] initWithTokenArray:arr];
+        _tokenView = [[RYTokenView alloc] initWithTokenDict:self.tagLibDict andArticleID:self.tid];
     }
     return _tokenView;
 }
@@ -304,7 +476,8 @@
 - (UIScrollView *)scrollView
 {
     if (_scrollView == nil) {
-        _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+//        _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 40)];
         _scrollView.backgroundColor = [UIColor whiteColor];
     }
     return _scrollView;
@@ -314,7 +487,8 @@
 - (UIWebView *)webView
 {
     if (_webView == nil) {
-        _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+//        _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 40)];
         _webView.backgroundColor = [UIColor clearColor];
         _webView.opaque = NO;
         _webView.delegate = self;
@@ -430,106 +604,51 @@
     }
     return _textShareButton;
 }
-
-- (UIView *)originalAddressView
+- (RYCopyAddressView *)ryCopyView
 {
-    if ( _originalAddressView == nil ) {
-        _originalAddressView = [[UIView alloc] initWithFrame:CGRectZero];
-        _originalAddressView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
-        _originalAddressView.left = 0;
-        _originalAddressView.width = SCREEN_WIDTH;
-        
-        addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 8, SCREEN_WIDTH - 80, 12)];
-        addressLabel.font = [UIFont systemFontOfSize:12];
-        addressLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        addressLabel.text = @"原文地址";
-        addressLabel.hidden = YES;
-        [_originalAddressView addSubview:addressLabel];
-        
-        self.showAddressLabel.top = addressLabel.bottom + 8;
-        [_originalAddressView addSubview:self.showAddressLabel];
-        
-        passwordLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, self.showAddressLabel.bottom + 8, SCREEN_WIDTH - 80, 12)];
-        passwordLabel.font = [UIFont systemFontOfSize:12];
-        passwordLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        passwordLabel.text = @"密码";
-        passwordLabel.hidden = YES;
-        [_originalAddressView addSubview:passwordLabel];
-        
-        self.showPasswordLabel.top = passwordLabel.bottom + 8;
-        [_originalAddressView addSubview:self.showPasswordLabel];
-        
-        self.copyAddressAndPassword.top = self.showPasswordLabel.bottom + 8;
-        [_originalAddressView addSubview:self.copyAddressAndPassword];
-        
-        self.suggestLabel.top = self.copyAddressAndPassword.bottom + 8;
-        [_originalAddressView addSubview:self.suggestLabel];
+    if ( _ryCopyView == nil ) {
+        _ryCopyView = [[RYCopyAddressView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 220) andArticleData:self.articleData];
+        _ryCopyView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
     }
-    return _originalAddressView;
+    return _ryCopyView;
 }
 
-- (HTCopyableLabel *)showAddressLabel
-{
-    if ( _showAddressLabel == nil ) {
-        _showAddressLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 40)];
-        _showAddressLabel.copyableLabelDelegate = self;
-        _showAddressLabel.backgroundColor = [UIColor whiteColor];
-        _showAddressLabel.font = [UIFont systemFontOfSize:14];
-        _showAddressLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-        _showAddressLabel.layer.cornerRadius = 5;
-        _showAddressLabel.layer.masksToBounds = YES;
-        _showAddressLabel.hidden = YES;
-    }
-    return _showAddressLabel;
-}
+//- (UIView *)lookOriginalView
+//{
+//    if ( _lookOriginalView == nil ) {
+//        _lookOriginalView = [[UIView alloc] init];
+//        _lookOriginalView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
+//    }
+//    return _lookOriginalView;
+//}
 
-- (HTCopyableLabel *)showPasswordLabel
+- (UIView *)toobar
 {
-    if ( _showPasswordLabel == nil ) {
-        _showPasswordLabel = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 40)];
-        _showPasswordLabel.copyableLabelDelegate = self;
-        _showPasswordLabel.backgroundColor = [UIColor whiteColor];
-        _showPasswordLabel.font = [UIFont systemFontOfSize:14];
-        _showPasswordLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-        _showPasswordLabel.layer.cornerRadius = 5;
-        _showPasswordLabel.layer.masksToBounds = YES;
-        _showPasswordLabel.hidden = YES;
-
-    }
-    return _showPasswordLabel;
-}
-
-- (HTCopyableLabel *)copyAddressAndPassword
-{
-    if ( _copyAddressAndPassword == nil ) {
-        _copyAddressAndPassword = [[HTCopyableLabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 40)];
-        _copyAddressAndPassword.copyableLabelDelegate = self;
-        _copyAddressAndPassword.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
-        _copyAddressAndPassword.textAlignment = NSTextAlignmentCenter;
-        _copyAddressAndPassword.font = [UIFont boldSystemFontOfSize:18];
-        _copyAddressAndPassword.textColor = [UIColor whiteColor];
-        _copyAddressAndPassword.text = @"复制地址和密码";
-        _copyAddressAndPassword.layer.cornerRadius = 5;
-        _copyAddressAndPassword.layer.masksToBounds = YES;
-        _copyAddressAndPassword.hidden = YES;
+    if ( _toobar == nil ) {
+        _toobar = [[UIView alloc] initWithFrame:CGRectZero];
+        _toobar.backgroundColor = [UIColor whiteColor];
+        _toobar.height = 40;
+        _toobar.left = 0;
+        _toobar.top = SCREEN_HEIGHT - 40;
+        _toobar.width = SCREEN_WIDTH;
         
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _toobar.width, 0.5)];
+        line.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
+        [_toobar addSubview:line];
+        
+        UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 5, 50, 30)];
+        [backBtn setImage:[UIImage imageNamed:@"back_btn_icon_sel.png"] forState:UIControlStateNormal];
+        [backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [_toobar addSubview:backBtn];
     }
-    return _copyAddressAndPassword;
+    
+    return _toobar;
 }
 
-- (UILabel *)suggestLabel
+- (void)backBtnClick:(id)sender
 {
-    if ( _suggestLabel == nil ) {
-        _suggestLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, SCREEN_WIDTH - 80, 12)];
-        _suggestLabel.font = [UIFont systemFontOfSize:12];
-        _suggestLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        _suggestLabel.text = @"建议使用电脑设备浏览";
-        _suggestLabel.textAlignment = NSTextAlignmentCenter;
-        _suggestLabel.hidden = YES;
-    }
-    return _suggestLabel;
+    [self.navigationController popViewControllerAnimated:YES];
 }
-
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
@@ -577,36 +696,25 @@
     
     NSString *htmlHeight = [webView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"webHeight\").offsetHeight;"];
     self.webViewHeight = htmlHeight.integerValue;
+    
+    [self.ryCopyView removeFromSuperview];
+    [self.scrollView addSubview:self.ryCopyView];
     if ( showButtomView ) {
-        self.originalAddressView.hidden = NO;
-        self.originalAddressView.height = 220;
-        self.showAddressLabel.hidden = NO;
-        self.showAddressLabel.text = [NSString stringWithFormat:@"   %@",self.articleData.originalAddress];
-        self.showPasswordLabel.hidden = NO;
-        self.showPasswordLabel.text = [NSString stringWithFormat:@"   %@",self.articleData.password];;
-
-        
-        self.copyAddressAndPassword.hidden = NO;
-        self.suggestLabel.hidden = NO;
-        addressLabel.hidden = NO;
-        passwordLabel.hidden = NO;
+        self.ryCopyView.height = 220;
     }
     else{
-        self.originalAddressView.hidden = YES;
-        self.originalAddressView.height = 0;
-        self.showAddressLabel.hidden = YES;
-        self.showPasswordLabel.hidden = YES;
-        self.copyAddressAndPassword.hidden = YES;
-        self.suggestLabel.hidden = YES;
-        addressLabel.hidden = YES;
-        passwordLabel.hidden = YES;
+        self.ryCopyView.height = 0;
     }
-    self.originalAddressView.top = self.webViewHeight + self.topTextDemarcation.bottom;
+//    self.lookOriginalView.frame = self.ryCopyView.bounds;
+//    [self.ryCopyView addSubview:self.lookOriginalView];
+    
+    self.ryCopyView.top = self.webViewHeight + self.topTextDemarcation.bottom + 10;
     
 //    CGSize scrollViewContentSize = self.scrollView.contentSize;
 //     scrollViewContentSize.height = self.webViewHeight + self.topTextDemarcation.bottom + self.originalAddressView.height;
 //    self.scrollView.contentSize = scrollViewContentSize ;
-    self.webView.height = self.webViewHeight + self.originalAddressView.height + self.topTextDemarcation.bottom - 100;
+//    self.webView.height = self.webViewHeight + self.originalAddressView.height + self.topTextDemarcation.bottom - 100;
+     self.webView.height = self.webViewHeight + self.topTextDemarcation.bottom + self.ryCopyView.height - 90;
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -722,7 +830,7 @@
 }
 
 #pragma mark - HTCopyableLabelDelegate
-
+/*
 - (NSString *)stringToCopyForCopyableLabel:(HTCopyableLabel *)copyableLabel
 {
     NSString *stringToCopy = @"";
@@ -737,6 +845,7 @@
     }
     return stringToCopy;
 }
+ */
 
 //- (CGRect)copyMenuTargetRectInCopyableLabelCoordinates:(HTCopyableLabel *)copyableLabel
 //{
@@ -772,19 +881,83 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (void)stowButtonClick:(id)sender
-{
-    NSLog(@"收藏");
-    [self.view addSubview:self.tokenView];
-    [self.tokenView showTokenView];
-}
-
 - (void)shareButtonClick:(id)sender
 {
     NSLog(@"分享");
     self.shareSheet.delegate = self;
     [self.shareSheet showShareView];
 }
+
+
+- (void)stowButtonClick:(id)sender
+{
+    NSLog(@"收藏");
+    if ( [ShowBox isLogin] ) {
+        if ( self.iscollect  ) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"" message:@"确定取消收藏" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+            alertView.tag = 9090;
+            [alertView show];
+        }
+        else{
+            [self.view addSubview:self.tokenView];
+            [self.tokenView showTokenView];
+        }
+    }
+    else{
+        RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+            if ( isLogin ) {
+                NSLog(@"登录完成");
+                [self getBodyData]; // 登录之后重新 刷新数据
+            }
+        }];
+        [self.navigationController pushViewController:nextVC animated:YES];
+    }
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ( alertView.tag == 9090 ) {
+        // 取消收藏
+        if ( buttonIndex == 1 ) {
+            __weak typeof(self) wSelf = self;
+            [NetRequestAPI cancelCollectWithSessionId:[RYUserInfo sharedManager].session
+                                                 thid:self.tid
+                                              success:^(id responseDic) {
+                                                  NSLog(@"取消收藏responseDic : %@",responseDic);
+                                                  [wSelf cancelCollectWithDict:responseDic];
+                                                  
+                                              } failure:^(id errorString) {
+                                                  NSLog(@"取消收藏 errorString : %@",errorString);
+                                                  [ShowBox showError:@"取消收藏失败，请稍候重试"];
+                                              }];
+        }
+    }}
+
+- (void)cancelCollectWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"取消收藏失败，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"取消收藏失败，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"取消收藏失败，请稍候重试"]];
+        return;
+    }
+    self.iscollect = NO;
+    [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
+    
+}
+
 
 
 @end

@@ -172,7 +172,7 @@
 -(void)GridMenuViewButtonSelected:(NSInteger)btntag selfTag:(NSInteger)selftag
 {
     NSUInteger index;
-    if ( selftag == 100 ) {
+    if ( selftag == 100 ) {// 0 , 1 , 2
         index = btntag;
     }
     else {
@@ -186,7 +186,13 @@
     
     __weak AppDelegate *_appDelegate;
     _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [_appDelegate shareWithIndex:index];
+    
+     [_appDelegate shareWithIndex:index
+                     shareContent:[self.shareDataDict getStringValueForKey:SHARE_TEXT defaultValue:@""]
+                      sharePicUrl:[self.shareDataDict getStringValueForKey:SHARE_PIC defaultValue:@""]
+                       callbackId:[self.shareDataDict getStringValueForKey:SHARE_CALLBACK_DI defaultValue:@""]
+                         shareUrl:[self.shareDataDict getStringValueForKey:SHARE_URL defaultValue:@""]
+                             thid:[self.shareDataDict getStringValueForKey:SHARE_TID defaultValue:@""]];
 }
 
 

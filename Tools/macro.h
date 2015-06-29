@@ -45,5 +45,13 @@ return __singleton__; \
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 
 
+#define SHARE_URL         @"shareUrl"     // 分享的网页地址
+#define SHARE_TEXT        @"shareText"    // 分享文章内容
+#define SHARE_CALLBACK_DI @"callback_id"  // 分享成功把该id回传给后台
+#define SHARE_PIC         @"sharePic"     // 分享图片地址
+#define SHARE_TID         @"share_tid"    // 分享的文章id
+
+
+
 
 #endif

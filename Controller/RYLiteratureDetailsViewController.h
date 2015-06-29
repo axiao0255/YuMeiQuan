@@ -10,4 +10,6 @@
 
 @interface RYLiteratureDetailsViewController : RYBaseViewController
 
+- (id)initWithTid:(NSString *)tid;
+
 @end

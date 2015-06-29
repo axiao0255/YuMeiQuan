@@ -16,21 +16,115 @@
 {
     UITableView      *theTableView;
 }
+
+@property (nonatomic ,strong) RYMyNoticeModel *noticeModel;
+
 @end
 
 @implementation RYMyInformViewController
+
+-(id)initWithNoticeModel:(RYMyNoticeModel *)model
+{
+    self = [super init];
+    if ( self ) {
+        self.noticeModel = model;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"通知";
     [self initSubviews];
+    
+    if ( self.noticeModel.systemNoticeArray.count == 0 && self.noticeModel.prizeNoticeArray.count == 0 && self.noticeModel.companyNoticeArray.count == 0 ) {
+        [self getNoticeData];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)getNoticeData
+{
+    __weak typeof(self) wSelf = self;
+    [NetRequestAPI getMyNoticeHomePageListWithSessionId:[RYUserInfo sharedManager].session
+                                                success:^(id responseDic) {
+                                                    NSLog(@"responseDic 通知 ：%@",responseDic);
+                                                    [wSelf analysisDataWithDict:responseDic];
+                                                    
+                                                } failure:^(id errorString) {
+                                                    NSLog(@"errorString 通知 ：%@",errorString);
+                                                }];
+}
+
+-(void)analysisDataWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        return;
+    }
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        return;
+    }
+    // 取系统消息
+    NSArray *noticesystemmessage = [info getArrayValueForKey:@"noticesystemmessage" defaultValue:nil];
+    self.noticeModel.systemNoticeArray = noticesystemmessage;
+    
+//    for ( NSInteger i = 0; i < noticesystemmessage.count; i ++ ) {
+//        
+//        NSDictionary *dict = [noticesystemmessage objectAtIndex:i];
+//        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
+//        if ( number > 0 ) {
+//            self.noticeNumber = self.noticeNumber + number;
+//        }
+//    }
+    
+    // 取有奖活动
+    NSArray *noticespreadmessage = [info getArrayValueForKey:@"noticespreadmessage" defaultValue:nil];
+    self.noticeModel.prizeNoticeArray = noticespreadmessage;
+    
+//    for ( NSInteger i = 0; i < noticespreadmessage.count; i ++ ) {
+//        
+//        NSDictionary *dict = [noticespreadmessage objectAtIndex:i];
+//        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
+//        if ( number > 0 ) {
+//            self.noticeNumber = self.noticeNumber + number;
+//        }
+//    }
+    
+    // 取 公司通知列表
+    NSArray      *noticethreadmessage = [info getArrayValueForKey:@"noticethreadmessage" defaultValue:nil];
+    self.noticeModel.companyNoticeArray = noticethreadmessage;
+    
+//    for ( NSInteger i = 0; i < noticethreadmessage.count; i ++ ) {
+//        
+//        NSDictionary *dict = [noticethreadmessage objectAtIndex:i];
+//        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
+//        if ( number > 0 ) {
+//            self.noticeNumber = self.noticeNumber + number;
+//        }
+//    }
+    
+//    if ( self.noticeNumber > 0 ) {
+//        [theTableView reloadData];
+//    }
+    [theTableView reloadData];
+}
+
 
 - (void)initSubviews
 {
@@ -52,15 +146,15 @@
 {
     switch ( section ) {
         case 0:
-            return 1;
+            return self.noticeModel.systemNoticeArray.count;
             break;
         case 1:
+            return self.noticeModel.prizeNoticeArray.count;
             return 1;
             break;
         case 2:
-            return 4;
+            return self.noticeModel.companyNoticeArray.count;
             break;
-            
         default:
             return 0;
             break;
@@ -68,7 +162,7 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 48;
+    return 75;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -80,15 +174,48 @@
     }
     if ( indexPath.section == 0 ) {
         cell.titleLabel.text = @"系统消息";
-        cell.numLabel.text = @"3";
+        cell.leftImgView.image = [UIImage imageNamed:@"system_notice.png"];
+        if ( self.noticeModel.systemNoticeArray.count ) {
+            NSDictionary *dict = [self.noticeModel.systemNoticeArray objectAtIndex:indexPath.row];
+            NSInteger count = [dict getIntValueForKey:@"count" defaultValue:0];
+            if ( count > 0 ) {
+                cell.numLabel.hidden = NO;
+                cell.numLabel.text = [NSString stringWithFormat:@"%li",(long)count];
+            }
+            else{
+                cell.numLabel.hidden = YES;
+            }
+        }
     }
     else if ( indexPath.section == 1 ){
         cell.titleLabel.text = @"有奖活动";
-        cell.numLabel.text = @"4";
+        cell.leftImgView.image = [UIImage imageNamed:@"award_notice.png"];
+        if ( self.noticeModel.prizeNoticeArray.count ) {
+            NSDictionary *dict = [self.noticeModel.prizeNoticeArray objectAtIndex:indexPath.row];
+            NSInteger count = [dict getIntValueForKey:@"count" defaultValue:0];
+            if ( count > 0 ) {
+                cell.numLabel.hidden = NO;
+                cell.numLabel.text = [NSString stringWithFormat:@"%li",(long)count];
+            }
+            else{
+                cell.numLabel.hidden = YES;
+            }
+        }
     }
     else{
-        cell.titleLabel.text = @"赛诺秀：什么乱七八糟的什么乱七八糟的什么乱七八糟的什么乱七八糟的什么乱七八糟的什么乱七八糟的什么乱七八糟的什么乱七八糟的";
-        cell.numLabel.text = @"99+";
+        if ( self.noticeModel.companyNoticeArray.count ) {
+            NSDictionary *dict = [self.noticeModel.companyNoticeArray objectAtIndex:indexPath.row];
+            cell.titleLabel.text = [dict getStringValueForKey:@"author" defaultValue:@""];
+            cell.subheadLabel.text = [dict getStringValueForKey:@"note" defaultValue:@""];
+            NSInteger count = [dict getIntValueForKey:@"count" defaultValue:0];
+            if ( count > 0 ) {
+                cell.numLabel.hidden = NO;
+                cell.numLabel.text = [NSString stringWithFormat:@"%li",(long)count];
+            }
+            else{
+                cell.numLabel.hidden = YES;
+            }
+        }
     }
     return cell;
 }
@@ -107,7 +234,9 @@
         }
     }
     else{
-        RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] init];
+        NSDictionary *dict = [self.noticeModel.companyNoticeArray objectAtIndex:indexPath.row];
+        NSString *companyId = [dict getStringValueForKey:@"authorid" defaultValue:@""];
+        RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] initWithCorporateID:companyId];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

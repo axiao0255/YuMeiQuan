@@ -28,6 +28,7 @@
 #import "UMSocial.h"
 #import "UIView+CJ_Extention.h"
 #import "RYUserInfo.h"
+#import "SVProgressHUD.h"
 
 
 

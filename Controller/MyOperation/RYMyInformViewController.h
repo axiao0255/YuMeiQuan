@@ -7,7 +7,10 @@
 //
 
 #import "RYBaseViewController.h"
+#import "RYMyNoticeModel.h"
 
 @interface RYMyInformViewController : RYBaseViewController
+
+-(id)initWithNoticeModel:(RYMyNoticeModel *)model;
 
 @end

@@ -37,9 +37,10 @@
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.logoImageView.frame) + 15,
                                                                     18,
-                                                                    250,
+                                                                    170,
                                                                     16)];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+        self.titleLabel.numberOfLines = 0;
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         [self.contentView addSubview:self.titleLabel];
         
@@ -68,10 +69,18 @@
         return;
     }
     [self.logoImageView setImageWithURL:[NSURL URLWithString:[dic objectForKey:@"pic"]] placeholderImage:[UIImage imageNamed:@"ic_logo_default.png"]];
-    [self.titleLabel setText:[dic getStringValueForKey:@"name" defaultValue:@""]];
-    [self.declareLabel setText:[dic getStringValueForKey:@"declare" defaultValue:@""]];
-    [self.titleLabel sizeToFit];
+    
+    NSString *titleStr = [dic getStringValueForKey:@"username" defaultValue:@""];
+    CGSize size = [titleStr sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(170, 39)];
+    self.titleLabel.height = size.height;
+    self.titleLabel.width = size.width;
+    [self.titleLabel setText:titleStr];
+    
     self.directImgView.left = self.titleLabel.right;
+    
+    self.declareLabel.top = self.titleLabel.bottom + 8;
+    [self.declareLabel setText:[dic getStringValueForKey:@"slogan" defaultValue:@""]];
+    
 }
 
 @end
@@ -174,9 +183,36 @@
         self.titlePic.width = 0;
         self.contentLabel.frame = CGRectMake(15, self.contentLabel.top, SCREEN_WIDTH - 30, 39);
     }
-    self.contentLabel.text = [dic getStringValueForKey:@"content" defaultValue:@""];
+    self.contentLabel.text = [dic getStringValueForKey:@"subject" defaultValue:@""];
     self.categoryLabel.left = self.contentLabel.left;
-    self.categoryLabel.text = @"新闻";
+    self.categoryLabel.text = [dic getStringValueForKey:@"name" defaultValue:@""];
+    
+    BOOL questions = [dic getBoolValueForKey:@"questions" defaultValue:NO];
+    if ( questions ) {
+        self.answerImgView.hidden = NO;
+        self.answerImgView.width = 17;
+    }
+    else{
+        self.answerImgView.hidden = YES;
+        self.answerImgView.width = 0;
+    }
+    
+    BOOL spread = [dic getBoolValueForKey:@"spread" defaultValue:NO];
+    if ( spread ) {
+        self.integratorImgView.hidden = NO;
+        self.integratorImgView.width = 17;
+
+        if ( self.answerImgView.width == 0 ) {
+            self.integratorImgView.left = self.answerImgView.left;
+        }
+        else{
+            self.integratorImgView.left = CGRectGetMinX(self.answerImgView.frame)-17 - 4;
+        }
+    }
+    else{
+        self.integratorImgView.hidden = YES;
+        self.integratorImgView.width = 0;
+    }
 }
 
 @end

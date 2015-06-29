@@ -43,24 +43,33 @@
     return self;
 }
 
-- (void)setValueWithModel:(RYCorporateModel *)model
+- (void)setValueWithModel:(RYCorporateHomePageData *)model
 {
     if ( !model ) {
         return;
     }
     
-    self.corporateTitleLabel.text = model.corporateName;
+    self.corporateTitleLabel.text = [model.corporateBody getStringValueForKey:@"realname" defaultValue:@""];
     [self.corporateTitleLabel sizeToFit];
-    self.attentionBtn.hidden = NO;
-    self.attentionBtn.top = self.corporateTitleLabel.bottom + 16;
-    if (model.isAttention) {
-        [self.attentionBtn setImage:[UIImage imageNamed:@"ic_no_attention.png"] forState:UIControlStateNormal];
-    }else{
-        [self.attentionBtn setImage:[UIImage imageNamed:@"ic_attention.png"] forState:UIControlStateNormal];
+    
+    if ( [ShowBox isLogin] ) {
+        self.attentionBtn.hidden = NO;
+        self.attentionBtn.height = 28;
+        if (model.isAttention) {
+            [self.attentionBtn setImage:[UIImage imageNamed:@"ic_no_attention.png"] forState:UIControlStateNormal];
+        }else{
+            [self.attentionBtn setImage:[UIImage imageNamed:@"ic_attention.png"] forState:UIControlStateNormal];
+        }
+    }
+    else{
+        self.attentionBtn.hidden = YES;
+        self.attentionBtn.height = 0;
     }
     
+    self.attentionBtn.top = self.corporateTitleLabel.bottom + 16;
+    
     self.corporateRecommendLabel.top = self.attentionBtn.bottom + 16;
-    self.corporateRecommendLabel.text = model.corporateRecommend;
+    self.corporateRecommendLabel.text = [model.corporateBody getStringValueForKey:@"desc" defaultValue:@""];
     [self.corporateRecommendLabel sizeToFit];
 }
 

@@ -47,6 +47,11 @@
     return UIStatusBarStyleLightContent;
 }
 
+-(void)viewWillUnload{
+    [super viewWillUnload];
+    NSLog(@"viewWillUnload");
+    [[NetManager sharedManager] cancelAllURLRequest];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {

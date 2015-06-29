@@ -7,7 +7,19 @@
 //
 
 #import "RYBaseViewController.h"
+#import "RYCorporateHomePageData.h"
+
+@protocol RYCorporateProductCategoryViewControllerDelegate <NSObject>
+
+-(void)categorySelectDidWithFid:(NSString *)fid;
+
+@end
 
 @interface RYCorporateProductCategoryViewController : RYBaseViewController
+
+@property (nonatomic,weak) id<RYCorporateProductCategoryViewControllerDelegate>delegate;
+
+
+-(id)initWithCategoryData:(RYCorporateHomePageData *)data;
 
 @end

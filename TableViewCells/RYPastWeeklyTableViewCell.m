@@ -49,8 +49,12 @@
     
     NSString *pic = [dict getStringValueForKey:@"pic" defaultValue:@""];
     [self.leftImgView setImageWithURL:[NSURL URLWithString:pic] placeholderImage:[UIImage imageNamed:@"ic_pic_default.png"]];
-    self.titleLabel.text = [dict getStringValueForKey:@"title" defaultValue:@""];
-    self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
+    self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
+    
+    NSString *time = [dict getStringValueForKey:@"time" defaultValue:@""];
+    NSString *idStr = [dict getStringValueForKey:@"id" defaultValue:@""];
+    
+    self.timeLabel.text = [NSString stringWithFormat:@"%@ 总第%@期",time,idStr];
 }
 
 @end

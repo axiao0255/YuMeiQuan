@@ -10,4 +10,6 @@
 
 @interface RYMyHomeLeftViewController : RYBaseViewController
 
+//@property (nonatomic, assign) NSInteger    noticeCount;
+
 @end

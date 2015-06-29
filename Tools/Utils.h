@@ -71,6 +71,14 @@
 #pragma mark 获取中文字符串转码utf8
 + (NSString*) getEncodingWithUTF8:(NSString *)_str;
 
+#pragma mark - 从NSString中 取出 数字
++ (NSInteger)findNumFormOriginalStr:(NSString *)originalStr;
+
+#pragma mark - 从数组中取出 首字母相同key字典 归类
++ (NSArray *)findSameKeyWithArray:(NSArray *)originalArray;
+
+
+
 
 
 

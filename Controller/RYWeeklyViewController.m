@@ -11,8 +11,9 @@
 #import "RYWeeklyTableViewCell.h"
 #import "RYArticleViewController.h"
 #import "RYPastWeeklyViewController.h"
+#import "RYLiteratureDetailsViewController.h"
 
-@interface RYWeeklyViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface RYWeeklyViewController ()<UITableViewDelegate,UITableViewDataSource,RYPastWeeklyViewControllerDelegate>
 
 @property (nonatomic , strong) UITableView      *tableView;
 
@@ -65,6 +66,58 @@
 {
     [self.view addSubview:self.tableView];
     [self setNavigationItem];
+    [self getNetData];
+}
+
+- (void)getNetData
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getSelectWeeklyDataWithSessionId:[RYUserInfo sharedManager].session
+                                               weeklyId:[self.weeklyDict objectForKey:@"id"]
+                                                success:^(id responseDic) {
+                                                    NSLog(@"选择的周报 responseDic: %@",responseDic);
+                                                    [wSelf analysisDataWithDict:responseDic];
+            
+        } failure:^(id errorString) {
+            NSLog(@"选择的周报 errorString: %@",errorString);
+        }];
+    }
+}
+
+-(void)analysisDataWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据错误，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( !meta ) {
+        [ShowBox showError:@"数据错误，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据错误，请稍候重试"]];
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据错误，请稍候重试"]];
+        return;
+    }
+    // 取周报 发布时间 和多少期
+    NSDictionary *weeklymessage = [info getDicValueForKey:@"weeklymessage" defaultValue:nil];
+    self.weeklyTimeDict = weeklymessage;
+    
+    // 取周报内容
+    NSArray *weeklydetailmessage = [info getArrayValueForKey:@"weeklydetailmessage" defaultValue:nil];
+    self.listData = weeklydetailmessage;
+    [self.tableView reloadData];
+
 }
 
 - (void)setNavigationItem
@@ -81,6 +134,7 @@
 - (void)rightBtnClick:(id)sender
 {
     RYPastWeeklyViewController *vc = [[RYPastWeeklyViewController alloc] init];
+    vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -184,7 +238,10 @@
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 28)];
             label.font = [UIFont systemFontOfSize:12];
             label.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-            label.text = @"2015-04-18 总第219期";
+            
+            NSString *weeklyId = [self.weeklyTimeDict objectForKey:@"id"];
+            NSString *weeklyTime = [self.weeklyTimeDict objectForKey:@"time"];
+            label.text = [NSString stringWithFormat:@"%@ 总第%@期",weeklyTime,weeklyId ];//@"2015-04-18 总第219期";
             [view addSubview:label];
             
             return view;
@@ -201,8 +258,34 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    RYArticleViewController *vc = [[RYArticleViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    
+    NSDictionary *dict;
+    if ( indexPath.section == 0 ) {
+        dict = [self.listData objectAtIndex:0];
+    }
+    else{
+        dict = [self.listData objectAtIndex:indexPath.row + 1];
+    }
+    
+    NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@""];
+    NSString *tid = [dict getStringValueForKey:@"tid" defaultValue:@""];
+    
+    if ( [fid isEqualToString:@"137"] ) {
+        RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:tid];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:tid];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+#pragma mark RYPastWeeklyViewControllerDelegate
+
+-(void)selectWeeklyWithWeeklyDict:(NSDictionary *)dict
+{
+    self.weeklyDict = dict;
+    [self getNetData];
 }
 
 @end

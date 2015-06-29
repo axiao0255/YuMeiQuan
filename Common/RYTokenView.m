@@ -24,6 +24,12 @@
 
 @property (nonatomic,strong)UITableView         *tableView;      //
 
+
+@property (strong,nonatomic) NSDictionary       *recommendedTokenDict;
+@property (strong,nonatomic) NSArray            *officialTagsArr; // 默认标签
+@property (strong,nonatomic) NSArray            *customTagsArr;   // 自定义标签
+@property (strong,nonatomic) NSString           *articleID;       // 文章id
+
 @end
 
 @implementation RYTokenView
@@ -36,19 +42,75 @@
 }
 */
 
-- (id)initWithTokenArray:(NSArray *)array
+- (id)initWithTokenDict:(NSDictionary *)dict andArticleID:(NSString *)articleId
 {
     self = [super init];
     
     if (self) {
-        self.recommendedTokenArray = array;
+        self.recommendedTokenDict = dict;
+        self.articleID = articleId;
     }
+    
+    if ( self.recommendedTokenDict ) {
+        [self manageTagsWithDict:self.recommendedTokenDict];
+    }
+    
     return self;
 }
 
+- (void)manageTagsWithDict:(NSDictionary *)dict
+{
+//    NSLog(@"dict :%@",dict);
+    
+    NSMutableArray *tempCustomArr = [dict getArrayValueForKey:@"custom" defaultValue:nil].mutableCopy;
+    NSMutableArray *tempOfficialArr = [dict getArrayValueForKey:@"official" defaultValue:nil].mutableCopy;
+    
+    if ( tempCustomArr.count && tempOfficialArr.count )
+    {
+        for ( int i = 0; i < tempCustomArr.count; i ++ ) {
+            
+            NSDictionary *tempCustomDict = [tempCustomArr objectAtIndex:i];
+            NSString *tempCustomName = [tempCustomDict getStringValueForKey:@"name" defaultValue:@""];
+            
+            for ( int j = 0; j < tempOfficialArr.count ; j ++ ) {
+                
+                NSDictionary *tempOfficialDict = [tempOfficialArr objectAtIndex:j];
+                NSString *tempOfficialName = [tempOfficialDict getStringValueForKey:@"name" defaultValue:@""];
+                
+                if ( tempCustomName.length && [tempCustomName isEqualToString:tempOfficialName] ) {
+                    // 找到相同的 把相同标签从 默认标签组移除
+                    [tempOfficialArr removeObject:tempOfficialDict];
+                    break;
+                }
+            }
+        }
+     }
+    self.customTagsArr = [self getTagsNameWithArray:tempCustomArr];
+    self.officialTagsArr = [self getTagsNameWithArray:tempOfficialArr];
+}
+
+// 取 标签中的name
+- (NSArray *)getTagsNameWithArray:(NSArray *)arr
+{
+    if ( arr.count == 0 ) {
+        return nil;
+    }
+    NSMutableArray *tempTitleArray = [NSMutableArray array];
+    for ( int i = 0 ; i < arr.count; i ++ ) {
+        NSDictionary *temDict = [arr objectAtIndex:i];
+        NSString *name = [temDict getStringValueForKey:@"name" defaultValue:@""];
+        
+        if ( ![ShowBox isEmptyString:name] ) {
+            [tempTitleArray addObject:name];
+        }
+    }
+    return tempTitleArray;
+}
+
+
 - (void)showTokenView
 {
-    self.frame = CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT);
+    self.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     self.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.transparencyBtn];
     [self addSubview:self.BGView];
@@ -64,7 +126,7 @@
     [self addSubview:self.submitView];
     
     [UIView animateWithDuration:0 animations:^{
-        self.BGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT);
+        self.BGView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         self.tokenField.height = VIEW_HEIGHT - 85;
         self.tableView.height = VIEW_HEIGHT - 115;
     } completion:^(BOOL finished) {
@@ -90,7 +152,7 @@
 - (UIButton *)transparencyBtn
 {
     if ( _transparencyBtn == nil ) {
-        _transparencyBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _transparencyBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
         _transparencyBtn.backgroundColor = [Utils getRGBColor:0 g:0 b:0 a:0.5];
         [_transparencyBtn addTarget:self action:@selector(dismissTokenView) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -135,12 +197,12 @@
 - (UIView *)submitView
 {
     if ( _submitView == nil ) {
-        _submitView = [[UIView alloc] initWithFrame:CGRectMake(0, VIEW_HEIGHT-56, SCREEN_WIDTH, 40)];
+        _submitView = [[UIView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-56, SCREEN_WIDTH, 40)];
         
         _submitView.backgroundColor = [UIColor clearColor];
         
         UIButton *submitBtn = [Utils getCustomLongButton:@"确定"];
-        [submitBtn addTarget:self action:@selector(submitBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [submitBtn addTarget:self action:@selector(submitBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         submitBtn.frame = CGRectMake(16, 0, 140, 40);
         [_submitView addSubview:submitBtn];
         
@@ -153,11 +215,52 @@
     return _submitView;
 }
 
-- (void)submitBtnClick
+- (void)submitBtnClick:(id)sender
 {
     NSLog(@"提交");
+    if ( [ShowBox checkCurrentNetwork] ) {
+        UIButton *tempBtn = (UIButton *)sender;
+        __weak typeof(self) wSelf = self;
+        [tempBtn setEnabled:NO];
+        [NetRequestAPI additionCollectWithSessionId:[RYUserInfo sharedManager].session
+                                               thid:self.articleID
+                                               tags:self.tokens
+                                            success:^(id responseDic) {
+                                                NSLog(@"添加收藏 responseDic : %@",responseDic);
+                                                [tempBtn setEnabled:YES];
+                                                [wSelf collectWithDict:responseDic];
+                                            } failure:^(id errorString) {
+                                                //        NSLog(@"添加收藏 errorString :%@",errorString);
+                                                [ShowBox showError:@"收藏失败，请稍候重试"];
+                                                [tempBtn setEnabled:YES];
+                                            }];
+        
+    }
 }
 
+- (void)collectWithDict:(NSDictionary *)responseDic
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"收藏失败，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"收藏失败，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"收藏失败，请稍候重试"]];
+        return;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"collectStateChange" object:nil];
+    [self dismissTokenView];
+    
+}
 
 /**
  *
@@ -182,7 +285,7 @@
             cl = 0;
         }
     }
-    NSLog(@"row : %d",row);
+//    NSLog(@"row : %d",row);
     return row * 8 + row * 26 + 8;
 }
 
@@ -346,20 +449,49 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    if ( section == 0 ) {
+        if (self.officialTagsArr.count) {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+    else{
+        if (self.customTagsArr.count) {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat height = [self cellHeightWithArrar:self.recommendedTokenArray];
-    return height;
+    if ( indexPath.section == 0 ) {
+        if ( self.officialTagsArr.count ) {
+            CGFloat height = [self cellHeightWithArrar:self.officialTagsArr];
+            return height;
+        }
+        else{
+            return 0;
+        }
+    }
+    else{
+        if ( self.customTagsArr.count ) {
+            CGFloat height = [self cellHeightWithArrar:self.customTagsArr];
+            return height;
+        }
+        return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *token_Cell = @"token_Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:token_Cell];
-    CGFloat height = [self cellHeightWithArrar:self.recommendedTokenArray];
+    CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
     if ( !cell ) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:token_Cell];
         SelectLabelGroup *selectLabel = [[SelectLabelGroup alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, height)];
@@ -372,20 +504,24 @@
     }
     SelectLabelGroup *selectLabel = (SelectLabelGroup *)[cell.contentView viewWithTag:1230 + indexPath.section];
     selectLabel.height = height;
-    
-    [selectLabel setItems:self.recommendedTokenArray];
+    if ( indexPath.section == 0 ) {
+        [selectLabel setItems:self.officialTagsArr];
+    }
+    else{
+        [selectLabel setItems:self.customTagsArr];
+    }
     __weak typeof(RYTokenView) *wSelf = self;
     selectLabel.itemClick = ^(SelectLabelGroup* lable, int i){
         RYTokenView *sSelf = wSelf;
         if (sSelf.tokens.count < 4) {
             
             if ( lable.tag - 1230 == 0  ) {
-                sSelf.tokenField.textField.text = [sSelf.recommendedTokenArray objectAtIndex:i];
+                 sSelf.tokenField.textField.text = [sSelf.officialTagsArr objectAtIndex:i];
             }
             else{
-                sSelf.tokenField.textField.text = [sSelf.recommendedTokenArray objectAtIndex:i];
+                sSelf.tokenField.textField.text = [sSelf.customTagsArr objectAtIndex:i];
             }
-            [sSelf tokenField:sSelf.tokenField didReturnWithText:[sSelf.recommendedTokenArray objectAtIndex:i]];
+            [sSelf tokenField:sSelf.tokenField didReturnWithText:sSelf.tokenField.textField.text];
         }
         else{
             [ShowBox showError:@"最多只能输入4个标签哦！"];
@@ -407,7 +543,22 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 28;
+    if ( section == 0 ) {
+        if ( self.officialTagsArr.count ) {
+            return 28;
+        }
+        else{
+            return 0;
+        }
+    }
+    else{
+        if ( self.customTagsArr.count ) {
+            return 28;
+        }
+        else{
+            return 0;
+        }
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section

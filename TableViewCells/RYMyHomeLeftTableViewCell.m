@@ -61,6 +61,14 @@
 //        self.separateLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 220, 1)];
 //        self.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
 //        [self.commonImageView addSubview:self.separateLine];
+        
+        self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(140, 0, 40, 43)];
+        self.noticeLabel.backgroundColor = [UIColor clearColor];
+        self.noticeLabel.textAlignment = NSTextAlignmentRight;
+        self.noticeLabel.font = [UIFont systemFontOfSize:16];
+        self.noticeLabel.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
+        [self.contentView addSubview:self.noticeLabel];
+    
     }
     return self;
 }

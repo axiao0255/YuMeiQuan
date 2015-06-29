@@ -9,12 +9,20 @@
 #import "RYMyEnshrineViewController.h"
 #import "RYEnshrineTableViewCell.h"
 #import "RYEnshrineClassifyViewController.h"
+#import "MJRefreshTableView.h"
+#import "RYArticleViewController.h"
+#import "RYLiteratureDetailsViewController.h"
 
-@interface RYMyEnshrineViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate>
+
+@interface RYMyEnshrineViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate,MJRefershTableViewDelegate>
 {
-    UITableView         *theTableView;
-    NSMutableArray      *dataArray;
+    NSMutableArray             *dataArray;
 }
+
+@property (nonatomic,strong) MJRefreshTableView       *tableView;
+@property (nonatomic,strong) NSString                 *keywords;         // 搜索时的关键字
+@property (nonatomic,strong) UISearchBar              *searchBar;
+
 @end
 
 @implementation RYMyEnshrineViewController
@@ -23,43 +31,107 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"我的收藏";
-    dataArray = [[self setdata] mutableCopy];
-    [self initSubviews];
+    self.keywords = nil;
+    dataArray = [NSMutableArray array];
+    [self.view addSubview:self.tableView];
+    [self.tableView setTableHeaderView:[self tabelViewheadView]];
+    [self.tableView headerBeginRefreshing];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tallyChangeUpdate:) name:@"tallyChangeUpdate" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void)initSubviews
+-(void)tallyChangeUpdate:(NSNotification *)notic
 {
-    theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
-    theTableView.backgroundColor = [UIColor clearColor];
-    theTableView.delegate = self;
-    theTableView.dataSource = self;
-    [Utils setExtraCellLineHidden:theTableView];
-    [self.view addSubview:theTableView];
+    self.keywords = nil;
+    self.tableView.totlePage = 1;
+    self.tableView.currentPage = 0;
+    [self getDataWithIsHeaderReresh:YES andCurrentPage:self.tableView.currentPage];
 }
 
-- (NSArray *)setdata
+#pragma mark - MJRefershTableViewDelegate
+- (void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
 {
-    NSMutableArray *arr = [NSMutableArray array];
-    for ( int i = 0 ; i < 5; i ++ ) {
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        NSString *title = @"护肤品中的生长因子安全吗。护肤品中的生长因子安全吗。护肤品中的生长因子安全吗。护肤品中的生长因子安全吗。护肤品中的生长因子安全吗。";
-        [dic setValue:title forKey:@"title"];
-        [dic setValue:@"2015-04-23" forKey:@"time"];
-        if ( i%2 == 0) {
-            [dic setValue:@"护肤品成分" forKey:@"class"];
-        }
-        else{
-            [dic setValue:@"护肤品成分护肤品成分" forKey:@"class"];
-        }
-        
-        [arr addObject:dic];
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        self.keywords = self.searchBar.text;
+        [NetRequestAPI getMyCollectListWithSessionId:[RYUserInfo sharedManager].session
+                                                fcid:nil
+                                                page:currentPage
+                                            keywords:self.keywords
+                                             success:^(id responseDic) {
+                                                 [wSelf.tableView endRefreshing];
+                                                 NSLog(@"收藏 responseDic： %@",responseDic);
+                                                 [wSelf analysisDataWithDict:responseDic isHeadRefresh:isHeaderReresh];
+                                             } failure:^(id errorString) {
+                                                 [wSelf.tableView endRefreshing];
+                                                 NSLog(@"收藏 errorString： %@",errorString);
+                                                 
+                                             }];
     }
-    return arr;
+
+    
+}
+
+-(void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRefresh:(BOOL)isHead
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据错误，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( !meta ) {
+        [ShowBox showError:@"数据错误，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据错误，请稍候重试"]];
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据错误，请稍候重试"]];
+        return;
+    }
+    
+    self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
+    
+    if ( isHead ) {
+        [dataArray removeAllObjects];
+    }
+    
+    // 取列表
+    NSArray *favoritemessage = [info getArrayValueForKey:@"favoritemessage" defaultValue:nil];
+    if ( favoritemessage.count ) {
+        [dataArray addObjectsFromArray:favoritemessage];
+    }
+    [self.tableView reloadData];
+    if ( dataArray.count == 0 ) {
+        [ShowBox showError:@"未找到相关信息"];
+    }
+}
+
+
+-(MJRefreshTableView *)tableView
+{
+    if ( _tableView == nil ) {
+        _tableView = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _tableView.backgroundColor = [UIColor clearColor];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.delegateRefersh = self;
+        [Utils setExtraCellLineHidden:_tableView];
+    }
+    return _tableView;
 }
 
 #pragma mark - UITableView 代理方法
@@ -93,14 +165,20 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSDictionary *dic = [dataArray objectAtIndex:indexPath.row];
+    NSString *fid = [dic getStringValueForKey:@"fid" defaultValue:@""];
+    if ( [fid isEqualToString:@"137"] ) { // fid 为137 的时候  是文献
+        RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:[dic getStringValueForKey:@"tid" defaultValue:@""]];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:[dic getStringValueForKey:@"tid" defaultValue:@""]];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+
 }
 
-// head 的高度
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 35;
-}
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (UIView *)tabelViewheadView
 {
     UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 35)];
     headView.backgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
@@ -109,6 +187,7 @@
     searchBar.layer.masksToBounds = YES;
     searchBar.placeholder = @"搜索收藏";
     searchBar.delegate = self;
+    
     UITextField *searchField = [searchBar valueForKey:@"_searchField"];
     searchField.font = [UIFont systemFontOfSize:12];
     searchBar.backgroundImage = [UIImage new];
@@ -122,6 +201,7 @@
     [btn addTarget:self action:@selector(goToClassify) forControlEvents:UIControlEventTouchUpInside];
     [headView addSubview:btn];
     
+    self.searchBar = searchBar;
     return headView;
 }
 
@@ -156,10 +236,17 @@
     }
     searchBarTextField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
     searchBarTextField.enablesReturnKeyAutomatically = NO;
-    searchBarTextField.returnKeyType = UIReturnKeyDone;
+    searchBarTextField.returnKeyType = UIReturnKeySearch;
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    
+    if ( searchBar.text.length ) {
+        self.keywords = searchBar.text;
+        self.tableView.totlePage = 1;
+        self.tableView.currentPage = 0;
+        [self getDataWithIsHeaderReresh:YES andCurrentPage:self.tableView.currentPage];
+    }
     [searchBar resignFirstResponder];
 }
 

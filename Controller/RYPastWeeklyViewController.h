@@ -8,6 +8,14 @@
 
 #import "RYBaseViewController.h"
 
+@protocol RYPastWeeklyViewControllerDelegate <NSObject>
+
+-(void)selectWeeklyWithWeeklyDict:(NSDictionary *)dict;
+
+@end
+
 @interface RYPastWeeklyViewController : RYBaseViewController
+
+@property (nonatomic,strong) id <RYPastWeeklyViewControllerDelegate>delegate;
 
 @end

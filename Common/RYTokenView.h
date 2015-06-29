@@ -12,9 +12,8 @@
 
 @interface RYTokenView : UIView
 
-@property (strong, nonatomic) NSArray   *recommendedTokenArray;
 
-- (id)initWithTokenArray:(NSArray *)array;
+- (id)initWithTokenDict:(NSDictionary *)dict andArticleID:(NSString *)articleId;
 
 - (void)showTokenView;
 - (void)dismissTokenView;

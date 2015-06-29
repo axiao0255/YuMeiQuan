@@ -8,11 +8,12 @@
 
 #import "RYMyInformRewardListViewController.h"
 #import "RYArticleViewController.h"
+#import "MJRefreshTableView.h"
 
-@interface RYMyInformRewardListViewController () <UITableViewDelegate,UITableViewDataSource>
+@interface RYMyInformRewardListViewController () <UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
 
-@property (strong , nonatomic) UITableView         *tableView;
-@property (strong , nonatomic) NSArray             *listData;
+@property (nonatomic,  strong) MJRefreshTableView       *tableView;
+@property (strong , nonatomic) NSMutableArray           *listData;
 
 @end
 
@@ -22,8 +23,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"有奖活动";
-    self.listData = [self getdata];
+//    self.listData = [self getdata];
     [self.view addSubview:self.tableView];
+    [self.tableView headerBeginRefreshing];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,40 +43,101 @@
 }
 */
 
-- (NSArray *)listData
+- (NSMutableArray *)listData
 {
     if ( _listData == nil ) {
-        _listData = [NSArray array];
+        _listData = [NSMutableArray array];
     }
     return _listData;
 }
 
-- (UITableView *)tableView
+-(MJRefreshTableView *)tableView
 {
     if ( _tableView == nil ) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _tableView = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.delegateRefersh = self;
         [Utils setExtraCellLineHidden:_tableView];
     }
     return _tableView;
 }
 
-- (NSArray *)getdata;
+-(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
 {
-    NSMutableArray *arr = [NSMutableArray array];
-    for ( int i = 0 ; i < 6; i ++ ) {
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-        if ( i % 2 == 0 ) {
-            [dic setObject:@"电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影" forKey:@"title"];
-        }
-        else{
-            [dic setObject:@"视频视频视频视频视频视频视频视频视频视" forKey:@"title"];
-        }
-        [arr addObject:dic];
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getSystemAndAwardNoticeListWithSessionId:[RYUserInfo sharedManager].session
+                                                           type:@"spread"
+                                                           page:currentPage
+                                                        success:^(id responseDic) {
+                                                            NSLog(@"有奖活动 ： responseDic ：%@",responseDic);
+                                                            [wSelf.tableView endRefreshing];
+                                                            [wSelf analysisDataWithDict:responseDic isHeadRersh:isHeaderReresh];
+            
+        } failure:^(id errorString) {
+             NSLog(@"有奖活动 ： errorString ：%@",errorString);
+            if(self.listData.count == 0)
+            {
+                 [ShowBox showError:@"数据出错"];
+            }
+        }];
     }
-    return arr;
 }
+
+- (void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRersh:(BOOL)isHead
+{
+    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    if ( meta == nil ) {
+        [ShowBox showError:@"数据出错，请稍候重试"];
+        return;
+    }
+    
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        return;
+    }
+    
+    self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
+    
+    NSArray *noticemessage = [info getArrayValueForKey:@"noticemessage" defaultValue:nil];
+    if ( noticemessage.count ) {
+        if ( isHead ) {
+            [self.listData removeAllObjects];
+        }
+        [self.listData addObjectsFromArray:noticemessage];
+    }
+    [self.tableView reloadData];
+    
+}
+
+//- (NSArray *)getdata;
+//{
+//    NSMutableArray *arr = [NSMutableArray array];
+//    for ( int i = 0 ; i < 6; i ++ ) {
+//        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//        if ( i % 2 == 0 ) {
+//            [dic setObject:@"电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影电影" forKey:@"title"];
+//        }
+//        else{
+//            [dic setObject:@"视频视频视频视频视频视频视频视频视频视" forKey:@"title"];
+//        }
+//        [arr addObject:dic];
+//    }
+//    return arr;
+//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -85,7 +148,7 @@
 {
     if ( self.listData.count ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
-        NSString *title = [dict getStringValueForKey:@"title" defaultValue:@""];
+        NSString *title = [dict getStringValueForKey:@"note" defaultValue:@""];
         CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
         return size.height + 16;
     }
@@ -112,7 +175,7 @@
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:1010];
     if ( self.listData.count ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
-        NSString *title = [dict getStringValueForKey:@"title" defaultValue:@""];
+        NSString *title = [dict getStringValueForKey:@"note" defaultValue:@""];
         CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
         label.height = size.height + 16;
         

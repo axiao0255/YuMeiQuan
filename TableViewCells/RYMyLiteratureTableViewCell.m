@@ -47,15 +47,15 @@
         return;
     }
     
-    BOOL state = [dict getBoolValueForKey:@"state" defaultValue:NO];
-    if ( state ) {
-        self.leftImgView.image = [UIImage imageNamed:@"ic_successful.png"];
+    NSInteger result = [dict getIntValueForKey:@"result" defaultValue:0];
+    if ( result == 1 ) { // doi 查询 结果 分类 result：1查询完成，2第三方查到，3留言，4失败
+         self.leftImgView.image = [UIImage imageNamed:@"ic_successful.png"];
     }
     else{
         self.leftImgView.image = [UIImage imageNamed:@"ic_query.png"];
     }
     
-    self.titleLabel.text = [dict getStringValueForKey:@"title" defaultValue:@""];
+    self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
     self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
     
 }

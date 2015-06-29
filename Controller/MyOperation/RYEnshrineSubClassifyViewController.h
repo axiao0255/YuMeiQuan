@@ -10,6 +10,6 @@
 
 @interface RYEnshrineSubClassifyViewController : RYBaseViewController
 
-- (id)initWithDataArray:(NSArray *)arr;
+- (id)initWithDataDict:(NSDictionary *)dict;
 
 @end

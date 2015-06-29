@@ -56,8 +56,7 @@
         return;
     }
     
-    self.contentLabel.text = [dic getStringValueForKey:@"title" defaultValue:@""];
-//    [self.contentLabel sizeToFit];
+    self.contentLabel.text = [dic getStringValueForKey:@"subject" defaultValue:@""];
     NSString *jifen = [dic getStringValueForKey:@"jifen" defaultValue:@""];
     CGSize size = [jifen sizeWithFont:self.jifenLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH, 12)];
     self.jifenLabel.frame = CGRectMake(SCREEN_WIDTH - 15 - size.width, self.jifenLabel.top, size.width, 12);

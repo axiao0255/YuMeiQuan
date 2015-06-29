@@ -16,14 +16,14 @@
 - (void)setMessage:(NSString *)message
 {
     if (_message != message) {
-        _message = [message base64DecodedString];
+        _message = message;//[message base64DecodedString];
     }
 }
 
 - (void)setDateline:(NSString *)dateline
 {
     if (_dateline != dateline) {
-        _dateline = [dateline replaceHTMLEntitiesInString];
+        _dateline = dateline;//[dateline replaceHTMLEntitiesInString];
     }
 }
 

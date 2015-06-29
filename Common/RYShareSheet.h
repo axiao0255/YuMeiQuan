@@ -15,7 +15,11 @@
 
 @interface RYShareSheet : UIView
 
-@property (nonatomic ,weak) id <RYShareSheetDelegate>delegate;
+@property (nonatomic ,weak  ) id <RYShareSheetDelegate>delegate;
+
+// 分享数据
+@property (nonatomic ,strong) NSDictionary             *shareDataDict;
+
 
 - (void)showShareView;
 - (void)dismissShareView;

@@ -55,9 +55,9 @@
     }
     NSString *pic = [dict getStringValueForKey:@"pic" defaultValue:@""];
     [self.leftImgView setImageWithURL:[NSURL URLWithString:pic] placeholderImage:[UIImage imageNamed:@"ic_default_small.png"]];
-    self.titleLabel.text = [dict getStringValueForKey:@"title" defaultValue:@""];
+    self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
     
-    NSString *jifen = [ dict getStringValueForKey:@"jifen" defaultValue:@""];
+    NSString *jifen = [ dict getStringValueForKey:@"hdjifen" defaultValue:@""];
     CGSize size = [jifen sizeWithFont:self.jifenLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH, 12)];
     self.jifenLabel.frame = CGRectMake(SCREEN_WIDTH - 15 - size.width, self.jifenLabel.top, size.width, 12);
     self.jifenLabel.text = jifen;
