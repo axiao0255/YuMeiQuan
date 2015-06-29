@@ -721,148 +721,6 @@
     else{
     }
 }
-// 个人注册 判断
-- (void)personalRegister
-{
-//    if ( [ShowBox alertPhoneNo:registerData.userPhone] ) {
-//        return;
-//    }
-//    if ( [ShowBox isEmptyString:registerData.userSecurityCode] ) {
-//        [ShowBox showError:@"请输入验证码"];
-//        return;
-//    }
-//    if ( [ShowBox isEmptyString:registerData.userPassword] ) {
-//        [ShowBox showError:@"请输入密码"];
-//        return;
-//    }
-//    if ( [ShowBox isEmptyString:registerData.userRepetPassword] && ![registerData.userRepetPassword isEqualToString:registerData.userPassword] ) {
-//        [ShowBox showError:@"两次密码不一致"];
-//        return;
-//    }
-//    if ( [ShowBox isEmptyString:identityText.text] ) {
-//        [ShowBox showError:@"请选择专业"];
-//        return;
-//    }
-//    
-//    if ( [ShowBox isEmptyString:registerData.userName] ) {
-//        [ShowBox showError:@"请输入姓名"];
-//        return;
-//    }
-//    
-//    if ( [ShowBox isEmptyString:positionText.text] ) {
-//        [ShowBox showError:@"请选择职务"];
-//        return;
-//    }
-//    if ( [ShowBox isEmptyString:registerData.userCompany] ) {
-//        [ShowBox showError:@"请填写单位"];
-//        return;
-//    }
-    
-//    [self personalRegisterNet];
-    [self uploadImage];
-}
-
-
-- (void)uploadImage
-{
-    NSArray * imgArray = [proofImgView getImgArray];
-    if ( imgArray.count <= 0 ) {
-        return;
-    }
-    NSLog(@"%@", imgArray);
-    ALAsset *alas = [imgArray objectAtIndex:0];
-    UIImage *img = [self fullResolutionImageFromALAsset:alas];
-    [NetRequestAPI uploadImageWithImage:img success:^(id responseDic) {
-        NSLog(@"上传图片 responseDic%@",responseDic);
-    } failure:^(id errorString) {
-        NSLog(@"上传图片 errorString%@",errorString);
-    }];
-}
-
-/**
- *  取相册中 图片
- *
- *  @param asset 相册返回的 图片类型
- *
- *  @return 返回 UIImage
- */
-- (UIImage *)fullResolutionImageFromALAsset:(ALAsset *)asset
-{
-    ALAssetRepresentation *assetRep = [asset defaultRepresentation];
-    CGImageRef imgRef = [assetRep fullResolutionImage];
-    UIImage *img = [UIImage imageWithCGImage:imgRef
-                                       scale:assetRep.scale
-                                 orientation:(UIImageOrientation)assetRep.orientation];
-    return img;
-}
-
-
-
-/*
-// 个人注册 提交网络
-- (void)personalRegisterNet
-{
-    if ( [ShowBox checkCurrentNetwork] ) {
-//
-        NSString *strUrl = [NSString stringWithFormat:@"http://121.40.151.63/ios.php?mod=register&username=%@&code=%@&password=%@&doctor=%d&professional=%@&realname=%@&position=%@&company=%@",registerData.userPhone,registerData.userSecurityCode,registerData.userPassword,isDoctor,registerData.userRofessional,registerData.userName,registerData.userPosition,registerData.userCompany];
-//        NSString *strUrl = @"http://api2.rongyi.com/app/v5/home/index.htm;jsessionid=057537E635C9F0A0526B700E2BB34AA5?type=latest&areaName=%E4%B8%8A%E6%B5%B7&cityId=51f9d7f231d6559b7d000002&lng=121.439659&lat=31.194059&currentPage=1&pageSize=20&version=v5_6";
-//         NSString *strUrl = @"http://121.40.151.63/app.php";
-        NSLog(@"strUrl :: %@",strUrl);
-//        NSDictionary *parameter = @{@"mod":@"register",@"username":@"123"};
-        NSMutableDictionary *parameter = [NSMutableDictionary dictionary];
-        [parameter setValue:@"register" forKey:@"mod"];
-        [parameter setValue:registerData.userPhone forKey:@"username"];
-        [parameter setValue:registerData.userSecurityCode forKey:@"code"];
-        [parameter setValue:registerData.userPassword forKey:@"password"];
-        [parameter setValue:registerData.userSecurityCode forKey:@"code"];
-        [parameter setValue:[NSNumber numberWithBool:isDoctor] forKey:@"doctor"];
-        [parameter setValue:registerData.userRofessional forKey:@"professional"];
-        [parameter setValue:registerData.userName forKey:@"realname"];
-        [parameter setValue:registerData.userPosition forKey:@"position"];
-        [parameter setValue:registerData.userCompany forKey:@"company"];
-        
-        NSLog(@"parameter :: %@",parameter);
-        NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
-        [NetManager JSONDataWithUrl:url parameters:parameter success:^(id json) {
-            NSLog(@"json :: %@", json);
-        } fail:^(id error) {
-             NSLog(@"error :: %@",error);
-        }];
-        
-//        [NetManager postJSONWithUrl:@"http://121.40.151.63/ios.php" parameters:parameter success:^(id responseObject) {
-//             NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-//             NSLog(@"responseObject :: %@", responseObject);
-//            NSLog(@"result :: %@",result);
-//            
-//        } fail:^(id error) {
-//            NSLog(@"error :: %@",error);
-//        }];
-    }
-}
-
-*/
-
-// 个人注册 提交网络
-- (void)personalRegisterNet
-{
-    if ( [ShowBox checkCurrentNetwork] ) {
-        [NetRequestAPI submitRegisterDataWithUserName:registerData.userPhone
-                                                 code:registerData.userSecurityCode
-                                             password:registerData.userPassword
-                                               doctor:isDoctor
-                                         professional:registerData.userRofessional
-                                             realname:registerData.userName
-                                             position:registerData.userPosition
-                                              company:registerData.userCompany
-                                              success:^(id responseDic) {
-                                                  NSLog(@" 提交注册 responseDic: %@",responseDic);
-            
-        } failure:^(id errorString) {
-             NSLog(@" 提交注册 errorString: %@",errorString);
-        }];
-    }
-}
-
 // 获取验证码
 - (void)getSecurityCode
 {
@@ -931,6 +789,7 @@
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    NSLog(@"textField.text : %@",textField.text);
     NSUInteger textLength = [Utils getTextFieldActualLengthWithTextField:textField shouldChangeCharactersInRange:range replacementString:string];
     if ( textField == userPhoneText || textField == commanyPhoneText ) {
         if ( textLength > 11 ) {
@@ -949,8 +808,10 @@
             return NO;
         }
     }
+    
     return YES;
 }
+
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     if ( myType == typeCollective ) { // 企业
@@ -1006,6 +867,169 @@
         }
     }
 }
+
+#pragma mark - 个人注册数据 处理
+// 个人注册 判断
+- (void)personalRegister
+{
+    if ( [ShowBox alertPhoneNo:registerData.userPhone] ) {
+        return;
+    }
+    if ( [ShowBox isEmptyString:registerData.userSecurityCode] ) {
+        [ShowBox showError:@"请输入验证码"];
+        return;
+    }
+    if ( [ShowBox isEmptyString:registerData.userPassword] ) {
+        [ShowBox showError:@"请输入密码"];
+        return;
+    }
+    if ( [ShowBox isEmptyString:registerData.userRepetPassword] && ![registerData.userRepetPassword isEqualToString:registerData.userPassword] ) {
+        [ShowBox showError:@"两次密码不一致"];
+        return;
+    }
+    if ( [ShowBox isEmptyString:identityText.text] ) {
+        [ShowBox showError:@"请选择专业"];
+        return;
+    }
+    
+    if ( [ShowBox isEmptyString:registerData.userName] ) {
+        [ShowBox showError:@"请输入姓名"];
+        return;
+    }
+    
+    if ( [ShowBox isEmptyString:positionText.text] ) {
+        [ShowBox showError:@"请选择职务"];
+        return;
+    }
+    if ( [ShowBox isEmptyString:registerData.userCompany] ) {
+        [ShowBox showError:@"请填写单位"];
+        return;
+    }
+    
+    NSArray * imgArray = [proofImgView getImgArray];
+    if ( imgArray.count <= 0 ) {
+        [ShowBox showError:@"请选择证件图片"];
+        return;
+    }
+    [self personalRegisterNet];
+}
+
+/**
+ *  取相册中 图片
+ *
+ *  @param asset 相册返回的 图片类型
+ *
+ *  @return 返回 UIImage
+ */
+- (UIImage *)fullResolutionImageFromALAsset:(ALAsset *)asset
+{
+    ALAssetRepresentation *assetRep = [asset defaultRepresentation];
+    CGImageRef imgRef = [assetRep fullResolutionImage];
+    UIImage *img = [UIImage imageWithCGImage:imgRef
+                                       scale:assetRep.scale
+                                 orientation:(UIImageOrientation)assetRep.orientation];
+    return img;
+}
+
+// 个人注册 提交网络
+- (void)personalRegisterNet
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"正在提交..." maskType:SVProgressHUDMaskTypeGradient];
+        [NetRequestAPI submitRegisterDataWithUserName:registerData.userPhone
+                                                 code:registerData.userSecurityCode
+                                             password:registerData.userPassword
+                                               doctor:isDoctor
+                                         professional:registerData.userRofessional
+                                             realname:registerData.userName
+                                             position:registerData.userPosition
+                                              company:registerData.userCompany
+                                              success:^(id responseDic) {
+                                                  NSLog(@" 提交注册 responseDic: %@",responseDic);
+                                                  [wSelf manageRegisterNetWithDict:responseDic];
+                                                  
+                                              } failure:^(id errorString) {
+                                                  NSLog(@" 提交注册 errorString: %@",errorString);
+                                                  [SVProgressHUD dismiss];
+                                                  [ShowBox showError:@"提交失败，请稍候重试"];
+                                              }];
+    }
+}
+
+-(void)manageRegisterNetWithDict:(NSDictionary *)responseDic
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [SVProgressHUD dismiss];
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"服务器出错，请稍候重试"]];
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    NSString *uid = [info getStringValueForKey:@"uid" defaultValue:@""];
+    [self uploadImageWithUid:uid];
+}
+
+/**
+ *uid 是提交资料时 后台生产 的uid
+ */
+- (void)uploadImageWithUid:(NSString *)uid
+{
+    NSArray * imgArray = [proofImgView getImgArray];
+    if ( imgArray.count <= 0 || [ShowBox isEmptyString:uid] ) {
+        [SVProgressHUD dismiss];
+        [ShowBox showError:@"数据出错"];
+        return;
+    }
+    ALAsset *alas = [imgArray objectAtIndex:0];
+    UIImage *img = [self fullResolutionImageFromALAsset:alas];
+    __weak typeof(self) wSelf = self;
+    [NetRequestAPI uploadImageWithImage:img uid:uid success:^(id responseDic) {
+        [SVProgressHUD dismiss];
+        //        NSLog(@"上传图片 responseDic%@",responseDic);
+        NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+        BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+        if ( !success ) {
+            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+            return ;
+        }
+        [wSelf successReguster];
+    } failure:^(id errorString) {
+        [SVProgressHUD dismiss];
+        [ShowBox showError:@"上传失败，请稍候重试"];
+        NSLog(@"上传图片 errorString%@",errorString);
+    }];
+}
+
+/**
+ *个人注册成功
+ */
+-(void)successReguster
+{
+    // 清除 之前的 账号信息
+    [RYUserInfo logout];
+    
+    // 用户注册成功 记住用户名和密码
+    NSMutableDictionary *savedDic = [[NSMutableDictionary alloc] init];
+    [savedDic setObject:registerData.userPhone forKey:@"userName"];
+    [savedDic setObject:registerData.userPassword forKey:@"password"];
+    
+    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *path = [docPath stringByAppendingPathComponent:LoginText];
+    [savedDic writeToFile:path atomically:YES];
+    
+    NSArray *controllers = self.navigationController.viewControllers;
+    for ( UIViewController *vc in controllers) {
+        if ( [vc isKindOfClass:[RYLoginViewController class]] ) {
+            [self.navigationController popToViewController:vc animated:YES];
+        }
+    }
+}
+
+
+#pragma mark - 企业注册 数据处理
 
 
 @end

@@ -1,30 +1,46 @@
 //
-//  RYMyInformRewardListViewController.m
+//  RYInviteMakeMoneyViewController.m
 //  YuMeiQuan
 //
-//  Created by Jason on 15/5/27.
+//  Created by Jason on 15/6/29.
 //  Copyright (c) 2015年 Jason. All rights reserved.
 //
 
-#import "RYMyInformRewardListViewController.h"
+#import "RYInviteMakeMoneyViewController.h"
 #import "RYArticleViewController.h"
 #import "MJRefreshTableView.h"
 #import "RYLiteratureDetailsViewController.h"
 
-@interface RYMyInformRewardListViewController () <UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
+@interface RYInviteMakeMoneyViewController () <UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
+
+@property (nonatomic , assign) InviteType   myInviteType;
 
 @property (nonatomic,  strong) MJRefreshTableView       *tableView;
 @property (strong , nonatomic) NSMutableArray           *listData;
 
 @end
 
-@implementation RYMyInformRewardListViewController
+@implementation RYInviteMakeMoneyViewController
+
+- (id)initWithInviteType:(InviteType)type
+{
+    self = [super init];
+    if ( self ) {
+        self.myInviteType = type;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"有奖活动";
-//    self.listData = [self getdata];
+    
+    if ( self.myInviteType == transmit) {
+        self.title = @"转发赚积分";
+    }
+    else{
+        self.title = @"调研赚积分";
+    }
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
 }
@@ -69,22 +85,42 @@
 {
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
-        [NetRequestAPI getSystemAndAwardNoticeListWithSessionId:[RYUserInfo sharedManager].session
-                                                           type:@"spread"
-                                                           page:currentPage
-                                                        success:^(id responseDic) {
-                                                            NSLog(@"有奖活动 ： responseDic ：%@",responseDic);
-                                                            [wSelf.tableView endRefreshing];
-                                                            [wSelf analysisDataWithDict:responseDic isHeadRersh:isHeaderReresh];
+        if ( self.myInviteType == transmit ) {
+            [NetRequestAPI getspreadlistWithSessionId:[RYUserInfo sharedManager].session
+                                                 page:currentPage
+                                              success:^(id responseDic) {
+                                                  NSLog(@"转发赚积分 responseDic : %@",responseDic);
+                                                  [wSelf.tableView endRefreshing];
+                                                  [wSelf analysisDataWithDict:responseDic isHeadRersh:isHeaderReresh];
+                
+            } failure:^(id errorString) {
+                [wSelf.tableView endRefreshing];
+                 NSLog(@"转发赚积分 errorString : %@",errorString);
+                if(self.listData.count == 0)
+                {
+                    [ShowBox showError:@"数据出错"];
+                }
+
+            }];
+        }
+        else{
             
-        } failure:^(id errorString) {
-             NSLog(@"有奖活动 ： errorString ：%@",errorString);
-            [wSelf.tableView endRefreshing];
-            if(self.listData.count == 0)
-            {
-                 [ShowBox showError:@"数据出错"];
-            }
-        }];
+            [NetRequestAPI getquestionlistWithSessionId:[RYUserInfo sharedManager].session
+                                                   page:currentPage
+                                                success:^(id responseDic) {
+                                                    NSLog(@"调研赚积分 responseDic : %@",responseDic);
+                                                    [wSelf.tableView endRefreshing];
+                                                    [wSelf analysisDataWithDict:responseDic isHeadRersh:isHeaderReresh];
+                               
+            } failure:^(id errorString) {
+                [wSelf.tableView endRefreshing];
+                NSLog(@"调研赚积分 errorString : %@",errorString);
+                if(self.listData.count == 0)
+                {
+                    [ShowBox showError:@"数据出错"];
+                }
+            }];
+        }
     }
 }
 
@@ -114,7 +150,7 @@
     
     self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
     
-    NSArray *noticemessage = [info getArrayValueForKey:@"noticemessage" defaultValue:nil];
+    NSArray *noticemessage = [info getArrayValueForKey:@"message" defaultValue:nil];
     if ( noticemessage.count ) {
         if ( isHead ) {
             [self.listData removeAllObjects];
@@ -134,14 +170,14 @@
 {
     if ( self.listData.count ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
-        NSString *title = [dict getStringValueForKey:@"note" defaultValue:@""];
+        NSString *title = [dict getStringValueForKey:@"subject" defaultValue:@""];
         CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
         return size.height + 16;
     }
     else{
         return 0;
     }
-
+    
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -161,13 +197,13 @@
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:1010];
     if ( self.listData.count ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
-        NSString *title = [dict getStringValueForKey:@"note" defaultValue:@""];
+        NSString *title = [dict getStringValueForKey:@"subject" defaultValue:@""];
         CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
         label.height = size.height + 16;
         
         label.text = title;
     }
-
+    
     return cell;
 }
 
@@ -178,6 +214,7 @@
     NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
     NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@""];
     NSString *tid = [dict getStringValueForKey:@"tid" defaultValue:@""];
+    
     if ( [fid isEqualToString:@"137"] ) {
         RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:tid];
         [self.navigationController pushViewController:vc animated:YES];

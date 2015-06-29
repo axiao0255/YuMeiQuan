@@ -652,8 +652,9 @@
 {
     NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
     [parDic setValue:@"register" forKey:@"mod"];
-    [parDic setValue:username forKey:@""];
+    [parDic setValue:username forKey:@"username"];
     [parDic setValue:_password forKey:@"password"];
+    [parDic setValue:_code forKey:@"code"];
     [parDic setValue:[NSNumber numberWithBool:_doctor] forKey:@"doctor"];
     [parDic setValue:_professional forKey:@"professional"];
     [parDic setValue:_realname forKey:@"realname"];
@@ -682,12 +683,49 @@
 
 #pragma mark - 上传图片
 +(void)uploadImageWithImage:(UIImage *)image
+                        uid:(NSString*)_uid
                     success:(void(^)(id responseDic))success
                     failure:(void(^)(id errorString))failure
 {
-//     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
-    NSString *url = [NSString stringWithFormat:@"%@/files.php",DEBUGADDRESS];
-    [[NetManager sharedManager] uploadImageWithUrl:url image:image success:success fail:failure];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setValue:@"files" forKey:@"mod"];
+    [dict setValue:_uid forKey:@"uid"];
+
+     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+//    [[NetManager sharedManager] uploadImageWithUrl:url image:image success:success fail:failure];
+    [[NetManager sharedManager] uploadImageWithUrl:url image:image parameters:dict success:success fail:failure];
+}
+
+#pragma mark - 转发文章赚积分
++(void)getspreadlistWithSessionId:(NSString *)session
+                             page:(NSInteger )_page
+                          success:(void(^)(id responseDic))success
+                          failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"spreadlist" forKey:@"mod"];
+    [parDic setValue:session forKey:@"sid"];
+    [parDic setValue:[NSNumber numberWithInteger:_page] forKey:@"page"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+}
+
+#pragma mark - 参与调研赚积分
++(void)getquestionlistWithSessionId:(NSString *)session
+                               page:(NSInteger )_page
+                            success:(void(^)(id responseDic))success
+                            failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"questionlist" forKey:@"mod"];
+    [parDic setValue:session forKey:@"sid"];
+    [parDic setValue:[NSNumber numberWithInteger:_page] forKey:@"page"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 }
 
 @end

@@ -10,6 +10,7 @@
 #import "RFSegmentView.h"
 #import "RYMyLiteratureViewController.h"
 #import "RYMyInviteViewController.h"
+#import "RYInviteMakeMoneyViewController.h"
 
 @interface RYMyJiFenViewController ()<UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate>
 {
@@ -195,6 +196,16 @@
         if ( indexPath.row == 2 ) {
             RYMyInviteViewController *vc = [[RYMyInviteViewController alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
+        }
+        else{
+            RYInviteMakeMoneyViewController *inviteVC;
+            if ( indexPath.row == 0 ) {
+                inviteVC = [[RYInviteMakeMoneyViewController alloc] initWithInviteType:transmit];
+            }
+            else{
+                inviteVC = [[RYInviteMakeMoneyViewController alloc] initWithInviteType:survey];
+            }
+            [self.navigationController pushViewController:inviteVC animated:YES];
         }
     }
 }

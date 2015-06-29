@@ -223,21 +223,28 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    RYMyInformTableViewCell *cell = (RYMyInformTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    
     if ( indexPath.section == 0 || indexPath.section == 1 ) {
         if ( indexPath.section == 0 ) {
             RYMyInformListViewController *vc = [[RYMyInformListViewController alloc] initWithInfomType:InformSystem];
             [self.navigationController pushViewController:vc animated:YES];
+             cell.numLabel.hidden = YES;
         }
         else{
+           
             RYMyInformRewardListViewController *vc = [[RYMyInformRewardListViewController alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
+            cell.numLabel.hidden = YES;
         }
     }
     else{
+        
         NSDictionary *dict = [self.noticeModel.companyNoticeArray objectAtIndex:indexPath.row];
         NSString *companyId = [dict getStringValueForKey:@"authorid" defaultValue:@""];
         RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] initWithCorporateID:companyId];
         [self.navigationController pushViewController:vc animated:YES];
+        cell.numLabel.hidden = YES;
     }
 }
 
@@ -259,6 +266,9 @@
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     if ( section == 1 ) {
+        if (self.noticeModel.companyNoticeArray.count == 0 ) {
+            return nil;
+        }
         UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 28)];
         bgView.backgroundColor = [UIColor clearColor];
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, SCREEN_WIDTH - 30, 28)];

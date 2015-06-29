@@ -9,6 +9,8 @@
 #import "RYMyInformListViewController.h"
 #import "RYMyInformListTableViewCell.h"
 #import "MJRefreshTableView.h"
+#import "RYArticleViewController.h"
+#import "RYLiteratureDetailsViewController.h"
 
 @interface RYMyInformListViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
 {
@@ -97,6 +99,7 @@
                                                             
                                                         } failure:^(id errorString) {
                                                             NSLog(@"系统消息 ： errorString ：%@",errorString);
+                                                            [wSelf.tableView endRefreshing];
                                                             if(self.listData.count == 0)
                                                             {
                                                                 [ShowBox showError:@"数据出错"];
@@ -142,22 +145,6 @@
     
 }
 
-//- (NSArray *)setdata
-//{
-//    NSMutableArray *arr = [NSMutableArray array];
-//    for ( NSUInteger i = 0 ; i < 5; i ++ ) {
-//        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//        NSString *title = @"护肤品中的生长因子安全吗?";
-//        [dic setValue:title forKey:@"title"];
-//        NSString *content = @"移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，移动互联网的革命性的创新，";
-//        [dic setValue:content forKey:@"content"];
-//        [dic setValue:@"2015-04-23" forKey:@"time"];
-//        [arr addObject:dic];
-//    }
-//    return arr;
-//}
-
-
 #pragma mark - UITableView 代理方法
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -171,7 +158,17 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 98;
+    if ( self.listData.count ) {
+        NSDictionary *dict = [self.listData objectAtIndex:indexPath.section];
+        NSString *title = [dict getStringValueForKey:@"note" defaultValue:@""];
+        CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+        return size.height + 16;
+    }
+    else{
+        return 0;
+    }
+    
+//    return 98;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -191,6 +188,18 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    NSDictionary *dict = [self.listData objectAtIndex:indexPath.section];
+    NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@""];
+    NSString *tid = [dict getStringValueForKey:@"tid" defaultValue:@""];
+    if ( [fid isEqualToString:@"137"] ) {
+        RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:tid];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:tid];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section

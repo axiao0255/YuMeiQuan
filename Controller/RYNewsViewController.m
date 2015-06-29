@@ -1136,7 +1136,6 @@
     RYWeeklyViewController *vc = [[RYWeeklyViewController alloc] init];
 //    vc.listData = self.homePage.listData;
     vc.weeklyDict = [self.homePage.listData objectAtIndex:0];
-    [self.navigationController setNavigationBarHidden:YES];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

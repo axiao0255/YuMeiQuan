@@ -230,8 +230,21 @@
 
 #pragma mark - 上传图片
 +(void)uploadImageWithImage:(UIImage *)image
+                        uid:(NSString*)_uid
                     success:(void(^)(id responseDic))success
                     failure:(void(^)(id errorString))failure;
+
+#pragma mark - 转发文章赚积分
++(void)getspreadlistWithSessionId:(NSString *)session
+                             page:(NSInteger )_page
+                          success:(void(^)(id responseDic))success
+                          failure:(void(^)(id errorString))failure;
+
+#pragma mark - 参与调研赚积分
++(void)getquestionlistWithSessionId:(NSString *)session
+                               page:(NSInteger )_page
+                            success:(void(^)(id responseDic))success
+                            failure:(void(^)(id errorString))failure;
 
 
 

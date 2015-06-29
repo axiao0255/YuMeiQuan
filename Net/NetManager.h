@@ -31,6 +31,6 @@
 /**
  * 上传图片
  */
-- (void)uploadImageWithUrl:(NSString *)urlStr image:(UIImage *)image success:(void (^)(id responseObject))success fail:(void (^)(id error))fail;
+- (void)uploadImageWithUrl:(NSString *)urlStr image:(UIImage *)image parameters:(id)parameters success:(void (^)(id responseObject))success fail:(void (^)(id error))fail;
 
 @end

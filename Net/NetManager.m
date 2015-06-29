@@ -132,29 +132,37 @@ static NetManager *_manager;
     }];
 }
 
-- (void)uploadImageWithUrl:(NSString *)urlStr image:(UIImage *)image success:(void (^)(id responseObject))success fail:(void (^)(id error))fail
+- (void)uploadImageWithUrl:(NSString *)urlStr image:(UIImage *)image parameters:(id)parameters success:(void (^)(id responseObject))success fail:(void (^)(id error))fail
 {
-//    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-//    [dict setValue:@"files" forKey:@"mod"];
-//    
+    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"text/html"];
     
-    [manager POST:urlStr parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+    [manager POST:urlStr parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         NSData *imageData = UIImageJPEGRepresentation(image, 1);
         
-        NSLog(@"图片数据 ： %@",imageData);
+//        NSLog(@"图片数据 ： %@",imageData);
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         
         formatter.dateFormat = @"yyyyMMddHHmmss";
         NSString *str = [formatter stringFromDate:[NSDate date]];
         NSString *fileName = [NSString stringWithFormat:@"%@.jpg", str];
-        // 上传图片，以文件流的格式 static/editer/attached/image
-        [formData appendPartWithFileData:imageData name:@"file" fileName:fileName mimeType:@"image/jpg/file"];
+        // 上传图片，以文件流的格式
+        [formData appendPartWithFileData:imageData name:@"file" fileName:fileName mimeType:@"image/jpeg"];
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-         success(responseObject);
+    
+        if ( [responseObject isKindOfClass:[NSData class]] ) {
+            NSDictionary *jsonObject =[NSJSONSerialization
+                         JSONObjectWithData:responseObject
+                         options:NSJSONReadingMutableLeaves
+                         error:nil];
+            success(jsonObject);
+        }
+        else{
+            success(responseObject);
+        }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         fail(error);
     }];
