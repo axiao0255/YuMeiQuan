@@ -279,7 +279,6 @@
 		96D0A56E1B18708000BF6D90 /* RYAnswersRecordTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D0A56D1B18708000BF6D90 /* RYAnswersRecordTableViewCell.m */; };
 		96D0A5701B18738800BF6D90 /* ic_small_jifen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D0A56F1B18738800BF6D90 /* ic_small_jifen@2x.png */; };
 		96D120661B0C308800BF8062 /* ic_stow_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D120641B0C308800BF8062 /* ic_stow_highlighted@2x.png */; };
-		96D120671B0C308800BF8062 /* ic_stow_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D120651B0C308800BF8062 /* ic_stow_normal@2x.png */; };
 		96D120691B0C329900BF8062 /* ic_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D120681B0C329900BF8062 /* ic_share@2x.png */; };
 		96D1206B1B0C36DF00BF8062 /* ic_textShare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D1206A1B0C36DF00BF8062 /* ic_textShare@2x.png */; };
 		96D1206E1B0C6A4000BF8062 /* RYAnswerSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D1206D1B0C6A4000BF8062 /* RYAnswerSheet.m */; };
@@ -316,6 +315,14 @@
 		96D9C98C1AE4CD4200997430 /* RYRegisterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C98B1AE4CD4200997430 /* RYRegisterData.m */; };
 		96D9C98F1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C98E1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m */; };
 		96D9C9911AE4EFCD00997430 /* cell_partingLine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D9C9901AE4EFCD00997430 /* cell_partingLine@2x.png */; };
+		96DAB7241B424C0500565F30 /* RYCompanyRegisterSuccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DAB7231B424C0500565F30 /* RYCompanyRegisterSuccessViewController.m */; };
+		96DAB7271B42697400565F30 /* ic_register_phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DAB7251B42697400565F30 /* ic_register_phone@2x.png */; };
+		96DAB7281B42697400565F30 /* ic_register_success@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DAB7261B42697400565F30 /* ic_register_success@2x.png */; };
+		96DAB72B1B42979D00565F30 /* ic_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DAB7291B42979D00565F30 /* ic_back@2x.png */; };
+		96DAB72C1B42979D00565F30 /* ic_comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DAB72A1B42979D00565F30 /* ic_comment@2x.png */; };
+		96DAB72E1B42984300565F30 /* ic_stow_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DAB72D1B42984300565F30 /* ic_stow_normal@2x.png */; };
+		96DAB7301B42A58100565F30 /* ic_mohu@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 96DAB72F1B42A58100565F30 /* ic_mohu@2x.jpg */; };
+		96DAB7321B42A87D00565F30 /* ic_lookOriginal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DAB7311B42A87D00565F30 /* ic_lookOriginal@2x.png */; };
 		96DAB9EF1B392D05009262D8 /* BPushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96DAB9EE1B392D05009262D8 /* BPushConfig.plist */; };
 		96F321451AD50A2700CAFC51 /* Icon-114@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96F3213F1AD50A2700CAFC51 /* Icon-114@2x.png */; };
 		96F321461AD50A2700CAFC51 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96F321401AD50A2700CAFC51 /* Icon-72@2x.png */; };
@@ -805,7 +812,6 @@
 		96D0A56D1B18708000BF6D90 /* RYAnswersRecordTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYAnswersRecordTableViewCell.m; sourceTree = "<group>"; };
 		96D0A56F1B18738800BF6D90 /* ic_small_jifen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_small_jifen@2x.png"; sourceTree = "<group>"; };
 		96D120641B0C308800BF8062 /* ic_stow_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_stow_highlighted@2x.png"; sourceTree = "<group>"; };
-		96D120651B0C308800BF8062 /* ic_stow_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_stow_normal@2x.png"; sourceTree = "<group>"; };
 		96D120681B0C329900BF8062 /* ic_share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_share@2x.png"; sourceTree = "<group>"; };
 		96D1206A1B0C36DF00BF8062 /* ic_textShare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_textShare@2x.png"; sourceTree = "<group>"; };
 		96D1206C1B0C6A4000BF8062 /* RYAnswerSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYAnswerSheet.h; sourceTree = "<group>"; };
@@ -862,6 +868,15 @@
 		96D9C98D1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterSpecialtyTableViewCell.h; sourceTree = "<group>"; };
 		96D9C98E1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYRegisterSpecialtyTableViewCell.m; sourceTree = "<group>"; };
 		96D9C9901AE4EFCD00997430 /* cell_partingLine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell_partingLine@2x.png"; sourceTree = "<group>"; };
+		96DAB7221B424C0500565F30 /* RYCompanyRegisterSuccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCompanyRegisterSuccessViewController.h; sourceTree = "<group>"; };
+		96DAB7231B424C0500565F30 /* RYCompanyRegisterSuccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCompanyRegisterSuccessViewController.m; sourceTree = "<group>"; };
+		96DAB7251B42697400565F30 /* ic_register_phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_register_phone@2x.png"; sourceTree = "<group>"; };
+		96DAB7261B42697400565F30 /* ic_register_success@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_register_success@2x.png"; sourceTree = "<group>"; };
+		96DAB7291B42979D00565F30 /* ic_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_back@2x.png"; sourceTree = "<group>"; };
+		96DAB72A1B42979D00565F30 /* ic_comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_comment@2x.png"; sourceTree = "<group>"; };
+		96DAB72D1B42984300565F30 /* ic_stow_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_stow_normal@2x.png"; sourceTree = "<group>"; };
+		96DAB72F1B42A58100565F30 /* ic_mohu@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ic_mohu@2x.jpg"; sourceTree = "<group>"; };
+		96DAB7311B42A87D00565F30 /* ic_lookOriginal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_lookOriginal@2x.png"; sourceTree = "<group>"; };
 		96DAB9EE1B392D05009262D8 /* BPushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BPushConfig.plist; sourceTree = "<group>"; };
 		96F3213F1AD50A2700CAFC51 /* Icon-114@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-114@2x.png"; sourceTree = "<group>"; };
 		96F321401AD50A2700CAFC51 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
@@ -1707,6 +1722,12 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96DAB7311B42A87D00565F30 /* ic_lookOriginal@2x.png */,
+				96DAB72F1B42A58100565F30 /* ic_mohu@2x.jpg */,
+				96DAB7291B42979D00565F30 /* ic_back@2x.png */,
+				96DAB72A1B42979D00565F30 /* ic_comment@2x.png */,
+				96DAB7251B42697400565F30 /* ic_register_phone@2x.png */,
+				96DAB7261B42697400565F30 /* ic_register_success@2x.png */,
 				96CD4D621B32A02D00C3917B /* system_notice@2x.png */,
 				96CD4D601B32A02200C3917B /* award_notice@2x.png */,
 				96C6E6CA1B1C11C900E9FD34 /* ic_home_head@2x.png */,
@@ -1738,7 +1759,7 @@
 				96D1206A1B0C36DF00BF8062 /* ic_textShare@2x.png */,
 				96D120681B0C329900BF8062 /* ic_share@2x.png */,
 				96D120641B0C308800BF8062 /* ic_stow_highlighted@2x.png */,
-				96D120651B0C308800BF8062 /* ic_stow_normal@2x.png */,
+				96DAB72D1B42984300565F30 /* ic_stow_normal@2x.png */,
 				96C24D101B0B0BC90044C86B /* ic_adown_arrow@2x.png */,
 				96C24D111B0B0BC90044C86B /* ic_up_arrow@2x.png */,
 				96C24D0C1B0ADF700044C86B /* ic_grid_highlighted@2x.png */,
@@ -1859,6 +1880,8 @@
 				96C7ACC61AD656E000FA2E22 /* RYLoginViewController.m */,
 				96C51A6B1AD76D7900C5374D /* RYRegisterViewController.h */,
 				96C51A6C1AD76D7900C5374D /* RYRegisterViewController.m */,
+				96DAB7221B424C0500565F30 /* RYCompanyRegisterSuccessViewController.h */,
+				96DAB7231B424C0500565F30 /* RYCompanyRegisterSuccessViewController.m */,
 				96D9C9861AE49A7500997430 /* RYRegisterSpecialtyViewController.h */,
 				96D9C9871AE49A7500997430 /* RYRegisterSpecialtyViewController.m */,
 				96C610801ADCDBF900862E0E /* RYRegisterSelectViewController.h */,
@@ -1989,18 +2012,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96D120671B0C308800BF8062 /* ic_stow_normal@2x.png in Resources */,
 				96CFB3E01AFA2AF70078C225 /* menu-button.png in Resources */,
+				96DAB7301B42A58100565F30 /* ic_mohu@2x.jpg in Resources */,
 				96CAB6171AF1DD4000ECD350 /* user_head_yes@2x.png in Resources */,
 				96D9C9911AE4EFCD00997430 /* cell_partingLine@2x.png in Resources */,
 				96F321491AD50A2700CAFC51 /* Default@2x.png in Resources */,
+				96DAB7321B42A87D00565F30 /* ic_lookOriginal@2x.png in Resources */,
 				96F321451AD50A2700CAFC51 /* Icon-114@2x.png in Resources */,
 				96F321461AD50A2700CAFC51 /* Icon-72@2x.png in Resources */,
 				96CFB3C11AF9C51C0078C225 /* ic_invite_share3@2x.png in Resources */,
+				96DAB7271B42697400565F30 /* ic_register_phone@2x.png in Resources */,
 				9667D8221B00600F0099C424 /* UMShareEditViewController.xib in Resources */,
 				96D1D0E91B2970D000A93D71 /* SVProgressHUD.bundle in Resources */,
 				96D2382A1AF75E5500936721 /* ic_read_num@2x.png in Resources */,
 				96CFB3BE1AF9C51C0078C225 /* ic_invite_share0@2x.png in Resources */,
+				96DAB72C1B42979D00565F30 /* ic_comment@2x.png in Resources */,
 				9667D8201B00600F0099C424 /* UMSCommentInputController.xib in Resources */,
 				96CAB6121AF1CE6D00ECD350 /* ic_normalImage_6@2x.png in Resources */,
 				96F321471AD50A2700CAFC51 /* Default-568h@2x.png in Resources */,
@@ -2023,6 +2049,7 @@
 				96CAEDA11AF899100067BC2F /* jifen_img0@2x.png in Resources */,
 				9667D81F1B00600F0099C424 /* UMSCommentDetailController.xib in Resources */,
 				96C24D131B0B0BC90044C86B /* ic_up_arrow@2x.png in Resources */,
+				96DAB72B1B42979D00565F30 /* ic_back@2x.png in Resources */,
 				96CBAA3F1B15B91300D13C27 /* ic_small_arrow@2x.png in Resources */,
 				96CFB3B41AF9BC9A0078C225 /* ic_Invite@2x.png in Resources */,
 				96CD08B01B02E81100088B1E /* ic_arrow_right@2x.png in Resources */,
@@ -2077,6 +2104,7 @@
 				96CFB3BF1AF9C51C0078C225 /* ic_invite_share1@2x.png in Resources */,
 				96CC35541B0473CB00EFA27A /* ic_transparency@2x.png in Resources */,
 				96D238121AF74AA000936721 /* register_personal@2x.png in Resources */,
+				96DAB72E1B42984300565F30 /* ic_stow_normal@2x.png in Resources */,
 				96C4C4061AE77CC700151A84 /* IQKeyboardManager.bundle in Resources */,
 				9667D8261B00600F0099C424 /* UMSShareListController.xib in Resources */,
 				96D0A5691B183A9800BF6D90 /* ic_recusalImge_5@2x.png in Resources */,
@@ -2089,6 +2117,7 @@
 				96D2380E1AF721ED00936721 /* ic_cell_unselected@2x.png in Resources */,
 				96C610911ADCE95700862E0E /* register_slider@2x.png in Resources */,
 				96CC39B71AD4E3BB00D5D157 /* MJRefresh.bundle in Resources */,
+				96DAB7281B42697400565F30 /* ic_register_success@2x.png in Resources */,
 				96CAB6091AF1CE6D00ECD350 /* ic_highlighted_5@2x.png in Resources */,
 				96CFB3C01AF9C51C0078C225 /* ic_invite_share2@2x.png in Resources */,
 				96CAB60D1AF1CE6D00ECD350 /* ic_normalImage_1@2x.png in Resources */,
@@ -2253,6 +2282,7 @@
 				96C5BFDD1AFB648600BC5744 /* CXBrowserToolBarView.m in Sources */,
 				96CC39BE1AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m in Sources */,
 				96CD08B71B0324F300088B1E /* RYCorporateHomePageData.m in Sources */,
+				96DAB7241B424C0500565F30 /* RYCompanyRegisterSuccessViewController.m in Sources */,
 				96C664FF1ADBA0A900C35310 /* RYRetrievePasswordViewController.m in Sources */,
 				96CF17E71AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m in Sources */,
 				96CC354C1B0442DC00EFA27A /* RYNewsPage.m in Sources */,

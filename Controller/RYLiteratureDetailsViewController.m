@@ -49,12 +49,14 @@
 
 @property (nonatomic, strong)  CXPhotoBrowser   *browser;
 
-//@property (nonatomic, strong)  UIView           *lookOriginalView;
+@property (nonatomic, strong)  UIImageView       *lookOriginalView;  // 查看原文 view
+@property (nonatomic, strong)  UILabel           *lookOriginalLabel;  // 查看原文提示框
 @property (nonatomic, strong)  RYCopyAddressView *ryCopyView;   // copy 原文地址
 
 // 收藏和分享
 @property (nonatomic, strong)   UIButton         *stowButton; // 收藏按钮
 @property (nonatomic, strong)   UIButton         *shareButton;// 分享按钮
+@property (nonatomic, strong)   UIButton         *commentButton;// 评论按钮
 
 @property (nonatomic, strong)   RYShareSheet     *shareSheet; // 分享
 @property (nonatomic, strong)   RYTokenView      *tokenView;  // 标签view
@@ -146,15 +148,15 @@
 {
     [self setupMainView];
     [self getBodyData];
-    [self setNavigationItem];
+//    [self setNavigationItem];
 }
 
-- (void)setNavigationItem
-{
-    UIBarButtonItem *stowItem = [[UIBarButtonItem alloc] initWithCustomView:self.stowButton];
-    UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:self.shareButton];
-    self.navigationItem.rightBarButtonItems = @[shareItem,stowItem];
-}
+//- (void)setNavigationItem
+//{
+//    UIBarButtonItem *stowItem = [[UIBarButtonItem alloc] initWithCustomView:self.stowButton];
+//    UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:self.shareButton];
+//    self.navigationItem.rightBarButtonItems = @[shareItem,stowItem];
+//}
 
 - (void)setupMainView
 {
@@ -180,17 +182,6 @@
 
 - (void)getBodyData
 {
-//    NSString *url = @"http://yimeiquan.cn/forum.php?mod=viewthread&tid=1016575&page=1&mobile=2&yy=1";
-//    //    NSString *url = @"http://121.40.151.63/ios.php?mod=forum&uid=2&tid=12";
-//    __weak typeof(self) wSelf = self;
-//    [NetManager JSONDataWithUrl:url parameters:nil success:^(id json) {
-//        NSDictionary *dic = (NSDictionary *)json;
-//        [wSelf setBodDatayWithDict:dic];
-//    } fail:^(id error) {
-//        NSLog(@"error : %@",error);
-//    }];
-    
-    
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
         [NetRequestAPI getArticleDetailWithSessionId:[RYUserInfo sharedManager].session
@@ -302,16 +293,21 @@
         [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
     }
 
-    
-    self.articleData.author = [dic getStringValueForKey:@"author" defaultValue:@""];
-    self.articleData.dateline = [dic getStringValueForKey:@"time" defaultValue:@""];
+    self.articleData.author = [dic getStringValueForKey:@"doiauthor" defaultValue:@""];
+    self.articleData.dateline = [dic getStringValueForKey:@"doidate" defaultValue:@""];
     self.articleData.message = [dic getStringValueForKey:@"message" defaultValue:@""];
     self.articleData.subject = [dic getStringValueForKey:@"subject" defaultValue:@""];
-    self.articleData.subhead = @"adsjkfhakjdhfasdkjfhsadjkhfsakjhdfkas";
-    self.articleData.periodical = @"jshfghsjghsfjhgsdjghewowtywug";
-    self.articleData.DOI = @"1233816875698423756";
-    self.articleData.originalAddress = @"http://pan.baidu.com/s/1o6qUur4";
-    self.articleData.password = @"3typ";
+    self.articleData.subhead = [dic getStringValueForKey:@"doititle" defaultValue:@""];
+    self.articleData.periodical = [dic getStringValueForKey:@"doijournal" defaultValue:@""];
+    self.articleData.DOI = [dic getStringValueForKey:@"doiresult" defaultValue:@""];
+    self.articleData.originalAddress = [dic getStringValueForKey:@"doiurl" defaultValue:@""];
+    self.articleData.password = [dic getStringValueForKey:@"doipassword" defaultValue:@""];
+    self.articleData.isInquire = [dic getBoolValueForKey:@"doiqueryuid" defaultValue:NO];
+    
+    self.articleData.shareArticleUrl = [dic getStringValueForKey:@"spreadurl" defaultValue:@""];
+    self.articleData.shareId = [dic getStringValueForKey:@"spid" defaultValue:@""];
+    self.articleData.sharePicUrl = [dic getStringValueForKey:@"pic" defaultValue:@""];
+
     
     [self refreshMainView];
 }
@@ -363,18 +359,16 @@
     self.DOILabel.top = self.dateLabel.bottom + 6;
 
     self.topTextDemarcation.top = self.DOILabel.bottom + 6;
- 
+
     self.webView.top = self.topTextDemarcation.bottom;
     self.webView.height -= self.webView.top;
     
-    
-    //
     NSMutableString *htmlString = [NSMutableString stringWithFormat:@"<div id='webHeight' style=\"padding-left:7px;padding-right:8px;line-height:24px;\">%@</div>", self.articleData.message ];
     //    NSString *webviewText = @"<style>body{margin:10;background-color:transparent;font:80px/18px Custom-Font-Name}</style>";
     //        NSString *htmlString = [webviewText stringByAppendingFormat:@"%@", self.bodyModel.message];
     [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"http://yimeiquan.cn"]];
-    UIEdgeInsets insets = self.webView.scrollView.contentInset;
-    insets.top = self.topTextDemarcation.bottom;
+//    UIEdgeInsets insets = self.webView.scrollView.contentInset;
+//    insets.top = self.topTextDemarcation.bottom;
 }
 
 -(void)addTapOnWebView
@@ -414,7 +408,7 @@
 - (UIButton *)stowButton
 {
     if ( _stowButton == nil ) {
-        _stowButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+        _stowButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
         [_stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
         [_stowButton addTarget:self action:@selector(stowButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -424,11 +418,21 @@
 - (UIButton *)shareButton
 {
     if ( _shareButton == nil ) {
-        _shareButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+        _shareButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
         [_shareButton setImage:[UIImage imageNamed:@"ic_share.png"] forState:UIControlStateNormal];
         [_shareButton addTarget:self action:@selector(shareButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _shareButton;
+}
+
+- (UIButton *)commentButton
+{
+    if ( _commentButton == nil ) {
+        _commentButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+        [_commentButton setImage:[UIImage imageNamed:@"ic_comment.png"] forState:UIControlStateNormal];
+        [_commentButton addTarget:self action:@selector(commentButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _commentButton;
 }
 
 - (RYShareSheet *)shareSheet
@@ -613,14 +617,44 @@
     return _ryCopyView;
 }
 
-//- (UIView *)lookOriginalView
-//{
-//    if ( _lookOriginalView == nil ) {
-//        _lookOriginalView = [[UIView alloc] init];
-//        _lookOriginalView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
-//    }
-//    return _lookOriginalView;
-//}
+- (UIImageView *)lookOriginalView
+{
+    if ( _lookOriginalView == nil ) {
+        _lookOriginalView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _lookOriginalView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
+        _lookOriginalView.image = [UIImage imageNamed:@"ic_mohu.jpg"];
+        [_lookOriginalView setUserInteractionEnabled:YES];
+        
+        UIButton *lookOriginalBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-83/2, 65, 83, 83)];
+        lookOriginalBtn.backgroundColor = [UIColor clearColor];
+        [lookOriginalBtn setTitleColor:[Utils getRGBColor:0x00 g:0x91 b:0xe7 a:1.0] forState:UIControlStateNormal];
+        [lookOriginalBtn.titleLabel setFont:[UIFont systemFontOfSize:20]];
+        [lookOriginalBtn setTitle:@"获取" forState:UIControlStateNormal];
+        [lookOriginalBtn setBackgroundImage:[UIImage imageNamed:@"ic_lookOriginal.png"] forState:UIControlStateNormal];
+        [lookOriginalBtn addTarget:self action:@selector(lookOriginalBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [_lookOriginalView addSubview:lookOriginalBtn];
+        
+        self.lookOriginalLabel.top = lookOriginalBtn.bottom + 8;
+        [_lookOriginalView addSubview:self.lookOriginalLabel];
+    }
+    return _lookOriginalView;
+}
+
+/**
+ * 获取原文地址 提示框
+ */
+-(UIView *)lookOriginalLabel
+{
+    if ( _lookOriginalLabel == nil ) {
+        _lookOriginalLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        _lookOriginalLabel.width = SCREEN_WIDTH;
+        _lookOriginalLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        _lookOriginalLabel.textAlignment = NSTextAlignmentCenter;
+        _lookOriginalLabel.height = 16;
+        _lookOriginalLabel.font = [UIFont systemFontOfSize:16];
+    }
+    return _lookOriginalLabel;
+}
 
 - (UIView *)toobar
 {
@@ -636,13 +670,34 @@
         line.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
         [_toobar addSubview:line];
         
-        UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 5, 50, 30)];
-        [backBtn setImage:[UIImage imageNamed:@"back_btn_icon_sel.png"] forState:UIControlStateNormal];
+        UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 0, 40, 40)];
+        [backBtn setImage:[UIImage imageNamed:@"ic_back.png"] forState:UIControlStateNormal];
         [backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [_toobar addSubview:backBtn];
+        
+        
+        self.shareButton.right = SCREEN_WIDTH - 15;
+        [_toobar addSubview:self.shareButton];
+        
+        self.stowButton.right = SCREEN_WIDTH - 70;
+        [_toobar addSubview:self.stowButton];
+        
+        self.commentButton.right = SCREEN_WIDTH - 125;
+        [_toobar addSubview:self.commentButton];
+        
     }
     
     return _toobar;
+}
+
+- (void)lookOriginalBtnClick:(id)sender
+{
+    NSLog(@"点击查看原文地址");
+   [UIView animateWithDuration:0.3 animations:^{
+       self.lookOriginalView.frame = CGRectMake(0, 220, SCREEN_WIDTH, 0);
+   } completion:^(BOOL finished) {
+       
+   }];
 }
 
 - (void)backBtnClick:(id)sender
@@ -705,16 +760,13 @@
     else{
         self.ryCopyView.height = 0;
     }
-//    self.lookOriginalView.frame = self.ryCopyView.bounds;
-//    [self.ryCopyView addSubview:self.lookOriginalView];
+    self.lookOriginalView.frame = self.ryCopyView.bounds;
+    self.lookOriginalLabel.text = @"点击获得查看文献权限";
+    [self.ryCopyView addSubview:self.lookOriginalView];
     
-    self.ryCopyView.top = self.webViewHeight + self.topTextDemarcation.bottom + 10;
+    self.ryCopyView.top = self.webViewHeight + self.topTextDemarcation.bottom;
     
-//    CGSize scrollViewContentSize = self.scrollView.contentSize;
-//     scrollViewContentSize.height = self.webViewHeight + self.topTextDemarcation.bottom + self.originalAddressView.height;
-//    self.scrollView.contentSize = scrollViewContentSize ;
-//    self.webView.height = self.webViewHeight + self.originalAddressView.height + self.topTextDemarcation.bottom - 100;
-     self.webView.height = self.webViewHeight + self.topTextDemarcation.bottom + self.ryCopyView.height - 90;
+    self.webView.height = self.webViewHeight + self.topTextDemarcation.bottom + self.ryCopyView.height;
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -757,7 +809,8 @@
         CGSize  size = [[change valueForKey:NSKeyValueChangeNewKey] CGSizeValue];
         if (size.height > 0) {
             CGSize scrollViewContentSize = self.scrollView.contentSize;
-            scrollViewContentSize.height = size.height + self.topTextDemarcation.bottom;
+//            scrollViewContentSize.height = size.height  + self.topTextDemarcation.bottom;
+            scrollViewContentSize.height = size.height;
             self.scrollView.contentSize = scrollViewContentSize ;
             self.webView.height = size.height;
         }
@@ -829,29 +882,6 @@
     return navBarView;
 }
 
-#pragma mark - HTCopyableLabelDelegate
-/*
-- (NSString *)stringToCopyForCopyableLabel:(HTCopyableLabel *)copyableLabel
-{
-    NSString *stringToCopy = @"";
-    if ( copyableLabel == self.showAddressLabel ) {
-        stringToCopy = self.articleData.originalAddress;
-    }
-    else if ( copyableLabel == self.showPasswordLabel ){
-        stringToCopy = self.articleData.password;
-    }
-    else if (copyableLabel == self.copyAddressAndPassword){
-        stringToCopy = [NSString stringWithFormat:@"%@ %@",self.articleData.originalAddress,self.articleData.password];
-    }
-    return stringToCopy;
-}
- */
-
-//- (CGRect)copyMenuTargetRectInCopyableLabelCoordinates:(HTCopyableLabel *)copyableLabel
-//{
-//    
-//}
-
 #pragma mark - CXPhotoBrowserDelegate
 
 - (void)photoBrowser:(CXPhotoBrowser *)photoBrowser didChangedToPageAtIndex:(NSUInteger)index
@@ -884,8 +914,22 @@
 - (void)shareButtonClick:(id)sender
 {
     NSLog(@"分享");
+    NSMutableDictionary *tempDict = [NSMutableDictionary dictionary];
+    [tempDict setValue:self.articleData.shareArticleUrl forKey:SHARE_URL];
+    [tempDict setValue:self.articleData.subject forKey:SHARE_TEXT];
+    [tempDict setValue:self.articleData.shareId forKey:SHARE_CALLBACK_DI];
+    [tempDict setValue:self.articleData.sharePicUrl forKey:SHARE_PIC];
+    [tempDict setValue:self.tid forKey:SHARE_TID];
+    
+    self.shareSheet.shareDataDict = tempDict;
     self.shareSheet.delegate = self;
+    
     [self.shareSheet showShareView];
+}
+
+- (void)commentButtonClick:(id)sender
+{
+    NSLog(@"点击评论");
 }
 
 
@@ -912,7 +956,6 @@
         }];
         [self.navigationController pushViewController:nextVC animated:YES];
     }
-    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

@@ -51,4 +51,7 @@
 #pragma mark 取出 文献分类的tag字典
 +(NSDictionary *)getLiteratureTagDict;
 
+#pragma mark 邮箱验证
++(BOOL)isValidateEmail:(NSString *)Email;
+
 @end

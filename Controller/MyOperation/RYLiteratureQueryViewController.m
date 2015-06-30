@@ -63,17 +63,7 @@
 }
 
 - (void)setdataWithDict:(NSDictionary *)dict
-{
-//    self.articleData.author = @"阿肯积分卡时间发货";
-//    self.articleData.dateline = @"2015.5.5";
-//    self.articleData.message = @"adfaf";
-//    self.articleData.subject = @"低能量激光治疗低能量激光治疗低能量激光治疗低能量激光治疗";
-//    self.articleData.subhead = @"adsjkfha kjdhfas dkjfhsa djkhfsakj hdfkaadl fjhask dhfdalsk";
-//    self.articleData.periodical = @"jshfghsjghsfjhgsdjghewowtywug";
-//    self.articleData.DOI = @"1233816875698423756";
-//    self.articleData.originalAddress = @"http://pan.baidu.com/s/1o6qUur4";
-//    self.articleData.password = @"3typ";
-    
+{    
     self.articleData.author = [dict getStringValueForKey:@"doiauthor" defaultValue:@""];
     self.articleData.dateline = [dict getStringValueForKey:@"doidate" defaultValue:@""];
     self.articleData.message = [dict getStringValueForKey:@"message" defaultValue:@""];

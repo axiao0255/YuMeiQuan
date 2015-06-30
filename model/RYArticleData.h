@@ -21,6 +21,7 @@
 @property(nonatomic, strong)NSString *password;
 @property(nonatomic, assign)BOOL     isCompany;// 是否是企业 所发的文章
 @property(nonatomic, strong)NSString *authorId;// 如果是企业所发的文章，则次id为企业id
+@property(nonatomic, assign)BOOL     isInquire; // 是否查询过改文献，YES 查询过，NO 未查询过
 
 #pragma mark 分享所用
 @property(nonatomic, strong)NSString *shareId;         // 分享id

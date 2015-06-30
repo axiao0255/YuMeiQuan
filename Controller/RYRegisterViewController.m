@@ -11,6 +11,7 @@
 #import "RYRegisterSpecialtyViewController.h"
 #import "TextFieldWithLabel.h"
 #import "NYSegmentedControl.h"
+#import "RYCompanyRegisterSuccessViewController.h"
 
 @interface RYRegisterViewController ()<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate,RYRegisterSpecialtyDelegate>
 {
@@ -359,7 +360,7 @@
         case 3:
         {
             commanyPhoneText = textField;
-            commanyPhoneText.placeholder = @"请输入手机号码";
+            commanyPhoneText.placeholder = @"联系电话";
             commanyPhoneText.text = registerData.companyPhone;
         }
             break;
@@ -716,9 +717,12 @@
 - (void)submitDidClick:(id)sender
 {
     if ( myType == typePersonal ) {
+        // 个人注册
         [self personalRegister];
     }
     else{
+        // 企业 注册
+        [self companyRegister];
     }
 }
 // 获取验证码
@@ -791,7 +795,7 @@
 {
     NSLog(@"textField.text : %@",textField.text);
     NSUInteger textLength = [Utils getTextFieldActualLengthWithTextField:textField shouldChangeCharactersInRange:range replacementString:string];
-    if ( textField == userPhoneText || textField == commanyPhoneText ) {
+    if ( textField == userPhoneText ) {
         if ( textLength > 11 ) {
             return NO;
         }
@@ -805,6 +809,12 @@
     
     if ( textField == passWordText || textField == repetPasswordText ) {
         if ( textLength > 20 ) {
+            return NO;
+        }
+    }
+    
+    if ( textField == commanyPhoneText ) {
+        if ( textLength >= 25 ) {
             return NO;
         }
     }
@@ -1031,5 +1041,66 @@
 
 #pragma mark - 企业注册 数据处理
 
+-(void)companyRegister
+{
+    if ( [ShowBox isEmptyString:registerData.companyType] ) {
+        [ShowBox showError:@"请选择企业类型"];
+        return;
+    }
+    if ( [ShowBox isEmptyString:registerData.companyName] ) {
+        [ShowBox showError:@"输入企业名称"];
+        return;
+    }
+    if ( [ShowBox isEmptyString:registerData.companyContactPerson] ) {
+        [ShowBox showError:@"请输入联系人"];
+        return;
+    }
+    if ( [ShowBox isEmptyString:registerData.companyPhone] || registerData.companyPhone.length < 7 || registerData.companyPhone.length > 25 ) {
+        [ShowBox showError:@"请输入正确的联系电话"];
+        return;
+    }
+    if ( [ShowBox isEmptyString:registerData.companyEmail] || ![ShowBox isValidateEmail:registerData.companyEmail]) {
+        [ShowBox showError:@"请输入正确邮箱"];
+        return;
+    }
+    [self companyRegisterNet];
+}
 
+// 企业注册 提交网络
+- (void)companyRegisterNet
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"正在提交..." maskType:SVProgressHUDMaskTypeGradient];
+        [NetRequestAPI submitCompanyRegisterWithType:registerData.companyType
+                                             company:registerData.companyName
+                                                name:registerData.companyContactPerson
+                                                 tel:registerData.companyPhone
+                                               email:registerData.companyEmail
+                                             success:^(id responseDic) {
+                                                  NSLog(@"企业注册 responseDic: %@",responseDic);
+                                                 [SVProgressHUD dismiss];
+                                                 [wSelf manageCompanyRegisterNetWithDict:responseDic];
+                                             } failure:^(id errorString) {
+                                                 NSLog(@"企业注册 errorString：%@",errorString);
+                                                 [SVProgressHUD dismiss];
+                                             }];
+    }
+}
+
+-(void)manageCompanyRegisterNetWithDict:(NSDictionary *)responseDic
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"服务器出错，请稍候重试"]];
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    
+    RYCompanyRegisterSuccessViewController *vc = [[RYCompanyRegisterSuccessViewController alloc] initWithDict:info];
+    [self.navigationController pushViewController:vc animated:YES];
+
+}
 @end

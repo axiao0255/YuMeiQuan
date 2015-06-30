@@ -728,4 +728,26 @@
     [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 }
 
+#pragma mark - 企业注册提交
++(void)submitCompanyRegisterWithType:(NSString *)_type
+                             company:(NSString *)_company
+                                name:(NSString *)_name
+                                 tel:(NSString *)_tel
+                               email:(NSString *)_email
+                             success:(void(^)(id responseDic))success
+                             failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"companyreg" forKey:@"mod"];
+    [parDic setValue:_type forKey:@"type"];
+    [parDic setValue:_company forKey:@"company"];
+    [parDic setValue:_name forKey:@"linkman"];
+    [parDic setValue:_tel forKey:@"phone"];
+    [parDic setValue:_email forKey:@"email"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+}
+
 @end

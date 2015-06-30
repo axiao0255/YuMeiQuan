@@ -523,13 +523,13 @@
                                                     fid:@"136"
                                                    page:currentPage
                                                 success:^(id responseDic) {
-                                                    //                                                    NSLog(@"新闻 ：responseDic  %@",responseDic);
+//                                                    NSLog(@"新闻 ：responseDic  %@",responseDic);
                                                     // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
                                                     [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                     [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                 } failure:^(id errorString) {
                                                     [ShowBox showError:@"获取数据失败，请稍候重试"];
-                                                    //                                                    NSLog(@"新闻 ：errorString  %@",errorString);
+//                                                    NSLog(@"新闻 ：errorString  %@",errorString);
                                                     // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
                                                      [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                 }];

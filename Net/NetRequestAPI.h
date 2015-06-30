@@ -246,6 +246,15 @@
                             success:(void(^)(id responseDic))success
                             failure:(void(^)(id errorString))failure;
 
+#pragma mark - 企业注册提交
++(void)submitCompanyRegisterWithType:(NSString *)_type
+                             company:(NSString *)_company
+                                name:(NSString *)_name
+                                 tel:(NSString *)_tel
+                               email:(NSString *)_email
+                             success:(void(^)(id responseDic))success
+                             failure:(void(^)(id errorString))failure;
+
 
 
 @end

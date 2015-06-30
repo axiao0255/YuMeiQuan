@@ -322,9 +322,8 @@
     //
     NSMutableString *htmlString = [NSMutableString stringWithFormat:@"<div id='webHeight' style=\"padding-left:7px;padding-right:7px;line-height:24px;\">%@</div>", self.articleData.message ];
     [self.webView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"http://yimeiquan.cn"]];
-    UIEdgeInsets insets = self.webView.scrollView.contentInset;
-//    insets.top = self.originalBtn.bottom;
-    insets.top = self.topTextDemarcation.bottom;
+//    UIEdgeInsets insets = self.webView.scrollView.contentInset;
+//    insets.top = self.topTextDemarcation.bottom;
 }
 
 -(void)addTapOnWebView
@@ -364,9 +363,8 @@
 - (UIButton *)stowButton
 {
     if ( _stowButton == nil ) {
-        _stowButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+        _stowButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
         [_stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
-        _stowButton.backgroundColor = [UIColor redColor];
 //        [_stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateHighlighted];
         [_stowButton addTarget:self action:@selector(stowButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -376,8 +374,7 @@
 - (UIButton *)shareButton
 {
     if ( _shareButton == nil ) {
-        _shareButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-        _shareButton.backgroundColor = [UIColor yellowColor];
+        _shareButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
         [_shareButton setImage:[UIImage imageNamed:@"ic_share.png"] forState:UIControlStateNormal];
         [_shareButton addTarget:self action:@selector(shareButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -559,17 +556,15 @@
         line.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
         [_toobar addSubview:line];
         
-        UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 5, 50, 30)];
-        [backBtn setImage:[UIImage imageNamed:@"back_btn_icon_sel.png"] forState:UIControlStateNormal];
+        UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 0, 50, 30)];
+        [backBtn setImage:[UIImage imageNamed:@"ic_back.png"] forState:UIControlStateNormal];
         [backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [_toobar addSubview:backBtn];
         
-        self.shareButton.top = 7;
-        self.shareButton.right = SCREEN_WIDTH - 30;
+        self.shareButton.right = SCREEN_WIDTH - 15;
         [_toobar addSubview:self.shareButton];
         
-        self.stowButton.top = 7;
-        self.stowButton.right = SCREEN_WIDTH - 85;
+        self.stowButton.right = SCREEN_WIDTH - 70;
         [_toobar addSubview:self.stowButton];
     }
     
@@ -694,14 +689,12 @@
     NSString *questionID = [self.questionsDict getStringValueForKey:@"id" defaultValue:nil];
     if ( ![ShowBox isEmptyString:questionID] ) { // 有答题
         if ( showButtomView ) {
-            //        self.buttomView.hidden = NO;
             self.answerSheet.dataDict = self.questionsDict;
             self.answerSheet.hidden = NO;
             self.answerSheet.height = [self.answerSheet getAnswerSheetHeight];
             self.answerSheet.thid = self.tid;
         }
         else{
-            //        self.buttomView.hidden = YES;
             self.answerSheet.height = 0;
             self.answerSheet.hidden = YES;
         }
@@ -711,18 +704,12 @@
         self.answerSheet.hidden = YES;
     }
    
-//    self.buttomView.top = self.webViewHeight + self.originalBtn.bottom;
-//    self.buttomView.top = self.webViewHeight + self.topTextDemarcation.bottom;
     self.answerSheet.top = self.webViewHeight + self.topTextDemarcation.bottom;
     CGSize scrollViewContentSize = self.scrollView.contentSize;
-//    scrollViewContentSize.height = self.webViewHeight + self.originalBtn.bottom + self.buttomView.height;
     scrollViewContentSize.height = self.webViewHeight + self.topTextDemarcation.bottom + self.answerSheet.height;
     self.scrollView.contentSize = scrollViewContentSize ;
-//    self.webView.height = self.webViewHeight+self.buttomView.height + self.originalBtn.bottom;
-    self.webView.height = self.webViewHeight+self.answerSheet.height + self.topTextDemarcation.bottom;
-     NSLog(@"%f",scrollViewContentSize.height);
-    NSLog(@"%f",self.webView.height);
-}
+    self.webView.height = self.webViewHeight + self.answerSheet.height + self.topTextDemarcation.bottom;
+ }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
@@ -765,7 +752,7 @@
         if (size.height > 0) {
             CGSize scrollViewContentSize = self.scrollView.contentSize;
 //            scrollViewContentSize.height = size.height + self.originalBtn.bottom;
-             scrollViewContentSize.height = size.height + self.topTextDemarcation.bottom;
+//             scrollViewContentSize.height = size.height + self.topTextDemarcation.bottom;
             self.scrollView.contentSize = scrollViewContentSize ;
             self.webView.height = size.height;
         }
