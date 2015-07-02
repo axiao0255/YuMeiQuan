@@ -17,6 +17,7 @@
 #import "RYShareSheet.h"
 #import "RYTokenView.h"
 #import "RYCopyAddressView.h"
+#import "RYcommentDetailsViewController.h"
 
 #define BROWSER_TITLE_LBL_TAG 12731
 @interface RYLiteratureDetailsViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate>
@@ -51,7 +52,9 @@
 
 @property (nonatomic, strong)  UIImageView       *lookOriginalView;  // 查看原文 view
 @property (nonatomic, strong)  UILabel           *lookOriginalLabel;  // 查看原文提示框
-@property (nonatomic, strong)  RYCopyAddressView *ryCopyView;   // copy 原文地址
+@property (nonatomic, strong)  RYCopyAddressView *ryCopyView;        // copy 原文地址
+@property (nonatomic, strong)  UIView            *hintCoverView ;    //提示 view
+@property (nonatomic, strong)  UILabel           *hintCoverLabel;    // 提示框
 
 // 收藏和分享
 @property (nonatomic, strong)   UIButton         *stowButton; // 收藏按钮
@@ -117,12 +120,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-//    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-//        // iOS 7
-//        [self prefersStatusBarHidden];
-//        [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-//    }
     
     showButtomView = YES;
     [self setup];
@@ -265,13 +262,7 @@
     // 是否有奖转发
     self.isAward = [info getBoolValueForKey:@"spreadmessage" defaultValue:NO];
     
-//    // 取 文章内容
-//    NSArray *threadmessage = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
-//    if ( !threadmessage.count ) {
-//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
-//        return;
-//    }
-//    [self setBodDatayWithDict:[threadmessage objectAtIndex:0]];
+    // 取 文章内容
     NSDictionary *dataDict = [info getDicValueForKey:@"threadmessage" defaultValue:nil];
     [self setBodDatayWithDict:dataDict];
 
@@ -303,6 +294,8 @@
     self.articleData.originalAddress = [dic getStringValueForKey:@"doiurl" defaultValue:@""];
     self.articleData.password = [dic getStringValueForKey:@"doipassword" defaultValue:@""];
     self.articleData.isInquire = [dic getBoolValueForKey:@"doiqueryuid" defaultValue:NO];
+    self.articleData.comment = [dic getStringValueForKey:@"comment" defaultValue:@""];
+    self.articleData.check = [dic getStringValueForKey:@"check" defaultValue:@""];
     
     self.articleData.shareArticleUrl = [dic getStringValueForKey:@"spreadurl" defaultValue:@""];
     self.articleData.shareId = [dic getStringValueForKey:@"spid" defaultValue:@""];
@@ -314,14 +307,23 @@
 
 - (void)refreshMainView
 {
+    
+    if ( [ShowBox isEmptyString:self.articleData.comment] ) {
+        self.hintCoverView.hidden = YES;
+    }
+    else{
+        self.hintCoverView.hidden = NO;
+        self.hintCoverLabel.text = self.articleData.comment;
+    }
+    
+    [self.view addSubview:self.hintCoverView];
+    
     // 是否显示有奖转发
     if ( self.isAward ) {
         self.textShareButton.height = 35;
     }else{
         self.textShareButton.height = 0;
     }
-
-    
     // 标题
     CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
     self.bodeyTitleLabel.text = self.articleData.subject;
@@ -617,6 +619,38 @@
     return _ryCopyView;
 }
 
+- (UIView *)hintCoverView
+{
+    if ( _hintCoverView == nil ) {
+        _hintCoverView = [[UIView alloc] initWithFrame:self.view.bounds];
+        _hintCoverView.backgroundColor = [UIColor clearColor];
+        
+        UIImageView *topCoverView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 388)];
+        topCoverView.backgroundColor = [Utils getRGBColor:0 g:0 b:0 a:0.56];
+        [_hintCoverView addSubview:topCoverView];
+        
+        UIImageView *bottomCoverView = [[UIImageView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 388, SCREEN_WIDTH, 388)];
+        bottomCoverView.image = [UIImage imageNamed:@"ic_hintCover.png"];
+        bottomCoverView.userInteractionEnabled = YES;
+        [_hintCoverView addSubview:bottomCoverView];
+        
+        UIButton *dismissCoverBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80,0 , 50, 50)];
+        dismissCoverBtn.backgroundColor = [UIColor clearColor];
+        [dismissCoverBtn addTarget:self action:@selector(dismissCoverView:) forControlEvents:UIControlEventTouchUpInside];
+        [bottomCoverView addSubview:dismissCoverBtn];
+
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 80, 60, 180, 100)];
+        label.font = [UIFont systemFontOfSize:16];
+        label.textColor = [UIColor whiteColor];
+        label.backgroundColor = [UIColor clearColor];
+        label.numberOfLines = 0;
+        self.hintCoverLabel = label;
+        [bottomCoverView addSubview:label];
+        
+    }
+    return _hintCoverView;
+}
+
 - (UIImageView *)lookOriginalView
 {
     if ( _lookOriginalView == nil ) {
@@ -627,7 +661,7 @@
         
         UIButton *lookOriginalBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-83/2, 65, 83, 83)];
         lookOriginalBtn.backgroundColor = [UIColor clearColor];
-        [lookOriginalBtn setTitleColor:[Utils getRGBColor:0x00 g:0x91 b:0xe7 a:1.0] forState:UIControlStateNormal];
+        [lookOriginalBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [lookOriginalBtn.titleLabel setFont:[UIFont systemFontOfSize:20]];
         [lookOriginalBtn setTitle:@"获取" forState:UIControlStateNormal];
         [lookOriginalBtn setBackgroundImage:[UIImage imageNamed:@"ic_lookOriginal.png"] forState:UIControlStateNormal];
@@ -693,11 +727,47 @@
 - (void)lookOriginalBtnClick:(id)sender
 {
     NSLog(@"点击查看原文地址");
-   [UIView animateWithDuration:0.3 animations:^{
-       self.lookOriginalView.frame = CGRectMake(0, 220, SCREEN_WIDTH, 0);
-   } completion:^(BOOL finished) {
-       
-   }];
+    
+    if ( [ShowBox checkCurrentNetwork] ) {
+        
+        __weak typeof(self) wSelf = self;
+        if ( ![ShowBox isLogin] ) {
+            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+                if ( isLogin ) {
+                    NSLog(@"登录完成");    // 重新获取数据
+                    [wSelf getBodyData];  // 登录之后重新 刷新数据
+                }
+            }];
+            [self.navigationController pushViewController:nextVC animated:YES];
+            return;
+        }
+        
+        [NetRequestAPI getShowDoiWithSessionId:[RYUserInfo sharedManager].session
+                                           tid:self.tid
+                                       success:^(id responseDic) {
+                                           NSLog(@"获取原文权限 responseDic： %@",responseDic);
+                                           [wSelf getLookResultWithDict:responseDic];
+            
+        } failure:^(id errorString) {
+             NSLog(@"获取原文权限 errorString： %@",errorString);
+            [ShowBox showError:@"网络出错，请稍候重试"];
+        }];
+    }
+}
+
+-(void)getLookResultWithDict:(NSDictionary *)responseDic
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"网络出错，请稍候重试"]];
+        return;
+    }
+    [UIView animateWithDuration:0.3 animations:^{
+        self.lookOriginalView.frame = CGRectMake(0, 220, SCREEN_WIDTH, 0);
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 - (void)backBtnClick:(id)sender
@@ -760,8 +830,16 @@
     else{
         self.ryCopyView.height = 0;
     }
+    
+    // 判断是否有 查看原文地址的权限
+    if (!self.articleData.isInquire) {
+        self.lookOriginalView.hidden = NO;
+    }
+    else{
+        self.lookOriginalView.hidden = YES;
+    }
     self.lookOriginalView.frame = self.ryCopyView.bounds;
-    self.lookOriginalLabel.text = @"点击获得查看文献权限";
+    self.lookOriginalLabel.text = self.articleData.check;
     [self.ryCopyView addSubview:self.lookOriginalView];
     
     self.ryCopyView.top = self.webViewHeight + self.topTextDemarcation.bottom;
@@ -930,8 +1008,15 @@
 - (void)commentButtonClick:(id)sender
 {
     NSLog(@"点击评论");
+    RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleData:self.articleData];
+    [self.navigationController pushViewController:vc animated:YES];
+    
 }
 
+- (void)dismissCoverView:(id)sender
+{
+    self.hintCoverView.hidden = YES;
+}
 
 - (void)stowButtonClick:(id)sender
 {

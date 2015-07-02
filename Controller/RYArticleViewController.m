@@ -556,7 +556,7 @@
         line.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
         [_toobar addSubview:line];
         
-        UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 0, 50, 30)];
+        UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 0, 40, 40)];
         [backBtn setImage:[UIImage imageNamed:@"ic_back.png"] forState:UIControlStateNormal];
         [backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [_toobar addSubview:backBtn];

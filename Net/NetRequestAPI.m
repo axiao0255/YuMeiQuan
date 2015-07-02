@@ -750,4 +750,20 @@
     [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 }
 
+#pragma mark - 文献详细页 获取文献原文
++(void)getShowDoiWithSessionId:(NSString *)session
+                           tid:(NSString *)_tid
+                       success:(void(^)(id responseDic))success
+                       failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"showdoi" forKey:@"mod"];
+    [parDic setValue:session forKey:@"sid"];
+    [parDic setValue:_tid forKey:@"tid"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+}
+
 @end

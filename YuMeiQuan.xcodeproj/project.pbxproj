@@ -70,6 +70,15 @@
 		96C404D11B019EAD0066E5D4 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C404C81B019EAD0066E5D4 /* libWeChatSDK.a */; };
 		96C404D71B01F82D0066E5D4 /* RYCorporateHomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C404D61B01F82D0066E5D4 /* RYCorporateHomePageViewController.m */; };
 		96C425ED1B2FF54C00F1DDA3 /* RYMyNoticeModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C425EC1B2FF54C00F1DDA3 /* RYMyNoticeModel.m */; };
+		96C44D6C1B44E108000C3EB9 /* replyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C44D6B1B44E108000C3EB9 /* replyView.m */; };
+		96C44D711B44ECE4000C3EB9 /* ic_comment_reply@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D6E1B44ECE4000C3EB9 /* ic_comment_reply@2x.png */; };
+		96C44D741B4506B3000C3EB9 /* ic_comment_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D731B4506B3000C3EB9 /* ic_comment_share@2x.png */; };
+		96C44D761B4507A9000C3EB9 /* ic_comment_dele@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D751B4507A9000C3EB9 /* ic_comment_dele@2x.png */; };
+		96C44D791B451CC7000C3EB9 /* JSCustomChatKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C44D781B451CC7000C3EB9 /* JSCustomChatKeyboard.m */; };
+		96C44D7F1B455A9D000C3EB9 /* HPGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C44D7C1B455A9D000C3EB9 /* HPGrowingTextView.m */; };
+		96C44D801B455A9D000C3EB9 /* HPTextViewInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C44D7E1B455A9D000C3EB9 /* HPTextViewInternal.m */; };
+		96C44D831B456BC1000C3EB9 /* ic_shuru@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D811B456BC1000C3EB9 /* ic_shuru@2x.png */; };
+		96C44D841B456BC1000C3EB9 /* ic_voice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D821B456BC1000C3EB9 /* ic_voice@2x.png */; };
 		96C4A5CB1AE62236008DCC5B /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C4A5C81AE62236008DCC5B /* Reachability.m */; };
 		96C4A5CC1AE62236008DCC5B /* ReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C4A5CA1AE62236008DCC5B /* ReachabilityManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		96C4C3FB1AE77CC700151A84 /* IQNSArray+Sort.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C4C3DD1AE77CC700151A84 /* IQNSArray+Sort.m */; };
@@ -95,7 +104,6 @@
 		96C51A6D1AD76D7900C5374D /* RYRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C51A6C1AD76D7900C5374D /* RYRegisterViewController.m */; };
 		96C52FCA1B05E01C007BC747 /* RYPodcastPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C52FC91B05E01C007BC747 /* RYPodcastPage.m */; };
 		96C52FCD1B05EAED007BC747 /* RYMoviePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C52FCC1B05EAED007BC747 /* RYMoviePlayerViewController.m */; };
-		96C52FCF1B05EB54007BC747 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C52FCE1B05EB54007BC747 /* MediaPlayer.framework */; };
 		96C56CFC1AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF11AEE158400B127FF /* NSMutableArray+SWUtilityButtons.m */; };
 		96C56CFD1AEE158400B127FF /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF31AEE158400B127FF /* SWCellScrollView.m */; };
 		96C56CFE1AEE158400B127FF /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C56CF51AEE158400B127FF /* SWLongPressGestureRecognizer.m */; };
@@ -248,6 +256,21 @@
 		96CD79561AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */; };
 		96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */; };
 		96CD795B1AE8EE1E00DDC1D8 /* navigationbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */; };
+		96CE2A0C1B4380E3004FA4BF /* ic_hintCover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A0B1B4380E3004FA4BF /* ic_hintCover@2x.png */; };
+		96CE2A0F1B43B79B004FA4BF /* RYcommentDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE2A0E1B43B79B004FA4BF /* RYcommentDetailsViewController.m */; };
+		96CE2A121B43C123004FA4BF /* RYcommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE2A111B43C123004FA4BF /* RYcommentTableViewCell.m */; };
+		96CE2A161B43C7A3004FA4BF /* ic_praise_bk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A131B43C7A3004FA4BF /* ic_praise_bk@2x.png */; };
+		96CE2A171B43C7A3004FA4BF /* ic_praise_hl@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A141B43C7A3004FA4BF /* ic_praise_hl@2x.png */; };
+		96CE2A181B43C7A3004FA4BF /* ic_praise_nm@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A151B43C7A3004FA4BF /* ic_praise_nm@2x.png */; };
+		96CE2A2F1B43DB78004FA4BF /* fs_cap_bg_0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A2E1B43DB78004FA4BF /* fs_cap_bg_0@2x.png */; };
+		96CE2A3F1B43F0AD004FA4BF /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A341B43F0AD004FA4BF /* .gitkeep */; };
+		96CE2A401B43F0AD004FA4BF /* fs_chat_bubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A351B43F0AD004FA4BF /* fs_chat_bubble@2x.png */; };
+		96CE2A411B43F0AD004FA4BF /* fs_icon_wave_0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A361B43F0AD004FA4BF /* fs_icon_wave_0@2x.png */; };
+		96CE2A421B43F0AD004FA4BF /* fs_icon_wave_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A371B43F0AD004FA4BF /* fs_icon_wave_1@2x.png */; };
+		96CE2A431B43F0AD004FA4BF /* fs_icon_wave_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A381B43F0AD004FA4BF /* fs_icon_wave_2@2x.png */; };
+		96CE2A441B43F0AD004FA4BF /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A3A1B43F0AD004FA4BF /* .gitkeep */; };
+		96CE2A451B43F0AD004FA4BF /* FSVoiceBubble.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE2A3C1B43F0AD004FA4BF /* FSVoiceBubble.m */; };
+		96CE2A461B43F0AD004FA4BF /* UIImage+FSExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE2A3E1B43F0AD004FA4BF /* UIImage+FSExtension.m */; };
 		96CF17E71AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CF17E61AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m */; };
 		96CFB3B21AF9B9180078C225 /* RYMyInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3B11AF9B9180078C225 /* RYMyInviteViewController.m */; };
 		96CFB3B41AF9BC9A0078C225 /* ic_Invite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3B31AF9BC9A0078C225 /* ic_Invite@2x.png */; };
@@ -461,6 +484,19 @@
 		96C404D61B01F82D0066E5D4 /* RYCorporateHomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCorporateHomePageViewController.m; sourceTree = "<group>"; };
 		96C425EB1B2FF54C00F1DDA3 /* RYMyNoticeModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyNoticeModel.h; sourceTree = "<group>"; };
 		96C425EC1B2FF54C00F1DDA3 /* RYMyNoticeModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyNoticeModel.m; sourceTree = "<group>"; };
+		96C44D6A1B44E108000C3EB9 /* replyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = replyView.h; sourceTree = "<group>"; };
+		96C44D6B1B44E108000C3EB9 /* replyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = replyView.m; sourceTree = "<group>"; };
+		96C44D6E1B44ECE4000C3EB9 /* ic_comment_reply@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_comment_reply@2x.png"; sourceTree = "<group>"; };
+		96C44D731B4506B3000C3EB9 /* ic_comment_share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_comment_share@2x.png"; sourceTree = "<group>"; };
+		96C44D751B4507A9000C3EB9 /* ic_comment_dele@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_comment_dele@2x.png"; sourceTree = "<group>"; };
+		96C44D771B451CC7000C3EB9 /* JSCustomChatKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSCustomChatKeyboard.h; path = ../../Desktop/testVoice/testVoice/JSCustomChatKeyboard.h; sourceTree = "<group>"; };
+		96C44D781B451CC7000C3EB9 /* JSCustomChatKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSCustomChatKeyboard.m; path = ../../Desktop/testVoice/testVoice/JSCustomChatKeyboard.m; sourceTree = "<group>"; };
+		96C44D7B1B455A9D000C3EB9 /* HPGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPGrowingTextView.h; sourceTree = "<group>"; };
+		96C44D7C1B455A9D000C3EB9 /* HPGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPGrowingTextView.m; sourceTree = "<group>"; };
+		96C44D7D1B455A9D000C3EB9 /* HPTextViewInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTextViewInternal.h; sourceTree = "<group>"; };
+		96C44D7E1B455A9D000C3EB9 /* HPTextViewInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPTextViewInternal.m; sourceTree = "<group>"; };
+		96C44D811B456BC1000C3EB9 /* ic_shuru@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_shuru@2x.png"; sourceTree = "<group>"; };
+		96C44D821B456BC1000C3EB9 /* ic_voice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_voice@2x.png"; sourceTree = "<group>"; };
 		96C4A5C71AE62236008DCC5B /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		96C4A5C81AE62236008DCC5B /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		96C4A5C91AE62236008DCC5B /* ReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReachabilityManager.h; sourceTree = "<group>"; };
@@ -768,6 +804,25 @@
 		96CD79571AE8D63000DDC1D8 /* RYNewPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYNewPasswordViewController.h; sourceTree = "<group>"; };
 		96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYNewPasswordViewController.m; sourceTree = "<group>"; };
 		96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigationbar@2x.png"; sourceTree = "<group>"; };
+		96CE2A0B1B4380E3004FA4BF /* ic_hintCover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_hintCover@2x.png"; sourceTree = "<group>"; };
+		96CE2A0D1B43B79B004FA4BF /* RYcommentDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYcommentDetailsViewController.h; sourceTree = "<group>"; };
+		96CE2A0E1B43B79B004FA4BF /* RYcommentDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYcommentDetailsViewController.m; sourceTree = "<group>"; };
+		96CE2A101B43C123004FA4BF /* RYcommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYcommentTableViewCell.h; sourceTree = "<group>"; };
+		96CE2A111B43C123004FA4BF /* RYcommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYcommentTableViewCell.m; sourceTree = "<group>"; };
+		96CE2A131B43C7A3004FA4BF /* ic_praise_bk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_praise_bk@2x.png"; sourceTree = "<group>"; };
+		96CE2A141B43C7A3004FA4BF /* ic_praise_hl@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_praise_hl@2x.png"; sourceTree = "<group>"; };
+		96CE2A151B43C7A3004FA4BF /* ic_praise_nm@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_praise_nm@2x.png"; sourceTree = "<group>"; };
+		96CE2A2E1B43DB78004FA4BF /* fs_cap_bg_0@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fs_cap_bg_0@2x.png"; sourceTree = "<group>"; };
+		96CE2A341B43F0AD004FA4BF /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		96CE2A351B43F0AD004FA4BF /* fs_chat_bubble@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fs_chat_bubble@2x.png"; sourceTree = "<group>"; };
+		96CE2A361B43F0AD004FA4BF /* fs_icon_wave_0@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fs_icon_wave_0@2x.png"; sourceTree = "<group>"; };
+		96CE2A371B43F0AD004FA4BF /* fs_icon_wave_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fs_icon_wave_1@2x.png"; sourceTree = "<group>"; };
+		96CE2A381B43F0AD004FA4BF /* fs_icon_wave_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fs_icon_wave_2@2x.png"; sourceTree = "<group>"; };
+		96CE2A3A1B43F0AD004FA4BF /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		96CE2A3B1B43F0AD004FA4BF /* FSVoiceBubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSVoiceBubble.h; sourceTree = "<group>"; };
+		96CE2A3C1B43F0AD004FA4BF /* FSVoiceBubble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSVoiceBubble.m; sourceTree = "<group>"; };
+		96CE2A3D1B43F0AD004FA4BF /* UIImage+FSExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FSExtension.h"; sourceTree = "<group>"; };
+		96CE2A3E1B43F0AD004FA4BF /* UIImage+FSExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FSExtension.m"; sourceTree = "<group>"; };
 		96CF17E51AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYEnshrineClassifyTableViewCell.h; sourceTree = "<group>"; };
 		96CF17E61AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYEnshrineClassifyTableViewCell.m; sourceTree = "<group>"; };
 		96CFB3B01AF9B9180078C225 /* RYMyInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyInviteViewController.h; sourceTree = "<group>"; };
@@ -905,7 +960,6 @@
 				96CD23D41B340970009CF10A /* SystemConfiguration.framework in Frameworks */,
 				96CD23D21B340956009CF10A /* CoreTelephony.framework in Frameworks */,
 				96CD23D01B340941009CF10A /* CoreGraphics.framework in Frameworks */,
-				96C52FCF1B05EB54007BC747 /* MediaPlayer.framework in Frameworks */,
 				96C404CD1B019EAD0066E5D4 /* libSocialQQ.a in Frameworks */,
 				96C404CE1B019EAD0066E5D4 /* TencentOpenAPI.framework in Frameworks */,
 				967500071B0090FA00CCD80C /* libsqlite3.dylib in Frameworks */,
@@ -1105,6 +1159,10 @@
 				96CBAA391B15A85A00D13C27 /* RYPastWeeklyTableViewCell.m */,
 				96D0A56C1B18708000BF6D90 /* RYAnswersRecordTableViewCell.h */,
 				96D0A56D1B18708000BF6D90 /* RYAnswersRecordTableViewCell.m */,
+				96CE2A101B43C123004FA4BF /* RYcommentTableViewCell.h */,
+				96CE2A111B43C123004FA4BF /* RYcommentTableViewCell.m */,
+				96C44D6A1B44E108000C3EB9 /* replyView.h */,
+				96C44D6B1B44E108000C3EB9 /* replyView.m */,
 			);
 			path = TableViewCells;
 			sourceTree = SOURCE_ROOT;
@@ -1165,6 +1223,17 @@
 				96C878841B2693FC00F81DBC /* RYCorporateSearchViewController.m */,
 			);
 			path = Corporate;
+			sourceTree = "<group>";
+		};
+		96C44D7A1B455A9D000C3EB9 /* HPGrowingTextView */ = {
+			isa = PBXGroup;
+			children = (
+				96C44D7B1B455A9D000C3EB9 /* HPGrowingTextView.h */,
+				96C44D7C1B455A9D000C3EB9 /* HPGrowingTextView.m */,
+				96C44D7D1B455A9D000C3EB9 /* HPTextViewInternal.h */,
+				96C44D7E1B455A9D000C3EB9 /* HPTextViewInternal.m */,
+			);
+			path = HPGrowingTextView;
 			sourceTree = "<group>";
 		};
 		96C4A5C61AE62236008DCC5B /* Reachability */ = {
@@ -1455,6 +1524,8 @@
 				96CA73271B16B58300FEC68F /* RYUserInfo.h */,
 				96CA73281B16B58300FEC68F /* RYUserInfo.m */,
 				96C51A6A1AD7675D00C5374D /* macro.h */,
+				96C44D771B451CC7000C3EB9 /* JSCustomChatKeyboard.h */,
+				96C44D781B451CC7000C3EB9 /* JSCustomChatKeyboard.m */,
 			);
 			path = Tools;
 			sourceTree = SOURCE_ROOT;
@@ -1575,6 +1646,8 @@
 		96CC39831AD4DE2F00D5D157 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				96C44D7A1B455A9D000C3EB9 /* HPGrowingTextView */,
+				96CE2A321B43F0AD004FA4BF /* VoiceBubble */,
 				96C5B64E1B3AB7BF00E371B5 /* Harpy */,
 				96CD23CA1B33E2D2009CF10A /* LibBPush */,
 				96D1D0E41B2970D000A93D71 /* SVProgressHUD */,
@@ -1631,6 +1704,39 @@
 				96CD23CC1B33E2D2009CF10A /* libBPush.a */,
 			);
 			path = LibBPush;
+			sourceTree = "<group>";
+		};
+		96CE2A321B43F0AD004FA4BF /* VoiceBubble */ = {
+			isa = PBXGroup;
+			children = (
+				96CE2A331B43F0AD004FA4BF /* Assets */,
+				96CE2A391B43F0AD004FA4BF /* Classes */,
+			);
+			path = VoiceBubble;
+			sourceTree = "<group>";
+		};
+		96CE2A331B43F0AD004FA4BF /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				96CE2A341B43F0AD004FA4BF /* .gitkeep */,
+				96CE2A351B43F0AD004FA4BF /* fs_chat_bubble@2x.png */,
+				96CE2A361B43F0AD004FA4BF /* fs_icon_wave_0@2x.png */,
+				96CE2A371B43F0AD004FA4BF /* fs_icon_wave_1@2x.png */,
+				96CE2A381B43F0AD004FA4BF /* fs_icon_wave_2@2x.png */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		96CE2A391B43F0AD004FA4BF /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				96CE2A3A1B43F0AD004FA4BF /* .gitkeep */,
+				96CE2A3B1B43F0AD004FA4BF /* FSVoiceBubble.h */,
+				96CE2A3C1B43F0AD004FA4BF /* FSVoiceBubble.m */,
+				96CE2A3D1B43F0AD004FA4BF /* UIImage+FSExtension.h */,
+				96CE2A3E1B43F0AD004FA4BF /* UIImage+FSExtension.m */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		96CFB3C91AFA2AF70078C225 /* SlideViewController */ = {
@@ -1722,6 +1828,16 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96C44D811B456BC1000C3EB9 /* ic_shuru@2x.png */,
+				96C44D821B456BC1000C3EB9 /* ic_voice@2x.png */,
+				96C44D751B4507A9000C3EB9 /* ic_comment_dele@2x.png */,
+				96C44D6E1B44ECE4000C3EB9 /* ic_comment_reply@2x.png */,
+				96C44D731B4506B3000C3EB9 /* ic_comment_share@2x.png */,
+				96CE2A2E1B43DB78004FA4BF /* fs_cap_bg_0@2x.png */,
+				96CE2A131B43C7A3004FA4BF /* ic_praise_bk@2x.png */,
+				96CE2A141B43C7A3004FA4BF /* ic_praise_hl@2x.png */,
+				96CE2A151B43C7A3004FA4BF /* ic_praise_nm@2x.png */,
+				96CE2A0B1B4380E3004FA4BF /* ic_hintCover@2x.png */,
 				96DAB7311B42A87D00565F30 /* ic_lookOriginal@2x.png */,
 				96DAB72F1B42A58100565F30 /* ic_mohu@2x.jpg */,
 				96DAB7291B42979D00565F30 /* ic_back@2x.png */,
@@ -1872,6 +1988,8 @@
 				96C5BFB41AFB4F3500BC5744 /* RYArticleViewController.m */,
 				96CCB3951B13171E0007C151 /* RYLiteratureDetailsViewController.h */,
 				96CCB3961B13171E0007C151 /* RYLiteratureDetailsViewController.m */,
+				96CE2A0D1B43B79B004FA4BF /* RYcommentDetailsViewController.h */,
+				96CE2A0E1B43B79B004FA4BF /* RYcommentDetailsViewController.m */,
 				96CBAA2D1B15777000D13C27 /* RYWeeklyViewController.h */,
 				96CBAA2E1B15777000D13C27 /* RYWeeklyViewController.m */,
 				96CBAA351B15A53E00D13C27 /* RYPastWeeklyViewController.h */,
@@ -2019,26 +2137,33 @@
 				96F321491AD50A2700CAFC51 /* Default@2x.png in Resources */,
 				96DAB7321B42A87D00565F30 /* ic_lookOriginal@2x.png in Resources */,
 				96F321451AD50A2700CAFC51 /* Icon-114@2x.png in Resources */,
+				96CE2A411B43F0AD004FA4BF /* fs_icon_wave_0@2x.png in Resources */,
+				96C44D761B4507A9000C3EB9 /* ic_comment_dele@2x.png in Resources */,
 				96F321461AD50A2700CAFC51 /* Icon-72@2x.png in Resources */,
 				96CFB3C11AF9C51C0078C225 /* ic_invite_share3@2x.png in Resources */,
 				96DAB7271B42697400565F30 /* ic_register_phone@2x.png in Resources */,
 				9667D8221B00600F0099C424 /* UMShareEditViewController.xib in Resources */,
 				96D1D0E91B2970D000A93D71 /* SVProgressHUD.bundle in Resources */,
 				96D2382A1AF75E5500936721 /* ic_read_num@2x.png in Resources */,
+				96C44D741B4506B3000C3EB9 /* ic_comment_share@2x.png in Resources */,
 				96CFB3BE1AF9C51C0078C225 /* ic_invite_share0@2x.png in Resources */,
+				96CE2A441B43F0AD004FA4BF /* .gitkeep in Resources */,
 				96DAB72C1B42979D00565F30 /* ic_comment@2x.png in Resources */,
 				9667D8201B00600F0099C424 /* UMSCommentInputController.xib in Resources */,
 				96CAB6121AF1CE6D00ECD350 /* ic_normalImage_6@2x.png in Resources */,
 				96F321471AD50A2700CAFC51 /* Default-568h@2x.png in Resources */,
 				96C7ACCF1AD679F200FA2E22 /* back_btn_icon@2x.png in Resources */,
 				9667D8271B00600F0099C424 /* UMSocialSDKResourcesNew.bundle in Resources */,
+				96CE2A421B43F0AD004FA4BF /* fs_icon_wave_1@2x.png in Resources */,
 				9667D8231B00600F0099C424 /* UMShareEditViewControlleriPad.xib in Resources */,
+				96C44D831B456BC1000C3EB9 /* ic_shuru@2x.png in Resources */,
 				96C24D0E1B0ADF700044C86B /* ic_grid_highlighted@2x.png in Resources */,
 				96CC39691AD4DDF100D5D157 /* Main.storyboard in Resources */,
 				96CD08B91B032BDE00088B1E /* ic_logo_default@2x.png in Resources */,
 				96CAEDA21AF899100067BC2F /* jifen_img1@2x.png in Resources */,
 				96C4E59F1B0F2C9400AE3042 /* ic_token_close@2x.png in Resources */,
 				96D120771B0CA04200BF8062 /* ic_answer_normal@2x.png in Resources */,
+				96CE2A3F1B43F0AD004FA4BF /* .gitkeep in Resources */,
 				96C404CF1B019EAD0066E5D4 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				96C5AEEB1AF0744400F9195A /* ic_edit@2x.png in Resources */,
 				96C7ACCE1AD679F200FA2E22 /* back_btn_icon_sel@2x.png in Resources */,
@@ -2051,11 +2176,13 @@
 				96C24D131B0B0BC90044C86B /* ic_up_arrow@2x.png in Resources */,
 				96DAB72B1B42979D00565F30 /* ic_back@2x.png in Resources */,
 				96CBAA3F1B15B91300D13C27 /* ic_small_arrow@2x.png in Resources */,
+				96C44D841B456BC1000C3EB9 /* ic_voice@2x.png in Resources */,
 				96CFB3B41AF9BC9A0078C225 /* ic_Invite@2x.png in Resources */,
 				96CD08B01B02E81100088B1E /* ic_arrow_right@2x.png in Resources */,
 				96CD08B41B03001300088B1E /* ic_integrator_pic@2x.png in Resources */,
 				96CAB6081AF1CE6D00ECD350 /* ic_highlighted_4@2x.png in Resources */,
 				96CD08C81B035D9D00088B1E /* ic_helight@2x.png in Resources */,
+				96CE2A2F1B43DB78004FA4BF /* fs_cap_bg_0@2x.png in Resources */,
 				96CC35521B04713600EFA27A /* ic_bigPic_defaule@2x.png in Resources */,
 				96CAB60B1AF1CE6D00ECD350 /* ic_highlighted_7@2x.png in Resources */,
 				96CAB6111AF1CE6D00ECD350 /* ic_normalImage_5@2x.png in Resources */,
@@ -2067,6 +2194,7 @@
 				96C3CC6B1AE0AC44007266A0 /* arrows_right@2x.png in Resources */,
 				96D0A5641B183A9800BF6D90 /* ic_recusalImge_0@2x.png in Resources */,
 				96CC396E1AD4DDF100D5D157 /* LaunchScreen.xib in Resources */,
+				96C44D711B44ECE4000C3EB9 /* ic_comment_reply@2x.png in Resources */,
 				96D0A5701B18738800BF6D90 /* ic_small_jifen@2x.png in Resources */,
 				96CD08B31B03001300088B1E /* ic_answer_pic@2x.png in Resources */,
 				96C56D0E1AEE3D4E00B127FF /* icon_select@2x.png in Resources */,
@@ -2085,14 +2213,17 @@
 				96C3A9BB1ADFB84D008011D3 /* imgsectionright.png in Resources */,
 				96D120691B0C329900BF8062 /* ic_share@2x.png in Resources */,
 				96CAB6161AF1DD4000ECD350 /* user_head_no@2x.png in Resources */,
+				96CE2A431B43F0AD004FA4BF /* fs_icon_wave_2@2x.png in Resources */,
 				96CD08BB1B0331AC00088B1E /* ic_direct@2x.png in Resources */,
 				96D0A56A1B183A9800BF6D90 /* ic_recusalImge_6@2x.png in Resources */,
 				9667D8211B00600F0099C424 /* UMSCommentInputControlleriPad.xib in Resources */,
 				96CAB60E1AF1CE6D00ECD350 /* ic_normalImage_2@2x.png in Resources */,
+				96CE2A0C1B4380E3004FA4BF /* ic_hintCover@2x.png in Resources */,
 				96D0A5661B183A9800BF6D90 /* ic_recusalImge_2@2x.png in Resources */,
 				96C4E5A21B0F46DD00AE3042 /* textField_buttom_line@2x.png in Resources */,
 				96D238311AF76AC000936721 /* ic_showJifen_bg@2x.png in Resources */,
 				96CAB6061AF1CE6D00ECD350 /* ic_highlighted_2@2x.png in Resources */,
+				96CE2A181B43C7A3004FA4BF /* ic_praise_nm@2x.png in Resources */,
 				96CBAA341B15A30C00D13C27 /* ic_default_select@2x.png in Resources */,
 				96D0A56B1B183A9800BF6D90 /* ic_recusalImge_7@2x.png in Resources */,
 				96CFB3E11AFA2AF70078C225 /* menu-button@2x.png in Resources */,
@@ -2113,9 +2244,11 @@
 				9667D8251B00600F0099C424 /* UMSnsAccountViewController.xib in Resources */,
 				96C4C6AF1AE9F5FF00D2C1C8 /* input_text_bk_long@2x.png in Resources */,
 				96CA732F1B16F5B600FEC68F /* jifen_img_literature@2x.png in Resources */,
+				96CE2A171B43C7A3004FA4BF /* ic_praise_hl@2x.png in Resources */,
 				96D2382F1AF7681A00936721 /* ic_jifen_jewel@2x.png in Resources */,
 				96D2380E1AF721ED00936721 /* ic_cell_unselected@2x.png in Resources */,
 				96C610911ADCE95700862E0E /* register_slider@2x.png in Resources */,
+				96CE2A401B43F0AD004FA4BF /* fs_chat_bubble@2x.png in Resources */,
 				96CC39B71AD4E3BB00D5D157 /* MJRefresh.bundle in Resources */,
 				96DAB7281B42697400565F30 /* ic_register_success@2x.png in Resources */,
 				96CAB6091AF1CE6D00ECD350 /* ic_highlighted_5@2x.png in Resources */,
@@ -2130,6 +2263,7 @@
 				96CBAA2C1B1572DA00D13C27 /* ic_weekly@2x.png in Resources */,
 				96D1494D1B1459D800C05809 /* ic_successful@2x.png in Resources */,
 				96C51A681AD75FC700C5374D /* button_up@2x.png in Resources */,
+				96CE2A161B43C7A3004FA4BF /* ic_praise_bk@2x.png in Resources */,
 				96CD4D611B32A02200C3917B /* award_notice@2x.png in Resources */,
 				96C3A9BA1ADFB84D008011D3 /* imgsectiondown.png in Resources */,
 				96D0A5651B183A9800BF6D90 /* ic_recusalImge_1@2x.png in Resources */,
@@ -2164,6 +2298,7 @@
 				96C7ACB71AD611FA00FA2E22 /* AFURLSessionManager.m in Sources */,
 				96C52FCA1B05E01C007BC747 /* RYPodcastPage.m in Sources */,
 				96C7ACD91AD6823E00FA2E22 /* GTMBase64.m in Sources */,
+				96CE2A451B43F0AD004FA4BF /* FSVoiceBubble.m in Sources */,
 				96CFB3B21AF9B9180078C225 /* RYMyInviteViewController.m in Sources */,
 				96C5AEFA1AF0C18000F9195A /* RYMyHomeLeftTableViewCell.m in Sources */,
 				96C7ACBC1AD611FA00FA2E22 /* UIImageView+AFNetworking.m in Sources */,
@@ -2178,12 +2313,14 @@
 				96C7ACB41AD611FA00FA2E22 /* AFURLConnectionOperation.m in Sources */,
 				96CFB3DB1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorFade.m in Sources */,
 				96F321571AD50CC600CAFC51 /* RYNewsViewController.m in Sources */,
+				96CE2A121B43C123004FA4BF /* RYcommentTableViewCell.m in Sources */,
 				96C7ACBF1AD611FA00FA2E22 /* UIWebView+AFNetworking.m in Sources */,
 				96D2381E1AF759F700936721 /* RYEditClassifyViewController.m in Sources */,
 				96C4C3FB1AE77CC700151A84 /* IQNSArray+Sort.m in Sources */,
 				96C6108C1ADCE0D400862E0E /* NYSegment.m in Sources */,
 				96D2381F1AF759F700936721 /* RYEnshrineClassifyViewController.m in Sources */,
 				96C7ACB11AD611FA00FA2E22 /* AFHTTPSessionManager.m in Sources */,
+				96C44D7F1B455A9D000C3EB9 /* HPGrowingTextView.m in Sources */,
 				9663AB251B41110600E7BD72 /* RYInviteMakeMoneyViewController.m in Sources */,
 				96CAEDA61AF89FFC0067BC2F /* RYMyInformViewController.m in Sources */,
 				96CD08AE1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.m in Sources */,
@@ -2191,6 +2328,7 @@
 				96D2382D1AF7664F00936721 /* RYMyJiFenViewController.m in Sources */,
 				96D238251AF75AE100936721 /* RYMyShareViewController.m in Sources */,
 				96C5BFC41AFB5B9C00BC5744 /* RYArticleData.m in Sources */,
+				96C44D6C1B44E108000C3EB9 /* replyView.m in Sources */,
 				96D9C98F1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m in Sources */,
 				96C5BFE21AFB648600BC5744 /* CXTapDetectingView.m in Sources */,
 				96C56D011AEE158400B127FF /* SWUtilityButtonView.m in Sources */,
@@ -2235,6 +2373,7 @@
 				96D9C9881AE49A7500997430 /* RYRegisterSpecialtyViewController.m in Sources */,
 				96D0A56E1B18708000BF6D90 /* RYAnswersRecordTableViewCell.m in Sources */,
 				96CFB3DF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */,
+				96C44D791B451CC7000C3EB9 /* JSCustomChatKeyboard.m in Sources */,
 				96C7ACBB1AD611FA00FA2E22 /* UIButton+AFNetworking.m in Sources */,
 				96C425ED1B2FF54C00F1DDA3 /* RYMyNoticeModel.m in Sources */,
 				96F321531AD50A6700CAFC51 /* MJScrollPageView.m in Sources */,
@@ -2256,6 +2395,7 @@
 				96C878851B2693FC00F81DBC /* RYCorporateSearchViewController.m in Sources */,
 				96CD08C31B03438F00088B1E /* RYCorporateTableViewCell.m in Sources */,
 				96CC39631AD4DDF100D5D157 /* AppDelegate.m in Sources */,
+				96CE2A461B43F0AD004FA4BF /* UIImage+FSExtension.m in Sources */,
 				96C4C4051AE77CC700151A84 /* IQUIView+IQKeyboardToolbar.m in Sources */,
 				96C4C4031AE77CC700151A84 /* IQTitleBarButtonItem.m in Sources */,
 				96C822371AFC6651000ED614 /* GlobleModel.m in Sources */,
@@ -2274,6 +2414,7 @@
 				96C5BFDE1AFB648600BC5744 /* CXPhoto.m in Sources */,
 				96D238281AF75BB500936721 /* RYMyShareTableViewCell.m in Sources */,
 				96C3A9B31ADFB84D008011D3 /* imagesView.m in Sources */,
+				96C44D801B455A9D000C3EB9 /* HPTextViewInternal.m in Sources */,
 				96CD08C01B033CD300088B1E /* RYCorporateViewController.m in Sources */,
 				96CFB3B81AF9C0090078C225 /* GridMenuView.m in Sources */,
 				96C7ACBA1AD611FA00FA2E22 /* UIAlertView+AFNetworking.m in Sources */,
@@ -2284,6 +2425,7 @@
 				96CD08B71B0324F300088B1E /* RYCorporateHomePageData.m in Sources */,
 				96DAB7241B424C0500565F30 /* RYCompanyRegisterSuccessViewController.m in Sources */,
 				96C664FF1ADBA0A900C35310 /* RYRetrievePasswordViewController.m in Sources */,
+				96CE2A0F1B43B79B004FA4BF /* RYcommentDetailsViewController.m in Sources */,
 				96CF17E71AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m in Sources */,
 				96CC354C1B0442DC00EFA27A /* RYNewsPage.m in Sources */,
 				96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */,

@@ -43,6 +43,12 @@
  *  初始化方法
  */
 - (id)initWithFrame:(CGRect)frame;
+
+/**
+ *
+ */
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
+
 /**
  *  上拉 结束
  */

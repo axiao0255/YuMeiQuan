@@ -20,6 +20,15 @@
     return self;
 }
 
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style
+{
+    self = [super initWithFrame:frame style:style];
+    if ( self ) {
+        [self setupRefresh];
+    }
+    return self;
+}
+
 /**
  *  集成刷新控件
  */

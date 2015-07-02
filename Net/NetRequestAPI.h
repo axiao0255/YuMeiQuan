@@ -255,6 +255,12 @@
                              success:(void(^)(id responseDic))success
                              failure:(void(^)(id errorString))failure;
 
+#pragma mark - 文献详细页 获取文献原文
++(void)getShowDoiWithSessionId:(NSString *)session
+                           tid:(NSString *)_tid
+                       success:(void(^)(id responseDic))success
+                       failure:(void(^)(id errorString))failure;
+
 
 
 @end
