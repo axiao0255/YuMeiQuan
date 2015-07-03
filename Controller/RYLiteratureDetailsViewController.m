@@ -1008,7 +1008,8 @@
 - (void)commentButtonClick:(id)sender
 {
     NSLog(@"点击评论");
-    RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleData:self.articleData];
+//    RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleData:self.articleData];
+     RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleTid:self.tid];
     [self.navigationController pushViewController:vc animated:YES];
     
 }

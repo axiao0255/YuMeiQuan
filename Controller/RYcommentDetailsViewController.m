@@ -9,18 +9,32 @@
 #import "RYcommentDetailsViewController.h"
 #import "MJRefreshTableView.h"
 #import "RYcommentTableViewCell.h"
+//#import "ChatCacheFileUtil.h"
+//#import "VoiceConverter.h"
 
-@interface RYcommentDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,FSVoiceBubbleDelegate>
+@interface RYcommentDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,FSVoiceBubbleDelegate,AVAudioRecorderDelegate>
 {
-    UIView *containerView;
+    UIView            *containerView;
     HPGrowingTextView *textView;
-    UIButton *talkBtn;
+    UIButton          *talkBtn;
+    
+    BOOL            recording;
+    NSURL           *pathURL;
+    NSTimer         *peakTimer;
+    AVAudioRecorder *audioRecorder;
+    NSTimeInterval  _timeLen;
+    NSString*       _lastRecordFile;
+    CAShapeLayer    *shapeLayer;
+    
+    AVAudioPlayer   *audioPlayer;
+    UIButton        *recordBtn;       // 录音按钮
 }
 
 @property (nonatomic , strong) RYArticleData       *articleData;
 @property (nonatomic , strong) MJRefreshTableView  *tableView;
 @property (nonatomic , strong) NSMutableArray      *listData;
 @property (nonatomic , strong) NSDictionary        *topDict;
+@property (nonatomic , strong) NSString            *tid;
 
 @property (assign, nonatomic) NSInteger currentRow;
 
@@ -38,6 +52,16 @@
     return self;
 }
 
+-(id)initWithArticleTid:(NSString *) tid
+{
+    self = [super init];
+    if ( self ) {
+       self.listData = [NSMutableArray array];
+        self.tid = tid;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -50,8 +74,7 @@
     self.topDict = dict;
     
     [self.view addSubview:self.tableView];
-//    [self.tableView headerBeginRefreshing];
-//    [[JSCustomChatKeyboard customKeyboard]textViewShowView:self customKeyboardDelegate:self];
+    [self.tableView headerBeginRefreshing];
     
     [self createTalkView];
 
@@ -77,7 +100,17 @@
 
 -(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
 {
-    
+    if ( [ShowBox checkCurrentNetwork] ) {
+        [NetRequestAPI getCommentListWithSessionId:[RYUserInfo sharedManager].session
+                                               tid:self.tid
+                                              page:currentPage
+                                           success:^(id responseDic) {
+                                               NSLog(@"评论列表 responseDic :%@",responseDic);
+            
+        } failure:^(id errorString) {
+             NSLog(@"评论列表 errorString :%@",errorString);
+        }];
+    }
 }
 
 #pragma mark - UITableView 代理方法
@@ -208,13 +241,19 @@
     }
     return nil;
 }
-#pragma FSVoiceBubbleDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [textView resignFirstResponder];
+}
+
+#pragma mark FSVoiceBubbleDelegate
 - (void)voiceBubbleDidStartPlaying:(FSVoiceBubble *)voiceBubble
 {
     _currentRow = voiceBubble.tag;
 }
 
-#pragma 聊天窗
+#pragma mark 聊天窗
 -(void)createTalkView
 {
     containerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, SCREEN_WIDTH, 50)];
@@ -223,8 +262,8 @@
     talkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     talkBtn.frame = CGRectMake(15, 5, 36, 36);
     talkBtn.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-    [talkBtn setImage:[UIImage imageNamed:@"ic_voice.png"] forState:UIControlStateNormal];
-    [talkBtn setImage:[UIImage imageNamed:@"ic_shuru.png"] forState:UIControlStateSelected];
+    [talkBtn setImage:[UIImage imageNamed:@"ic_shuru.png"] forState:UIControlStateNormal];
+    [talkBtn setImage:[UIImage imageNamed:@"ic_voice.png"] forState:UIControlStateSelected];
     [talkBtn setTitleShadowColor:[UIColor colorWithWhite:0 alpha:0.4] forState:UIControlStateNormal];
     talkBtn.titleLabel.shadowOffset = CGSizeMake (0.0, -1.0);
     [talkBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -260,6 +299,21 @@
     // view hierachy
     [containerView addSubview:textView];
     containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    
+    
+    recordBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    recordBtn.frame = textView.frame;
+    recordBtn.backgroundColor = [UIColor lightGrayColor];
+    [recordBtn setTitle:@"按住  说话" forState:UIControlStateNormal];
+    [recordBtn setTitle:@"松开  结束" forState:UIControlEventTouchDown];
+    [recordBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [recordBtn setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [recordBtn setTitleShadowOffset:CGSizeMake(1, 1)];
+    [recordBtn addTarget:self action:@selector(recordStart:) forControlEvents:UIControlEventTouchDown];
+    [recordBtn addTarget:self action:@selector(recordStop:) forControlEvents:UIControlEventTouchUpInside];
+    [recordBtn addTarget:self action:@selector(recordCancel:) forControlEvents:UIControlEventTouchUpOutside];
+    recordBtn.selected = NO;
+    [containerView addSubview:recordBtn];
 }
 
 -(void)talkBtnClick:(id)sender
@@ -267,10 +321,12 @@
     UIButton *btn = (UIButton *)sender;
     
     if ( btn.selected ) {
-        [textView becomeFirstResponder];
+        recordBtn.hidden = NO;
+        [textView resignFirstResponder];
     }
     else{
-        [textView resignFirstResponder];
+        recordBtn.hidden = YES;
+        [textView becomeFirstResponder];
     }
 }
 
@@ -286,12 +342,173 @@
 
 - (void)growingTextViewDidBeginEditing:(HPGrowingTextView *)growingTextView
 {
-    talkBtn.selected = NO;
+    
+    talkBtn.selected = YES;
 }
 
 - (void)growingTextViewDidEndEditing:(HPGrowingTextView *)growingTextView
 {
-    talkBtn.selected = YES;
+    
+    talkBtn.selected = NO;
 }
+
+#pragma mark 录音功能
+
+-(void)recordStart:(UIButton *)sender
+{
+    if(recording)
+        return;
+    RYcommentTableViewCell *cell = (RYcommentTableViewCell *)[self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_currentRow inSection:1]];
+    [cell.bubble pause];
+    recording=YES;
+    /*
+    NSDictionary *settings=[NSDictionary dictionaryWithObjectsAndKeys:
+                            [NSNumber numberWithFloat:8000],AVSampleRateKey,
+                            [NSNumber numberWithInt:kAudioFormatLinearPCM],AVFormatIDKey,
+                            [NSNumber numberWithInt:1],AVNumberOfChannelsKey,
+                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
+                            [NSNumber numberWithBool:NO],AVLinearPCMIsBigEndianKey,
+                            [NSNumber numberWithBool:NO],AVLinearPCMIsFloatKey,
+                            nil];
+    
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error: nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    
+    NSDate *now = [NSDate date];
+    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+    [dateFormater setDateFormat:@"yyyyMMddHHmmss"];
+//    NSString *fileName = [NSString stringWithFormat:@"rec_%@_%@.wav",MY_USER_ID,[dateFormater stringFromDate:now]];
+//    NSString *fullPath = [[[ChatCacheFileUtil sharedInstance] userDocPath] stringByAppendingPathComponent:fileName];
+//    NSURL *url = [NSURL fileURLWithPath:fullPath];
+    
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(
+                                                            NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    NSString *soundFilePath = [docsDir
+                               stringByAppendingPathComponent:@"recordTest.caf"];
+    
+    NSURL *url = [NSURL fileURLWithPath:soundFilePath];
+    pathURL = url;
+    NSError *error;
+    audioRecorder = [[AVAudioRecorder alloc] initWithURL:pathURL settings:settings error:&error];
+    audioRecorder.delegate = self;
+
+    peakTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(updatePeak:) userInfo:nil repeats:YES];
+    [peakTimer fire];
+     */
+    
+    NSDictionary *settings=[NSDictionary dictionaryWithObjectsAndKeys:
+                            [NSNumber numberWithInt:kAudioFormatAppleIMA4],AVFormatIDKey,
+                            [NSNumber numberWithFloat:44100.0],AVSampleRateKey,
+                            [NSNumber numberWithInt:2],AVNumberOfChannelsKey,
+                            [NSNumber numberWithInt:12800],AVEncoderBitRateKey,
+                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
+                            [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
+                            nil];
+    
+    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error: nil];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    
+//    NSDate *now = [NSDate date];
+//    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
+//    [dateFormater setDateFormat:@"yyyyMMddHHmmss"];
+    //    NSString *fileName = [NSString stringWithFormat:@"rec_%@_%@.wav",MY_USER_ID,[dateFormater stringFromDate:now]];
+    //    NSString *fullPath = [[[ChatCacheFileUtil sharedInstance] userDocPath] stringByAppendingPathComponent:fileName];
+    //    NSURL *url = [NSURL fileURLWithPath:fullPath];
+    
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(
+                                                            NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    NSString *soundFilePath = [docsDir
+                               stringByAppendingPathComponent:@"recordTest.caf"];
+    
+    NSURL *url = [NSURL fileURLWithPath:soundFilePath];
+    pathURL = url;
+    NSError *error;
+    audioRecorder = [[AVAudioRecorder alloc] initWithURL:pathURL settings:settings error:&error];
+    audioRecorder.delegate = self;
+    audioRecorder.meteringEnabled = YES;
+    [audioRecorder record];
+    
+    
+    peakTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(updatePeak:) userInfo:nil repeats:YES];
+    [peakTimer fire];
+}
+
+- (void)updatePeak:(NSTimer*)timer
+{
+    _timeLen = audioRecorder.currentTime;
+    if(_timeLen>=60)
+        [self recordStop:nil];
+    
+    /*    [audioRecorder updateMeters];
+     const double alpha=0.5;
+     double peakPowerForChannel=pow(10, (0.05)*[audioRecorder peakPowerForChannel:0]);
+     lowPassResults=alpha*peakPowerForChannel+(1.0-alpha)*lowPassResults;
+     
+     for (int i=1; i<8; i++) {
+     if (lowPassResults>1.0/7.0*i){
+     [[talkView viewWithTag:i] setHidden:NO];
+     }else{
+     [[talkView viewWithTag:i] setHidden:YES];
+     }
+     }*/
+}
+
+-(void)recordStop:(UIButton *)sender
+{
+    if(!recording)
+        return;
+    [peakTimer invalidate];
+    peakTimer = nil;
+    
+    //    [self offRecordBtns];
+    
+    _timeLen = audioRecorder.currentTime;
+    [audioRecorder stop];
+//    NSString *amrPath = [VoiceConverter wavToAmr:pathURL.path];
+//    NSData *recordData = [NSData dataWithContentsOfFile:amrPath];
+//    
+//    [[ChatCacheFileUtil sharedInstance] deleteWithContentPath:pathURL.path];
+//    [[ChatCacheFileUtil sharedInstance] deleteWithContentPath:amrPath];
+//    _lastRecordFile = [[amrPath lastPathComponent] copy];
+//    
+//    NSLog(@"音频文件路径:%@\n%@",pathURL.path,amrPath);
+//    //    if (_timeLen<1) {
+//    //        [g_App showAlert:@"录的时间过短"];
+//    //        return;
+//    //    }
+//    [self sendVoice:recordData];
+//    audioRecorder = nil;
+//    recording = NO;
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+
+    NSError *error;
+    audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:pathURL error:&error];
+    audioPlayer.numberOfLoops = 0;
+    [audioPlayer play];
+    
+    recording = NO;
+    NSLog(@"playing");
+
+}
+
+-(void)recordCancel:(UIButton *)sender
+{
+    if(!recording)
+        return;
+    [audioRecorder stop];
+    audioRecorder = nil;
+    [peakTimer invalidate];
+    peakTimer = nil;
+    recording = NO;
+}
+-(void)sendVoice:(NSData *)data
+{
+    // 发送声音
+}
+
 
 @end

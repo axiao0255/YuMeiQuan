@@ -109,13 +109,13 @@
         return 8;
     }
     else{
-        return 0;
+        return 0.1;
     }
 }
 
 -(CGFloat)newsTableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section;
 {
-    return 0;
+    return 0.1;
 }
 
 

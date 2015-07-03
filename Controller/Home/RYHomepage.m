@@ -10,6 +10,12 @@
 #import "RYNewsPageTableViewCell.h"
 #import "RYMyJiFenViewController.h"
 #import "RYMyInviteViewController.h"
+#import "RYCorporateSearchViewController.h"
+#import "RYLoginViewController.h"
+
+@interface RYHomepage ()<UISearchBarDelegate,UINavigationControllerDelegate>
+
+@end
 
 @implementation RYHomepage
 
@@ -33,8 +39,19 @@
 
 - (NSInteger)homepageNumberOfSectionsInTableView:(UITableView *)tableView
 {
+//    if ( self.listData.count ) {
+//        return 2;
+//    }
+//    else{
+//        return 0;
+//    }
     if ( self.listData.count ) {
-        return 2;
+        if ( [ShowBox isLogin] ) {
+            return 3;
+        }
+        else{
+            return 1;
+        }
     }
     else{
         return 0;
@@ -42,24 +59,21 @@
 }
 - (NSInteger)homepageTableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) {
-//        BOOL isLogin = YES;
-//        if ( isLogin ) {
-//            return 1;
-//        }
-//        else{
-//            NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
-//            if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
-//                return 1;
-//            }
-//            else{
-//                return 0;
-//            }
-//        }
-        return 1;
+//    if (section == 0) {
+//        return 1;
+//    }
+//    else{
+//        return 1;
+//    }
+    
+    if ( section == 0 ) {
+        return 3;
+    }
+    else if ( section == 1){
+        return 2;
     }
     else{
-        return 1;
+        return 10;
     }
 
 }
@@ -79,8 +93,27 @@
 //                return 0;
 //            }
 //        }
-        return 180;
+        if ( indexPath.row == 0 ) {
+            return 50;
+        }
+        else if ( indexPath.row == 1 ) {
+            return 180;
+        }
+        else{
+            if ( [ShowBox isLogin] ) {
+                return 80;
+            }
+            else{
+                if ( IS_IPHONE_5 ) {
+                    return 220;
+                }
+                return 172;
+            }
+        }
      }
+    else if ( indexPath.section == 1 ){
+        return 70;
+    }
     else{
         return 180;
     }
@@ -90,28 +123,42 @@
 {
     if ( indexPath.section == 0 ) {
         
-//        BOOL isLogin = YES;
-//        if ( isLogin ) {
-//            return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
+//        NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
+//        if ( self.adverData && ![ShowBox isEmptyString:adverPic] ) { // 判断是否有广告
+//            NSString *adverCell = @"adverCell";
+//            RYAdverTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:adverCell];
+//            if ( !cell ) {
+//                cell = [[RYAdverTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:adverCell];
+//            }
+//            [cell setValueWithDict:self.adverData];
+//            return cell;
 //        }
 //        else{
-//            NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
-//            if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
-//                NSString *adverCell = @"adverCell";
-//                RYAdverTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:adverCell];
-//                if ( !cell ) {
-//                    cell = [[RYAdverTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:adverCell];
-//                }
-//                [cell setValueWithDict:self.adverData];
-//                return cell;
-//            }
-//            else{
-//                return [[UITableViewCell alloc] init];
-//            }
+//            return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
 //        }
-        NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
-        if ( self.adverData && ![ShowBox isEmptyString:adverPic] ) { // 判断是否有广告
-            NSString *adverCell = @"adverCell";
+        if ( indexPath.row == 0 ) {
+            NSString *searchBar_cell = @"searchBar_cell";
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:searchBar_cell];
+            if ( !cell ) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:searchBar_cell];
+                cell.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
+                
+                UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(5, 5, SCREEN_WIDTH - 10, 40)];
+                searchBar.layer.cornerRadius = 5.0f;
+                searchBar.layer.masksToBounds = YES;
+                searchBar.placeholder = [self.descmessage getStringValueForKey:@"zhidahaoshili" defaultValue:@"输入直达号"];
+                searchBar.delegate = self;
+                searchBar.backgroundImage = [UIImage new];
+                UITextField *searchField = [searchBar valueForKey:@"_searchField"];
+                searchField.font = [UIFont systemFontOfSize:12];
+//                self.searchBar = searchBar;
+                [cell.contentView addSubview:searchBar];
+
+            }
+            return cell;
+        }
+        else if ( indexPath.row == 1 ) {
+            NSString *adverCell = @"adver_Cell";
             RYAdverTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:adverCell];
             if ( !cell ) {
                 cell = [[RYAdverTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:adverCell];
@@ -120,7 +167,32 @@
             return cell;
         }
         else{
-            return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
+            if ( [ShowBox isLogin] ) {
+                return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
+            }
+            else{
+                
+                NSString *log_cell = @"log_cell";
+                UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:log_cell];
+                if (!cell ) {
+                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:log_cell];
+                    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+                    
+                    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 172)];
+                    imgView.image = [UIImage imageNamed:@"ic_log_cell.jpg"];
+                    [cell.contentView addSubview:imgView];
+                    
+                    UIButton *gotoLoginBtn = [[UIButton alloc] initWithFrame:CGRectMake(128, 30, 67, 67)];
+                    [gotoLoginBtn setTitle:@"登录" forState:UIControlStateNormal];
+                    [gotoLoginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                    [gotoLoginBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+                    [gotoLoginBtn addTarget:self action:@selector(gotoLogin:) forControlEvents:UIControlEventTouchUpInside];
+                    
+                    [cell.contentView addSubview:gotoLoginBtn];
+                    
+                }
+                return cell;
+            }
         }
     }
     else{
@@ -135,6 +207,36 @@
         return cell;
     }
 }
+
+- (void)homepageTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ( indexPath.section == 0 ) {
+        if ( ![ShowBox isLogin] && indexPath.row == 2 ) {
+            [self gotoLogin:nil];
+        }
+    }
+}
+
+- (CGFloat)homepageTableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0;
+}
+- (UIView *)homepageTableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    return nil;
+}
+- (CGFloat)homepageTableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0;
+}
+
+- (UIView *)homepageTableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return nil;
+}
+
+
 
 // 登录时的 top cell
 - (UITableViewCell *)loginTopCellTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -234,5 +336,43 @@
     RYMyInviteViewController *vc = [[RYMyInviteViewController alloc] init];
     [self.viewControll.navigationController pushViewController:vc animated:YES];
 }
+
+#pragma mark - UISearchBarDelegate
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    NSString *placeholder = searchBar.placeholder;
+    RYCorporateSearchViewController *vc = [[RYCorporateSearchViewController alloc] initWithSearchBarPlaceholder:placeholder];
+    UINavigationController* nc = [[UINavigationController alloc]initWithRootViewController:vc];
+    nc.delegate = self;
+    [self.viewControll.navigationController presentViewController:nc animated:YES completion:^{
+        [searchBar resignFirstResponder];
+    }];
+
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    UIBarButtonItem *back=[[UIBarButtonItem alloc] init];
+    
+    back.title = @" ";
+    UIImage *backbtn = [UIImage imageNamed:@"back_btn_icon.png"];
+    [back setBackButtonBackgroundImage:backbtn forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [back setBackButtonBackgroundImage:[UIImage imageNamed:@"back_btn_icon.png"] forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
+    [back setStyle:UIBarButtonItemStylePlain];
+    
+    viewController.navigationItem.backBarButtonItem = back;
+}
+
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    [searchBar resignFirstResponder];
+    NSLog(@"点击搜索框");
+}
+
+-(void)gotoLogin:(id)sender
+{
+    RYLoginViewController *vc = [[RYLoginViewController alloc] init];
+    [self.viewControll.navigationController pushViewController:vc animated:YES];
+}
+
 
 @end

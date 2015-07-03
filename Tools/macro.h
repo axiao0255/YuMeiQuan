@@ -44,6 +44,9 @@ return __singleton__; \
 //判断是否为4或者3.5寸屏
 #define IS_IPHONE_5 ( fabs( ( double )[ [ UIScreen mainScreen ] bounds ].size.height - ( double )568 ) < DBL_EPSILON )
 
+#define kMY_USER_ID @"myUserId"
+#define MY_USER_ID [[NSUserDefaults standardUserDefaults]objectForKey:kMY_USER_ID]
+
 
 #define SHARE_URL         @"shareUrl"     // 分享的网页地址
 #define SHARE_TEXT        @"shareText"    // 分享文章内容

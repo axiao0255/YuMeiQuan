@@ -261,6 +261,13 @@
                        success:(void(^)(id responseDic))success
                        failure:(void(^)(id errorString))failure;
 
+#pragma mark - 获取评论 列表
++(void)getCommentListWithSessionId:(NSString *)session
+                               tid:(NSString *)_tid
+                              page:(NSInteger )_page
+                           success:(void(^)(id responseDic))success
+                           failure:(void(^)(id errorString))failure;
+
 
 
 @end

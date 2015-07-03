@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9663AB251B41110600E7BD72 /* RYInviteMakeMoneyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9663AB241B41110600E7BD72 /* RYInviteMakeMoneyViewController.m */; };
+		966788761B46AADB00F483C7 /* ic_log_cell@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 966788751B46AADB00F483C7 /* ic_log_cell@2x.jpg */; };
 		9667D7F21B00559A0099C424 /* libMobClickLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9667D7EF1B00559A0099C424 /* libMobClickLibrary.a */; };
 		9667D7F51B0059C30099C424 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9667D7F41B0059C30099C424 /* libz.dylib */; };
 		9667D81D1B00600F0099C424 /* UMSocialLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9667D7F71B00600F0099C424 /* UMSocialLocalizable.strings */; };
@@ -74,7 +75,6 @@
 		96C44D711B44ECE4000C3EB9 /* ic_comment_reply@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D6E1B44ECE4000C3EB9 /* ic_comment_reply@2x.png */; };
 		96C44D741B4506B3000C3EB9 /* ic_comment_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D731B4506B3000C3EB9 /* ic_comment_share@2x.png */; };
 		96C44D761B4507A9000C3EB9 /* ic_comment_dele@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D751B4507A9000C3EB9 /* ic_comment_dele@2x.png */; };
-		96C44D791B451CC7000C3EB9 /* JSCustomChatKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C44D781B451CC7000C3EB9 /* JSCustomChatKeyboard.m */; };
 		96C44D7F1B455A9D000C3EB9 /* HPGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C44D7C1B455A9D000C3EB9 /* HPGrowingTextView.m */; };
 		96C44D801B455A9D000C3EB9 /* HPTextViewInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C44D7E1B455A9D000C3EB9 /* HPTextViewInternal.m */; };
 		96C44D831B456BC1000C3EB9 /* ic_shuru@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C44D811B456BC1000C3EB9 /* ic_shuru@2x.png */; };
@@ -256,6 +256,7 @@
 		96CD79561AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */; };
 		96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */; };
 		96CD795B1AE8EE1E00DDC1D8 /* navigationbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */; };
+		96CDDC3A1B4636B800845040 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CDDC391B4636B800845040 /* AVFoundation.framework */; };
 		96CE2A0C1B4380E3004FA4BF /* ic_hintCover@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A0B1B4380E3004FA4BF /* ic_hintCover@2x.png */; };
 		96CE2A0F1B43B79B004FA4BF /* RYcommentDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE2A0E1B43B79B004FA4BF /* RYcommentDetailsViewController.m */; };
 		96CE2A121B43C123004FA4BF /* RYcommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE2A111B43C123004FA4BF /* RYcommentTableViewCell.m */; };
@@ -373,6 +374,7 @@
 /* Begin PBXFileReference section */
 		9663AB231B41110600E7BD72 /* RYInviteMakeMoneyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYInviteMakeMoneyViewController.h; sourceTree = "<group>"; };
 		9663AB241B41110600E7BD72 /* RYInviteMakeMoneyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYInviteMakeMoneyViewController.m; sourceTree = "<group>"; };
+		966788751B46AADB00F483C7 /* ic_log_cell@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "ic_log_cell@2x.jpg"; sourceTree = "<group>"; };
 		9667D7EF1B00559A0099C424 /* libMobClickLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobClickLibrary.a; sourceTree = "<group>"; };
 		9667D7F01B00559A0099C424 /* MobClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClick.h; sourceTree = "<group>"; };
 		9667D7F11B00559A0099C424 /* MobClickSocialAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClickSocialAnalytics.h; sourceTree = "<group>"; };
@@ -489,8 +491,6 @@
 		96C44D6E1B44ECE4000C3EB9 /* ic_comment_reply@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_comment_reply@2x.png"; sourceTree = "<group>"; };
 		96C44D731B4506B3000C3EB9 /* ic_comment_share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_comment_share@2x.png"; sourceTree = "<group>"; };
 		96C44D751B4507A9000C3EB9 /* ic_comment_dele@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_comment_dele@2x.png"; sourceTree = "<group>"; };
-		96C44D771B451CC7000C3EB9 /* JSCustomChatKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSCustomChatKeyboard.h; path = ../../Desktop/testVoice/testVoice/JSCustomChatKeyboard.h; sourceTree = "<group>"; };
-		96C44D781B451CC7000C3EB9 /* JSCustomChatKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSCustomChatKeyboard.m; path = ../../Desktop/testVoice/testVoice/JSCustomChatKeyboard.m; sourceTree = "<group>"; };
 		96C44D7B1B455A9D000C3EB9 /* HPGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPGrowingTextView.h; sourceTree = "<group>"; };
 		96C44D7C1B455A9D000C3EB9 /* HPGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPGrowingTextView.m; sourceTree = "<group>"; };
 		96C44D7D1B455A9D000C3EB9 /* HPTextViewInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTextViewInternal.h; sourceTree = "<group>"; };
@@ -804,6 +804,7 @@
 		96CD79571AE8D63000DDC1D8 /* RYNewPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYNewPasswordViewController.h; sourceTree = "<group>"; };
 		96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYNewPasswordViewController.m; sourceTree = "<group>"; };
 		96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigationbar@2x.png"; sourceTree = "<group>"; };
+		96CDDC391B4636B800845040 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		96CE2A0B1B4380E3004FA4BF /* ic_hintCover@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_hintCover@2x.png"; sourceTree = "<group>"; };
 		96CE2A0D1B43B79B004FA4BF /* RYcommentDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYcommentDetailsViewController.h; sourceTree = "<group>"; };
 		96CE2A0E1B43B79B004FA4BF /* RYcommentDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYcommentDetailsViewController.m; sourceTree = "<group>"; };
@@ -957,6 +958,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96CDDC3A1B4636B800845040 /* AVFoundation.framework in Frameworks */,
 				96CD23D41B340970009CF10A /* SystemConfiguration.framework in Frameworks */,
 				96CD23D21B340956009CF10A /* CoreTelephony.framework in Frameworks */,
 				96CD23D01B340941009CF10A /* CoreGraphics.framework in Frameworks */,
@@ -1524,8 +1526,6 @@
 				96CA73271B16B58300FEC68F /* RYUserInfo.h */,
 				96CA73281B16B58300FEC68F /* RYUserInfo.m */,
 				96C51A6A1AD7675D00C5374D /* macro.h */,
-				96C44D771B451CC7000C3EB9 /* JSCustomChatKeyboard.h */,
-				96C44D781B451CC7000C3EB9 /* JSCustomChatKeyboard.m */,
 			);
 			path = Tools;
 			sourceTree = SOURCE_ROOT;
@@ -1567,6 +1567,7 @@
 		96CC39511AD4DDF100D5D157 = {
 			isa = PBXGroup;
 			children = (
+				96CDDC391B4636B800845040 /* AVFoundation.framework */,
 				96CD23D31B340970009CF10A /* SystemConfiguration.framework */,
 				96CD23D11B340956009CF10A /* CoreTelephony.framework */,
 				96CD23CF1B340941009CF10A /* CoreGraphics.framework */,
@@ -1828,6 +1829,7 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				966788751B46AADB00F483C7 /* ic_log_cell@2x.jpg */,
 				96C44D811B456BC1000C3EB9 /* ic_shuru@2x.png */,
 				96C44D821B456BC1000C3EB9 /* ic_voice@2x.png */,
 				96C44D751B4507A9000C3EB9 /* ic_comment_dele@2x.png */,
@@ -2265,6 +2267,7 @@
 				96C51A681AD75FC700C5374D /* button_up@2x.png in Resources */,
 				96CE2A161B43C7A3004FA4BF /* ic_praise_bk@2x.png in Resources */,
 				96CD4D611B32A02200C3917B /* award_notice@2x.png in Resources */,
+				966788761B46AADB00F483C7 /* ic_log_cell@2x.jpg in Resources */,
 				96C3A9BA1ADFB84D008011D3 /* imgsectiondown.png in Resources */,
 				96D0A5651B183A9800BF6D90 /* ic_recusalImge_1@2x.png in Resources */,
 				96C24D0F1B0ADF700044C86B /* ic_grid_default@2x.png in Resources */,
@@ -2373,7 +2376,6 @@
 				96D9C9881AE49A7500997430 /* RYRegisterSpecialtyViewController.m in Sources */,
 				96D0A56E1B18708000BF6D90 /* RYAnswersRecordTableViewCell.m in Sources */,
 				96CFB3DF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */,
-				96C44D791B451CC7000C3EB9 /* JSCustomChatKeyboard.m in Sources */,
 				96C7ACBB1AD611FA00FA2E22 /* UIButton+AFNetworking.m in Sources */,
 				96C425ED1B2FF54C00F1DDA3 /* RYMyNoticeModel.m in Sources */,
 				96F321531AD50A6700CAFC51 /* MJScrollPageView.m in Sources */,
@@ -2637,8 +2639,10 @@
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/Wechat",
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/libs/LibBPush",
+					"$(PROJECT_DIR)/libs/Chat/amr_wav/VoiceConvert/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-Objc";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "af265c71-ceb9-48f5-b176-e16988a84a0f";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2670,8 +2674,10 @@
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/Wechat",
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/libs/LibBPush",
+					"$(PROJECT_DIR)/libs/Chat/amr_wav/VoiceConvert/lib",
 				);
 				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-Objc";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "af265c71-ceb9-48f5-b176-e16988a84a0f";
 				TARGETED_DEVICE_FAMILY = "1,2";

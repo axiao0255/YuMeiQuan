@@ -21,5 +21,12 @@
 
 - (UITableViewCell *)homepageTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 
+- (void)homepageTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+
+- (CGFloat)homepageTableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section;
+- (UIView *)homepageTableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section;
+
+- (CGFloat)homepageTableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section;
+- (UIView *)homepageTableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
 
 @end

@@ -766,4 +766,23 @@
     [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 }
 
+#pragma mark - 获取评论 列表
++(void)getCommentListWithSessionId:(NSString *)session
+                               tid:(NSString *)_tid
+                              page:(NSInteger )_page
+                           success:(void(^)(id responseDic))success
+                           failure:(void(^)(id errorString))failure
+{
+    
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"commentlist" forKey:@"mod"];
+    [parDic setValue:session forKey:@"sid"];
+    [parDic setValue:_tid forKey:@"tid"];
+    [parDic setValue:[NSNumber numberWithInteger:_page] forKey:@"page"];
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+
+}
+
 @end

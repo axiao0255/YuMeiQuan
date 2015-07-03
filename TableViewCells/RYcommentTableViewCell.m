@@ -31,12 +31,12 @@
         [self.contentView addSubview:self.nameLabel];
         
         // 设置语音框
-        self.bubble =  [[FSVoiceBubble alloc] initWithFrame:CGRectMake(20, self.nameLabel.bottom + 5, 160, 30)];
-        self.bubble.waveColor = [UIColor blackColor];
-        self.bubble.animatingWaveColor = [UIColor redColor];
+        self.bubble =  [[FSVoiceBubble alloc] initWithFrame:CGRectMake(20, self.nameLabel.bottom + 5, 200, 40)];
+        self.bubble.waveColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
+        self.bubble.animatingWaveColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
         self.bubble.invert = NO;
         self.bubble.exclusive = YES;
-        self.bubble.durationInsideBubble = NO;
+        self.bubble.durationInsideBubble = YES;
         [self.bubble setBubbleImage:[UIImage imageNamed:@"fs_cap_bg_0"]];
         [self.contentView addSubview:self.bubble];
         

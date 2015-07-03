@@ -7,12 +7,14 @@
 //
 
 #import "RYBaseViewController.h"
+#import <AVFoundation/AVFoundation.h>
 #import "RYArticleData.h"
-#import "JSCustomChatKeyboard.h"
 #import "HPGrowingTextView.h"
 
 @interface RYcommentDetailsViewController : RYBaseViewController<HPGrowingTextViewDelegate>
 
 -(id)initWithArticleData:(RYArticleData *)articleData;
+
+-(id)initWithArticleTid:(NSString *) tid;
 
 @end

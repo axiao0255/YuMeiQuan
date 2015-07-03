@@ -42,7 +42,7 @@
 #define MJRandomData [NSString stringWithFormat:@"随机数据---%d", arc4random_uniform(1000000)]
 
 
-@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate,GridMenuViewDelegate,RYLiteratureCategoryViewDelegate,UISearchBarDelegate,UINavigationControllerDelegate>
+@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate,GridMenuViewDelegate,RYLiteratureCategoryViewDelegate>
 {
     MJScrollBarView    *scrollBarView;
     MJScrollPageView   *scrollPageView;
@@ -159,32 +159,37 @@
     NSArray *vButtonItemArray = @[@{NOMALKEY: @"normal.png",
                                     HEIGHTKEY:@"ic_helight",
                                     TITLEKEY:@"首页",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:54]
+                                    TITLEWIDTH:[NSNumber numberWithFloat:64]
+                                    },
+                                  @{NOMALKEY: @"normal.png",
+                                    HEIGHTKEY:@"ic_helight",
+                                    TITLEKEY:@"周报",
+                                    TITLEWIDTH:[NSNumber numberWithFloat:64]
                                     },
                                   @{NOMALKEY: @"normal.png",
                                     HEIGHTKEY:@"ic_helight",
                                     TITLEKEY:@"新闻",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:53]
+                                    TITLEWIDTH:[NSNumber numberWithFloat:64]
                                     },
                                   @{NOMALKEY: @"normal.png",
                                     HEIGHTKEY:@"ic_helight",
                                     TITLEKEY:@"会讯",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:53]
+                                    TITLEWIDTH:[NSNumber numberWithFloat:64]
                                     },
                                   @{NOMALKEY: @"normal.png",
                                     HEIGHTKEY:@"ic_helight",
                                     TITLEKEY:@"文献",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:53]
+                                    TITLEWIDTH:[NSNumber numberWithFloat:64]
                                     },
                                   @{NOMALKEY: @"normal.png",
                                     HEIGHTKEY:@"ic_helight",
                                     TITLEKEY:@"播客",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:53]
+                                    TITLEWIDTH:[NSNumber numberWithFloat:64]
                                     },
                                   @{NOMALKEY: @"normal.png",
                                     HEIGHTKEY:@"ic_helight",
                                     TITLEKEY:@"百家",
-                                    TITLEWIDTH:[NSNumber numberWithFloat:54]
+                                    TITLEWIDTH:[NSNumber numberWithFloat:64]
                                     },
                                 ];
     
@@ -194,11 +199,11 @@
     self.baiJiaCurrentSelectIndex = 0;
     
     if ( scrollBarView == nil ) {
-        scrollBarView = [[MJScrollBarView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40) ButtonItems:vButtonItemArray];
+        scrollBarView = [[MJScrollBarView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 55) ButtonItems:vButtonItemArray];
         scrollBarView.delegate = self;
     }
     if ( scrollPageView == nil ) {
-        scrollPageView = [[MJScrollPageView alloc] initWithFrame:CGRectMake(0, 40, SCREEN_WIDTH, VIEW_HEIGHT - 40)];
+        scrollPageView = [[MJScrollPageView alloc] initWithFrame:CGRectMake(0, 55, SCREEN_WIDTH, VIEW_HEIGHT - 55)];
         scrollPageView.delegate = self;
         [scrollBarView changeButtonStateAtIndex:currentIndex];
         [scrollPageView setContentOfTables:vButtonItemArray.count];
@@ -210,7 +215,7 @@
                 tableView.dataSource = self;
                 
                 NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-                if ( aIndex == 5 ) {
+                if ( aIndex == 6 ) {
                     [tableView setSectionIndexColor:[Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0]];
                     tableView.tableHeaderView = [self baiJiaTableViewHeadView];
 
@@ -879,6 +884,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
     if ( aIndex == 0 ) {
+        [self.homePage homepageTableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 1 ) {
         [self weeklyTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
     else if ( aIndex == 4 ) { // 播客点击，进入播放
@@ -909,7 +917,10 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 1 ) {
+    if ( aIndex == 0 ) {
+        return [self.homePage homepageTableView:tableView heightForFooterInSection:section];
+    }
+    else if ( aIndex == 1 ) {
         return [self.newsPage newsTableView:tableView heightForFooterInSection:section];
     }
     else if ( aIndex == 3 ){
@@ -922,7 +933,7 @@
         return [self.baiJiaPage baiJiaTableView:tableView heightForFooterInSection:section];
     }
     else{
-        return 0;
+        return 0.1;
     }
 }
 
@@ -930,8 +941,7 @@
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
     if ( aIndex == 0 ) {
-        if ( section == 1 )return 84;
-        else return 0;
+        return [self.homePage homepageTableView:tableView heightForHeaderInSection:section];
     }
     else if ( aIndex == 1 ) {
         return [self.newsPage newsTableView:tableView heightForHeaderInSection:section];
@@ -948,13 +958,15 @@
     else{
         return 0;
     }
+
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
     if ( aIndex == 0 ) {
-        return [self homePageDirectSearchView];
+//        return [self homePageDirectSearchView];
+        return [self.homePage homepageTableView:tableView viewForHeaderInSection:section];
     }
     else if ( aIndex == 5 ) {
         return [self.baiJiaPage baiJiaTableView:tableView viewForHeaderInSection:section];
@@ -962,6 +974,15 @@
     else{
         return nil;
     }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
+    if ( aIndex == 0 ) {
+        return [self.homePage homepageTableView:tableView viewForFooterInSection:section];
+    }
+    return nil;
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
