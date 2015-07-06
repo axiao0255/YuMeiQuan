@@ -38,6 +38,8 @@ static RYUserInfo * _userInfo;
     self.status = [userDefaults stringForKey:statusKey];
     self.credits = [userDefaults stringForKey:creditsKey];
     self.realname = [userDefaults stringForKey:realnameKey];
+    self.username = [userDefaults stringForKey:usernameKey];
+    self.uid = [userDefaults stringForKey:uidKey];
 }
 
 
@@ -49,6 +51,8 @@ static RYUserInfo * _userInfo;
     [userDefaults setObject:self.status forKey:statusKey];
     [userDefaults setObject:self.credits forKey:creditsKey];
     [userDefaults setObject:self.realname forKey:realnameKey];
+    [userDefaults setObject:self.username forKey:usernameKey];
+    [userDefaults setObject:self.uid forKey:uidKey];
     [userDefaults synchronize];
 }
 
@@ -61,6 +65,8 @@ static RYUserInfo * _userInfo;
         [[RYUserInfo sharedManager] setStatus:@""];
         [[RYUserInfo sharedManager] setCredits:@""];
         [[RYUserInfo sharedManager] setRealname:@""];
+        [[RYUserInfo sharedManager] setUsername:@""];
+        [[RYUserInfo sharedManager] setUid:@""];
     }
     else{
         
@@ -80,6 +86,12 @@ static RYUserInfo * _userInfo;
             }
             if ( [key isEqualToString:@"realname"] ) {
                 [[RYUserInfo sharedManager] setRealname:[dict getStringValueForKey:@"realname" defaultValue:@""]];
+            }
+            if ( [key isEqualToString:@"username"] ){
+                [[RYUserInfo sharedManager] setUsername:[dict getStringValueForKey:@"username" defaultValue:@""]];
+            }
+            if ( [key isEqualToString:@"uid"] ) {
+                [[RYUserInfo sharedManager] setUsername:[dict getStringValueForKey:@"uid" defaultValue:@""]];
             }
         }
     }

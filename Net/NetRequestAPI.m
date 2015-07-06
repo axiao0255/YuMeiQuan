@@ -785,4 +785,39 @@
 
 }
 
+#pragma mark - 提交评论
+/**
+ *
+ *_tid  文章 id
+ *_pid  回复第几楼
+ *_word 评论的 文字
+ *_voiceUrl 音频文件
+ */
++(void)submitCommentWithSessionId:(NSString *)session
+                              tid:(NSString *)_tid
+                              pid:(NSString *)_pid
+                             word:(NSString *)_word
+                            voice:(NSURL *)_voiceUrl
+                          success:(void(^)(id responseDic))success
+                          failure:(void(^)(id errorString))failure
+{
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setValue:@"commentaction" forKey:@"mod"];
+    [dict setValue:@"add" forKey:@"ac"];
+    [dict setValue:session forKey:@"sid"];
+    [dict setValue:_tid forKey:@"tid"];
+    [dict setValue:_pid forKey:@"pid"];
+    [dict setValue:_word forKey:@"word"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    [[NetManager sharedManager] uploadFileWithUrl:url filePath:_voiceUrl parameters:dict success:^(id responseObject) {
+        
+    } fail:^(id error) {
+        
+    }];
+
+    
+}
+
 @end

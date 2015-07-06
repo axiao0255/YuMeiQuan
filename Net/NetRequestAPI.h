@@ -268,6 +268,15 @@
                            success:(void(^)(id responseDic))success
                            failure:(void(^)(id errorString))failure;
 
+#pragma mark - 提交评论
++(void)submitCommentWithSessionId:(NSString *)session
+                              tid:(NSString *)_tid
+                              pid:(NSString *)_pid
+                             word:(NSString *)_word
+                            voice:(NSURL *)_voiceUrl
+                          success:(void(^)(id responseDic))success
+                          failure:(void(^)(id errorString))failure;
+
 
 
 @end

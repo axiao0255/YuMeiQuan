@@ -17,7 +17,9 @@
 @property (nonatomic , strong) UILabel        *timeLabel;
 @property (nonatomic , strong) replyView      *replyMenu;
 
--(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
+- (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
+
+- (void)setValueWithDict:(NSDictionary *)dict;
 
 @end
 
@@ -29,6 +31,7 @@
 @property (nonatomic , strong) UILabel  *titleLabel;  // 标题
 @property (nonatomic , strong) UILabel  *praiseLael;  // 点赞人名称
 @property (nonatomic , strong) UIButton *praiseBtn;   // 点赞按钮
+@property (nonatomic , strong) UIButton *replyBtn;    // 评论按钮
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 

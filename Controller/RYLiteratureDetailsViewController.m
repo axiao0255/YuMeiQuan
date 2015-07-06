@@ -276,14 +276,6 @@
         return;
     }
     
-    // 是否收藏
-    if ( self.iscollect ) {
-        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
-    }
-
     self.articleData.author = [dic getStringValueForKey:@"doiauthor" defaultValue:@""];
     self.articleData.dateline = [dic getStringValueForKey:@"doidate" defaultValue:@""];
     self.articleData.message = [dic getStringValueForKey:@"message" defaultValue:@""];
@@ -307,6 +299,14 @@
 
 - (void)refreshMainView
 {
+    // 是否收藏
+    if ( self.iscollect ) {
+        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
+    }
+    else{
+        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
+    }
+
     
     if ( [ShowBox isEmptyString:self.articleData.comment] ) {
         self.hintCoverView.hidden = YES;
@@ -1011,7 +1011,6 @@
 //    RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleData:self.articleData];
      RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleTid:self.tid];
     [self.navigationController pushViewController:vc animated:YES];
-    
 }
 
 - (void)dismissCoverView:(id)sender

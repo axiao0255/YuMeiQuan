@@ -33,4 +33,10 @@
  */
 - (void)uploadImageWithUrl:(NSString *)urlStr image:(UIImage *)image parameters:(id)parameters success:(void (^)(id responseObject))success fail:(void (^)(id error))fail;
 
+/**
+ *上传录音
+ */
+- (void)uploadFileWithUrl:(NSString *)urlStr filePath:(NSURL *)_filePath parameters:(id)parameters success:(void (^)(id responseObject))success fail:(void (^)(id error))fail;
+
+
 @end

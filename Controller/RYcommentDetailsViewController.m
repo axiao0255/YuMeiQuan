@@ -35,6 +35,7 @@
 @property (nonatomic , strong) NSMutableArray      *listData;
 @property (nonatomic , strong) NSDictionary        *topDict;
 @property (nonatomic , strong) NSString            *tid;
+@property (nonatomic , strong) NSMutableArray      *commentList;
 
 @property (assign, nonatomic) NSInteger currentRow;
 
@@ -58,6 +59,7 @@
     if ( self ) {
        self.listData = [NSMutableArray array];
         self.tid = tid;
+        self.tid = @"1016634";
     }
     return self;
 }
@@ -67,11 +69,6 @@
     // Do any additional setup after loading the view.
     self.title = @"评论";
     self.currentRow = -1;
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setValue:self.articleData.subject forKey:@"subject"];
-    NSString *str = @"张三，李四，王五，赵六，张三，李四，王五，赵六，张三，李四，王五，赵六，张三，李四，王五，赵六等点赞";
-    [dict setValue:str forKey:@"praise"];
-    self.topDict = dict;
     
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
@@ -84,6 +81,23 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (NSMutableArray *)commentList
+{
+    if ( _commentList == nil ) {
+        _commentList = [NSMutableArray array];
+    }
+    return _commentList;
+}
+
+- (RYArticleData *)articleData
+{
+    if ( _articleData == nil ) {
+        _articleData = [[RYArticleData alloc] init];
+    }
+    return _articleData;
+}
+
 
 -(MJRefreshTableView *)tableView
 {
@@ -101,38 +115,114 @@
 -(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
 {
     if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
         [NetRequestAPI getCommentListWithSessionId:[RYUserInfo sharedManager].session
                                                tid:self.tid
                                               page:currentPage
                                            success:^(id responseDic) {
                                                NSLog(@"评论列表 responseDic :%@",responseDic);
+                                               [wSelf.tableView endRefreshing];
+                                               [wSelf analysisDataWithDict:responseDic isHeadRefresh:isHeaderReresh];
             
         } failure:^(id errorString) {
              NSLog(@"评论列表 errorString :%@",errorString);
+            [wSelf.tableView endRefreshing];
+            if ( wSelf.commentList.count == 0 ) {
+                [ShowBox showError:@"数据出错"];
+            }
         }];
     }
 }
+
+- (void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRefresh:(BOOL) isHead
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试！"]];
+        return;
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试！"]];
+        return;
+    }
+    // 取会员信息
+    NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
+    if ( usermassage ) {
+        [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:usermassage];
+    }
+    
+    // 取文章信息
+    NSDictionary *threadmessage = [info getDicValueForKey:@"threadmessage" defaultValue:nil];
+    if ( threadmessage ) {
+        NSDictionary *articleDict = [threadmessage getDicValueForKey:@"threadmessage" defaultValue:nil];
+        if ( articleDict ) {
+            [self setArticleWithDict:articleDict];
+        }
+    }
+    
+    self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
+    
+    NSArray *commentlistmessage = [info getArrayValueForKey:@"commentlistmessage" defaultValue:nil];
+    if (commentlistmessage.count) {
+        if ( isHead ) {
+            [self.commentList removeAllObjects];
+        }
+        [self.commentList addObjectsFromArray:commentlistmessage];
+    }
+    
+    [self.tableView reloadData];
+}
+
+-(void)setArticleWithDict:(NSDictionary *)dict
+{
+    if ( !dict ) {
+        return;
+    }
+    
+    self.articleData.subject = [dict getStringValueForKey:@"subject" defaultValue:@""];
+    
+    self.articleData.shareArticleUrl = [dict getStringValueForKey:@"spreadurl" defaultValue:@""];
+    self.articleData.shareId = [dict getStringValueForKey:@"spid" defaultValue:@""];
+    self.articleData.sharePicUrl = [dict getStringValueForKey:@"pic" defaultValue:@""];
+    
+    
+    NSMutableDictionary *tempDict = [NSMutableDictionary dictionary];
+    [tempDict setValue:self.articleData.subject forKey:@"subject"];
+    NSString *str = @"张三，李四，王五，赵六，张三，李四，王五，赵六，张三，李四，王五，赵六，张三，李四，王五，赵六等点赞";
+    [tempDict setValue:str forKey:@"praise"];
+    self.topDict = tempDict;
+}
+
+
 
 #pragma mark - UITableView 代理方法
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    NSString *subject = self.articleData.subject;
+    if ( [ShowBox isEmptyString:subject] ) {
+        return 0;
+    }
+    else{
+        return 2;
+    }
 }
 
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    return self.listData.count;
     if ( section == 0 ) {
-        NSString *subject = [self.topDict getStringValueForKey:@"subject" defaultValue:@""];
+//        NSString *subject = [self.topDict getStringValueForKey:@"subject" defaultValue:@""];
+        NSString *subject = self.articleData.subject;
         if ( [ShowBox isEmptyString:subject] ) {
             return 0;
         }
         return 1;
     }
     else{
-        return 10;
+        return self.commentList.count;
     }
 }
 
@@ -141,7 +231,7 @@
     if ( indexPath.section == 0 ) {
         
         CGFloat height = 0;
-        NSString *subject = [self.topDict getStringValueForKey:@"subject" defaultValue:@""];
+        NSString *subject = self.articleData.subject;
         NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:20]};
         // NSString class method: boundingRectWithSize:options:attributes:context is
         // available only on ios7.0 sdk.
@@ -166,7 +256,33 @@
         return height;
     }
     else{
-        return 200;
+        if ( self.commentList.count ) {
+//            NSDictionary *dict = [self.commentList objectAtIndex:indexPath.row];
+            NSMutableDictionary *dict = [[self.commentList objectAtIndex:indexPath.row] mutableCopy];
+//            [dict setValue:@"http://music.baidutt.com/up/kwcawswc/yuydsw.mp3" forKey:@"voice"];
+            NSString *voice = [dict getStringValueForKey:@"voice" defaultValue:nil];
+            CGFloat height = 0;
+            if ( ![ShowBox isEmptyString:voice] ) {
+                height = 16 + 5 + 40 + 10;
+            }
+            else{
+                height = 16 + 10;
+            }
+            NSString *word = [dict getStringValueForKey:@"word" defaultValue:nil];
+            if ( ![ShowBox isEmptyString:word] ) {
+                NSDictionary *praiseAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+                CGRect praiseRect = [word boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                                      attributes:praiseAttributes
+                                                         context:nil];
+                height = height + 5 + praiseRect.size.height;
+                
+            }
+            return height + 10 + 24 + 6;
+        }
+        else{
+            return 0;
+        }
     }
 }
 
@@ -177,6 +293,7 @@
         RYcommentTopCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:top_cell];
         if ( !cell ) {
             cell = [[RYcommentTopCellTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:top_cell];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         }
         [cell setValueWithDict:self.topDict];
         return cell;
@@ -186,17 +303,28 @@
         RYcommentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:voice_cell];
         if ( !cell ) {
             cell = [[RYcommentTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:voice_cell];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         }
-        cell.bubble.tag = indexPath.row;
-        cell.bubble.contentURL = [NSURL URLWithString:@"http://music.baidutt.com/up/kwcawswc/yuydsw.mp3"];
-        cell.bubble.delegate = self;
+        if ( self.commentList.count ) {
+            NSMutableDictionary *tempDict = [[self.commentList objectAtIndex:indexPath.row] mutableCopy];
+//            [tempDict setValue:@"http://music.baidutt.com/up/kwcawswc/yuydsw.mp3" forKey:@"voice"];
+            NSString *voice = [tempDict getStringValueForKey:@"voice" defaultValue:nil];
+            if ( ![ShowBox isEmptyString:voice] ) {
+                cell.bubble.tag = indexPath.row;
+                cell.bubble.contentURL = [NSURL URLWithString:voice];
+                cell.bubble.delegate = self;
+                
+                if ( _currentRow == indexPath.row && cell.bubble.playing ) {
+                    [cell.bubble startAnimating];
+                }
+                else{
+                    [cell.bubble stopAnimating];
+                }
+            }
+            
+            [cell setValueWithDict:tempDict];
+        }
         
-        if ( _currentRow == indexPath.row && cell.bubble.playing ) {
-            [cell.bubble startAnimating];
-        }
-        else{
-            [cell.bubble stopAnimating];
-        }
 
         return cell;
     }
@@ -224,7 +352,7 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    if ( section == 0 ) {
+    if ( section == 0 && self.commentList.count ) {
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30)];
         view.backgroundColor = [UIColor whiteColor];
         UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
@@ -308,7 +436,7 @@
     [recordBtn setTitle:@"松开  结束" forState:UIControlEventTouchDown];
     [recordBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [recordBtn setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [recordBtn setTitleShadowOffset:CGSizeMake(1, 1)];
+//    [recordBtn setTitleShadowOffset:CGSizeMake(1, 1)];
     [recordBtn addTarget:self action:@selector(recordStart:) forControlEvents:UIControlEventTouchDown];
     [recordBtn addTarget:self action:@selector(recordStop:) forControlEvents:UIControlEventTouchUpInside];
     [recordBtn addTarget:self action:@selector(recordCancel:) forControlEvents:UIControlEventTouchUpOutside];
@@ -492,6 +620,18 @@
     
     recording = NO;
     NSLog(@"playing");
+    
+    [NetRequestAPI submitCommentWithSessionId:[RYUserInfo sharedManager].session
+                                          tid:self.tid
+                                          pid:nil
+                                         word:@"评论文章啦啊啦啦啦"
+                                        voice:pathURL
+                                      success:^(id responseDic) {
+                                          NSLog(@"上传录音 responseDic： %@",responseDic);
+        
+    } failure:^(id errorString) {
+         NSLog(@"上传录音 errorString： %@",errorString);
+    }];
 
 }
 

@@ -14,6 +14,8 @@
 #define statusKey      @"statusKey"
 #define creditsKey     @"creditsKey"
 #define realnameKey    @"realnameKey"
+#define usernameKey    @"usernameKey"
+#define uidKey         @"uidKey"
 
 @interface RYUserInfo : NSObject
 
@@ -22,6 +24,8 @@
 @property (nonatomic ,strong) NSString       *status;
 @property (nonatomic ,strong) NSString       *credits;
 @property (nonatomic ,strong) NSString       *realname;
+@property (nonatomic ,strong) NSString       *username; // 用户名。 注册电话号码
+@property (nonatomic ,strong) NSString       *uid;      // 账号uid
 
 + (instancetype)sharedManager;
 

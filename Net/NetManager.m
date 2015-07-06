@@ -169,4 +169,36 @@ static NetManager *_manager;
     
 }
 
+/**
+ *上传录音
+ */
+- (void)uploadFileWithUrl:(NSString *)urlStr filePath:(NSURL *)_filePath parameters:(id)parameters success:(void (^)(id responseObject))success fail:(void (^)(id error))fail
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"text/html"];
+    
+    [manager POST:urlStr parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        
+        [formData appendPartWithFileURL:_filePath name:@"file" error:nil];
+        
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        if ( [responseObject isKindOfClass:[NSData class]] ) {
+            NSDictionary *jsonObject =[NSJSONSerialization
+                                       JSONObjectWithData:responseObject
+                                       options:NSJSONReadingMutableLeaves
+                                       error:nil];
+            success(jsonObject);
+        }
+        else{
+            success(responseObject);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        fail(error);
+    }];
+
+    
+}
+
 @end

@@ -57,11 +57,72 @@
         self.replyMenu = [[replyView alloc]init];
         self.replyMenu.right = SCREEN_WIDTH - 15;
         self.replyMenu.top = self.commentLabel.bottom + 10;
-        [self.replyMenu menuType:shareAndReply];
         [self.contentView addSubview:self.replyMenu];
         
     }
     return self;
+}
+
+- (void)setValueWithDict:(NSDictionary *)dict
+{
+    if ( dict == nil ) {
+        return;
+    }
+    
+    NSString *author = [dict getStringValueForKey:@"author" defaultValue:@""];
+    NSString *beauthor = [dict getStringValueForKey:@"beauthor" defaultValue:nil];
+    if ( [ShowBox isEmptyString:beauthor] ) {
+        self.nameLabel.text = author;
+    }
+    else{
+        self.nameLabel.text = [NSString stringWithFormat:@"%@回复%@",author,beauthor];
+    }
+    
+    // 判断声音是否 空
+    NSString *voice = [dict getStringValueForKey:@"voice" defaultValue:@""];
+    if ( [ShowBox isEmptyString:voice] ) {
+        self.bubble.hidden = YES;
+        self.bubble.height = 0;
+        self.commentLabel.top = self.bubble.bottom;
+    }
+    else{
+         self.bubble.hidden = NO;
+        self.bubble.height = 40;
+        self.commentLabel.top = self.bubble.bottom + 5;
+    }
+    
+    NSString *word = [dict getStringValueForKey:@"word" defaultValue:@""];
+    if ( [ShowBox isEmptyString:word] ) {
+        self.commentLabel.height = 0;
+        self.timeLabel.top = self.bubble.bottom + 15;
+        self.replyMenu.top = self.bubble.bottom + 10;
+    }
+    else{
+        
+        NSDictionary *praiseAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+        CGRect rect = [word boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                               options:NSStringDrawingUsesLineFragmentOrigin
+                                            attributes:praiseAttributes
+                                               context:nil];
+        self.commentLabel.height = rect.size.height;
+        self.commentLabel.text = word;
+        self.timeLabel.top = self.commentLabel.bottom + 15;
+        self.replyMenu.top = self.commentLabel.bottom + 10;
+    }
+    
+    
+    self.timeLabel.text = [dict getStringValueForKey:@"dateline" defaultValue:@""];
+    
+    // 取作者id  并 判断 是否 和本人uid 是否一致
+    NSString *authorid = [dict getStringValueForKey:@"authorid" defaultValue:@""];
+    if ( [[RYUserInfo sharedManager].uid isEqualToString:authorid] && ![ShowBox isEmptyString:authorid] ) {
+        [self.replyMenu menuType:shareAndDel];
+    }
+    else{
+        [self.replyMenu menuType:shareAndReply];
+    }
+    
+    
 }
 
 @end
@@ -103,6 +164,15 @@
         [self.praiseBtn setImage:[UIImage imageNamed:@"ic_praise_nm.png"] forState:UIControlStateNormal];
         [self.praiseBtn setBackgroundImage:[UIImage imageNamed:@"ic_praise_bk.png"] forState:UIControlStateNormal];
         [self.contentView addSubview:self.praiseBtn];
+        
+        
+        self.replyBtn = [[UIButton alloc] initWithFrame:CGRectZero];
+        self.replyBtn.width = 48;
+        self.replyBtn.height = 24;
+        self.replyBtn.right = self.praiseBtn.left - 10;
+        [self.replyBtn setImage:[UIImage imageNamed:@"ic_replyBtn_bk.png"] forState:UIControlStateNormal];
+        [self.replyBtn setBackgroundImage:[UIImage imageNamed:@"ic_praise_bk.png"] forState:UIControlStateNormal];
+        [self.contentView addSubview:self.replyBtn];
     }
     return self;
 }
@@ -123,9 +193,11 @@
     
     if ( [ShowBox isEmptyString:praise] ) {
         self.praiseBtn.top = self.titleLabel.bottom + 20;
+        self.replyBtn.top = self.titleLabel.bottom + 20;
     }
     else{
         self.praiseBtn.top = self.praiseLael.bottom + 10;
+        self.replyBtn.top = self.praiseLael.bottom + 10;
     }
 }
 
