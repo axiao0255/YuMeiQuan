@@ -277,6 +277,13 @@
                           success:(void(^)(id responseDic))success
                           failure:(void(^)(id errorString))failure;
 
+#pragma mark - 删除评论
++(void)deleteCommentWithSessionId:(NSString *)session
+                              tid:(NSString *)_tid
+                              pid:(NSString *)_pid
+                          success:(void(^)(id responseDic))success
+                          failure:(void(^)(id errorString))failure;
+
 
 
 @end

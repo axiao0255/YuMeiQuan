@@ -10,12 +10,20 @@
 #import "FSVoiceBubble.h"
 #import "replyView.h"
 
-@interface RYcommentTableViewCell : UITableViewCell
+@protocol RYcommentTableViewCellDelegate <NSObject>
+
+-(void)currentSelectCellTag:(NSInteger)cellTag andSelectBtnTage:(NSInteger)btnTage;
+
+@end
+
+@interface RYcommentTableViewCell : UITableViewCell<replyViewDelegate>
+
 @property (nonatomic , strong) UILabel        *nameLabel;
 @property (nonatomic , strong) FSVoiceBubble  *bubble;
 @property (nonatomic , strong) UILabel        *commentLabel;
 @property (nonatomic , strong) UILabel        *timeLabel;
 @property (nonatomic , strong) replyView      *replyMenu;
+@property (nonatomic , weak) id<RYcommentTableViewCellDelegate>delegate;
 
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
 

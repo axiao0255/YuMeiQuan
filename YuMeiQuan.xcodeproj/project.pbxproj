@@ -2644,6 +2644,7 @@
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/libs/LibBPush",
 					"$(PROJECT_DIR)/libs/Chat/amr_wav/VoiceConvert/lib",
+					"$(PROJECT_DIR)/libs/lame",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-Objc";
@@ -2679,6 +2680,7 @@
 					"$(PROJECT_DIR)/libs/UMSocial_Sdk_Extra_Frameworks/Sina",
 					"$(PROJECT_DIR)/libs/LibBPush",
 					"$(PROJECT_DIR)/libs/Chat/amr_wav/VoiceConvert/lib",
+					"$(PROJECT_DIR)/libs/lame",
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-Objc";

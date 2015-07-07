@@ -44,12 +44,18 @@
         [self addSubview:self.shareBtn];
         self.replyBtn.right = MENU_VIEW_WIDTH;
         [self addSubview:self.replyBtn];
+        
+        self.replyBtn.hidden = NO;
+        self.deleBtn.hidden = YES;
     }
     else{
         self.shareBtn.left = 0;
         [self addSubview:self.shareBtn];
         self.deleBtn.right = MENU_VIEW_WIDTH;
         [self addSubview:self.deleBtn];
+        
+        self.replyBtn.hidden = YES;
+        self.deleBtn.hidden = NO;
     }
 }
 

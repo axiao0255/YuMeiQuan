@@ -9,10 +9,11 @@
 #import "RYcommentDetailsViewController.h"
 #import "MJRefreshTableView.h"
 #import "RYcommentTableViewCell.h"
+#import "RYShareSheet.h"
 //#import "ChatCacheFileUtil.h"
 //#import "VoiceConverter.h"
 
-@interface RYcommentDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,FSVoiceBubbleDelegate,AVAudioRecorderDelegate>
+@interface RYcommentDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,FSVoiceBubbleDelegate,AVAudioRecorderDelegate,RYcommentTableViewCellDelegate,RYShareSheetDelegate,UIAlertViewDelegate>
 {
     UIView            *containerView;
     HPGrowingTextView *textView;
@@ -28,6 +29,11 @@
     
     AVAudioPlayer   *audioPlayer;
     UIButton        *recordBtn;       // 录音按钮
+    
+    NSString        *textContent;     // 输入框的内容
+    NSInteger       replyIndex;       // 当前回复评论第几条回复。      当对文字进行评论时 为 －1
+    NSString        *textViewPlaceholder;    //
+    
 }
 
 @property (nonatomic , strong) RYArticleData       *articleData;
@@ -36,8 +42,10 @@
 @property (nonatomic , strong) NSDictionary        *topDict;
 @property (nonatomic , strong) NSString            *tid;
 @property (nonatomic , strong) NSMutableArray      *commentList;
+@property (nonatomic , strong) RYShareSheet       *shareSheet; // 分享
 
-@property (assign, nonatomic) NSInteger currentRow;
+@property (assign , nonatomic) NSInteger           currentRow;
+@property (nonatomic , assign) BOOL                isCanComment;    // 是否有权限评论
 
 @end
 
@@ -69,6 +77,7 @@
     // Do any additional setup after loading the view.
     self.title = @"评论";
     self.currentRow = -1;
+    replyIndex = -1;
     
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
@@ -88,6 +97,14 @@
         _commentList = [NSMutableArray array];
     }
     return _commentList;
+}
+
+- (RYShareSheet *)shareSheet
+{
+    if ( _shareSheet == nil ) {
+        _shareSheet = [[RYShareSheet alloc] init];
+    }
+    return _shareSheet;
 }
 
 - (RYArticleData *)articleData
@@ -155,6 +172,7 @@
     
     // 取文章信息
     NSDictionary *threadmessage = [info getDicValueForKey:@"threadmessage" defaultValue:nil];
+    self.isCanComment = [threadmessage getBoolValueForKey:@"cancommentmessage" defaultValue:NO];
     if ( threadmessage ) {
         NSDictionary *articleDict = [threadmessage getDicValueForKey:@"threadmessage" defaultValue:nil];
         if ( articleDict ) {
@@ -171,6 +189,16 @@
         }
         [self.commentList addObjectsFromArray:commentlistmessage];
     }
+    
+    // 判断是否有权评论，
+//    if ( self.isCanComment ) {
+//        self.tableView.height = VIEW_HEIGHT - 50;
+//        containerView.hidden = NO;
+//    }
+//    else{
+//        self.tableView.height = VIEW_HEIGHT;
+//        containerView.hidden = YES;
+//    }
     
     [self.tableView reloadData];
 }
@@ -257,8 +285,8 @@
     }
     else{
         if ( self.commentList.count ) {
-//            NSDictionary *dict = [self.commentList objectAtIndex:indexPath.row];
-            NSMutableDictionary *dict = [[self.commentList objectAtIndex:indexPath.row] mutableCopy];
+            NSDictionary *dict = [self.commentList objectAtIndex:indexPath.row];
+//            NSMutableDictionary *dict = [[self.commentList objectAtIndex:indexPath.row] mutableCopy];
 //            [dict setValue:@"http://music.baidutt.com/up/kwcawswc/yuydsw.mp3" forKey:@"voice"];
             NSString *voice = [dict getStringValueForKey:@"voice" defaultValue:nil];
             CGFloat height = 0;
@@ -276,7 +304,6 @@
                                                       attributes:praiseAttributes
                                                          context:nil];
                 height = height + 5 + praiseRect.size.height;
-                
             }
             return height + 10 + 24 + 6;
         }
@@ -306,9 +333,9 @@
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         }
         if ( self.commentList.count ) {
-            NSMutableDictionary *tempDict = [[self.commentList objectAtIndex:indexPath.row] mutableCopy];
-//            [tempDict setValue:@"http://music.baidutt.com/up/kwcawswc/yuydsw.mp3" forKey:@"voice"];
+            NSDictionary *tempDict = [self.commentList objectAtIndex:indexPath.row];
             NSString *voice = [tempDict getStringValueForKey:@"voice" defaultValue:nil];
+//            voice = @"http://music.baidutt.com/up/kwcawswc/yuydsw.mp3";
             if ( ![ShowBox isEmptyString:voice] ) {
                 cell.bubble.tag = indexPath.row;
                 cell.bubble.contentURL = [NSURL URLWithString:voice];
@@ -324,8 +351,8 @@
             
             [cell setValueWithDict:tempDict];
         }
-        
-
+        cell.delegate = self;
+        cell.tag = indexPath.row;
         return cell;
     }
 }
@@ -333,6 +360,10 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [textView resignFirstResponder];
+    [UIView animateWithDuration:0.25 animations:^{
+        containerView.top = self.view.frame.size.height;
+    }];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -370,25 +401,176 @@
     return nil;
 }
 
+#pragma mark RYcommentTableViewCellDelegate
+
+-(void)currentSelectCellTag:(NSInteger)cellTag andSelectBtnTage:(NSInteger)btnTage
+{
+    NSLog(@"cellTag : %ld , btnTage: %ld",(long)cellTag,(long)btnTage);
+    if ( !self.isCanComment && btnTage == 1 ) {
+        [ShowBox showError:@"您没有回复权限，如需开通此功能，请与客服联系！"];
+        return;
+    }
+    
+    if ( cellTag >= self.commentList.count ) {
+        return;
+    }
+    
+    NSDictionary *dict = [self.commentList objectAtIndex:cellTag];
+    switch ( btnTage ) {
+        case 0:  // 分享
+        {
+            [textView resignFirstResponder];
+            [UIView animateWithDuration:0.25 animations:^{
+                containerView.top = self.view.frame.size.height;
+            } completion:^(BOOL finished) {
+                [self shareWithDict:dict];
+            }];
+            
+        }
+            break;
+        case 1: // 回复
+        {
+            replyIndex = cellTag;
+            textViewPlaceholder = [NSString stringWithFormat:@"回复%@",[dict getStringValueForKey:@"author" defaultValue:@""]];
+            textView.placeholder = textViewPlaceholder;
+            containerView.top = self.view.frame.size.height - 50;
+            [textView becomeFirstResponder];
+        }
+            break;
+        case 2: // 删除
+        {
+            
+            [textView resignFirstResponder];
+            [UIView animateWithDuration:0.25 animations:^{
+                containerView.top = self.view.frame.size.height;
+            } completion:^(BOOL finished) {
+            }];
+ 
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"确定删除" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+            alertView.tag = cellTag;
+            [alertView show];
+            
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+/**
+ * 分享评论
+ */
+-(void)shareWithDict:(NSDictionary *)dict
+{
+    
+    NSString *word = [dict getStringValueForKey:@"word" defaultValue:nil];
+    NSString *beauthorid = [dict getStringValueForKey:@"beauthorid" defaultValue:nil];
+    NSString *beauthor = [dict getStringValueForKey:@"beauthor" defaultValue:@""];
+    NSString *author = [dict getStringValueForKey:@"author" defaultValue:@""];
+    NSString *voice = [dict getStringValueForKey:@"voice" defaultValue:@""];
+    NSString *subject = self.articleData.subject;
+    NSString *shareContent;
+    if ( ![ShowBox isEmptyString:word] ) {
+        if ( word.length > 100 ) {
+            word = [word substringToIndex:100];
+        }
+        if ( [ShowBox isEmptyString:beauthorid] ) {
+            //文字评论
+            shareContent = [NSString stringWithFormat:@"%@ 评论给",word];
+        }
+        else{
+            //文字回复
+            shareContent = [NSString stringWithFormat:@"%@ %@回复%@",word,author,beauthor];
+        }
+    }
+    else{
+        if ( [ShowBox isEmptyString:beauthorid] && ![ShowBox isEmptyString:voice] ) {
+            // 语音 评论
+            shareContent = [NSString stringWithFormat:@"%@语音评论了《%@》",author,subject];
+        }
+        else{
+            // 语音回复
+            shareContent = [NSString stringWithFormat:@"%@语音回复%@",author,beauthor];
+        }
+    }
+    
+    NSMutableDictionary *tempDict = [NSMutableDictionary dictionary];
+    [tempDict setValue:self.articleData.shareArticleUrl forKey:SHARE_URL];
+    [tempDict setValue:shareContent forKey:SHARE_TEXT];
+    [tempDict setValue:self.articleData.shareId forKey:SHARE_CALLBACK_DI];
+    [tempDict setValue:self.articleData.sharePicUrl forKey:SHARE_PIC];
+    [tempDict setValue:self.tid forKey:SHARE_TID];
+    
+    self.shareSheet.shareDataDict = tempDict;
+    self.shareSheet.delegate = self;
+    
+    [self.shareSheet showShareView];
+}
+
+/**
+ *删除评论
+ */
+-(void)deleteCommentWithDict:(NSDictionary *)dict
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:@""];
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI deleteCommentWithSessionId:[RYUserInfo sharedManager].session
+                                              tid:self.tid
+                                              pid:pid
+                                          success:^(id responseDic) {
+                                              NSLog(@"删除评论responseDic : %@",responseDic);
+                                              NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                              BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                              if ( !success ) {
+                                                  [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"网络出错，请稍候重试！"]];
+                                              }
+                                              
+                                              [wSelf.tableView headerBeginRefreshing];
+        } failure:^(id errorString) {
+             NSLog(@"删除评论errorString : %@",errorString);
+            [ShowBox showError:@"网络出错，请稍候重试!"];
+        }];
+    }
+}
+
+#pragma  mark UIAlertView 代理
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ( buttonIndex == 1 ) {
+        NSDictionary *dict = [self.commentList objectAtIndex:alertView.tag];
+        [self deleteCommentWithDict:dict];
+    }
+}
+
+#pragma  mark UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [textView resignFirstResponder];
+    [UIView animateWithDuration:0.25 animations:^{
+        containerView.top = self.view.frame.size.height;
+    }];
 }
 
 #pragma mark FSVoiceBubbleDelegate
 - (void)voiceBubbleDidStartPlaying:(FSVoiceBubble *)voiceBubble
 {
     _currentRow = voiceBubble.tag;
+    [textView resignFirstResponder];
+    [UIView animateWithDuration:0.25 animations:^{
+        containerView.top = self.view.frame.size.height;
+    }];
 }
 
 #pragma mark 聊天窗
 -(void)createTalkView
 {
-    containerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50, SCREEN_WIDTH, 50)];
-    containerView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
+    containerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, SCREEN_WIDTH, 50)];
+    containerView.backgroundColor = [UIColor redColor];//[Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
     
     talkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    talkBtn.frame = CGRectMake(15, 5, 36, 36);
+    talkBtn.frame = CGRectMake(15, 8, 36, 36);
     talkBtn.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
     [talkBtn setImage:[UIImage imageNamed:@"ic_shuru.png"] forState:UIControlStateNormal];
     [talkBtn setImage:[UIImage imageNamed:@"ic_voice.png"] forState:UIControlStateSelected];
@@ -398,7 +580,7 @@
     [talkBtn addTarget:self action:@selector(talkBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [containerView addSubview:talkBtn];
 
-    textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(65, 5, SCREEN_WIDTH - 80, 40)];
+    textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(65, 8, SCREEN_WIDTH - 80, 40)];
     textView.isScrollable = NO;
     textView.contentInset = UIEdgeInsetsMake(0, 5, 0, 5);
     
@@ -406,19 +588,18 @@
     textView.maxNumberOfLines = 6;
     // you can also set the maximum height in points with maxHeight
     // textView.maxHeight = 200.0f;
-    textView.returnKeyType = UIReturnKeyGo; //just as an example
+    textView.returnKeyType = UIReturnKeySend; //just as an example
     textView.font = [UIFont systemFontOfSize:15.0f];
     textView.delegate = self;
     textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
     textView.backgroundColor = [UIColor whiteColor];
-    textView.placeholder = @"Type to see the textView grow!";
+    textView.placeholder = @"我也说一句!";
     textView.layer.cornerRadius = 5;
     textView.layer.masksToBounds = YES;
     textView.delegate = self;
     textView.layer.borderWidth = 0.5;
     textView.layer.borderColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0].CGColor;
-    // textView.text = @"test\n\ntest";
-    // textView.animateHeightChange = NO; //turns off animation
+//    textView.animateHeightChange = YES; //turns off animation
     
     [self.view addSubview:containerView];
     
@@ -451,6 +632,8 @@
     if ( btn.selected ) {
         recordBtn.hidden = NO;
         [textView resignFirstResponder];
+        textContent = textView.text;
+        textView.text = nil;
     }
     else{
         recordBtn.hidden = YES;
@@ -470,8 +653,11 @@
 
 - (void)growingTextViewDidBeginEditing:(HPGrowingTextView *)growingTextView
 {
-    
+    recordBtn.hidden = YES;
     talkBtn.selected = YES;
+    if (textContent.length) {
+        textView.text = textContent;
+    }
 }
 
 - (void)growingTextViewDidEndEditing:(HPGrowingTextView *)growingTextView
@@ -480,50 +666,55 @@
     talkBtn.selected = NO;
 }
 
+- (BOOL)growingTextViewShouldReturn:(HPGrowingTextView *)growingTextView
+{
+    NSLog(@"return");
+    if ( growingTextView.text.length == 0 ) {
+        return YES;
+    }
+    if ( replyIndex != -1 ) {
+        NSDictionary *dict = [self.commentList objectAtIndex:replyIndex];
+        NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
+        [self submitCommentWithPid:pid word:growingTextView.text voice:nil];
+    }
+    else{
+        [self submitCommentWithPid:nil word:growingTextView.text voice:nil];
+    }
+    return YES;
+}
+
+#pragma mark 提交评论
+-(void)submitCommentWithPid:(NSString *)_pid word:(NSString *)_word voice:(NSURL *)voiceURL
+{
+    if ([ShowBox checkCurrentNetwork] ) {
+        [NetRequestAPI submitCommentWithSessionId:[RYUserInfo sharedManager].session
+                                              tid:self.tid
+                                              pid:_pid
+                                             word:_word
+                                            voice:pathURL
+                                          success:^(id responseDic) {
+                                              NSLog(@"上传录音 responseDic： %@",responseDic);
+                                              
+                                          } failure:^(id errorString) {
+                                              NSLog(@"上传录音 errorString： %@",errorString);
+                                          }];
+ 
+    }
+}
+
+
 #pragma mark 录音功能
 
 -(void)recordStart:(UIButton *)sender
 {
     if(recording)
         return;
-    RYcommentTableViewCell *cell = (RYcommentTableViewCell *)[self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_currentRow inSection:1]];
-    [cell.bubble pause];
+    if (_currentRow>=0) {
+        RYcommentTableViewCell *cell = (RYcommentTableViewCell *)[self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_currentRow inSection:1]];
+        [cell.bubble pause];
+    }
+ 
     recording=YES;
-    /*
-    NSDictionary *settings=[NSDictionary dictionaryWithObjectsAndKeys:
-                            [NSNumber numberWithFloat:8000],AVSampleRateKey,
-                            [NSNumber numberWithInt:kAudioFormatLinearPCM],AVFormatIDKey,
-                            [NSNumber numberWithInt:1],AVNumberOfChannelsKey,
-                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
-                            [NSNumber numberWithBool:NO],AVLinearPCMIsBigEndianKey,
-                            [NSNumber numberWithBool:NO],AVLinearPCMIsFloatKey,
-                            nil];
-    
-    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error: nil];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    
-    NSDate *now = [NSDate date];
-    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
-    [dateFormater setDateFormat:@"yyyyMMddHHmmss"];
-//    NSString *fileName = [NSString stringWithFormat:@"rec_%@_%@.wav",MY_USER_ID,[dateFormater stringFromDate:now]];
-//    NSString *fullPath = [[[ChatCacheFileUtil sharedInstance] userDocPath] stringByAppendingPathComponent:fileName];
-//    NSURL *url = [NSURL fileURLWithPath:fullPath];
-    
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(
-                                                            NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *docsDir = [dirPaths objectAtIndex:0];
-    NSString *soundFilePath = [docsDir
-                               stringByAppendingPathComponent:@"recordTest.caf"];
-    
-    NSURL *url = [NSURL fileURLWithPath:soundFilePath];
-    pathURL = url;
-    NSError *error;
-    audioRecorder = [[AVAudioRecorder alloc] initWithURL:pathURL settings:settings error:&error];
-    audioRecorder.delegate = self;
-
-    peakTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(updatePeak:) userInfo:nil repeats:YES];
-    [peakTimer fire];
-     */
     
     NSDictionary *settings=[NSDictionary dictionaryWithObjectsAndKeys:
                             [NSNumber numberWithInt:kAudioFormatAppleIMA4],AVFormatIDKey,
@@ -537,18 +728,15 @@
     [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error: nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     
-//    NSDate *now = [NSDate date];
-//    NSDateFormatter *dateFormater = [[NSDateFormatter alloc] init];
-//    [dateFormater setDateFormat:@"yyyyMMddHHmmss"];
-    //    NSString *fileName = [NSString stringWithFormat:@"rec_%@_%@.wav",MY_USER_ID,[dateFormater stringFromDate:now]];
-    //    NSString *fullPath = [[[ChatCacheFileUtil sharedInstance] userDocPath] stringByAppendingPathComponent:fileName];
-    //    NSURL *url = [NSURL fileURLWithPath:fullPath];
-    
     NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(
                                                             NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docsDir = [dirPaths objectAtIndex:0];
-    NSString *soundFilePath = [docsDir
-                               stringByAppendingPathComponent:@"recordTest.caf"];
+    docsDir = [docsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[RYUserInfo sharedManager].uid]];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyyMMddHHmmss";
+    NSString *str = [formatter stringFromDate:[NSDate date]];
+    NSString *soundFilePath = [docsDir stringByAppendingFormat:@"%@.caf",str];
     
     NSURL *url = [NSURL fileURLWithPath:soundFilePath];
     pathURL = url;
@@ -557,8 +745,6 @@
     audioRecorder.delegate = self;
     audioRecorder.meteringEnabled = YES;
     [audioRecorder record];
-    
-    
     peakTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(updatePeak:) userInfo:nil repeats:YES];
     [peakTimer fire];
 }
@@ -632,6 +818,8 @@
     } failure:^(id errorString) {
          NSLog(@"上传录音 errorString： %@",errorString);
     }];
+    
+    
 
 }
 

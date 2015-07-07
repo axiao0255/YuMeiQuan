@@ -91,7 +91,7 @@ static RYUserInfo * _userInfo;
                 [[RYUserInfo sharedManager] setUsername:[dict getStringValueForKey:@"username" defaultValue:@""]];
             }
             if ( [key isEqualToString:@"uid"] ) {
-                [[RYUserInfo sharedManager] setUsername:[dict getStringValueForKey:@"uid" defaultValue:@""]];
+                [[RYUserInfo sharedManager] setUid:[dict getStringValueForKey:@"uid" defaultValue:@""]];
             }
         }
     }

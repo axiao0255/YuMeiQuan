@@ -811,12 +811,27 @@
     [dict setValue:_word forKey:@"word"];
     
     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
-    [[NetManager sharedManager] uploadFileWithUrl:url filePath:_voiceUrl parameters:dict success:^(id responseObject) {
-        
-    } fail:^(id error) {
-        
-    }];
+    
+    [[NetManager sharedManager] uploadFileWithUrl:url filePath:_voiceUrl parameters:dict success:success fail:failure];
+    
+}
 
+#pragma mark - 删除评论
++(void)deleteCommentWithSessionId:(NSString *)session
+                              tid:(NSString *)_tid
+                              pid:(NSString *)_pid
+                          success:(void(^)(id responseDic))success
+                          failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"commentaction" forKey:@"mod"];
+    [parDic setValue:@"del" forKey:@"ac"];
+    [parDic setValue:session forKey:@"sid"];
+    [parDic setValue:_tid forKey:@"tid"];
+    [parDic setValue:_pid forKey:@"pid"];
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
     
 }
 

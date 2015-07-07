@@ -57,6 +57,7 @@
         self.replyMenu = [[replyView alloc]init];
         self.replyMenu.right = SCREEN_WIDTH - 15;
         self.replyMenu.top = self.commentLabel.bottom + 10;
+        self.replyMenu.delegate = self;
         [self.contentView addSubview:self.replyMenu];
         
     }
@@ -123,6 +124,14 @@
     }
     
     
+}
+
+#pragma mark replyViewDelegate
+-(void)didSelectButtonWithIndex:(NSInteger) index
+{
+    if ( [self.delegate respondsToSelector:@selector(currentSelectCellTag:andSelectBtnTage:)] ) {
+        [self.delegate currentSelectCellTag:self.tag andSelectBtnTage:index];
+    }
 }
 
 @end
