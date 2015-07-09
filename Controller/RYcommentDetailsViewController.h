@@ -13,7 +13,6 @@
 
 @interface RYcommentDetailsViewController : RYBaseViewController<HPGrowingTextViewDelegate>
 
--(id)initWithArticleData:(RYArticleData *)articleData;
 
 -(id)initWithArticleTid:(NSString *) tid;
 

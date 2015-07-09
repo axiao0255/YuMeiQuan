@@ -36,6 +36,9 @@
 		96C24D121B0B0BC90044C86B /* ic_adown_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C24D101B0B0BC90044C86B /* ic_adown_arrow@2x.png */; };
 		96C24D131B0B0BC90044C86B /* ic_up_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C24D111B0B0BC90044C86B /* ic_up_arrow@2x.png */; };
 		96C24D161B0B15370044C86B /* RYLiteratureCategoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C24D151B0B15370044C86B /* RYLiteratureCategoryView.m */; };
+		96C366F11B4E40A9003B96FF /* ic_wushuju@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C366F01B4E40A9003B96FF /* ic_wushuju@2x.png */; };
+		96C366F71B4E754B003B96FF /* RYWeeklyPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C366F61B4E754B003B96FF /* RYWeeklyPage.m */; };
+		96C366FA1B4E7961003B96FF /* RYWeeklyPageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C366F91B4E7961003B96FF /* RYWeeklyPageTableViewCell.m */; };
 		96C3A9B31ADFB84D008011D3 /* imagesView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A01ADFB84D008011D3 /* imagesView.m */; };
 		96C3A9B41ADFB84D008011D3 /* albumListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A31ADFB84D008011D3 /* albumListsViewController.m */; };
 		96C3A9B51ADFB84D008011D3 /* albumlistTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C3A9A51ADFB84D008011D3 /* albumlistTableViewCell.m */; };
@@ -133,6 +136,7 @@
 		96C5BFE11AFB648600BC5744 /* CXTapDetectingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C5BFD71AFB648600BC5744 /* CXTapDetectingImageView.m */; };
 		96C5BFE21AFB648600BC5744 /* CXTapDetectingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C5BFD91AFB648600BC5744 /* CXTapDetectingView.m */; };
 		96C5BFE31AFB648600BC5744 /* CXZoomingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C5BFDB1AFB648600BC5744 /* CXZoomingScrollView.m */; };
+		96C606E81B4CCB750054044E /* RYCommentData.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C606E71B4CCB750054044E /* RYCommentData.m */; };
 		96C610821ADCDBF900862E0E /* RYRegisterSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C610811ADCDBF900862E0E /* RYRegisterSelectViewController.m */; };
 		96C6108C1ADCE0D400862E0E /* NYSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C610851ADCE0D400862E0E /* NYSegment.m */; };
 		96C6108D1ADCE0D400862E0E /* NYSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C610871ADCE0D400862E0E /* NYSegmentedControl.m */; };
@@ -423,6 +427,11 @@
 		96C24D111B0B0BC90044C86B /* ic_up_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_up_arrow@2x.png"; sourceTree = "<group>"; };
 		96C24D141B0B15370044C86B /* RYLiteratureCategoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYLiteratureCategoryView.h; sourceTree = "<group>"; };
 		96C24D151B0B15370044C86B /* RYLiteratureCategoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYLiteratureCategoryView.m; sourceTree = "<group>"; };
+		96C366F01B4E40A9003B96FF /* ic_wushuju@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_wushuju@2x.png"; sourceTree = "<group>"; };
+		96C366F51B4E754B003B96FF /* RYWeeklyPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYWeeklyPage.h; sourceTree = "<group>"; };
+		96C366F61B4E754B003B96FF /* RYWeeklyPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYWeeklyPage.m; sourceTree = "<group>"; };
+		96C366F81B4E7961003B96FF /* RYWeeklyPageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYWeeklyPageTableViewCell.h; sourceTree = "<group>"; };
+		96C366F91B4E7961003B96FF /* RYWeeklyPageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYWeeklyPageTableViewCell.m; sourceTree = "<group>"; };
 		96C3A99F1ADFB84D008011D3 /* imagesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imagesView.h; sourceTree = "<group>"; };
 		96C3A9A01ADFB84D008011D3 /* imagesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = imagesView.m; sourceTree = "<group>"; };
 		96C3A9A21ADFB84D008011D3 /* albumListsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = albumListsViewController.h; sourceTree = "<group>"; };
@@ -605,6 +614,8 @@
 		96C5BFD91AFB648600BC5744 /* CXTapDetectingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXTapDetectingView.m; sourceTree = "<group>"; };
 		96C5BFDA1AFB648600BC5744 /* CXZoomingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXZoomingScrollView.h; sourceTree = "<group>"; };
 		96C5BFDB1AFB648600BC5744 /* CXZoomingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXZoomingScrollView.m; sourceTree = "<group>"; };
+		96C606E61B4CCB750054044E /* RYCommentData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCommentData.h; sourceTree = "<group>"; };
+		96C606E71B4CCB750054044E /* RYCommentData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCommentData.m; sourceTree = "<group>"; };
 		96C610801ADCDBF900862E0E /* RYRegisterSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterSelectViewController.h; sourceTree = "<group>"; };
 		96C610811ADCDBF900862E0E /* RYRegisterSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYRegisterSelectViewController.m; sourceTree = "<group>"; };
 		96C610841ADCE0D400862E0E /* NYSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NYSegment.h; sourceTree = "<group>"; };
@@ -1161,6 +1172,8 @@
 				96CBAA311B157E0100D13C27 /* RYWeeklyTableViewCell.m */,
 				96CBAA381B15A85A00D13C27 /* RYPastWeeklyTableViewCell.h */,
 				96CBAA391B15A85A00D13C27 /* RYPastWeeklyTableViewCell.m */,
+				96C366F81B4E7961003B96FF /* RYWeeklyPageTableViewCell.h */,
+				96C366F91B4E7961003B96FF /* RYWeeklyPageTableViewCell.m */,
 				96D0A56C1B18708000BF6D90 /* RYAnswersRecordTableViewCell.h */,
 				96D0A56D1B18708000BF6D90 /* RYAnswersRecordTableViewCell.m */,
 				96CE2A101B43C123004FA4BF /* RYcommentTableViewCell.h */,
@@ -1562,6 +1575,8 @@
 				96C24D151B0B15370044C86B /* RYLiteratureCategoryView.m */,
 				96D149571B14863900C05809 /* RYCopyAddressView.h */,
 				96D149581B14863900C05809 /* RYCopyAddressView.m */,
+				96C366F51B4E754B003B96FF /* RYWeeklyPage.h */,
+				96C366F61B4E754B003B96FF /* RYWeeklyPage.m */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1831,6 +1846,7 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96C366F01B4E40A9003B96FF /* ic_wushuju@2x.png */,
 				96DC87061B4A26CC00201919 /* ic_replyBtn_bk@2x.png */,
 				966788751B46AADB00F483C7 /* ic_log_cell@2x.jpg */,
 				96C44D811B456BC1000C3EB9 /* ic_shuru@2x.png */,
@@ -2044,6 +2060,8 @@
 				96CD08C51B03497800088B1E /* RYCorporateModel.m */,
 				96C425EB1B2FF54C00F1DDA3 /* RYMyNoticeModel.h */,
 				96C425EC1B2FF54C00F1DDA3 /* RYMyNoticeModel.m */,
+				96C606E61B4CCB750054044E /* RYCommentData.h */,
+				96C606E71B4CCB750054044E /* RYCommentData.m */,
 			);
 			path = model;
 			sourceTree = SOURCE_ROOT;
@@ -2245,6 +2263,7 @@
 				96C4C4061AE77CC700151A84 /* IQKeyboardManager.bundle in Resources */,
 				9667D8261B00600F0099C424 /* UMSShareListController.xib in Resources */,
 				96D0A5691B183A9800BF6D90 /* ic_recusalImge_5@2x.png in Resources */,
+				96C366F11B4E40A9003B96FF /* ic_wushuju@2x.png in Resources */,
 				96C3A9BC1ADFB84D008011D3 /* imgtakephoto.png in Resources */,
 				96D120661B0C308800BF8062 /* ic_stow_highlighted@2x.png in Resources */,
 				9667D8251B00600F0099C424 /* UMSnsAccountViewController.xib in Resources */,
@@ -2303,6 +2322,7 @@
 			files = (
 				96CCB3941B12EC540007C151 /* RYMyAnswersRecordViewController.m in Sources */,
 				96C7ACB71AD611FA00FA2E22 /* AFURLSessionManager.m in Sources */,
+				96C366FA1B4E7961003B96FF /* RYWeeklyPageTableViewCell.m in Sources */,
 				96C52FCA1B05E01C007BC747 /* RYPodcastPage.m in Sources */,
 				96C7ACD91AD6823E00FA2E22 /* GTMBase64.m in Sources */,
 				96CE2A451B43F0AD004FA4BF /* FSVoiceBubble.m in Sources */,
@@ -2422,6 +2442,7 @@
 				96C3A9B31ADFB84D008011D3 /* imagesView.m in Sources */,
 				96C44D801B455A9D000C3EB9 /* HPTextViewInternal.m in Sources */,
 				96CD08C01B033CD300088B1E /* RYCorporateViewController.m in Sources */,
+				96C366F71B4E754B003B96FF /* RYWeeklyPage.m in Sources */,
 				96CFB3B81AF9C0090078C225 /* GridMenuView.m in Sources */,
 				96C7ACBA1AD611FA00FA2E22 /* UIAlertView+AFNetworking.m in Sources */,
 				96C3A9B41ADFB84D008011D3 /* albumListsViewController.m in Sources */,
@@ -2479,6 +2500,7 @@
 				96C7ACB61AD611FA00FA2E22 /* AFURLResponseSerialization.m in Sources */,
 				96C3A9E41ADFB89A008011D3 /* SDWebImageManager.m in Sources */,
 				96C3A9B91ADFB84D008011D3 /* imgCollectionViewCell.m in Sources */,
+				96C606E81B4CCB750054044E /* RYCommentData.m in Sources */,
 				96CBAA3A1B15A85A00D13C27 /* RYPastWeeklyTableViewCell.m in Sources */,
 				96D0979B1B0DD22F00C24FB1 /* RYShareSheet.m in Sources */,
 				96CFB3DC1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.m in Sources */,

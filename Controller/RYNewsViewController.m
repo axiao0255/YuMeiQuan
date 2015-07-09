@@ -29,6 +29,7 @@
 #import "RYPodcastPage.h"
 #import "RYBaiJiaPage.h"
 #import "RYLiteraturePage.h"
+#import "RYWeeklyPage.h"
 
 #import "RYLiteratureCategoryView.h"
 
@@ -68,8 +69,8 @@
 @property (strong, nonatomic) RYPodcastPage    *podcastPage;
 @property (strong, nonatomic) RYBaiJiaPage     *baiJiaPage;
 @property (strong, nonatomic) RYLiteraturePage *literaturePage;
+@property (strong, nonatomic) RYWeeklyPage     *weeklyPage;
 
-@property (strong, nonatomic) UILabel          *noticeLabel;
 @property (assign, nonatomic) NSInteger        noticecount;
 @property (assign, nonatomic) NSInteger        baiJiaCurrentSelectIndex;
 
@@ -87,6 +88,8 @@
     [self setNavigationItem];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginStateChange:) name:@"loginStateChange" object:nil];
+    NSTimer *peakTimer = [NSTimer scheduledTimerWithTimeInterval:300.0 target:self selector:@selector(updatePeak:) userInfo:nil repeats:YES];
+    [peakTimer fire];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -94,7 +97,6 @@
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO];
 }
-
 
 
 - (void)didReceiveMemoryWarning {
@@ -114,16 +116,19 @@
     [leftButton setImage:[UIImage imageNamed:@"ic_home_head.png"] forState:UIControlStateNormal];
     [leftButton addTarget:self action:@selector(leftButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.noticeLabel.left = leftButton.right - 15;
-    self.noticeLabel.top = 3;
-    [leftButton addSubview:self.noticeLabel];
-    
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftItem;
     
     UIImageView *logoView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 48, 20)];
     logoView.image = [UIImage imageNamed:@"ic_yimeiquan_logo.png"];
     self.navigationItem.titleView = logoView;
+}
+
+- (void)updatePeak:(NSTimer *)timer
+{
+    NSLog(@"time");
+    // 获取消息
+    [self getNoticeData];
 }
 
 #pragma mark 点击滑出侧边拦
@@ -439,20 +444,13 @@
     return _literaturePage;
 }
 
-- (UILabel *)noticeLabel
+- (RYWeeklyPage *)weeklyPage
 {
-    if (_noticeLabel == nil) {
-        _noticeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
-        _noticeLabel.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
-        _noticeLabel.hidden = YES;
-        
-        _noticeLabel.layer.cornerRadius = 4;
-        _noticeLabel.layer.masksToBounds = YES;
-        
-        _noticeLabel.layer.borderWidth = 1;
-        _noticeLabel.layer.borderColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0].CGColor;
+    if ( _weeklyPage == nil ) {
+        _weeklyPage = [[RYWeeklyPage alloc] init];
+        _weeklyPage.viewController = self;
     }
-    return _noticeLabel;
+    return _weeklyPage;
 }
 
 /**
@@ -519,34 +517,47 @@
                                             [ShowBox showError:@"获取数据失败，请稍候重试"];
                                             [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                         }];
-        
-        
     }
-    else if ( aIndex == 1 ) {
+    else if ( aIndex == 1 ){
+        NSInteger tempIndex = aIndex;
+        [NetRequestAPI getPastweeklylistWithSessionId:[RYUserInfo sharedManager].session
+                                                 page:currentPage
+                                              success:^(id responseDic) {
+                                                  NSLog(@"往期周报 responseDic : %@",responseDic);
+                                                  [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                  [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
+                                                  
+                                              } failure:^(id errorString) {
+                                                  NSLog(@"往期周报 errorString : %@",errorString);
+                                                  [ShowBox showError:@"获取数据失败，请稍候重试"];
+                                                  [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                              }];
+    }
+    else if ( aIndex == 2 ) {
         NSInteger tempIndex = aIndex;
         [NetRequestAPI getHomePageNewsListWithSessionId:[RYUserInfo sharedManager].session
                                                     fid:@"136"
                                                    page:currentPage
                                                 success:^(id responseDic) {
-//                                                    NSLog(@"新闻 ：responseDic  %@",responseDic);
+                                                    NSLog(@"新闻 ：responseDic  %@",responseDic);
                                                     // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
                                                     [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                     [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                 } failure:^(id errorString) {
                                                     [ShowBox showError:@"获取数据失败，请稍候重试"];
-//                                                    NSLog(@"新闻 ：errorString  %@",errorString);
+                                                    NSLog(@"新闻 ：errorString  %@",errorString);
                                                     // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
                                                      [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                 }];
     }
-    else if ( aIndex == 2 )
+    else if ( aIndex == 3 )
     {
         NSInteger tempIndex = aIndex;
         [NetRequestAPI getHomePageNewsListWithSessionId:[RYUserInfo sharedManager].session
                                                     fid:@"142"
                                                    page:currentPage
                                                 success:^(id responseDic) {
-                                                    //                                                   NSLog(@"会讯 ：responseDic  %@",responseDic);
+                                                    NSLog(@"会讯 ：responseDic  %@",responseDic);
                                                     [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                     [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                     
@@ -558,7 +569,7 @@
                                                 }];
         
     }
-    else if ( aIndex == 3 )
+    else if ( aIndex == 4 )
     {
         NSInteger tempIndex = aIndex;
         NSDictionary *tagDict = [ShowBox getLiteratureTagDict];
@@ -584,16 +595,15 @@
                                                       [ShowBox showError:@"获取数据失败，请稍候重试"];
                                                      [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                   }];
-        
     }
-    else if ( aIndex == 4 )
+    else if ( aIndex == 5 )
     {
         NSInteger tempIndex = aIndex;
         [NetRequestAPI getPodcastListWithSessionId:[RYUserInfo sharedManager].session
                                              tagid:@"284"
                                               page:currentPage
                                            success:^(id responseDic) {
-                                               //                                                NSLog(@"播客 ：responseDic  %@",responseDic);
+                                               NSLog(@"播客 ：responseDic  %@",responseDic);
                                                [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                
@@ -603,7 +613,6 @@
                                                [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                
                                            }];
-        
     }
     else
     {
@@ -626,26 +635,14 @@
 
 - (void)setValueWithDict:(NSDictionary *)responseDic andIndex:(NSInteger)aIndex isHead:(BOOL)isHead
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"获取数据失败，请稍候重试"];
-        return ;
-    }
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( !meta ) {
-        [ShowBox showError:@"获取数据失败，请稍候重试"];
-        return ;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
         int  login = [meta getIntValueForKey:@"login" defaultValue:0];
         if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
-            
             RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
                 if ( isLogin ) {
                     NSLog(@"登录完成"); // 重新获取数据 
-//                    MJRefreshTableView *v = [scrollPageView.contentItems objectAtIndex:aIndex];
-//                    [v headerBeginRefreshing];
                 }
             }];
             [self.navigationController pushViewController:nextVC animated:YES];
@@ -672,50 +669,60 @@
     NSDictionary *noticemessage = [info getDicValueForKey:@"noticemessage" defaultValue:nil];
     if ( noticemessage ) {
         self.noticecount = [noticemessage getIntValueForKey:@"noticecount" defaultValue:0];
-        #warning 此处 显示消息 图标
-        if ( self.noticecount > 0) {
-            self.noticeLabel.hidden = NO;
-        }else{
-            self.noticeLabel.hidden = YES;
-        }
     }
     
-    
     if ( aIndex == 0 ) { // 首页
-        // 取周报
-        NSDictionary *weeklymessage = [info getDicValueForKey:@"weeklymessage" defaultValue:nil];
-        if ( weeklymessage.allKeys.count ) {
-            NSArray *dataArray = [NSArray arrayWithObject:weeklymessage];
-            // 首页 周报 先删除 原来的 在添加新的  保持最新
-            [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
-            [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:dataArray];
-        }
-        // 取 登录 邀请等信息
-        NSDictionary *descmessage = [info getDicValueForKey:@"descmessage" defaultValue:nil];
-        if ( descmessage.allKeys.count ) {
-            self.homePage.descmessage = descmessage;
-        }
-        // 取广告
-        NSDictionary *admessage = [info getDicValueForKey:@"advmessage" defaultValue:nil];
-        self.homePage.adverData = admessage;
+        [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
+        [[scrollPageView.dataSources objectAtIndex:aIndex] addObject:info];
+        // 设置总页数
        [scrollPageView setTotlePageWithNum:1 atIndex:aIndex];
         // 刷新表格
         [[scrollPageView.contentItems objectAtIndex:aIndex] reloadData];
+        // 获取消息
+        [self getNoticeData];
     }
     else{
-        
-        // 取广告
-        NSDictionary *admessage = [info getDicValueForKey:@"advmessage" defaultValue:nil];
-        if ( admessage.allKeys.count ) {
-            if ( aIndex == 1 ) { // 新闻
-                self.newsPage.adverData = admessage;
-            }
-            else if ( aIndex == 3 ){ // 文献
-                self.literaturePage.adverData = admessage;
+        // 取周报
+        if ( aIndex == 1 ) {
+            NSArray *weeklylistmessage = [info getArrayValueForKey:@"weeklylistmessage" defaultValue:nil];
+            if ( weeklylistmessage.count ) {
+                if ( isHead ) { // 下拉刷新 头部 ， 需要清空数组
+                    [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
+                }
+                [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:weeklylistmessage];
             }
         }
-        
-        if ( aIndex == 3 ) { // 文献
+        // 取新闻
+        if ( aIndex == 2 ) {
+            // 取广告
+            NSDictionary *admessage = [info getDicValueForKey:@"advmessage" defaultValue:nil];
+            self.newsPage.adverData = admessage;
+            // 取列表
+            NSArray *dataArray = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
+            if ( dataArray.count ) {
+                if ( isHead ) { // 下拉刷新 头部 ， 需要清空数组
+                    [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
+                }
+                [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:dataArray];
+            }
+        }
+        // 取会讯
+        if ( aIndex == 3 ) {
+            // 取列表
+            NSArray *dataArray = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
+            if ( dataArray.count ) {
+                if ( isHead ) { // 下拉刷新 头部 ， 需要清空数组
+                    [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
+                }
+                [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:dataArray];
+            }
+        }
+        // 文献
+        if ( aIndex == 4 ) {
+            // 取广告
+            NSDictionary *admessage = [info getDicValueForKey:@"advmessage" defaultValue:nil];
+            self.literaturePage.adverData = admessage;
+            
             // 取tag array
             NSArray *tagArray = [info getArrayValueForKey:@"tagmessage" defaultValue:nil];
             if ( tagArray.count ) {
@@ -740,44 +747,92 @@
                 }
             }
             self.literatureCategoryView.categoryData = titleArray;
+            
+            // 取列表
+            NSArray *dataArray = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
+            if ( dataArray.count ) {
+                if ( isHead ) { // 下拉刷新 头部 ， 需要清空数组
+                    [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
+                }
+                [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:dataArray];
+            }
         }
-        else if ( aIndex == 5 ){
+        // 取播客
+        if ( aIndex == 5 ) {
+            // 取列表
+            NSArray *dataArray = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
+            if ( dataArray.count ) {
+                if ( isHead ) { // 下拉刷新 头部 ， 需要清空数组
+                    [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
+                }
+                [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:dataArray];
+            }
+        }
+        // 取百家
+        if ( aIndex == 6 ){
             // 取作者
             NSArray *authorList = [info getArrayValueForKey:@"writerlistmessage" defaultValue:nil];
             if ( authorList.count ) {
                 self.baiJiaPage.authorList = [Utils findSameKeyWithArray:authorList];
+            }
+            
+            // 取列表
+            NSArray *dataArray = [info getArrayValueForKey:@"artfromwritermessage" defaultValue:nil];
+            if ( dataArray.count ) {
+                if ( isHead ) { // 下拉刷新 头部 ， 需要清空数组
+                    [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
+                }
+                [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:dataArray];
             }
         }
         
         // 设置 总共多少 页
         NSInteger totalPage = [info getIntValueForKey:@"total" defaultValue:1];
         [scrollPageView setTotlePageWithNum:totalPage atIndex:aIndex];
-        
-        NSArray *dataArray;
-        if ( aIndex == 5 ) {
-            dataArray = [info getArrayValueForKey:@"artfromwritermessage" defaultValue:nil];
-        }
-        else{
-            dataArray = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
-        }
-        
-        if ( dataArray.count ) {
-            if ( isHead ) { // 下拉刷新 头部 ， 需要清空数组
-                [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
-            }
-            [[scrollPageView.dataSources objectAtIndex:aIndex] addObjectsFromArray:dataArray];
-        }
         // 刷新表格
         [[scrollPageView.contentItems objectAtIndex:aIndex] reloadData];
     }
-   
-    
-//    if ( aIndex == 1 ) {
-//         self.newsPage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
-//        // 刷新表格
-//        [[scrollPageView.contentItems objectAtIndex:aIndex] reloadData];
-//    }
 }
+
+- (void)getNoticeData
+{
+    __weak typeof(self) wSelf = self;
+    [NetRequestAPI getMyNoticeHomePageListWithSessionId:[RYUserInfo sharedManager].session
+                                                success:^(id responseDic) {
+                                                    NSLog(@"responseDic 通知 ：%@",responseDic);
+                                                    [wSelf analysisNoticeDataWithDict:responseDic];
+                                                    
+                                                } failure:^(id errorString) {
+                                                    NSLog(@"errorString 通知 ：%@",errorString);
+                                                }];
+}
+
+-(void)analysisNoticeDataWithDict:(NSDictionary *)responseDic
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        return;
+    }
+    
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( info == nil ) {
+        return;
+    }
+    // 取系统消息
+    NSArray *noticesystemmessage = [info getArrayValueForKey:@"noticesystemmessage" defaultValue:nil];
+    self.homePage.noticesystemmessage = noticesystemmessage;
+    // 取有奖活动
+    NSArray *noticespreadmessage = [info getArrayValueForKey:@"noticespreadmessage" defaultValue:nil];
+    self.homePage.noticespreadmessage = noticespreadmessage;
+    
+    // 取 公司通知列表
+    NSArray  *noticethreadmessage = [info getArrayValueForKey:@"noticethreadmessage" defaultValue:nil];
+    self.homePage.noticethreadmessage = noticethreadmessage;
+    [[scrollPageView.contentItems objectAtIndex:0] reloadData];
+}
+
+
 
 #pragma mark  UITableView delegate and dataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -787,23 +842,28 @@
         self.homePage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
         return [self.homePage homepageNumberOfSectionsInTableView:tableView];
     }
-    else if ( aIndex == 1 ) {
+    else if ( aIndex == 1 ){
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.weeklyPage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
+        return [self.weeklyPage weeklyPageNumberOfSectionsInTableView:tableView];
+    }
+    else if ( aIndex == 2 ) {
         self.newsPage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
         return [self.newsPage newsNumberOfSectionsInTableView:tableView];
     }
-    else if ( aIndex == 2 ){
+    else if ( aIndex == 3 ){
         self.huiXun.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
         return [self.huiXun huiXunNumberOfSectionsInTableView:tableView];
     }
-    else if ( aIndex == 3 ){
+    else if ( aIndex == 4 ){
         self.literaturePage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
         return [self.literaturePage literatureNumberOfSectionsInTableView:tableView];
     }
-    else if ( aIndex == 4 ){
+    else if ( aIndex == 5 ){
         self.podcastPage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
         return  [self.podcastPage podcastNumberOfSectionsInTableView:tableView];
     }
-    else if ( aIndex == 5 ){
+    else if ( aIndex == 6 ){
         self.baiJiaPage.listData = [scrollPageView.dataSources objectAtIndex:aIndex];
         return [self.baiJiaPage baiJiaNumberOfSectionsInTableView:tableView];
     }
@@ -816,16 +876,19 @@
     if ( aIndex == 0 ) {
         return [self.homePage homepageTableView:tableView numberOfRowsInSection:section];
     }
-    else if ( aIndex == 1 ) {
+    else if ( aIndex == 1 ){
+        return [self.weeklyPage weeklyPageTableView:tableView numberOfRowsInSection:section];
+    }
+    else if ( aIndex == 2 ) {
         return [self.newsPage newsTableView:tableView numberOfRowsInSection:section];
     }
-    else if ( aIndex == 2 ){
+    else if ( aIndex == 3 ){
         return [self.huiXun huiXunTableView:tableView numberOfRowsInSection:section];
     }
-    else if ( aIndex == 3 ){
+    else if ( aIndex == 4 ){
         return [self.literaturePage literatureTableView:tableView numberOfRowsInSection:section];
     }
-    else if ( aIndex == 4 ){
+    else if ( aIndex == 5 ){
         return [self.podcastPage podcastTableView:tableView numberOfRowsInSection:section];
     }
     else {
@@ -839,16 +902,19 @@
     if ( aIndex == 0 ) {
         return [self.homePage homepageTableView:tableView heightForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 1 ) {
+    else if ( aIndex == 1 ){
+        return [self.weeklyPage weeklyPageTableView:tableView heightForRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 2 ) {
         return [self.newsPage newsTableView:tableView heightForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 2 ){
+    else if ( aIndex == 3 ){
         return [self.huiXun huiXunTableView:tableView heightForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 3 ){
+    else if ( aIndex == 4 ){
         return [self.literaturePage literatureTableView:tableView heightForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 4 ){
+    else if ( aIndex == 5 ){
         return [self.podcastPage podcastTableView:tableView heightForRowAtIndexPath:indexPath];
     }
     else{
@@ -862,16 +928,19 @@
     if ( aIndex == 0 ) {
         return [self.homePage homepageTableView:tableView cellForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 1 ) {
+    else if ( aIndex == 1 ){
+        return [self.weeklyPage weeklyPageTableView:tableView cellForRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 2 ) {
         return [self.newsPage newsTableView:tableView cellForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 2 ){
+    else if ( aIndex == 3 ){
         return [self.huiXun huiXunTableView:tableView cellForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 3 ){
+    else if ( aIndex == 4 ){
         return [self.literaturePage literatureTableView:tableView cellForRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 4 ){
+    else if ( aIndex == 5 ){
         return [self.podcastPage podcastTableView:tableView cellForRowAtIndexPath:indexPath];
     }
     else {
@@ -887,7 +956,8 @@
         [self.homePage homepageTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
     else if ( aIndex == 1 ) {
-        [self weeklyTableView:tableView didSelectRowAtIndexPath:indexPath];
+//        [self weeklyTableView:tableView didSelectRowAtIndexPath:indexPath];
+        [self.weeklyPage weeklyPageTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
     else if ( aIndex == 4 ) { // 播客点击，进入播放
         [self podcastTableView:tableView didSelectRowAtIndexPath:indexPath];
@@ -920,7 +990,10 @@
     if ( aIndex == 0 ) {
         return [self.homePage homepageTableView:tableView heightForFooterInSection:section];
     }
-    else if ( aIndex == 1 ) {
+    else if ( aIndex == 1 ){
+        return [self.weeklyPage weeklyPageTableView:tableView heightForFooterInSection:section];
+    }
+    else if ( aIndex == 2 ) {
         return [self.newsPage newsTableView:tableView heightForFooterInSection:section];
     }
     else if ( aIndex == 3 ){
@@ -943,7 +1016,10 @@
     if ( aIndex == 0 ) {
         return [self.homePage homepageTableView:tableView heightForHeaderInSection:section];
     }
-    else if ( aIndex == 1 ) {
+    else if ( aIndex == 1 ){
+        return [self.weeklyPage weeklyPageTableView:tableView heightForHeaderInSection:section];
+    }
+    else if ( aIndex == 2 ) {
         return [self.newsPage newsTableView:tableView heightForHeaderInSection:section];
     }
     else if ( aIndex == 3 ){
@@ -965,8 +1041,10 @@
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
     if ( aIndex == 0 ) {
-//        return [self homePageDirectSearchView];
         return [self.homePage homepageTableView:tableView viewForHeaderInSection:section];
+    }
+    else if ( aIndex == 1 ){
+        return [self.weeklyPage weeklyPageTableView:tableView viewForHeaderInSection:section];
     }
     else if ( aIndex == 5 ) {
         return [self.baiJiaPage baiJiaTableView:tableView viewForHeaderInSection:section];
@@ -981,6 +1059,9 @@
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
     if ( aIndex == 0 ) {
         return [self.homePage homepageTableView:tableView viewForFooterInSection:section];
+    }
+    else if ( aIndex == 1 ){
+        return [self.weeklyPage weeklyPageTableView:tableView viewForFooterInSection:section];
     }
     return nil;
 }
@@ -1114,42 +1195,6 @@
 
     return view;
 }
-
-#pragma mark - UISearchBarDelegate
--(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    if ( searchBar == self.searchBar ) {
-        NSString *placeholder = searchBar.placeholder;
-        RYCorporateSearchViewController *vc = [[RYCorporateSearchViewController alloc] initWithSearchBarPlaceholder:placeholder];
-        UINavigationController* nc = [[UINavigationController alloc]initWithRootViewController:vc];
-        nc.delegate = self;
-        [self presentViewController:nc animated:YES completion:^{
-            [searchBar resignFirstResponder];
-        }];
-    }
-    else{
-        [searchBar resignFirstResponder];
-    }
-}
-
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    UIBarButtonItem *back=[[UIBarButtonItem alloc] init];
-    
-    back.title = @" ";
-    UIImage *backbtn = [UIImage imageNamed:@"back_btn_icon.png"];
-    [back setBackButtonBackgroundImage:backbtn forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    [back setBackButtonBackgroundImage:[UIImage imageNamed:@"back_btn_icon.png"] forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
-    [back setStyle:UIBarButtonItemStylePlain];
-    
-    viewController.navigationItem.backBarButtonItem = back;
-}
-
-
--(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
-    [searchBar resignFirstResponder];
-    NSLog(@"点击搜索框");
-}
-
 
 - (void)gotoweekly
 {

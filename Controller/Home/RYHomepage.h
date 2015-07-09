@@ -11,9 +11,12 @@
 @interface RYHomepage : UIView
 
 @property (nonatomic , strong) UIViewController *viewControll;
-@property (nonatomic , strong) NSDictionary     *adverData;
-@property (nonatomic , strong) NSArray          *listData;
-@property (nonatomic , strong) NSDictionary     *descmessage;
+@property (nonatomic , strong) NSArray          *listData;              //
+@property (nonatomic , strong) NSDictionary     *advmessage;            //广告
+@property (nonatomic , strong) NSDictionary     *descmessage;           //企业直达号等讯息
+@property (nonatomic , strong) NSArray          *noticesystemmessage;   //系统消息
+@property (nonatomic , strong) NSArray          *noticespreadmessage;   //有奖活动
+@property (nonatomic , strong) NSArray          *noticethreadmessage;   //公司消息
 
 - (NSInteger)homepageNumberOfSectionsInTableView:(UITableView *)tableView;
 - (NSInteger)homepageTableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;

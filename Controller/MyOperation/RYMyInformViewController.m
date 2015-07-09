@@ -206,7 +206,7 @@
         if ( self.noticeModel.companyNoticeArray.count ) {
             NSDictionary *dict = [self.noticeModel.companyNoticeArray objectAtIndex:indexPath.row];
             cell.titleLabel.text = [dict getStringValueForKey:@"author" defaultValue:@""];
-            cell.subheadLabel.text = [dict getStringValueForKey:@"note" defaultValue:@""];
+//            cell.subheadLabel.text = [dict getStringValueForKey:@"note" defaultValue:@""];
             NSInteger count = [dict getIntValueForKey:@"count" defaultValue:0];
             if ( count > 0 ) {
                 cell.numLabel.hidden = NO;

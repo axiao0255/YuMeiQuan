@@ -180,8 +180,9 @@ static NetManager *_manager;
     
     [manager POST:urlStr parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
-        [formData appendPartWithFileURL:_filePath name:@"file" error:nil];
-        
+        if ( _filePath != nil ) {
+            [formData appendPartWithFileURL:_filePath name:@"file" error:nil];
+        }
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if ( [responseObject isKindOfClass:[NSData class]] ) {

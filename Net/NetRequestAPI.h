@@ -283,6 +283,11 @@
                               pid:(NSString *)_pid
                           success:(void(^)(id responseDic))success
                           failure:(void(^)(id errorString))failure;
+#pragma mark - 点赞
++(void)praisesCommentWithSessionId:(NSString *)session
+                               tid:(NSString *)_tid
+                           success:(void(^)(id responseDic))success
+                           failure:(void(^)(id errorString))failure;
 
 
 

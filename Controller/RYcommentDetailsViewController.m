@@ -10,8 +10,7 @@
 #import "MJRefreshTableView.h"
 #import "RYcommentTableViewCell.h"
 #import "RYShareSheet.h"
-//#import "ChatCacheFileUtil.h"
-//#import "VoiceConverter.h"
+#import "RYCommentData.h"
 
 @interface RYcommentDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,FSVoiceBubbleDelegate,AVAudioRecorderDelegate,RYcommentTableViewCellDelegate,RYShareSheetDelegate,UIAlertViewDelegate>
 {
@@ -24,15 +23,13 @@
     NSTimer         *peakTimer;
     AVAudioRecorder *audioRecorder;
     NSTimeInterval  _timeLen;
-    NSString*       _lastRecordFile;
-    CAShapeLayer    *shapeLayer;
     
     AVAudioPlayer   *audioPlayer;
-    UIButton        *recordBtn;       // 录音按钮
+    UIButton        *recordBtn;              // 录音按钮
     
-    NSString        *textContent;     // 输入框的内容
-    NSInteger       replyIndex;       // 当前回复评论第几条回复。      当对文字进行评论时 为 －1
+    NSString        *textContent;            // 输入框的内容
     NSString        *textViewPlaceholder;    //
+    NSString        *praisesName;            // 点赞者的名字
     
 }
 
@@ -42,24 +39,18 @@
 @property (nonatomic , strong) NSDictionary        *topDict;
 @property (nonatomic , strong) NSString            *tid;
 @property (nonatomic , strong) NSMutableArray      *commentList;
-@property (nonatomic , strong) RYShareSheet       *shareSheet; // 分享
+@property (nonatomic , strong) RYShareSheet       *shareSheet;      // 分享
 
 @property (assign , nonatomic) NSInteger           currentRow;
 @property (nonatomic , assign) BOOL                isCanComment;    // 是否有权限评论
+@property (nonatomic , strong) RYCommentData      *commentData;     // 需要提交的 评论数据
+@property (nonatomic , assign) NSInteger          replyIndex;       // 当前回复评论第几条回复。      当对文字进行评论时 为 －1
+@property (nonatomic , assign) BOOL               keyboardShow;     // 用于判断 textView是否是编辑
+@property (nonatomic , assign) BOOL               myzanmessage;     // 是否点赞过
 
 @end
 
 @implementation RYcommentDetailsViewController
-
--(id)initWithArticleData:(RYArticleData *)articleData
-{
-    self = [super init];
-    if ( self ) {
-        self.articleData = articleData;
-        self.listData = [NSMutableArray array];
-    }
-    return self;
-}
 
 -(id)initWithArticleTid:(NSString *) tid
 {
@@ -67,6 +58,9 @@
     if ( self ) {
        self.listData = [NSMutableArray array];
         self.tid = tid;
+        
+        
+#warning 测试 tid  需要删除
         self.tid = @"1016634";
     }
     return self;
@@ -77,7 +71,8 @@
     // Do any additional setup after loading the view.
     self.title = @"评论";
     self.currentRow = -1;
-    replyIndex = -1;
+    self.replyIndex = -1;
+    self.keyboardShow = NO;
     
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
@@ -105,6 +100,14 @@
         _shareSheet = [[RYShareSheet alloc] init];
     }
     return _shareSheet;
+}
+
+- (RYCommentData *)commentData
+{
+    if ( _commentData == nil ) {
+        _commentData = [[RYCommentData alloc] init];
+    }
+    return _commentData;
 }
 
 - (RYArticleData *)articleData
@@ -173,6 +176,8 @@
     // 取文章信息
     NSDictionary *threadmessage = [info getDicValueForKey:@"threadmessage" defaultValue:nil];
     self.isCanComment = [threadmessage getBoolValueForKey:@"cancommentmessage" defaultValue:NO];
+    self.myzanmessage = [threadmessage getBoolValueForKey:@"myzanmessage" defaultValue:NO];
+    praisesName = [threadmessage getStringValueForKey:@"zanmessage" defaultValue:@""];
     if ( threadmessage ) {
         NSDictionary *articleDict = [threadmessage getDicValueForKey:@"threadmessage" defaultValue:nil];
         if ( articleDict ) {
@@ -189,17 +194,6 @@
         }
         [self.commentList addObjectsFromArray:commentlistmessage];
     }
-    
-    // 判断是否有权评论，
-//    if ( self.isCanComment ) {
-//        self.tableView.height = VIEW_HEIGHT - 50;
-//        containerView.hidden = NO;
-//    }
-//    else{
-//        self.tableView.height = VIEW_HEIGHT;
-//        containerView.hidden = YES;
-//    }
-    
     [self.tableView reloadData];
 }
 
@@ -218,8 +212,7 @@
     
     NSMutableDictionary *tempDict = [NSMutableDictionary dictionary];
     [tempDict setValue:self.articleData.subject forKey:@"subject"];
-    NSString *str = @"张三，李四，王五，赵六，张三，李四，王五，赵六，张三，李四，王五，赵六，张三，李四，王五，赵六等点赞";
-    [tempDict setValue:str forKey:@"praise"];
+    [tempDict setValue:praisesName forKey:@"praise"];
     self.topDict = tempDict;
 }
 
@@ -242,7 +235,6 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ( section == 0 ) {
-//        NSString *subject = [self.topDict getStringValueForKey:@"subject" defaultValue:@""];
         NSString *subject = self.articleData.subject;
         if ( [ShowBox isEmptyString:subject] ) {
             return 0;
@@ -279,7 +271,7 @@
                                                      context:nil];
             height = height + praiseRect.size.height + 10;
         }
-        height = height + 20 + 24 + 10;
+        height = height + 20 + 28 + 10;
         
         return height;
     }
@@ -323,6 +315,16 @@
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         }
         [cell setValueWithDict:self.topDict];
+        [cell.replyBtn addTarget:self action:@selector(replyBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.praiseBtn addTarget:self action:@selector(praiseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        if ( self.myzanmessage ) {
+            [cell.praiseBtn setEnabled:NO];
+            cell.praiseBtn.backgroundColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
+        }
+        else{
+            [cell.praiseBtn setEnabled:YES];
+            cell.praiseBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
+        }
         return cell;
     }
     else{
@@ -360,10 +362,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [textView resignFirstResponder];
-    [UIView animateWithDuration:0.25 animations:^{
-        containerView.top = self.view.frame.size.height;
-    }];
+    [self dismissTextView];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -405,7 +404,7 @@
 
 -(void)currentSelectCellTag:(NSInteger)cellTag andSelectBtnTage:(NSInteger)btnTage
 {
-    NSLog(@"cellTag : %ld , btnTage: %ld",(long)cellTag,(long)btnTage);
+//    NSLog(@"cellTag : %ld , btnTage: %ld",(long)cellTag,(long)btnTage);
     if ( !self.isCanComment && btnTage == 1 ) {
         [ShowBox showError:@"您没有回复权限，如需开通此功能，请与客服联系！"];
         return;
@@ -419,18 +418,17 @@
     switch ( btnTage ) {
         case 0:  // 分享
         {
-            [textView resignFirstResponder];
-            [UIView animateWithDuration:0.25 animations:^{
-                containerView.top = self.view.frame.size.height;
-            } completion:^(BOOL finished) {
-                [self shareWithDict:dict];
-            }];
-            
+            [self dismissTextView];
+            [self shareWithDict:dict];
         }
             break;
         case 1: // 回复
         {
-            replyIndex = cellTag;
+            if ( self.keyboardShow ) {
+                [self dismissTextView];
+                return;
+            }
+            self.replyIndex = cellTag;
             textViewPlaceholder = [NSString stringWithFormat:@"回复%@",[dict getStringValueForKey:@"author" defaultValue:@""]];
             textView.placeholder = textViewPlaceholder;
             containerView.top = self.view.frame.size.height - 50;
@@ -440,11 +438,7 @@
         case 2: // 删除
         {
             
-            [textView resignFirstResponder];
-            [UIView animateWithDuration:0.25 animations:^{
-                containerView.top = self.view.frame.size.height;
-            } completion:^(BOOL finished) {
-            }];
+            [self dismissTextView];
  
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"确定删除" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
             alertView.tag = cellTag;
@@ -538,6 +532,13 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if ( alertView.tag == 1010 ) {
+        if ( buttonIndex == 1 ) {
+            [self submitComment];
+        }
+        return;
+    }
+    
     if ( buttonIndex == 1 ) {
         NSDictionary *dict = [self.commentList objectAtIndex:alertView.tag];
         [self deleteCommentWithDict:dict];
@@ -547,27 +548,21 @@
 #pragma  mark UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    [textView resignFirstResponder];
-    [UIView animateWithDuration:0.25 animations:^{
-        containerView.top = self.view.frame.size.height;
-    }];
+    [self dismissTextView];
 }
 
 #pragma mark FSVoiceBubbleDelegate
 - (void)voiceBubbleDidStartPlaying:(FSVoiceBubble *)voiceBubble
 {
     _currentRow = voiceBubble.tag;
-    [textView resignFirstResponder];
-    [UIView animateWithDuration:0.25 animations:^{
-        containerView.top = self.view.frame.size.height;
-    }];
+    [self dismissTextView];
 }
 
 #pragma mark 聊天窗
 -(void)createTalkView
 {
     containerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, SCREEN_WIDTH, 50)];
-    containerView.backgroundColor = [UIColor redColor];//[Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
+    containerView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
     
     talkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     talkBtn.frame = CGRectMake(15, 8, 36, 36);
@@ -613,7 +608,7 @@
     recordBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     recordBtn.frame = textView.frame;
     recordBtn.backgroundColor = [UIColor lightGrayColor];
-    [recordBtn setTitle:@"按住  说话" forState:UIControlStateNormal];
+    [recordBtn setTitle:@"按住  说话(60s)" forState:UIControlStateNormal];
     [recordBtn setTitle:@"松开  结束" forState:UIControlEventTouchDown];
     [recordBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [recordBtn setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -625,6 +620,9 @@
     [containerView addSubview:recordBtn];
 }
 
+/**
+ * 语音和文字输入 切换
+ */
 -(void)talkBtnClick:(id)sender
 {
     UIButton *btn = (UIButton *)sender;
@@ -641,6 +639,7 @@
     }
 }
 
+#pragma  mark HPGrowingTextView 代理
 - (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
 {
     float diff = (growingTextView.frame.size.height - height);
@@ -655,6 +654,7 @@
 {
     recordBtn.hidden = YES;
     talkBtn.selected = YES;
+    self.keyboardShow = YES;
     if (textContent.length) {
         textView.text = textContent;
     }
@@ -662,44 +662,148 @@
 
 - (void)growingTextViewDidEndEditing:(HPGrowingTextView *)growingTextView
 {
-    
+    self.keyboardShow = NO;
     talkBtn.selected = NO;
 }
 
 - (BOOL)growingTextViewShouldReturn:(HPGrowingTextView *)growingTextView
 {
-    NSLog(@"return");
     if ( growingTextView.text.length == 0 ) {
+        [self dismissTextView];
         return YES;
     }
-    if ( replyIndex != -1 ) {
-        NSDictionary *dict = [self.commentList objectAtIndex:replyIndex];
+    if ( self.replyIndex != -1 ) {
+        NSDictionary *dict = [self.commentList objectAtIndex:self.replyIndex];
         NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
-        [self submitCommentWithPid:pid word:growingTextView.text voice:nil];
+        self.commentData.tid = self.tid;
+        self.commentData.voiceURL = nil;
+        self.commentData.pid = pid;
+        self.commentData.word = growingTextView.text;
+        [self submitComment];
     }
     else{
-        [self submitCommentWithPid:nil word:growingTextView.text voice:nil];
+        self.commentData.tid = self.tid;
+        self.commentData.voiceURL = nil;
+        self.commentData.pid = nil;
+        self.commentData.word = growingTextView.text;
+        [self submitComment];
     }
     return YES;
 }
 
 #pragma mark 提交评论
--(void)submitCommentWithPid:(NSString *)_pid word:(NSString *)_word voice:(NSURL *)voiceURL
+-(void)submitComment
 {
     if ([ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"正在发送..." maskType:SVProgressHUDMaskTypeBlack];
         [NetRequestAPI submitCommentWithSessionId:[RYUserInfo sharedManager].session
-                                              tid:self.tid
-                                              pid:_pid
-                                             word:_word
-                                            voice:pathURL
+                                              tid:self.commentData.tid
+                                              pid:self.commentData.pid
+                                             word:self.commentData.word
+                                            voice:self.commentData.voiceURL
                                           success:^(id responseDic) {
+                                              [SVProgressHUD dismiss];
                                               NSLog(@"上传录音 responseDic： %@",responseDic);
+                                              NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                              BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                              if ( !success ) {
+                                                  [wSelf submitCommentFailureShowAlert];
+                                                  return ;
+                                              }
+                                              wSelf.replyIndex = -1;
+                                              [wSelf submitCommentsuccess];
+                                              [wSelf.tableView headerBeginRefreshing];
                                               
                                           } failure:^(id errorString) {
                                               NSLog(@"上传录音 errorString： %@",errorString);
+                                              [SVProgressHUD dismiss];
+                                              [wSelf submitCommentFailureShowAlert];
                                           }];
- 
     }
+}
+/**
+ *上传评论 失败  弹出提示框
+ */
+- (void)submitCommentFailureShowAlert
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"发送失败，是否重新发送！" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alertView.tag = 1010;
+    [alertView show];
+}
+
+/**
+ *上传评论成功
+ */
+- (void)submitCommentsuccess
+{    pathURL = nil;
+    [self dismissTextView];
+}
+
+
+/**
+ * 隐藏键盘
+ */
+-(void) dismissTextView
+{
+    [textView resignFirstResponder];
+    textView.text = nil;
+    textContent = nil;
+    [UIView animateWithDuration:0.25 animations:^{
+        containerView.top = self.view.frame.size.height;
+        
+    }];
+}
+
+
+#pragma mark 文字点赞
+
+-(void)praiseBtnClick:(id)sender
+{
+    NSLog(@"点赞");
+    if ( !self.isCanComment ) {
+        [ShowBox showError:@"您没有点赞权限，如需开通此功能，请与客服联系！"];
+        return;
+    }
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI praisesCommentWithSessionId:[RYUserInfo sharedManager].session
+                                               tid:self.tid
+                                           success:^(id responseDic) {
+                                               NSLog(@"点赞 responseDic: %@",responseDic);
+                                               NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                               BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                               if ( !success ) {
+                                                   [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"操作失败，请稍候重试！"]];
+                                                   return ;
+                                               }
+                                               [wSelf.tableView headerBeginRefreshing];
+            
+        } failure:^(id errorString) {
+            [ShowBox showError:@"操作失败，请稍候重试！"];
+             NSLog(@"点赞 errorString: %@",errorString);
+        }];
+    }
+}
+
+#pragma mark 评论文章
+-(void)replyBtnClick:(id)sender
+{
+    NSLog(@"评论文章");
+    if ( !self.isCanComment ) {
+        [ShowBox showError:@"您没有回复权限，如需开通此功能，请与客服联系！"];
+        return;
+    }
+    if ( self.keyboardShow ) {
+        [self dismissTextView];
+        return;
+    }
+    self.replyIndex = -1;
+    textViewPlaceholder = @"我也说一句";
+    textView.placeholder = textViewPlaceholder;
+    textView.text = nil;
+    containerView.top = self.view.frame.size.height - 50;
+    [textView becomeFirstResponder];
 }
 
 
@@ -754,73 +858,58 @@
     _timeLen = audioRecorder.currentTime;
     if(_timeLen>=60)
         [self recordStop:nil];
-    
-    /*    [audioRecorder updateMeters];
-     const double alpha=0.5;
-     double peakPowerForChannel=pow(10, (0.05)*[audioRecorder peakPowerForChannel:0]);
-     lowPassResults=alpha*peakPowerForChannel+(1.0-alpha)*lowPassResults;
-     
-     for (int i=1; i<8; i++) {
-     if (lowPassResults>1.0/7.0*i){
-     [[talkView viewWithTag:i] setHidden:NO];
-     }else{
-     [[talkView viewWithTag:i] setHidden:YES];
-     }
-     }*/
 }
 
 -(void)recordStop:(UIButton *)sender
 {
-    if(!recording)
+    _timeLen = audioRecorder.currentTime;
+    if(!recording && _timeLen < 1.0 )
         return;
     [peakTimer invalidate];
     peakTimer = nil;
-    
-    //    [self offRecordBtns];
-    
-    _timeLen = audioRecorder.currentTime;
     [audioRecorder stop];
-//    NSString *amrPath = [VoiceConverter wavToAmr:pathURL.path];
-//    NSData *recordData = [NSData dataWithContentsOfFile:amrPath];
-//    
-//    [[ChatCacheFileUtil sharedInstance] deleteWithContentPath:pathURL.path];
-//    [[ChatCacheFileUtil sharedInstance] deleteWithContentPath:amrPath];
-//    _lastRecordFile = [[amrPath lastPathComponent] copy];
-//    
-//    NSLog(@"音频文件路径:%@\n%@",pathURL.path,amrPath);
-//    //    if (_timeLen<1) {
-//    //        [g_App showAlert:@"录的时间过短"];
-//    //        return;
-//    //    }
-//    [self sendVoice:recordData];
-//    audioRecorder = nil;
-//    recording = NO;
-    
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-
-    NSError *error;
-    audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:pathURL error:&error];
-    audioPlayer.numberOfLoops = 0;
-    [audioPlayer play];
-    
     recording = NO;
-    NSLog(@"playing");
     
-    [NetRequestAPI submitCommentWithSessionId:[RYUserInfo sharedManager].session
-                                          tid:self.tid
-                                          pid:nil
-                                         word:@"评论文章啦啊啦啦啦"
-                                        voice:pathURL
-                                      success:^(id responseDic) {
-                                          NSLog(@"上传录音 responseDic： %@",responseDic);
-        
-    } failure:^(id errorString) {
-         NSLog(@"上传录音 errorString： %@",errorString);
-    }];
+//    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+//    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+//
+//    NSError *error;
+//    audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:pathURL error:&error];
+//    audioPlayer.numberOfLoops = 0;
+//    [audioPlayer play];
+//    
+//   
+//    NSLog(@"playing");
+//    
+//    [NetRequestAPI submitCommentWithSessionId:[RYUserInfo sharedManager].session
+//                                          tid:self.tid
+//                                          pid:nil
+//                                         word:@"评论文章啦啊啦啦啦"
+//                                        voice:pathURL
+//                                      success:^(id responseDic) {
+//                                          NSLog(@"上传录音 responseDic： %@",responseDic);
+//        
+//    } failure:^(id errorString) {
+//         NSLog(@"上传录音 errorString： %@",errorString);
+//    }];
     
     
-
+    if ( self.replyIndex != -1 ) {
+        NSDictionary *dict = [self.commentList objectAtIndex:self.replyIndex];
+        NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
+        self.commentData.tid = self.tid;
+        self.commentData.voiceURL = pathURL;
+        self.commentData.pid = pid;
+        self.commentData.word = nil;
+        [self submitComment];
+    }
+    else{
+        self.commentData.tid = self.tid;
+        self.commentData.voiceURL = pathURL;
+        self.commentData.pid = nil;
+        self.commentData.word = nil;
+        [self submitComment];
+    }
 }
 
 -(void)recordCancel:(UIButton *)sender
@@ -833,10 +922,7 @@
     peakTimer = nil;
     recording = NO;
 }
--(void)sendVoice:(NSData *)data
-{
-    // 发送声音
-}
+
 
 
 @end

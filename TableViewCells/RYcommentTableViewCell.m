@@ -27,7 +27,6 @@
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, SCREEN_WIDTH - 30, 16)];
         self.nameLabel.font = [UIFont systemFontOfSize:16];
         self.nameLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-        self.nameLabel.text = @"习近平";
         [self.contentView addSubview:self.nameLabel];
         
         // 设置语音框
@@ -51,7 +50,7 @@
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.commentLabel.bottom + 15, 150, 14)];
         self.timeLabel.font = [UIFont systemFontOfSize:14];
         self.timeLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        [self.contentView addSubview:self.commentLabel];
+        [self.contentView addSubview:self.timeLabel];
         
         // 分享评论框
         self.replyMenu = [[replyView alloc]init];
@@ -59,7 +58,6 @@
         self.replyMenu.top = self.commentLabel.bottom + 10;
         self.replyMenu.delegate = self;
         [self.contentView addSubview:self.replyMenu];
-        
     }
     return self;
 }
@@ -112,8 +110,7 @@
     }
     
     
-    self.timeLabel.text = [dict getStringValueForKey:@"dateline" defaultValue:@""];
-    
+    self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
     // 取作者id  并 判断 是否 和本人uid 是否一致
     NSString *authorid = [dict getStringValueForKey:@"authorid" defaultValue:@""];
     if ( [[RYUserInfo sharedManager].uid isEqualToString:authorid] && ![ShowBox isEmptyString:authorid] ) {
@@ -166,22 +163,29 @@
         self.praiseLael.width = SCREEN_WIDTH - 30;
         [self.contentView addSubview:self.praiseLael];
         
-        self.praiseBtn = [[UIButton alloc] initWithFrame:CGRectZero];
-        self.praiseBtn.width = 48;
-        self.praiseBtn.height = 24;
-        self.praiseBtn.right = SCREEN_WIDTH - 15;
-        [self.praiseBtn setImage:[UIImage imageNamed:@"ic_praise_nm.png"] forState:UIControlStateNormal];
-        [self.praiseBtn setBackgroundImage:[UIImage imageNamed:@"ic_praise_bk.png"] forState:UIControlStateNormal];
-        [self.contentView addSubview:self.praiseBtn];
-        
-        
         self.replyBtn = [[UIButton alloc] initWithFrame:CGRectZero];
-        self.replyBtn.width = 48;
-        self.replyBtn.height = 24;
-        self.replyBtn.right = self.praiseBtn.left - 10;
-        [self.replyBtn setImage:[UIImage imageNamed:@"ic_replyBtn_bk.png"] forState:UIControlStateNormal];
-        [self.replyBtn setBackgroundImage:[UIImage imageNamed:@"ic_praise_bk.png"] forState:UIControlStateNormal];
+        self.replyBtn.width = 56;
+        self.replyBtn.height = 28;
+        self.replyBtn.right = SCREEN_WIDTH - 15;
+        self.replyBtn.layer.cornerRadius = 15;
+        self.replyBtn.layer.masksToBounds = YES;
+        self.replyBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
+        [self.replyBtn setTitle:@"评论" forState:UIControlStateNormal];
+        self.replyBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [self.replyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.contentView addSubview:self.replyBtn];
+        
+        self.praiseBtn = [[UIButton alloc] initWithFrame:CGRectZero];
+        self.praiseBtn.width = 56;
+        self.praiseBtn.height = 28;
+        self.praiseBtn.right = self.replyBtn.left - 10;
+        self.praiseBtn.layer.cornerRadius = 15;
+        self.praiseBtn.layer.masksToBounds = YES;
+        self.praiseBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
+        [self.praiseBtn setTitle:@"赞" forState:UIControlStateNormal];
+        self.praiseBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [self.praiseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.contentView addSubview:self.praiseBtn];
     }
     return self;
 }
@@ -195,10 +199,15 @@
     self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
     [self.titleLabel sizeToFit];
     
-    self.praiseLael.top = self.titleLabel.bottom + 20;
     NSString *praise = [dict getStringValueForKey:@"praise" defaultValue:@""];
+    NSDictionary *praiseAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:14]};
+    CGRect praiseRect = [praise boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                             options:NSStringDrawingUsesLineFragmentOrigin
+                                          attributes:praiseAttributes
+                                             context:nil];
+    self.praiseLael.top = self.titleLabel.bottom + 20;
+    self.praiseLael.height = praiseRect.size.height;
     self.praiseLael.text = praise;
-    [self.praiseLael sizeToFit];
     
     if ( [ShowBox isEmptyString:praise] ) {
         self.praiseBtn.top = self.titleLabel.bottom + 20;

@@ -835,4 +835,21 @@
     
 }
 
+#pragma mark - 点赞
++(void)praisesCommentWithSessionId:(NSString *)session
+                               tid:(NSString *)_tid
+                           success:(void(^)(id responseDic))success
+                           failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"commentaction" forKey:@"mod"];
+    [parDic setValue:@"zan" forKey:@"ac"];
+    [parDic setValue:session forKey:@"sid"];
+    [parDic setValue:_tid forKey:@"tid"];
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+    
+}
+
 @end

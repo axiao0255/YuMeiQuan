@@ -1008,7 +1008,16 @@
 - (void)commentButtonClick:(id)sender
 {
     NSLog(@"点击评论");
-//    RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleData:self.articleData];
+    if ( ![ShowBox isLogin] ) {
+        RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+            if ( isLogin ) {
+                NSLog(@"登录完成");
+                [self getBodyData]; // 登录之后重新 刷新数据
+            }
+        }];
+        [self.navigationController pushViewController:nextVC animated:YES];
+        return;
+    }
      RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleTid:self.tid];
     [self.navigationController pushViewController:vc animated:YES];
 }

@@ -12,7 +12,18 @@
 
 @property (nonatomic , strong) UIImageView *leftImgView;
 @property (nonatomic , strong) UILabel     *titleLabel;
+//@property (nonatomic , strong) UILabel     *subheadLabel;
+@property (nonatomic , strong) UILabel     *numLabel;
+
+@end
+
+
+@interface RYCompanyNoticeTableViewCell : UITableViewCell
+
+//@property (nonatomic , strong) UIImageView *leftImgView;
+@property (nonatomic , strong) UILabel     *titleLabel;
 @property (nonatomic , strong) UILabel     *subheadLabel;
 @property (nonatomic , strong) UILabel     *numLabel;
 
+-(void)setValueWithDict:(NSDictionary *)dict;
 @end
