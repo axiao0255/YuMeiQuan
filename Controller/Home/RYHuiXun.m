@@ -8,6 +8,7 @@
 
 #import "RYHuiXun.h"
 #import "RYHuiXunTableViewCell.h"
+#import "RYArticleViewController.h"
 
 @implementation RYHuiXun
 
@@ -29,7 +30,7 @@
 
 
 - (NSInteger)huiXunNumberOfSectionsInTableView:(UITableView *)tableView
-{
+{    
     return 1;
 }
 - (NSInteger)huiXunTableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -42,18 +43,30 @@
         return 0;
     }
     else{
+        
         NSDictionary *dic = [self.listData objectAtIndex:indexPath.row];
         NSString *pic = [dic getStringValueForKey:@"pic" defaultValue:@""];
-        CGFloat titleLabelWidth;
         if ( ![ShowBox isEmptyString:pic] ) {
-            titleLabelWidth = SCREEN_WIDTH - 30 - 66;
-        }else{
-            titleLabelWidth = SCREEN_WIDTH - 30;
+            return 112;
         }
-        NSString *title = [dic getStringValueForKey:@"subject" defaultValue:@""];
-        CGSize titleSize = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(titleLabelWidth, 39)];
-        
-        return 8 + titleSize.height + 8 + 12 + 8 + 12 + 8;
+        else{
+            NSString *title = [dic getStringValueForKey:@"subject" defaultValue:@""];
+            NSDictionary *titleAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+            CGRect titleRect = [title boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, 39)
+                                                    options:NSStringDrawingUsesLineFragmentOrigin
+                                                 attributes:titleAttributes
+                                                    context:nil];
+            
+            NSString *organizer = [dic getStringValueForKey:@"organizer" defaultValue:@""];
+            NSDictionary *organizerAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:12]};
+            CGRect organizerRect = [organizer boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, 30)
+                                                    options:NSStringDrawingUsesLineFragmentOrigin
+                                                 attributes:organizerAttributes
+                                                    context:nil];
+            
+            return 10 + titleRect.size.height + 10 + organizerRect.size.height + 10 + 12 + 10;
+            
+        }
     }
 }
 - (UITableViewCell *)huiXunTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -68,6 +81,13 @@
     }
     return cell;
    
+}
+
+- (void)huiXunPageTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
+    RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
+    [self.viewController.navigationController pushViewController:vc animated:YES];
 }
 - (CGFloat)huiXunTableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {

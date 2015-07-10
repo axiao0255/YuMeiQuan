@@ -10,6 +10,8 @@
 
 @interface RYNewsPage : UIView
 
+@property (nonatomic , strong) UIViewController *viewController;
+
 @property (nonatomic , strong) NSDictionary   *adverData;
 
 @property (nonatomic , strong) NSArray        *listData;
@@ -21,6 +23,7 @@
 - (CGFloat)newsTableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 - (UITableViewCell *)newsTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)newsTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 
 -(CGFloat)newsTableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section;
 

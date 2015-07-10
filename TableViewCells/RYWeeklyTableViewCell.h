@@ -11,10 +11,8 @@
 @interface RYWeeklyTableViewCell : UITableViewCell
 
 @property (nonatomic , strong) UIImageView      *leftImgView;
-@property (nonatomic , strong) UILabel          *belongsLabel;
 @property (nonatomic , strong) UILabel          *titleLabel;
 @property (nonatomic , strong) UILabel          *timeLabel;
-@property (nonatomic , strong) UILabel          *subheadLabel;
 
 - (void)setValueWithDict:(NSDictionary *)dict;
 

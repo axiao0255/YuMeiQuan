@@ -24,18 +24,17 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.leftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 8, 58, 58)];
+        self.leftImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 95, 70)];
         [self.contentView addSubview:self.leftImageView];
         
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.leftImageView.frame) + 8,
-                                                                    8, SCREEN_WIDTH - 30 - 58, 39)];
-        self.titleLabel.font = [UIFont systemFontOfSize:16];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftImageView.right + 5, 8, SCREEN_WIDTH - 30 - 5 - self.leftImageView.width, 58)];
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-        self.titleLabel.numberOfLines = 2;
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
+        self.titleLabel.numberOfLines = 3;
         [self.contentView addSubview:self.titleLabel];
         
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.titleLabel.frame),
-                                                                   55, 100, 12)];
+                                                                   self.titleLabel.bottom + 3, 100, 12)];
         self.timeLabel.font = [UIFont systemFontOfSize:12];
         self.timeLabel.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         [self.contentView addSubview:self.timeLabel];
@@ -50,7 +49,10 @@
     }
     
     [self.leftImageView setImageWithURL:[NSURL URLWithString:[dict objectForKey:@"pic"]] placeholderImage:[UIImage imageNamed:@"ic_pic_default.png"]];
+    self.titleLabel.width = SCREEN_WIDTH - 130;
+    self.titleLabel.height = 58;
     self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
+    [self.titleLabel sizeToFit];
     self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
 }
 

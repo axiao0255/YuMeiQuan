@@ -200,7 +200,6 @@
     
     newsData = [[newsBarData alloc] init];
     newsData.dataArray = vButtonItemArray;
-//    self.title = [newsData currentTitleWithIndex:0];
     self.baiJiaCurrentSelectIndex = 0;
     
     if ( scrollBarView == nil ) {
@@ -408,6 +407,7 @@
 {
     if ( _newsPage == nil ) {
         _newsPage = [[RYNewsPage alloc] init];
+        _newsPage.viewController = self;
     }
     return _newsPage;
 }
@@ -416,6 +416,7 @@
 {
     if ( _huiXun == nil ) {
         _huiXun = [[RYHuiXun alloc] init];
+        _huiXun.viewController = self;
     }
     return _huiXun;
 }
@@ -479,7 +480,6 @@
         self.literatureCategoryView.hidden = YES;
         [self.literatureCategoryView dismissCategoryView];
     }
-//    self.title = [newsData currentTitleWithIndex:index];
     if (currentIndex != index ) {
         currentIndex = index;
         [scrollPageView moveScrollowViewAthIndex:currentIndex];
@@ -508,7 +508,7 @@
         NSInteger tempIndex = aIndex;
         [NetRequestAPI getHomePageWithSessionId:[RYUserInfo sharedManager].session
                                         success:^(id responseDic) {
-                                            NSLog(@"首页 responseDic： %@",responseDic);
+//                                            NSLog(@"首页 responseDic： %@",responseDic);
                                             [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                             [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                             
@@ -523,12 +523,12 @@
         [NetRequestAPI getPastweeklylistWithSessionId:[RYUserInfo sharedManager].session
                                                  page:currentPage
                                               success:^(id responseDic) {
-                                                  NSLog(@"往期周报 responseDic : %@",responseDic);
+//                                                  NSLog(@"往期周报 responseDic : %@",responseDic);
                                                   [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                   [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                   
                                               } failure:^(id errorString) {
-                                                  NSLog(@"往期周报 errorString : %@",errorString);
+//                                                  NSLog(@"往期周报 errorString : %@",errorString);
                                                   [ShowBox showError:@"获取数据失败，请稍候重试"];
                                                   [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                               }];
@@ -832,8 +832,6 @@
     [[scrollPageView.contentItems objectAtIndex:0] reloadData];
 }
 
-
-
 #pragma mark  UITableView delegate and dataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -956,30 +954,23 @@
         [self.homePage homepageTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
     else if ( aIndex == 1 ) {
-//        [self weeklyTableView:tableView didSelectRowAtIndexPath:indexPath];
         [self.weeklyPage weeklyPageTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 4 ) { // 播客点击，进入播放
+    else if ( aIndex == 2 ) {
+        [self.newsPage newsTableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 3 ) {
+        [self.huiXun huiXunPageTableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
+    else if ( aIndex == 5 ) { // 播客点击，进入播放
         [self podcastTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 5 ){
+    else if ( aIndex == 6 ){
         [self baiJiaTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
-    else if ( aIndex == 3 ){
+    else if ( aIndex == 4 ){
         NSDictionary *dict = [self.literaturePage.listData objectAtIndex:indexPath.row];
         RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else if ( aIndex == 1 ){
-        if ( indexPath.section == 1 ) {
-            NSDictionary *dict = [self.newsPage.listData objectAtIndex:indexPath.row];
-            RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-    }
-    else if ( aIndex == 2 ){
-        NSDictionary *dict = [self.huiXun.listData objectAtIndex:indexPath.row];
-        RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -996,17 +987,17 @@
     else if ( aIndex == 2 ) {
         return [self.newsPage newsTableView:tableView heightForFooterInSection:section];
     }
-    else if ( aIndex == 3 ){
+    else if ( aIndex == 4 ){
         return [self.literaturePage literatureTableView:tableView heightForFooterInSection:section];
     }
-    else if ( aIndex == 4 ){
+    else if ( aIndex == 5 ){
         return [self.podcastPage podcastTableView:tableView heightForFooterInSection:section];
     }
-    else if ( aIndex == 5 ){
+    else if ( aIndex == 6 ){
         return [self.baiJiaPage baiJiaTableView:tableView heightForFooterInSection:section];
     }
     else{
-        return 0.1;
+        return 0;
     }
 }
 
@@ -1022,13 +1013,13 @@
     else if ( aIndex == 2 ) {
         return [self.newsPage newsTableView:tableView heightForHeaderInSection:section];
     }
-    else if ( aIndex == 3 ){
+    else if ( aIndex == 4 ){
         return [self.literaturePage literatureTableView:tableView heightForHeaderInSection:section];
     }
-    else if ( aIndex == 4 ){
+    else if ( aIndex == 5 ){
         return [self.podcastPage podcastTableView:tableView heightForHeaderInSection:section];
     }
-    else if ( aIndex == 5 ){
+    else if ( aIndex == 6 ){
         return [self.baiJiaPage baiJiaTableView:tableView heightForHeaderInSection:section];
     }
     else{
@@ -1109,14 +1100,6 @@
     }
 }
 
-#pragma mark 进入周报 进入周报页
-- (void)weeklyTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ( indexPath.section != 0 ) {
-        [self gotoweekly];
-    }
-}
-
 #pragma mark - 播客点击播放视频
 - (void)podcastTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -1149,63 +1132,6 @@
     [player stop];
     //    [playerViewController dismissModalViewControllerAnimated:YES];
 }
-
-#pragma mark 直达号搜索框
-- (UIView *)homePageDirectSearchView
-{
-    UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 84)];
-    view.backgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
-    
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(10, 8, SCREEN_WIDTH - 20, 28)];
-    searchBar.layer.cornerRadius = 5.0f;
-    searchBar.layer.masksToBounds = YES;
-    searchBar.placeholder = [self.homePage.descmessage getStringValueForKey:@"zhidahaoshili" defaultValue:@"输入直达号"];
-    searchBar.delegate = self;
-    searchBar.backgroundImage = [UIImage new];
-    UITextField *searchField = [searchBar valueForKey:@"_searchField"];
-    searchField.font = [UIFont systemFontOfSize:12];
-    self.searchBar = searchBar;
-    [view addSubview:searchBar];
-    
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, 40)];
-    btn.backgroundColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-    [btn addTarget:self action:@selector(gotoweekly) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:btn];
-    
-    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 11, 106, 18)];
-    imgView.image = [UIImage imageNamed:@"ic_weekly.png"];
-    [btn addSubview:imgView];
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(imgView.right + 4, 12, 65, 18)];
-    label.font = [UIFont systemFontOfSize:12];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.textColor = [Utils getRGBColor:0xff g:0x82 b:0x21 a:1.0];
-    label.backgroundColor = [UIColor whiteColor];
-    label.layer.cornerRadius = 5;
-    label.layer.masksToBounds = YES;
-    self.weeklyLabel = label;
-    
-    NSDictionary *weeklyDic;
-    if (self.homePage.listData.count) {
-        weeklyDic = [self.homePage.listData objectAtIndex:0];
-    }
-    NSString *weeklyNum = [weeklyDic getStringValueForKey:@"id" defaultValue:@"0"];
-    self.weeklyLabel.text = [NSString stringWithFormat:@"总第%@期",weeklyNum];
-    [btn addSubview:label];
-
-    return view;
-}
-
-- (void)gotoweekly
-{
-    NSLog(@"周报");
-    RYWeeklyViewController *vc = [[RYWeeklyViewController alloc] init];
-//    vc.listData = self.homePage.listData;
-    vc.weeklyDict = [self.homePage.listData objectAtIndex:0];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-
 
 #pragma mark    滑出侧边拦，需要实现该代理方法
 -(BOOL)slideNavigationControllerShouldDisplayLeftMenu

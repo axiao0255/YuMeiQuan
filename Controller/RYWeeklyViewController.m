@@ -10,10 +10,11 @@
 #import "RYNewsPageTableViewCell.h"
 #import "RYWeeklyTableViewCell.h"
 #import "RYArticleViewController.h"
-#import "RYPastWeeklyViewController.h"
 #import "RYLiteratureDetailsViewController.h"
+#import "RYWeeklyCategoryViewController.h"
 
-@interface RYWeeklyViewController ()<UITableViewDelegate,UITableViewDataSource,RYPastWeeklyViewControllerDelegate>
+
+@interface RYWeeklyViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , strong) UITableView      *tableView;
 
@@ -24,7 +25,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"周报";
     [self setup];
 }
 
@@ -57,6 +57,7 @@
         _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+         _tableView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
         [Utils setExtraCellLineHidden:_tableView];
     }
     return _tableView;
@@ -65,7 +66,6 @@
 - (void)setup
 {
     [self.view addSubview:self.tableView];
-    [self setNavigationItem];
     [self getNetData];
 }
 
@@ -110,8 +110,10 @@
         return;
     }
     // 取周报 发布时间 和多少期
-    NSDictionary *weeklymessage = [info getDicValueForKey:@"weeklymessage" defaultValue:nil];
-    self.weeklyTimeDict = weeklymessage;
+//    NSDictionary *weeklymessage = [info getDicValueForKey:@"weeklymessage" defaultValue:nil];
+//    self.weeklyTimeDict = weeklymessage;
+    
+    self.title = [NSString stringWithFormat:@"第%@期",[self.weeklyDict objectForKey:@"id"]];
     
     // 取周报内容
     NSArray *weeklydetailmessage = [info getArrayValueForKey:@"weeklydetailmessage" defaultValue:nil];
@@ -120,43 +122,17 @@
 
 }
 
-- (void)setNavigationItem
-{
-    UIButton *rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 18)];
-    [rightBtn setImage:[UIImage imageNamed:@"ic_default_select.png"] forState:UIControlStateNormal];
-    rightBtn.backgroundColor = [UIColor clearColor];
-    [rightBtn addTarget:self action:@selector(rightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
-    self.navigationItem.rightBarButtonItem = rightItem;
-}
-
-- (void)rightBtnClick:(id)sender
-{
-    RYPastWeeklyViewController *vc = [[RYPastWeeklyViewController alloc] init];
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
 
 #pragma mark  UITableView delegate and dataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ( self.listData.count ) {
-        if ( section == 0 ) {
-            return 1;
-        }
-        else{
-            if ( self.listData.count > 1 )
-                return self.listData.count - 1;
-            else
-                return 0;
-        }
+        return self.listData.count;
     }
     else
         return 0;
@@ -165,22 +141,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( self.listData.count ) {
-        if ( indexPath.section == 0 ) {
+        if ( indexPath.row == 0 ) {
             return 180;
         }
         else{
-            if ( self.listData.count > 1 ) {
-                NSDictionary *dict = [self.listData objectAtIndex:indexPath.row + 1];
-                NSString *subhead = [dict getStringValueForKey:@"subhead" defaultValue:@""];
-                if ( [ShowBox isEmptyString:subhead] ) {
-                    return 94;
-                }
-                else{
-                    return 114;
-                }
-            }
-            else
-                return 0;
+            return 90;
         }
     }
     else
@@ -189,7 +154,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ( indexPath.section == 0 ) {
+    if ( indexPath.row == 0 ) {
         NSString *adverCell = @"adverCell";
         RYAdverTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:adverCell];
         if ( !cell ) {
@@ -207,66 +172,65 @@
             cell = [[RYWeeklyTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:weekly_cell];
         }
         if ( self.listData.count ) {
-            [cell setValueWithDict:[self.listData objectAtIndex:indexPath.row + 1]];
+            [cell setValueWithDict:[self.listData objectAtIndex:indexPath.row]];
         }
         return cell;
     }
 }
 
-
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if ( self.listData.count > 1 ) {
+    if ( self.listData.count > 0 ) {
         if ( section == 0 ) {
-            return 28;
-        }else{
+            return 40;
+        }
+        else{
             return 0;
         }
     }
-    else{
-        return 0;
-    }
+    return 0;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if ( self.listData.count > 1 ) {
+    if ( self.listData.count ) {
         if ( section == 0 ) {
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 28)];
+            UIButton *view = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
             view.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
             
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 28)];
-            label.font = [UIFont systemFontOfSize:12];
-            label.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 42, 40)];
+            titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+            titleLabel.font = [UIFont systemFontOfSize:14];
+            titleLabel.text = @"分类：";
+            [view addSubview:titleLabel];
             
-            NSString *weeklyId = [self.weeklyTimeDict objectForKey:@"id"];
-            NSString *weeklyTime = [self.weeklyTimeDict objectForKey:@"time"];
-            label.text = [NSString stringWithFormat:@"%@ 总第%@期",weeklyTime,weeklyId ];//@"2015-04-18 总第219期";
-            [view addSubview:label];
+            UILabel *categoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabel.right+5, 0, 225, 40)];
+            categoryLabel.font = [UIFont boldSystemFontOfSize:16];
+            categoryLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+            categoryLabel.text = @"全部";
+            [view addSubview:categoryLabel];
+            
+            UIImageView *arrows = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 10, 13, 10, 14)];
+            arrows.image =[UIImage imageNamed:@"ic_right_arrow.png"];;
+            [view addSubview:arrows];
+            
+            [view addTarget:self action:@selector(categorySelect:) forControlEvents:UIControlEventTouchUpInside];
+            
             
             return view;
-        }
-        else{
+            
+        }else{
             return nil;
         }
     }
-    else{
-        return nil;
-    }
+    return nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    NSDictionary *dict;
-    if ( indexPath.section == 0 ) {
-        dict = [self.listData objectAtIndex:0];
-    }
-    else{
-        dict = [self.listData objectAtIndex:indexPath.row + 1];
-    }
-    
+    NSDictionary *dict = [self.listData objectAtIndexedSubscript:indexPath.row];
     NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@""];
     NSString *tid = [dict getStringValueForKey:@"tid" defaultValue:@""];
     
@@ -280,12 +244,11 @@
     }
 }
 
-#pragma mark RYPastWeeklyViewControllerDelegate
-
--(void)selectWeeklyWithWeeklyDict:(NSDictionary *)dict
+- (void)categorySelect:(id)sender
 {
-    self.weeklyDict = dict;
-    [self getNetData];
+    NSLog(@"分类选择");
+    RYWeeklyCategoryViewController *vc = [[RYWeeklyCategoryViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

@@ -35,12 +35,6 @@
     if ( _dataSources == nil ) {
         _dataSources = [[NSMutableArray alloc] init];
     }
-//    if ( _currentPages == nil ) {
-//        _currentPages = [[NSMutableArray alloc] init];
-//    }
-//    if ( _totlePages == nil ) {
-//        _totlePages = [[NSMutableArray alloc] init];
-//    }
     tableIndex = 0;
     // ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
     _scrollView.bounces = NO;
@@ -53,7 +47,7 @@
 -(void)setContentOfTables:(NSInteger)aNumerOfTables
 {
     for ( int i = 0;  i < aNumerOfTables; i ++ ) {
-        MJRefreshTableView *refreshTableV = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(self.frame.size.width * i , i == 3 ? 32 : 0, self.bounds.size.width, i == 3 ? (self.bounds.size.height - 32) : self.bounds.size.height) style:UITableViewStylePlain];
+        MJRefreshTableView *refreshTableV = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(self.frame.size.width * i , 0, self.bounds.size.width,self.bounds.size.height) style:UITableViewStylePlain];
         refreshTableV.backgroundColor = [UIColor clearColor];
         refreshTableV.delegateRefersh = self;
         [Utils setExtraCellLineHidden:refreshTableV];
@@ -62,8 +56,6 @@
         if ( i == 0 ) {
             [refreshTableV headerBeginRefreshing];
         }
-//        [_totlePages addObject:[NSNumber numberWithInt:1]];
-//        [_currentPages addObject:[NSNumber numberWithInt:0]];
         [_dataSources addObject:[NSMutableArray array]];
     }
      [_scrollView setContentSize:CGSizeMake(self.frame.size.width * aNumerOfTables, self.frame.size.height)];
@@ -74,9 +66,6 @@
     if (aTotlePage < 0 || aIndex < 0 || aIndex >= _contentItems.count) {
         return ;
     }
-    
-//    [_totlePages removeObjectAtIndex:aIndex];
-//    [_totlePages insertObject:[NSNumber numberWithInteger:aTotlePage] atIndex:aIndex];
     MJRefreshTableView *v = [_contentItems objectAtIndex:aIndex];
     v.totlePage = aTotlePage;
 }
@@ -88,57 +77,6 @@
         [self.delegate freshContentTableWithCurrentPage:currentPage andTableIndex:tableIndex isHead:isHeaderReresh];
     }
 }
-
-/*
-- (void)headerRereshingData
-{
-    // 下拉 刷新 重新设置 页码
-//    [_currentPages removeObjectAtIndex:mCurrentPage];
-//    [_currentPages insertObject:[NSNumber numberWithInt:0] atIndex:mCurrentPage];
-//    
-//    [_totlePages removeObjectAtIndex:mCurrentPage];
-//    [_totlePages insertObject:[NSNumber numberWithInt:1] atIndex:mCurrentPage];
-    
-    MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
-    v.totlePage = 1;
-    v.currentPage = 0;
-    
-    // 清空 数据
-    NSMutableArray *arr = [_dataSources objectAtIndex:mCurrentPage];
-    [arr removeAllObjects];
-
-    if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
-        [self.delegate freshContentTableAtIndex:mCurrentPage isHead:YES];
-    }
-}
-
-- (void)footerRereshingData
-{
-    
-//    int currentPage = [[_currentPages objectAtIndex:mCurrentPage]intValue];
-//    currentPage ++ ;
-//    
-//    NSInteger totlePage = [[_totlePages objectAtIndex:mCurrentPage] intValue];
-//    if ( currentPage >= totlePage ) {
-//        [self refreshEnd];
-//        return;
-//    }
-//    [_currentPages removeObjectAtIndex:mCurrentPage];
-//    [_currentPages insertObject:[NSNumber numberWithInt:currentPage] atIndex:mCurrentPage];
-    
-    MJRefreshTableView *v = [_contentItems objectAtIndex:mCurrentPage];
-    v.currentPage ++;
-    if (v.currentPage >= v.totlePage ) {
-        [self refreshEnd];
-        return;
-    }
-    
-    if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
-        [self.delegate freshContentTableAtIndex:mCurrentPage isHead:NO];
-    }
-}
-
- */
 -(void)refreshEndAtTableViewIndex:(NSInteger)index;
 {
     MJRefreshTableView *v = [_contentItems objectAtIndex:index];
@@ -148,9 +86,6 @@
 
 -(void)moveScrollowViewAthIndex:(NSInteger)aIndex
 {
-//    CGRect vMoveRect = CGRectMake(self.frame.size.width * aIndex, 0, self.frame.size.width, self.frame.size.width);
-//    mCurrentPage= aIndex;
-//    [_scrollView scrollRectToVisible:vMoveRect animated:YES];
     CGPoint point = CGPointMake(self.frame.size.width *aIndex, 0);
     [_scrollView setContentOffset:point animated:YES];
 }
@@ -219,9 +154,6 @@
         [v reloadData];
         return ;
     }
-//    if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
-//        [v headerBeginRefreshing];
-//    }
     [v headerBeginRefreshing];
 }
 
@@ -238,9 +170,6 @@
         [v reloadData];
         return ;
     }
-//    if ( [self.delegate respondsToSelector:@selector(freshContentTableAtIndex:isHead:)] ) {
-//        [v headerBeginRefreshing];
-//    }
     [v headerBeginRefreshing];
 }
 
@@ -253,12 +182,6 @@
          MJRefreshTableView *v = [_contentItems objectAtIndex:i];
         v.totlePage = 1;
         v.currentPage = 0;
-        
-//        [self.currentPages removeObjectAtIndex:i];
-//        [self.currentPages insertObject:[NSNumber numberWithInt:0] atIndex:i];
-//        
-//        [self.totlePages removeObjectAtIndex:i];
-//        [self.totlePages insertObject:[NSNumber numberWithInt:1] atIndex:i];
     }
     MJRefreshTableView *v = [_contentItems objectAtIndex:tableIndex];
     [v headerBeginRefreshing];

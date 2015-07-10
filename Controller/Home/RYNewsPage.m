@@ -8,6 +8,7 @@
 
 #import "RYNewsPage.h"
 #import "RYNewsPageTableViewCell.h"
+#import "RYArticleViewController.h"
 
 @implementation RYNewsPage
 
@@ -68,7 +69,7 @@
         }
     }
     else{
-        return 75;
+        return 90;
     }
 }
 
@@ -102,6 +103,18 @@
     }
 }
 
+- (void)newsTableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ( indexPath.section == 0 ) {
+        NSLog(@"点击广告");
+    }
+    else{
+        NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
+        RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
+        [self.viewController.navigationController pushViewController:vc animated:YES];
+    }
+}
+
 -(CGFloat)newsTableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section;
 {
     NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
@@ -109,13 +122,13 @@
         return 8;
     }
     else{
-        return 0.1;
+        return 0;
     }
 }
 
 -(CGFloat)newsTableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section;
 {
-    return 0.1;
+    return 0;
 }
 
 
