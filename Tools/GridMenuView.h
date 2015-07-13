@@ -88,10 +88,11 @@
  * @param titledowncolor 按下时按钮标题的颜色
  * @param titleupcolor 按钮标题的颜色
  * @param perrownum 每一行最多放几个按钮
+ * @param linefeed 按钮文字是否能换行
  *
  * @return 按钮组view
  */
-- (id)initWithFrame:(CGRect)frame imgUpName:(NSString *)imgupname imgDownName:(NSString *)imgdownname titleArray:(NSArray *)titlearray titleDownColor:(UIColor *)titledowncolor titleUpColor:(UIColor *)titleupcolor perRowNum:(int)perrownum;
+- (id)initWithFrame:(CGRect)frame imgUpName:(NSString *)imgupname imgDownName:(NSString *)imgdownname titleArray:(NSArray *)titlearray titleDownColor:(UIColor *)titledowncolor titleUpColor:(UIColor *)titleupcolor perRowNum:(int)perrownum andCanLinefeed:(BOOL)linefeed;
 
 /**
  * 创建相同背景图、有title的按钮组，图片从本地获取

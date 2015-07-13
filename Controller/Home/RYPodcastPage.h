@@ -10,7 +10,7 @@
 
 @interface RYPodcastPage : UIView
 
-@property (nonatomic , strong) NSArray *listData;
+@property (nonatomic , strong) NSArray          *listData;
 
 - (NSInteger)podcastNumberOfSectionsInTableView:(UITableView *)tableView;
 - (NSInteger)podcastTableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;

@@ -85,7 +85,7 @@
             }
         }
         else{
-            return 75;
+            return 90;
         }
     }
     else{
@@ -172,6 +172,16 @@
         NSDictionary *subDict = [subArr objectAtIndex:0];
         titleLabel.text = [subDict getStringValueForKey:@"firstcharter" defaultValue:@""];
         return sectionView;
+    }
+}
+
+- (UIView *)baiJiaTableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if ( self.currentType == articleType ) {
+        return nil;
+    }
+    else{
+        return nil;
     }
 }
 

@@ -141,7 +141,7 @@
 
 
 
-- (id)initWithFrame:(CGRect)frame imgUpName:(NSString *)imgupname imgDownName:(NSString *)imgdownname titleArray:(NSArray *)titlearray titleDownColor:(UIColor *)titledowncolor titleUpColor:(UIColor *)titleupcolor perRowNum:(int)perrownum
+- (id)initWithFrame:(CGRect)frame imgUpName:(NSString *)imgupname imgDownName:(NSString *)imgdownname titleArray:(NSArray *)titlearray titleDownColor:(UIColor *)titledowncolor titleUpColor:(UIColor *)titleupcolor perRowNum:(int)perrownum andCanLinefeed:(BOOL)linefeed;
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -186,6 +186,11 @@
             [itemView addTarget:self action:@selector(itemPressedDelegate:) forControlEvents:UIControlEventTouchUpInside];
             [itemView setExclusiveTouch:YES];
             [itemViewsArray addObject:itemView];
+            
+            if ( linefeed ) {
+                itemView.titleLabel.numberOfLines = 2;
+            }
+            
             [self addSubview:itemView];
             
             

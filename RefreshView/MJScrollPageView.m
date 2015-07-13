@@ -129,11 +129,14 @@
     }
     lastOffx = offx;
     // ----------------为了解决 滚动出侧边拦的手势冲突 end——————————————————————
+    if ( [self.delegate respondsToSelector:@selector(scrollPageViewDidScroll:)] ) {
+        [self.delegate scrollPageViewDidScroll:scrollView];
+    }
 }
 
 -(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-//    NSLog(@"结束 ：%ld",self.panGesture.state);
+//    NSLog(@"结束 %ld",targetContentOffset);
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView

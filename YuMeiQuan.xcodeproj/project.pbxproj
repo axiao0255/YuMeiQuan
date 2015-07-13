@@ -256,6 +256,8 @@
 		96CD23D41B340970009CF10A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CD23D31B340970009CF10A /* SystemConfiguration.framework */; };
 		96CD4D611B32A02200C3917B /* award_notice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD4D601B32A02200C3917B /* award_notice@2x.png */; };
 		96CD4D631B32A02D00C3917B /* system_notice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD4D621B32A02D00C3917B /* system_notice@2x.png */; };
+		96CD5F221B5360DC008616BF /* RYLiteratureCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD5F211B5360DC008616BF /* RYLiteratureCategoryViewController.m */; };
+		96CD5F241B536C43008616BF /* ic_literatureCategory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD5F231B536C43008616BF /* ic_literatureCategory@2x.png */; };
 		96CD79561AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */; };
 		96CD79591AE8D63000DDC1D8 /* RYNewPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CD79581AE8D63000DDC1D8 /* RYNewPasswordViewController.m */; };
 		96CD795B1AE8EE1E00DDC1D8 /* navigationbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CD795A1AE8EE1E00DDC1D8 /* navigationbar@2x.png */; };
@@ -813,6 +815,9 @@
 		96CD23D31B340970009CF10A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		96CD4D601B32A02200C3917B /* award_notice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "award_notice@2x.png"; sourceTree = "<group>"; };
 		96CD4D621B32A02D00C3917B /* system_notice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "system_notice@2x.png"; sourceTree = "<group>"; };
+		96CD5F201B5360DC008616BF /* RYLiteratureCategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYLiteratureCategoryViewController.h; sourceTree = "<group>"; };
+		96CD5F211B5360DC008616BF /* RYLiteratureCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYLiteratureCategoryViewController.m; sourceTree = "<group>"; };
+		96CD5F231B536C43008616BF /* ic_literatureCategory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_literatureCategory@2x.png"; sourceTree = "<group>"; };
 		96CD79541AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYPasswordAttestationViewController.h; sourceTree = "<group>"; };
 		96CD79551AE89E1F00DDC1D8 /* RYPasswordAttestationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYPasswordAttestationViewController.m; sourceTree = "<group>"; };
 		96CD79571AE8D63000DDC1D8 /* RYNewPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYNewPasswordViewController.h; sourceTree = "<group>"; };
@@ -1854,6 +1859,7 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96CD5F231B536C43008616BF /* ic_literatureCategory@2x.png */,
 				96CF028D1B4FA33A0053537C /* mallbtn_up_ic_2@2x.png */,
 				96CF02891B4FA12C0053537C /* arrows_down@2x.png */,
 				96CF028A1B4FA12C0053537C /* arrows_up@2x.png */,
@@ -2021,6 +2027,8 @@
 				96C5BFB41AFB4F3500BC5744 /* RYArticleViewController.m */,
 				96CCB3951B13171E0007C151 /* RYLiteratureDetailsViewController.h */,
 				96CCB3961B13171E0007C151 /* RYLiteratureDetailsViewController.m */,
+				96CD5F201B5360DC008616BF /* RYLiteratureCategoryViewController.h */,
+				96CD5F211B5360DC008616BF /* RYLiteratureCategoryViewController.m */,
 				96CE2A0D1B43B79B004FA4BF /* RYcommentDetailsViewController.h */,
 				96CE2A0E1B43B79B004FA4BF /* RYcommentDetailsViewController.m */,
 				96CBAA2D1B15777000D13C27 /* RYWeeklyViewController.h */,
@@ -2306,6 +2314,7 @@
 				96CE2A161B43C7A3004FA4BF /* ic_praise_bk@2x.png in Resources */,
 				96CD4D611B32A02200C3917B /* award_notice@2x.png in Resources */,
 				966788761B46AADB00F483C7 /* ic_log_cell@2x.jpg in Resources */,
+				96CD5F241B536C43008616BF /* ic_literatureCategory@2x.png in Resources */,
 				96C3A9BA1ADFB84D008011D3 /* imgsectiondown.png in Resources */,
 				96D0A5651B183A9800BF6D90 /* ic_recusalImge_1@2x.png in Resources */,
 				96C24D0F1B0ADF700044C86B /* ic_grid_default@2x.png in Resources */,
@@ -2498,6 +2507,7 @@
 				96AB36D51B09E22F002EB3E2 /* RYAuthorArticleViewController.m in Sources */,
 				96C4C40A1AE7ABF600151A84 /* NSDictionary+Additions.m in Sources */,
 				96CBAA3D1B15ADF600D13C27 /* RYCorporateProductCategoryViewController.m in Sources */,
+				96CD5F221B5360DC008616BF /* RYLiteratureCategoryViewController.m in Sources */,
 				96D9C98C1AE4CD4200997430 /* RYRegisterData.m in Sources */,
 				96C5BFE31AFB648600BC5744 /* CXZoomingScrollView.m in Sources */,
 				96C52FCD1B05EAED007BC747 /* RYMoviePlayerViewController.m in Sources */,

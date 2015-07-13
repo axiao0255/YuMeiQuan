@@ -20,6 +20,9 @@
 // 当前滚动到 第几页
 -(void)currentMoveToPageAtIndex:(NSInteger)aIndex;
 
+// 滚动
+-(void)scrollPageViewDidScroll:(UIScrollView *)scrollView;
+
 @optional
 // ---------------- 为了解决 滚动出侧边拦的手势冲突 begin——————————————————————
 - (void)handlePanGesture:(UIPanGestureRecognizer *)gesture;

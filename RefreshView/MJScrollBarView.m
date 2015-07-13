@@ -42,16 +42,16 @@
             mScrollView.showsHorizontalScrollIndicator = NO;
             mScrollView.showsVerticalScrollIndicator = NO;
             mScrollView.backgroundColor = [UIColor whiteColor];
-            
-            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.frame)-0.5, CGRectGetWidth(self.frame), 0.5)];
-            line.backgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
-            [mScrollView addSubview:line];
+            [self addSubview:mScrollView];
            }
         // 初始化 itemArray
         if (mItemInfoArray == nil) {
             mItemInfoArray = [[NSMutableArray alloc]init];
         }
-
+        
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.frame)-0.5, CGRectGetWidth(self.frame), 0.5)];
+        line.backgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
+        [self addSubview:line];
        [self createMenuItems:aItemsArray];
     }
     return self;
@@ -93,7 +93,7 @@
         [mItemInfoArray addObject:vNewDic];
     }
     [mScrollView setContentSize:CGSizeMake(menuWidth, self.frame.size.height)];
-    [self addSubview:mScrollView];
+//    [self addSubview:mScrollView];
     
     // 保存menu总长度，如果小于320则不需要移动，方便点击button时移动位置的判断
     mTotalWidth = menuWidth;

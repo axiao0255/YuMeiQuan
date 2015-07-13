@@ -31,19 +31,12 @@
 #import "RYLiteraturePage.h"
 #import "RYWeeklyPage.h"
 
-#import "RYLiteratureCategoryView.h"
-
 #import "RYMyInformListViewController.h"
 #import "RYCorporateHomePageViewController.h"
+#import "RYLiteratureCategoryViewController.h"
 
 
-/**
- *  随机数据
- */
-#define MJRandomData [NSString stringWithFormat:@"随机数据---%d", arc4random_uniform(1000000)]
-
-
-@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate,GridMenuViewDelegate,RYLiteratureCategoryViewDelegate>
+@interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate,RYLiteratureCategoryViewControllerDelegate>
 {
     MJScrollBarView    *scrollBarView;
     MJScrollPageView   *scrollPageView;
@@ -53,13 +46,7 @@
     GridMenuView       *gridMenu; // 文献页 分类 top 三个菜单
 }
 
-@property (strong, nonatomic) NSMutableArray   *fakeData;
 @property (strong, nonatomic) NSArray          *categoryArray;
-
-@property (strong, nonatomic) UIButton         *selectCategoryBtn;
-@property (strong, nonatomic) UIView           *categoryGridView;
-@property (strong, nonatomic) UISearchBar      *searchBar;
-@property (strong, nonatomic) UILabel          *weeklyLabel;
 
 @property (strong, nonatomic) NSDictionary     *selectLiteratureDict;
 
@@ -74,8 +61,9 @@
 @property (assign, nonatomic) NSInteger        noticecount;
 @property (assign, nonatomic) NSInteger        baiJiaCurrentSelectIndex;
 
-
-@property (strong, nonatomic) RYLiteratureCategoryView    *literatureCategoryView;
+@property (assign, nonatomic) CGFloat          barlastOffsetY;
+@property (assign, nonatomic) NSInteger        lastTabelViewIndex;
+@property (assign, nonatomic) CGFloat          scrollLastOffsetY;
 
 @end
 
@@ -135,28 +123,9 @@
 - (void)leftButtonClick:(id)sender
 {
     NSLog(@"我的");
-    if ( self.selectCategoryBtn.selected ) {
-        [self.literatureCategoryView dismissCategoryView];
-    }
-    else{
-        [[SlideNavigationController sharedInstance] openMenu:MenuLeft withCompletion:^{
-            NSLog(@"222");
-        }];
-    }
-}
-
-/**
- * 登陆按钮点击
- */
-- (void)loginButtonClick:(id)sender
-{
-    if ( self.selectCategoryBtn.selected ) {
-        [self.literatureCategoryView dismissCategoryView];
-    }
-    else{
-        RYLoginViewController *loginVC = [[RYLoginViewController alloc] init];
-        [self.navigationController pushViewController:loginVC animated:YES];
-    }
+    [[SlideNavigationController sharedInstance] openMenu:MenuLeft withCompletion:^{
+        NSLog(@"222");
+    }];
 }
 
 #pragma mark UI初始化
@@ -201,13 +170,14 @@
     newsData = [[newsBarData alloc] init];
     newsData.dataArray = vButtonItemArray;
     self.baiJiaCurrentSelectIndex = 0;
-    
     if ( scrollBarView == nil ) {
         scrollBarView = [[MJScrollBarView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 55) ButtonItems:vButtonItemArray];
         scrollBarView.delegate = self;
+        scrollBarView.backgroundColor = [UIColor whiteColor];
     }
+    
     if ( scrollPageView == nil ) {
-        scrollPageView = [[MJScrollPageView alloc] initWithFrame:CGRectMake(0, 55, SCREEN_WIDTH, VIEW_HEIGHT - 55)];
+        scrollPageView = [[MJScrollPageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
         scrollPageView.delegate = self;
         [scrollBarView changeButtonStateAtIndex:currentIndex];
         [scrollPageView setContentOfTables:vButtonItemArray.count];
@@ -217,21 +187,18 @@
                 MJRefreshTableView *tableView = (MJRefreshTableView *)view;
                 tableView.delegate = self;
                 tableView.dataSource = self;
-                
+                tableView.contentInset = UIEdgeInsetsMake(55, 0, 0, 0);
                 NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
                 if ( aIndex == 6 ) {
                     [tableView setSectionIndexColor:[Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0]];
                     tableView.tableHeaderView = [self baiJiaTableViewHeadView];
 
                 }
-//                else if ( aIndex == 3 ){
-//                    [scrollPageView.scrollView addSubview:[self literatureCategory]];
-//                }
             }
         }
     }
-    [self.view addSubview:scrollBarView];
     [self.view addSubview:scrollPageView];
+    [self.view addSubview:scrollBarView];
 }
 
 /**
@@ -239,87 +206,54 @@
  */
 - (UIView *)literatureCategory
 {
-    UIView   *view = [[UIView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH * 3, 0, SCREEN_WIDTH, 32)];
-    view.backgroundColor = [UIColor whiteColor];
+    UIButton *view = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
+    view.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
     
-    NSMutableArray *titleArray = [NSMutableArray array];
-    NSInteger length = (self.categoryArray.count >= 3)?3:self.categoryArray.count;
-    for (int i = 0 ; i < length; i ++ ) {
-        NSDictionary *tagDict = [self.categoryArray objectAtIndex:i];
-        NSString *title = [tagDict getStringValueForKey:@"tagname" defaultValue:@""];
-        if ( ![ShowBox isEmptyString:title] ) {
-            [titleArray addObject:title];
-        }
-    }
-   
-    gridMenu = [[GridMenuView alloc] initWithFrame:CGRectMake(0, 0, (SCREEN_WIDTH / 4.0 ) * 3, 32)
-                                                       imgUpName:@"ic_grid_default.png"
-                                                     imgDownName:@"ic_grid_highlighted.png"
-                                                      titleArray:titleArray
-                                                  titleDownColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0]
-                                                    titleUpColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0]
-                                                       perRowNum:3
-                                             andCanshowHighlight:YES];
-    gridMenu.delegate = self;
-    gridMenu.backgroundColor = [UIColor clearColor];
-
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 42, 40)];
+    titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+    titleLabel.font = [UIFont systemFontOfSize:14];
+    titleLabel.text = @"分类：";
+    [view addSubview:titleLabel];
+    
+    UILabel *categoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabel.right+5, 0, 225, 40)];
+    categoryLabel.font = [UIFont boldSystemFontOfSize:16];
+    categoryLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+    
     // 取出上次 保存的 tagDict
     NSDictionary *saveDict = [ShowBox getLiteratureTagDict];
-    NSInteger index = -1;
-    for ( int i = 0 ; i < titleArray.count; i ++ ) {
-        NSString *saveTitle = [saveDict getStringValueForKey:@"tagname" defaultValue:@""];
-        NSString *title = [titleArray objectAtIndex:i];
-        
-        if ( [saveTitle isEqualToString:title] ) {
-            index = i;
-        }
+    if ( saveDict == nil ) {
+        saveDict = [self.categoryArray lastObject];
     }
+    NSString *saveTitle = [saveDict getStringValueForKey:@"tagname" defaultValue:@""];
+    categoryLabel.text = saveTitle;
+    [view addSubview:categoryLabel];
     
-    if ( index != -1 ) {
-        [gridMenu changeSelectStatesWithIndex:index];
-    }
+    UIImageView *arrows = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 10, 13, 10, 14)];
+    arrows.image =[UIImage imageNamed:@"ic_right_arrow.png"];;
+    [view addSubview:arrows];
     
-    [view addSubview:gridMenu];
+    [view addTarget:self action:@selector(categorySelect:) forControlEvents:UIControlEventTouchUpInside];
     
-    [view addSubview:self.selectCategoryBtn];
     return view;
 }
 
-#pragma mark - GridMenuViewDelegate
--(void)GridMenuViewButtonSelected:(NSInteger)btntag selfTag:(NSInteger)selftag
+#pragma mark 文献分类选择
+- (void)categorySelect:(id)sender
 {
-//    NSLog(@"btntag : %ld, selftag : %ld" ,btntag,selftag); 
-    [self.literatureCategoryView dismissCategoryView];
-    [self.literatureCategoryView literatureCancelSelectStates];
-    // 保存 所选择的 标签
-    NSDictionary *selectDict = [self.categoryArray objectAtIndex:btntag];
-    if ( ![self.selectLiteratureDict isEqualToDictionary:selectDict] ) {
-        [ShowBox saveLiteratureTagDict:selectDict];
-        MJRefreshTableView *v = [scrollPageView.contentItems objectAtIndex:3];
-        [v headerBeginRefreshing];
-    }
-    
+    RYLiteratureCategoryViewController *vc = [[RYLiteratureCategoryViewController alloc] initWithCategoryArray:self.categoryArray];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
-#pragma  mark - RYLiteratureCategoryViewDelegate
-
-- (void)literatureCategorySelected:(NSInteger)btntag selfTag:(NSInteger)selftag
+- (void)selectLiteratureCategoryWithIndex:(NSInteger)index
 {
-//    NSLog(@"btntag : %ld, selftag : %ld" ,btntag,selftag);
-    [gridMenu cancelSelectStates];
-    
     // 保存 所选择的 标签
-    NSDictionary *selectDict = [self.categoryArray objectAtIndex:btntag+3];
+    NSDictionary *selectDict = [self.categoryArray objectAtIndex:index];
     if ( ![self.selectLiteratureDict isEqualToDictionary:selectDict] ) {
         [ShowBox saveLiteratureTagDict:selectDict];
-        MJRefreshTableView *v = [scrollPageView.contentItems objectAtIndex:3];
+        MJRefreshTableView *v = [scrollPageView.contentItems objectAtIndex:4];
         [v headerBeginRefreshing];
     }
-}
-
-- (void)dismissCompletion
-{
-    [self.selectCategoryBtn setSelected:NO];
 }
 
 /**
@@ -336,62 +270,12 @@
     return headView;
 }
 
-#pragma mark - 初始化
-/**
- *  数据的懒加载
- */
-- (NSMutableArray *)fakeData
-{
-    if (!_fakeData) {
-        self.fakeData = [NSMutableArray array];
-        
-        for (int i = 0; i<5; i++) {
-            [self.fakeData addObject:MJRandomData];
-        }
-    }
-    return _fakeData;
-}
-
-
 - (NSArray *)categoryArray
 {
     if ( _categoryArray == nil ) {
         _categoryArray = [NSArray array];
     }
     return _categoryArray;
-}
-
-/**
- * 选择分类的按钮
- */
-- (UIButton *)selectCategoryBtn
-{
-    if (_selectCategoryBtn == nil) {
-        _selectCategoryBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80, 0, 80, 32)];
-        [_selectCategoryBtn setImage:[UIImage imageNamed:@"ic_adown_arrow.png"] forState:UIControlStateNormal];
-        [_selectCategoryBtn setImage:[UIImage imageNamed:@"ic_up_arrow.png"] forState:UIControlStateSelected];
-        [_selectCategoryBtn addTarget:self action:@selector(selectCategoryBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _selectCategoryBtn;
-}
-/**
- *更多分类 的显示框
- */
-- (UIView *)categoryGridView
-{
-    if ( _categoryGridView == nil ) {
-        _categoryGridView = [[UIView alloc] initWithFrame:CGRectZero];
-    }
-    return _categoryGridView;
-}
-
-- (RYLiteratureCategoryView *)literatureCategoryView
-{
-    if ( _literatureCategoryView == nil ) {
-        _literatureCategoryView = [[RYLiteratureCategoryView alloc] init];
-        _literatureCategoryView.delegate = self;
-    }
-    return _literatureCategoryView;
 }
 
 - (RYHomepage *)homePage
@@ -454,32 +338,10 @@
     return _weeklyPage;
 }
 
-/**
- * 文献更多按钮点击
- */
--(void)selectCategoryBtnClick:(id)sender
-{
-    UIButton *btn = (UIButton *)sender;
-    if ( btn.selected ) {
-        [self.literatureCategoryView dismissCategoryView];
-    }
-    else{ // 展开
-        self.literatureCategoryView.hidden = NO;
-         self.literatureCategoryView.offSetY = 72;
-        [self.view addSubview:self.literatureCategoryView];
-        [self.literatureCategoryView showCategoryView];
-    }
-    [btn setSelected:!btn.selected];
-}
-
 #pragma mark 头部tabbar 分类 选择
 -(void)didMenuClickedButtonAtIndex:(NSInteger)index
 {
     NSLog(@" dianji %ld",(long)index);
-    if ( self.selectCategoryBtn.selected ) {
-        self.literatureCategoryView.hidden = YES;
-        [self.literatureCategoryView dismissCategoryView];
-    }
     if (currentIndex != index ) {
         currentIndex = index;
         [scrollPageView moveScrollowViewAthIndex:currentIndex];
@@ -490,7 +352,6 @@
 - (void)currentMoveToPageAtIndex:(NSInteger)aIndex
 {
     NSLog(@"滑动列表 %ld",(long)aIndex);
-   [self.literatureCategoryView dismissCategoryView];
     if ( currentIndex != aIndex ) {
         currentIndex = aIndex;
         [scrollBarView clickButtonAtIndex:currentIndex];
@@ -586,7 +447,7 @@
                                                     tagid:tagid
                                                      page:currentPage
                                                   success:^(id responseDic) {
-                                                      //                                                      NSLog(@"文献 ：responseDic  %@",responseDic);
+                                                     NSLog(@"文献 ：responseDic  %@",responseDic);
                                                        [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                       [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                       
@@ -733,20 +594,9 @@
             UIView *view = [scrollPageView.scrollView viewWithTag:9999];
             [view removeFromSuperview];
             view = [self literatureCategory];
-            view.tag = 9999;
-            [scrollPageView.scrollView addSubview:view];
-            
-            NSMutableArray *titleArray = [NSMutableArray array];
-            if ( self.categoryArray.count > 3 ) {
-                for ( int i = 3 ; i < self.categoryArray.count; i ++ ) {
-                    NSDictionary *tagDict = [self.categoryArray objectAtIndex:i];
-                    NSString *title = [tagDict getStringValueForKey:@"tagname" defaultValue:@""];
-                    if ( ![ShowBox isEmptyString:title] ) {
-                        [titleArray addObject:title];
-                    }
-                }
-            }
-            self.literatureCategoryView.categoryData = titleArray;
+            view.tag = 9999;            
+            MJRefreshTableView *tableView = (MJRefreshTableView *)[scrollPageView.contentItems objectAtIndex:aIndex];
+            tableView.tableHeaderView = view;
             
             // 取列表
             NSArray *dataArray = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
@@ -1037,7 +887,7 @@
     else if ( aIndex == 1 ){
         return [self.weeklyPage weeklyPageTableView:tableView viewForHeaderInSection:section];
     }
-    else if ( aIndex == 5 ) {
+    else if ( aIndex == 6 ) {
         return [self.baiJiaPage baiJiaTableView:tableView viewForHeaderInSection:section];
     }
     else{
@@ -1054,13 +904,16 @@
     else if ( aIndex == 1 ){
         return [self.weeklyPage weeklyPageTableView:tableView viewForFooterInSection:section];
     }
+    else if ( aIndex ==6 ){
+        return [self.baiJiaPage baiJiaTableView:tableView viewForFooterInSection:section];
+    }
     return nil;
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 5 ) {
+    if ( aIndex == 6 ) {
         return [self.baiJiaPage baiJiaSectionIndexTitlesForTableView:tableView];
     }
     else{
@@ -1072,11 +925,77 @@
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
 {
     NSInteger aIndex = [scrollPageView.contentItems indexOfObject:tableView];
-    if ( aIndex == 5 ) {
+    if ( aIndex == 6 ) {
         return [self.baiJiaPage baiJiaTableView:tableView sectionForSectionIndexTitle:title atIndex:index];
     }
     else {
         return 0;
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [scrollPageView scrollViewDidScroll:scrollView];
+}
+
+- (void)scrollPageViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    offsetY += 55;
+    if ( [scrollView isKindOfClass:[MJRefreshTableView class]] ) {
+        NSInteger index = [scrollPageView.contentItems indexOfObject:scrollView];
+        if ( index != self.lastTabelViewIndex ) {
+            self.barlastOffsetY = 0;
+            self.lastTabelViewIndex = index;
+            self.scrollLastOffsetY = 0;
+        }
+        
+        if ( index == 6 && self.baiJiaCurrentSelectIndex == 1 ) {
+            [UIView animateWithDuration:0.25 animations:^{
+                scrollBarView.frame = CGRectMake(0, 0, scrollBarView.frame.size.width, scrollBarView.frame.size.height);
+            } completion:^(BOOL finished) {
+                self.barlastOffsetY = offsetY;
+            }];
+            
+            return;
+        }
+        
+        if ( self.scrollLastOffsetY - offsetY < 0 ) {
+            self.scrollLastOffsetY = offsetY;
+            self.barlastOffsetY = offsetY;
+            if ( offsetY >= 0 ) {
+                if ( offsetY >= 55 ) {
+                    offsetY = 55;
+                }
+                scrollBarView.frame = CGRectMake(0, offsetY >= 55 ? - 55: - offsetY, scrollBarView.frame.size.width, scrollBarView.frame.size.height);
+            }
+            else{
+                [UIView animateWithDuration:0.25 animations:^{
+                    scrollBarView.frame = CGRectMake(0, 0, scrollBarView.frame.size.width, scrollBarView.frame.size.height);
+                } completion:^(BOOL finished) {
+                    
+                }];
+                
+            }
+        }
+        else{
+            self.scrollLastOffsetY = offsetY;
+            if (  self.barlastOffsetY - offsetY  > 20 ) {
+                [UIView animateWithDuration:0.25 animations:^{
+                    scrollBarView.frame = CGRectMake(0, 0, scrollBarView.frame.size.width, scrollBarView.frame.size.height);
+                } completion:^(BOOL finished) {
+                    self.barlastOffsetY = offsetY;
+                }];
+            }
+        }
+
+    }
+    else{
+        [UIView animateWithDuration:0.25 animations:^{
+            scrollBarView.frame = CGRectMake(0, 0, scrollBarView.frame.size.width, scrollBarView.frame.size.height);
+        } completion:^(BOOL finished) {
+            self.barlastOffsetY = 0;
+        }];
     }
 }
 
@@ -1125,23 +1044,18 @@
     }
 }
 
-- (void) playVideoFinished:(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
-{
-    MPMoviePlayerController *player = [theNotification object];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:player];
-    [player stop];
-    //    [playerViewController dismissModalViewControllerAnimated:YES];
-}
+//- (void) playVideoFinished:(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
+//{
+//    MPMoviePlayerController *player = [theNotification object];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:player];
+//    [player stop];
+//    //    [playerViewController dismissModalViewControllerAnimated:YES];
+//}
 
 #pragma mark    滑出侧边拦，需要实现该代理方法
 -(BOOL)slideNavigationControllerShouldDisplayLeftMenu
 {
-    if ( self.selectCategoryBtn.selected ) {
-        return NO;
-    }
-    else{
-        return YES;
-    }
+   return YES;
 }
 
 #pragma mark MJScrollPageView 手势代理
@@ -1152,13 +1066,13 @@
 }
 // ---------------- 为了解决 滚动出侧边拦的手势冲突 end——————————————————————
 
-#pragma mark - RFSegmentView delegate
+#pragma mark - RFSegmentView delegate  百家 文章和作者切换
 - (void)segmentViewSelectIndex:(NSInteger)index
 {
     if ( self.baiJiaCurrentSelectIndex != index ) {
         self.baiJiaCurrentSelectIndex = index;
         self.baiJiaPage.currentType = self.baiJiaCurrentSelectIndex;
-        MJRefreshTableView *tableView = [scrollPageView.contentItems objectAtIndex:5];
+        MJRefreshTableView *tableView = [scrollPageView.contentItems objectAtIndex:6];
         [tableView reloadData];
     }
 }

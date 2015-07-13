@@ -186,7 +186,7 @@
                                                               titleArray:titleArray
                                                           titleDownColor:[Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0]
                                                             titleUpColor:[Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0]
-                                                               perRowNum:3];
+                                                               perRowNum:3 andCanLinefeed:NO];
         categoryview.tag = indexPath.section + 500;
         [categoryview setDelegate:self];
         [cell.contentView addSubview:categoryview];

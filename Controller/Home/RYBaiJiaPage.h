@@ -27,6 +27,7 @@ typedef enum : NSUInteger {
 - (CGFloat)baiJiaTableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section;
 - (CGFloat)baiJiaTableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section;
 - (UIView *)baiJiaTableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
+- (UIView *)baiJiaTableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section;
 - (NSArray *)baiJiaSectionIndexTitlesForTableView:(UITableView *)tableView;
 - (NSInteger)baiJiaTableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index;
 
