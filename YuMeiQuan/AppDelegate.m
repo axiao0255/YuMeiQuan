@@ -60,7 +60,7 @@
     // 增加阴影
     [self.slideNav.navigationBar dropShadowWithOffset:CGSizeMake(0, 4) radius:1 color:[UIColor blackColor] opacity:0.1];
     // 设置侧边栏的宽度
-    self.slideNav.portraitSlideOffset = 100;
+    self.slideNav.portraitSlideOffset = 55;
     self.slideNav.leftMenu = homeLeftVC;
     self.slideNav.delegate = self;
     id <SlideNavigationContorllerAnimator> revealAnimator = [[SlideNavigationContorllerAnimatorSlide alloc] init];

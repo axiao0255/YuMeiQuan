@@ -10,17 +10,18 @@
 #import "RYMyHomeLeftTableViewCell.h"
 #import "RYLoginViewController.h"
 
-#import "RYMyNoticeModel.h"
+//#import "RYMyNoticeModel.h"
 
 
 #import "RYMyCollectViewController.h"
 #import "RYMyEnshrineViewController.h"
 #import "RYMyShareViewController.h"
 #import "RYMyJiFenViewController.h"
-#import "RYMyInformViewController.h"
+//#import "RYMyInformViewController.h"
 #import "RYMyInviteViewController.h"
 #import "RYMyLiteratureViewController.h"
 #import "RYMyAnswersRecordViewController.h"
+#import "RYMyExchangeViewController.h"
 
 @interface RYMyHomeLeftViewController ()<UITableViewDelegate,UITableViewDataSource>
 {
@@ -34,8 +35,7 @@
     BOOL             islogin;
 }
 
-@property (nonatomic , assign) NSInteger         noticeNumber;
-@property (nonatomic , strong) RYMyNoticeModel   *noticeModel;
+//@property (nonatomic , strong) RYMyNoticeModel   *noticeModel;
 
 @end
 
@@ -62,115 +62,31 @@
     NSLog(@"滑动 完成");
     islogin = [ShowBox isLogin];
     [theTableView reloadData];
-    
-    if ( islogin ) {
-        [self getNoticeData];
-    }
 }
 
 // 获取图片数组
 - (void)setdatas
 {
-    highlightedImgArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_highlighted_" andMaxIndex:7]];
-    normalImageArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_normalImage_" andMaxIndex:7]];
+    highlightedImgArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_highlighted_" andMaxIndex:5]];
+    normalImageArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_normalImage_" andMaxIndex:5]];
     
-    recusalImgeArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_recusalImge_" andMaxIndex:7]];
+    recusalImgeArrs = [NSArray arrayWithArray:[Utils getImageArrWithImgName:@"ic_recusalImge_" andMaxIndex:5]];
 }
 
 - (void)initSubviews
 {
+    UIImageView *topBackground = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 265, 195)];
+    topBackground.image = [UIImage imageNamed:@"ic_leftVIew_background.png"];
+    [self.view addSubview:topBackground];
+    
+    
     theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-    [theTableView setScrollEnabled:NO];
+    [theTableView setScrollEnabled:YES];
     [theTableView setDelegate:self];
     [theTableView setDataSource:self];
     theTableView.backgroundColor = [UIColor clearColor];
     [theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.view addSubview:theTableView];
-}
-
-- (void)getNoticeData
-{
-    __weak typeof(self) wSelf = self;
-    [NetRequestAPI getMyNoticeHomePageListWithSessionId:[RYUserInfo sharedManager].session
-                                                success:^(id responseDic) {
-                                                    NSLog(@"responseDic 通知 ：%@",responseDic);
-                                                    [wSelf analysisDataWithDict:responseDic];
-        
-    } failure:^(id errorString) {
-        NSLog(@"errorString 通知 ：%@",errorString);
-    }];
-}
-
--(void)analysisDataWithDict:(NSDictionary *)responseDic
-{
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        return;
-    }
-    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( meta == nil ) {
-        return;
-    }
-    
-    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
-    if ( !success ) {
-        return;
-    }
-    
-    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( info == nil ) {
-        return;
-    }
-    self.noticeNumber = 0;
-    // 取系统消息
-    NSArray *noticesystemmessage = [info getArrayValueForKey:@"noticesystemmessage" defaultValue:nil];
-    self.noticeModel.systemNoticeArray = noticesystemmessage;
-    
-    for ( NSInteger i = 0; i < noticesystemmessage.count; i ++ ) {
-        
-        NSDictionary *dict = [noticesystemmessage objectAtIndex:i];
-        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
-        if ( number > 0 ) {
-            self.noticeNumber = self.noticeNumber + number;
-        }
-    }
-    
-    // 取有奖活动
-    NSArray *noticespreadmessage = [info getArrayValueForKey:@"noticespreadmessage" defaultValue:nil];
-    self.noticeModel.prizeNoticeArray = noticespreadmessage;
-    
-    for ( NSInteger i = 0; i < noticespreadmessage.count; i ++ ) {
-        
-        NSDictionary *dict = [noticespreadmessage objectAtIndex:i];
-        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
-        if ( number > 0 ) {
-            self.noticeNumber = self.noticeNumber + number;
-        }
-    }
-    
-    // 取 公司通知列表
-    NSArray      *noticethreadmessage = [info getArrayValueForKey:@"noticethreadmessage" defaultValue:nil];
-    self.noticeModel.companyNoticeArray = noticethreadmessage;
-    
-    for ( NSInteger i = 0; i < noticethreadmessage.count; i ++ ) {
-        
-        NSDictionary *dict = [noticethreadmessage objectAtIndex:i];
-        NSInteger number = [dict getIntValueForKey:@"count" defaultValue:0];
-        if ( number > 0 ) {
-            self.noticeNumber = self.noticeNumber + number;
-        }
-    }
-
-    if ( self.noticeNumber > 0 ) {
-        [theTableView reloadData];
-    }
-}
-
-- (RYMyNoticeModel *)noticeModel
-{
-    if ( _noticeModel == nil ) {
-        _noticeModel = [[RYMyNoticeModel alloc]init];
-    }
-    return _noticeModel;
 }
 
 #pragma mark - UITableView 代理方法
@@ -183,99 +99,84 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ( section == 0 ) {
-        return 9;
+        return 1;
     }
     else{
-        if ( islogin ) {
-            return 1;
-        }
-        else{
-            return 0;
-        }
+        return 6;
     }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( indexPath.section == 0 ) {
-        if ( indexPath.row == 0 ) {
-            return 80;
-        }
-        else{
-            return 43;
-        }
-    }else{
-        return 50;
+        return 195;
+    }
+    else{
+        return 40;
     }
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( indexPath.section == 0 ) {
-        if ( indexPath.row == 0 ) {
-            NSString *topCell = @"topCell";
-            RYMyHomeLeftTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:topCell];
-            if ( !cell ) {
-                cell = [[RYMyHomeLeftTableViewCell alloc] initWithTopCellStyle:UITableViewCellStyleDefault reuseIdentifier:topCell];
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            }
-            if ( !islogin ) {
-                cell.headPortraitImageView.image = [UIImage imageNamed:@"user_head_no.png"];
-                cell.userNameLabel.text = @"点击登录";
+        UITableViewCell *cell  = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"topCell"];
+        cell.backgroundColor = [UIColor clearColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UIButton *nameBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 45, 160, 30)];
+        [nameBtn setBackgroundImage:[UIImage imageNamed:@"ic_leftview_name.png"] forState:UIControlStateNormal];
+        nameBtn.adjustsImageWhenHighlighted = NO;
+        [nameBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+        [cell.contentView addSubview:nameBtn];
+        
+        UIButton *loginBtn = [[UIButton alloc] initWithFrame:CGRectMake(nameBtn.right + 44, nameBtn.top, 30, 30)];
+        [loginBtn addTarget:self action:@selector(headButtonClick) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:loginBtn];
+        if ( islogin ) {
+            [loginBtn setBackgroundImage:[UIImage imageNamed:@"ic_leftView_exit.png"] forState:UIControlStateNormal];
+            if ( [[[RYUserInfo sharedManager] groupid] isEqualToString:@"10"] ) {
+                [nameBtn setTitle:@"账号审核中" forState:UIControlStateNormal];
             }
             else{
-                cell.headPortraitImageView.image = [UIImage imageNamed:@"user_head_yes.png"];
-                cell.userNameLabel.text = [[RYUserInfo sharedManager] realname];
+                [nameBtn setTitle:[[RYUserInfo sharedManager] realname] forState:UIControlStateNormal];
             }
-            
-            [cell.headPortraitButton addTarget:self action:@selector(headButtonClick) forControlEvents:UIControlEventTouchUpInside];
-            return cell;
         }
         else{
-            NSString *commonCell = @"commonCell";
-            RYMyHomeLeftTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:commonCell];
-            if ( !cell ) {
-                cell = [[RYMyHomeLeftTableViewCell alloc] initWithCommonStyle:UITableViewCellStyleDefault reuseIdentifier:commonCell];
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            }
-            if ( islogin  ) {
-                [cell setUserInteractionEnabled:YES];
-                if ( [[[RYUserInfo sharedManager] groupid] isEqualToString:@"10"] && indexPath.row != 2 ) {
-                    [cell setUserInteractionEnabled:NO];
-                    NSString *normalImageName = [recusalImgeArrs objectAtIndex:indexPath.row-1];
-                    cell.normalImage = [UIImage imageNamed:normalImageName];
-                }
-                else{
-                    //高亮图片的名字
-                    NSString *highlightedImgName = [highlightedImgArrs objectAtIndex:indexPath.row-1];
-                    //normal图片的名字
-                    NSString *normalImageName = [normalImageArrs objectAtIndex:indexPath.row-1];
-                    cell.normalImage = [UIImage imageNamed:normalImageName];
-                    cell.highlightImage = [UIImage imageNamed:highlightedImgName];
-                }
-                if ( indexPath.row == 1 ) {
-                    if ( self.noticeNumber > 0 ) {
-                        cell.noticeLabel.text = [NSString stringWithFormat:@"%li",(long)self.noticeNumber];
-                    }
-                    else{
-                        cell.noticeLabel.text = @"";
-                    }
-                }
-            }
-            else{
+            [nameBtn setTitle:@"未登录" forState:UIControlStateNormal];
+            [loginBtn setBackgroundImage:[UIImage imageNamed:@"ic_leftView_login.png"] forState:UIControlStateNormal];
+        }
+
+        return cell;
+    }
+    else{
+        
+        NSString *commonCell = @"commonCell";
+        RYMyHomeLeftTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:commonCell];
+        if ( !cell ) {
+            cell = [[RYMyHomeLeftTableViewCell alloc] initWithCommonStyle:UITableViewCellStyleDefault reuseIdentifier:commonCell];
+            cell.backgroundColor = [UIColor clearColor];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        if ( islogin  ) {
+            [cell setUserInteractionEnabled:YES];
+            if ( [[[RYUserInfo sharedManager] groupid] isEqualToString:@"10"] ) {
                 [cell setUserInteractionEnabled:NO];
-                NSString *normalImageName = [recusalImgeArrs objectAtIndex:indexPath.row-1];
+                NSString *normalImageName = [recusalImgeArrs objectAtIndex:indexPath.row];
                 cell.normalImage = [UIImage imageNamed:normalImageName];
             }
-            return cell;
+            else{
+                //高亮图片的名字
+                NSString *highlightedImgName = [highlightedImgArrs objectAtIndex:indexPath.row];
+                //normal图片的名字
+                NSString *normalImageName = [normalImageArrs objectAtIndex:indexPath.row];
+                cell.normalImage = [UIImage imageNamed:normalImageName];
+                cell.highlightImage = [UIImage imageNamed:highlightedImgName];
+            }
         }
-    }else{
-        NSString *exitCell = @"exitCell";
-        RYMyHomeLeftTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:exitCell];
-        if ( !cell ) {
-            cell = [[RYMyHomeLeftTableViewCell alloc] initWithExitStyle:UITableViewCellStyleDefault reuseIdentifier:exitCell];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            [cell.exitButton addTarget:self action:@selector(exitButtonClick) forControlEvents:UIControlEventTouchUpInside];
+        else{
+            [cell setUserInteractionEnabled:NO];
+            NSString *normalImageName = [recusalImgeArrs objectAtIndex:indexPath.row];
+            cell.normalImage = [UIImage imageNamed:normalImageName];
         }
         return cell;
     }
@@ -283,48 +184,34 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ( indexPath.row != 0 ) {
+    if ( indexPath.section != 0 ) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         UIViewController *vc;
         switch ( indexPath.row ) {
-            case 1: // 通知
-                vc = [[RYMyInformViewController alloc] initWithNoticeModel:self.noticeModel];
+            case 0: //  收藏
+                 vc = [[RYMyEnshrineViewController alloc] init];
                 break;
-            case 2: // 收藏
-                vc = [[RYMyEnshrineViewController alloc] init];
+            case 1: //关注
+                 vc = [[RYMyCollectViewController alloc] init];
                 break;
-            case 3: // 关注
-                vc = [[RYMyCollectViewController alloc] init];
+            case 2: // 分享记录
+                 vc = [[RYMyShareViewController alloc] init];
                 break;
-            case 4: // 积分
-                vc = [[RYMyJiFenViewController alloc] init];
+            case 3: // 积分商城
+                vc = [[RYMyExchangeViewController alloc] init];
                 break;
-            case 5: // 分享记录
-                vc = [[RYMyShareViewController alloc] init];
+            case 4: // 文献查询
+                 vc = [[RYMyLiteratureViewController alloc] init];
                 break;
-            case 6: // 邀请注册
-                vc = [[RYMyInviteViewController alloc] init];
-                break;
-            case 7: // 文献查询
-                vc = [[RYMyLiteratureViewController alloc] init];
-                break;
-            case 8: // 问答记录
+            case 5: // 问答记录
                 vc = [[RYMyAnswersRecordViewController alloc] init];
                 break;
             default:
                 break;
         }
-        __weak typeof(self) wSelf = self;
         [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:vc
                                                                  withSlideOutAnimation:NO
-                                                                         andCompletion:^{
-                                                                             __strong typeof(wSelf) sSelf = wSelf;
-                                                                             if ( indexPath.row == 1 ) {
-                                                                                 wSelf.noticeNumber = 0;
-                                                                                 [sSelf->theTableView reloadData];
-                                                                             }
-            
-        }];
+                                                                         andCompletion:nil];
     }
 }
 
@@ -337,6 +224,9 @@
         [[SlideNavigationController sharedInstance] popToRootAndSwitchToViewController:loginVC
                                                                  withSlideOutAnimation:NO
                                                                          andCompletion:nil];
+    }
+    else{
+        [self exitButtonClick];
     }
 }
 

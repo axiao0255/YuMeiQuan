@@ -21,32 +21,32 @@
 }
 
 
--(id)initWithTopCellStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if ( self ) {
-        
-        self.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
-        
-        self.headPortraitButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 43, 220, 37)];
-        self.headPortraitButton.backgroundColor = [UIColor clearColor];
-        [self.contentView addSubview:self.headPortraitButton];
-        
-        self.headPortraitImageView = [[UIImageView alloc]initWithFrame:CGRectMake(20, 0, 20, 20)];
-        self.headPortraitImageView.backgroundColor = [UIColor clearColor];
-        [self.headPortraitButton addSubview:self.headPortraitImageView];
-        
-        self.userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.headPortraitImageView.frame)+13,
-                                                                      CGRectGetMinY(self.headPortraitImageView.frame),
-                                                                      100,
-                                                                       CGRectGetHeight(self.headPortraitImageView.bounds))];
-        self.userNameLabel.font = [UIFont boldSystemFontOfSize:16];
-        self.userNameLabel.textColor = [UIColor whiteColor];
-        [self.headPortraitButton addSubview:self.userNameLabel];
-    }
-    return self;
-}
-
+//-(id)initWithTopCellStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+//{
+//    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+//    if ( self ) {
+//        
+//        self.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
+//        
+//        self.headPortraitButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 43, 220, 37)];
+//        self.headPortraitButton.backgroundColor = [UIColor clearColor];
+//        [self.contentView addSubview:self.headPortraitButton];
+//        
+//        self.headPortraitImageView = [[UIImageView alloc]initWithFrame:CGRectMake(20, 0, 20, 20)];
+//        self.headPortraitImageView.backgroundColor = [UIColor clearColor];
+//        [self.headPortraitButton addSubview:self.headPortraitImageView];
+//        
+//        self.userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.headPortraitImageView.frame)+13,
+//                                                                      CGRectGetMinY(self.headPortraitImageView.frame),
+//                                                                      100,
+//                                                                       CGRectGetHeight(self.headPortraitImageView.bounds))];
+//        self.userNameLabel.font = [UIFont boldSystemFontOfSize:16];
+//        self.userNameLabel.textColor = [UIColor whiteColor];
+//        [self.headPortraitButton addSubview:self.userNameLabel];
+//    }
+//    return self;
+//}
+//
 #pragma mark -----------------------
 
 -(id)initWithCommonStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -54,7 +54,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
         
-        self.commonImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 220, 43)];
+        self.commonImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 265, 40)];
         self.commonImageView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.commonImageView];
         
@@ -62,12 +62,12 @@
 //        self.backgroundColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0];
 //        [self.commonImageView addSubview:self.separateLine];
         
-        self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(140, 0, 40, 43)];
-        self.noticeLabel.backgroundColor = [UIColor clearColor];
-        self.noticeLabel.textAlignment = NSTextAlignmentRight;
-        self.noticeLabel.font = [UIFont systemFontOfSize:16];
-        self.noticeLabel.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
-        [self.contentView addSubview:self.noticeLabel];
+//        self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(140, 0, 40, 43)];
+//        self.noticeLabel.backgroundColor = [UIColor clearColor];
+//        self.noticeLabel.textAlignment = NSTextAlignmentRight;
+//        self.noticeLabel.font = [UIFont systemFontOfSize:16];
+//        self.noticeLabel.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
+//        [self.contentView addSubview:self.noticeLabel];
     
     }
     return self;
@@ -83,20 +83,6 @@
     {
         self.commonImageView.image = self.normalImage;
     }
-}
-
-#pragma mark -----------------------
--(id)initWithExitStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if ( self ) {
-        self.backgroundColor = [UIColor clearColor];
-        self.exitButton = [Utils getCustomLongButton:@"退出账号"];
-        self.exitButton.frame = CGRectMake(4, 8, 212, 40);
-        self.exitButton.backgroundColor = [Utils getRGBColor:0xd8 g:0xd8 b:0xd8 a:1.0];
-        [self.contentView addSubview:self.exitButton];
-    }
-    return self;
 }
 
 
