@@ -9,6 +9,7 @@
 #import "RYMyExchangeViewController.h"
 #import "RYMyExchangeTableViewCell.h"
 #import "RYExchangeDetailsViewController.h"
+#import "RYExchangeHistoryViewController.h"
 
 @interface RYMyExchangeViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -30,12 +31,14 @@
         [dict setValue:@"http://img1.cache.netease.com/catchpic/3/35/35AFDF1C4CFF12DDB31C9811E4F1441A.jpg" forKey:@"pic"];
         [dict setValue:@"精美礼品，吊坠挂件" forKey:@"name"];
         [dict setValue:@"足球主题曲响彻操场，足球舞蹈展示着运动活力。在精彩的节目演出后，重庆市教委副巡视员帅逊、万盛经开区党工委副书记肖猛" forKey:@"subject"];
-        [dict setValue:@"5" forKey:@"jifen"];
+        [dict setValue:@"20" forKey:@"maxNumber"];
+        [dict setValue:@"100" forKey:@"jifen"];
         [arr addObject:dict];
     }
     
     self.listData = arr;
     [self.view addSubview:self.tableView];
+    [self setNavigationItem];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -52,6 +55,22 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)setNavigationItem
+{
+     UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 36, 24)];
+    [rightButton setImage:[UIImage imageNamed:@"ic_exchange_history.png"] forState:UIControlStateNormal];
+    [rightButton addTarget:self action:@selector(rightButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = leftItem;
+
+}
+
+-(void)rightButtonClick:(id)sender
+{
+    RYExchangeHistoryViewController *vc = [[RYExchangeHistoryViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 -(UITableView *)tableView
 {

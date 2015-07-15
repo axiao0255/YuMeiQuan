@@ -24,3 +24,29 @@
 @property (nonatomic , strong) UITextField   *textField;
 
 @end
+
+
+#pragma mark 兑换礼品数量选择
+@protocol RYExchangeNumberSelectTableViewCellDelegate <NSObject>
+
+
+@end
+
+@interface RYExchangeNumberSelectTableViewCell : UITableViewCell
+
+@property (nonatomic , weak)id<RYExchangeNumberSelectTableViewCellDelegate>delegate;
+@property (nonatomic , strong)UILabel           *titleLabel;
+@property (nonatomic , strong)UIButton          *reduceBtn;
+@property (nonatomic , strong)UIButton          *addBtn;
+@property (nonatomic , strong)UILabel           *numberLabel;
+@property (nonatomic , assign)NSInteger         number;
+@property (nonatomic , strong)UILabel           *expendLabel;
+@property (nonatomic , strong)UILabel           *jifenLabel;
+@property (nonatomic , assign)NSInteger         canExchangeMaxNumber;
+@property (nonatomic , strong)NSDictionary      *dict;
+
+
+- (void)setValueWithDict:(NSDictionary *)dict;
+
+
+@end

@@ -86,3 +86,156 @@
 
 @end
 
+@implementation RYExchangeNumberSelectTableViewCell
+
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if ( self ) {
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 35, 26)];
+        self.titleLabel.text = @"数量";
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
+        self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        [self.contentView addSubview:self.titleLabel];
+        
+        self.reduceBtn = [[UIButton alloc]initWithFrame:CGRectMake(self.titleLabel.right + 5, 0, 26, 26)];
+        [self.reduceBtn setImage:[UIImage imageNamed:@"ic_reduce_normal.png"] forState:UIControlStateNormal];
+        [self.reduceBtn setImage:[UIImage imageNamed:@"ic_reduce_disabled.png"] forState:UIControlStateHighlighted];
+        [self.reduceBtn setImage:[UIImage imageNamed:@"ic_reduce_disabled.png"] forState:UIControlStateDisabled];
+        [self.reduceBtn addTarget:self action:@selector(reduceBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.reduceBtn setEnabled:NO];
+        [self.contentView addSubview:self.reduceBtn];
+        
+        
+        self.number = 1;
+        self.numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.reduceBtn.right + 5, 5, 16, 16)];
+        self.numberLabel.layer.borderWidth = 1.0;
+        self.numberLabel.layer.borderColor = [Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0].CGColor;
+        self.numberLabel.layer.cornerRadius = 4;
+        self.numberLabel.layer.masksToBounds = YES;
+        self.numberLabel.font = [UIFont systemFontOfSize:12];
+        self.numberLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        self.numberLabel.text = [NSString stringWithFormat:@"%ld",self.number];
+        self.numberLabel.textAlignment = NSTextAlignmentCenter;
+        [self.contentView addSubview:self.numberLabel];
+        
+        self.addBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.numberLabel.right + 5, 0, 26, 26)];
+        [self.addBtn setImage:[UIImage imageNamed:@"ic_add_normal.png"] forState:UIControlStateNormal];
+        [self.addBtn setImage:[UIImage imageNamed:@"ic_add_disabled.png"] forState:UIControlStateHighlighted];
+        [self.addBtn setImage:[UIImage imageNamed:@"ic_add_disabled.png"] forState:UIControlStateDisabled];
+        [self.addBtn addTarget:self action:@selector(addBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:self.addBtn];
+        
+        self.expendLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+        self.expendLabel.left = 200;
+        self.expendLabel.width = 80;
+        self.expendLabel.top = 0;
+        self.expendLabel.height = 26;
+        self.expendLabel.font = [UIFont systemFontOfSize:16];
+        self.expendLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        self.expendLabel.text = @"消耗积分：";
+        [self.contentView addSubview:self.expendLabel];
+        
+        self.jifenLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 40, 0, 40, 26)];
+        self.jifenLabel.font = [UIFont systemFontOfSize:16];
+        self.jifenLabel.textColor = [Utils getRGBColor:0xcd g:0x24 b:0x2b a:1.0];
+        self.jifenLabel.textAlignment = NSTextAlignmentRight;
+        [self.contentView addSubview:self.jifenLabel];
+    }
+    return self;
+}
+
+
+-(void)reduceBtnClick:(id)sender
+{
+    NSLog(@"减少");
+    if ( self.number > 1 ) {
+        [self.reduceBtn setEnabled:YES];
+        self.number --;
+        self.numberLabel.text = [NSString stringWithFormat:@"%ld",self.number];
+    }
+    
+    if ( self.number <= 1 ) {
+        [self.reduceBtn setEnabled:NO];
+    }
+    
+    if ( self.number < self.canExchangeMaxNumber ) {
+        [self.addBtn setEnabled:YES];
+    }
+    //每个礼品所需要的积分
+    NSInteger singleJifen = [self.dict getIntValueForKey:@"jifen" defaultValue:0];
+    NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen*self.number];
+    [self adjustSiteWithString:jifenStr];
+  
+}
+
+-(void)addBtnClick:(id)sender
+{
+    self.number ++;
+    if ( self.number > 1 ) {
+         [self.reduceBtn setEnabled:YES];
+    }
+    self.numberLabel.text = [NSString stringWithFormat:@"%ld",self.number];
+    if ( self.number >= self.canExchangeMaxNumber ) {
+        [self.addBtn setEnabled:NO];
+    }
+    
+    //每个礼品所需要的积分
+    NSInteger singleJifen = [self.dict getIntValueForKey:@"jifen" defaultValue:0];
+    NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen*self.number];
+    [self adjustSiteWithString:jifenStr];
+}
+
+- (void)setValueWithDict:(NSDictionary *)dict
+{
+    if ( dict == nil ) {
+        return;
+    }
+    self.dict = dict;
+    
+    // 取出最大兑换上限
+    NSInteger maxNumber = [dict getIntValueForKey:@"maxNumber" defaultValue:1];
+    //我当前的总积分
+    NSInteger myJifen = [[RYUserInfo sharedManager].credits integerValue];
+    //每个礼品所需要的积分
+    NSInteger singleJifen = [dict getIntValueForKey:@"jifen" defaultValue:0];
+    if ( singleJifen == 0 ) {
+        self.canExchangeMaxNumber = maxNumber;
+    }
+    else{
+        //我的总积分能换多少个礼品
+        NSInteger myMaxNum = myJifen / singleJifen;
+        if ( myMaxNum > maxNumber ) {
+            self.canExchangeMaxNumber = maxNumber;
+        }
+        else{
+            self.canExchangeMaxNumber = myMaxNum;
+        }
+    }
+    
+    if ( self.canExchangeMaxNumber <= 1 ) {
+        [self.reduceBtn setEnabled:NO];
+        [self.addBtn setEnabled:NO];
+    }
+    
+    NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen];
+    [self adjustSiteWithString:jifenStr];
+}
+
+- (void)adjustSiteWithString:(NSString *)string
+{
+    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+    CGRect rect = [string boundingRectWithSize:CGSizeMake(SCREEN_WIDTH, 16)
+                                       options:NSStringDrawingUsesLineFragmentOrigin
+                                    attributes:attributes
+                                       context:nil];
+    self.jifenLabel.width = rect.size.width;
+    self.jifenLabel.left = SCREEN_WIDTH - 15 - self.jifenLabel.width;
+    self.jifenLabel.text = string;
+    
+    self.expendLabel.left = SCREEN_WIDTH - 15 - 80 - self.jifenLabel.width;
+}
+
+
+@end
+
