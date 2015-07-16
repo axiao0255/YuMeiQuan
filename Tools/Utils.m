@@ -120,8 +120,7 @@
 }
 
 +(UIButton *)getCustomLongButton:(NSString *)string{
-//    UIImage *image = [UIImage imageNamed:@"button_up.png"];
-//    UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, image.size.width, image.size.height)];
+
     UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(10, 0, SCREEN_WIDTH - 20, 44)];
     baseButton.titleLabel.font = [UIFont boldSystemFontOfSize:18];
     [baseButton setTitle:string forState:UIControlStateNormal];
@@ -129,8 +128,6 @@
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     baseButton.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
     baseButton.layer.cornerRadius = 5.0;
-//    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateNormal];
-//    [baseButton setBackgroundImage:[UIImage imageNamed:@"button_up.png"] forState:UIControlStateHighlighted];
     [baseButton setExclusiveTouch:YES];
     return baseButton;
 }

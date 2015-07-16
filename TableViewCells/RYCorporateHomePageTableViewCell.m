@@ -26,39 +26,40 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.logoImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        self.logoImageView.left = 15;
-        self.logoImageView.top = 16;
-        self.logoImageView.height = 37;
-        self.logoImageView.width = 37;
-        self.logoImageView.layer.cornerRadius = 18.5;
-        self.logoImageView.layer.masksToBounds = YES;
-        [self.contentView addSubview:self.logoImageView];
+        self.backgroundView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 160)];
+        [self.backgroundView setImage:[UIImage imageNamed:@"ic_company_bj.png"]];
+        [self.contentView addSubview:self.backgroundView];
         
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.logoImageView.frame) + 15,
-                                                                    18,
-                                                                    170,
-                                                                    16)];
+        self.directBtn = [[UIButton alloc] initWithFrame:CGRectMake(200, 50, 50, 17)];
+        [self.directBtn setBackgroundImage:[UIImage imageNamed:@"ic_direct.png"] forState:UIControlStateNormal];
+        [self.directBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
+        [self.directBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.directBtn setTitle:@"直达号" forState:UIControlStateNormal];
+        [self.directBtn setAdjustsImageWhenDisabled:NO];
+        [self.contentView addSubview:self.directBtn];
+        
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,72,SCREEN_WIDTH,16)];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-        self.titleLabel.numberOfLines = 0;
-        self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        self.titleLabel.textAlignment = NSTextAlignmentCenter;
+        self.titleLabel.textColor = [UIColor whiteColor];
         [self.contentView addSubview:self.titleLabel];
         
-        self.declareLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.titleLabel.frame),
-                                                                      CGRectGetMaxY(self.titleLabel.frame) + 8,
-                                                                      250,
-                                                                      14)];
+        self.attentionBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-30, self.titleLabel.bottom + 10, 60, 25)];
+        [self.contentView addSubview:self.attentionBtn];
+        
+        self.declareLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,self.attentionBtn.bottom + 10,SCREEN_WIDTH,14)];
         self.declareLabel.font = [UIFont systemFontOfSize:14];
-        self.declareLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        self.declareLabel.textColor = [UIColor whiteColor];
+        self.declareLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:self.declareLabel];
         
-        self.rightArrow = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 17, 26, 17, 16)];
-        self.rightArrow.image = [UIImage imageNamed:@"ic_arrow_right.png"];
-        [self.contentView addSubview:self.rightArrow];
+        self.aboutCompanyBtn = [[UIButton alloc] initWithFrame:CGRectMake(285, 35, 24, 24)];
+        [self.aboutCompanyBtn setImage:[UIImage imageNamed:@"ic_aboutCompant.png"] forState:UIControlStateNormal];
+        [self.contentView addSubview:self.aboutCompanyBtn];
         
-        self.directImgView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.titleLabel.frame), 20, 38, 12)];
-        self.directImgView.image = [UIImage imageNamed:@"ic_direct.png"];
-        [self.contentView addSubview:self.directImgView];
+        self.backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 35, 24, 24)];
+        [self.backBtn setImage:[UIImage imageNamed:@"ic_company_back.png"] forState:UIControlStateNormal];
+        [self.contentView addSubview:self.backBtn];
     }
     return self;
 }
@@ -68,57 +69,12 @@
     if ( !dic ) {
         return;
     }
-    [self.logoImageView setImageWithURL:[NSURL URLWithString:[dic objectForKey:@"pic"]] placeholderImage:[UIImage imageNamed:@"ic_logo_default.png"]];
-    
     NSString *titleStr = [dic getStringValueForKey:@"username" defaultValue:@""];
-    CGSize size = [titleStr sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(170, 39)];
-    self.titleLabel.height = size.height;
-    self.titleLabel.width = size.width;
     [self.titleLabel setText:titleStr];
     
-    self.directImgView.left = self.titleLabel.right;
-    
-    self.declareLabel.top = self.titleLabel.bottom + 8;
     [self.declareLabel setText:[dic getStringValueForKey:@"slogan" defaultValue:@""]];
     
 }
-
-@end
-
-
-#pragma mark ---------------------------------------------
-
-@implementation RYCorporateAttentionTableViewCell
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    
-    // Configure the view for the selected state
-}
-
-
-//    企业微主页 关注
-- (id)initWithAttentionStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if ( self ) {
-//        self.attentionButton = [[UIButton alloc] initWithFrame:CGRectMake(15, 8, 77, 28)];
-//        self.attentionButton.layer.masksToBounds = YES;
-//        self.attentionButton.layer.borderColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0].CGColor;
-//        self.attentionButton.layer.borderWidth = 1;
-//        self.attentionButton.layer.cornerRadius = 5;
-//        self.attentionButton.titleLabel.font = [UIFont systemFontOfSize:14];
-//        [self.attentionButton setTitle:@"关注" forState:UIControlStateNormal];
-//        [self.attentionButton setTitleColor:[Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0] forState:UIControlStateNormal];
-//        [self.contentView addSubview:self.attentionButton];
-        
-        self.attentionButton = [Utils getCustomLongButton:@"关注"];
-        self.attentionButton.frame = CGRectMake(15, 8, SCREEN_WIDTH - 30, 40);
-        [self.contentView addSubview:self.attentionButton];
-    }
-    return self;
-}
-
-
 
 @end
 
@@ -139,28 +95,31 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
         // 题图
-        self.titlePic = [[UIImageView alloc] initWithFrame:CGRectMake(15, 8, 58, 58)];
+        self.titlePic = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 95, 70)];
+        self.titlePic.layer.borderWidth = 1.0;
+        self.titlePic.layer.borderColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0].CGColor;
         [self.contentView addSubview:self.titlePic];
         // 内容
-        self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.titlePic.frame) + 8,
-                                                                      8, SCREEN_WIDTH - 30 - 58, 39)];
+        self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.titlePic.frame) + 5,
+                                                                      10, SCREEN_WIDTH - 30 - 5 - self.titlePic.width, 58)];
         self.contentLabel.font = [UIFont systemFontOfSize:16];
         self.contentLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-        self.contentLabel.numberOfLines = 2;
+        self.contentLabel.numberOfLines = 3;
         [self.contentView addSubview:self.contentLabel];
         // 分类
-        self.categoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.contentLabel.left, self.contentLabel.bottom + 8, 50, 12)];
+        self.categoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 100, self.contentLabel.bottom + 8, 100, 12)];
         self.categoryLabel.font = [UIFont systemFontOfSize:12];
+        self.categoryLabel.textAlignment = NSTextAlignmentRight;
         self.categoryLabel.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         [self.contentView addSubview:self.categoryLabel];
         
-        // 问答
-        self.answerImgView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 17,self.categoryLabel.top - 2 , 17, 17)];
-        self.answerImgView.image = [UIImage imageNamed:@"ic_answer_pic.png"];
-        [self.contentView addSubview:self.answerImgView];
+//        // 问答
+//        self.answerImgView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 17,self.categoryLabel.top - 2 , 17, 17)];
+//        self.answerImgView.image = [UIImage imageNamed:@"ic_answer_pic.png"];
+//        [self.contentView addSubview:self.answerImgView];
         // 积分
-        self.integratorImgView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.answerImgView.frame)-17 - 4,
-                                                                               self.answerImgView.top, 17, 17)];
+        self.integratorImgView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.contentLabel.frame),
+                                                                               self.categoryLabel.top, 14, 11)];
         self.integratorImgView.image = [UIImage imageNamed:@"ic_integrator_pic.png"];
         [self.contentView addSubview:self.integratorImgView];
 
@@ -176,42 +135,31 @@
     NSString *pic = [dic getStringValueForKey:@"pic" defaultValue:@""];
     [self.titlePic setImageWithURL:[NSURL URLWithString:pic] placeholderImage:[UIImage imageNamed:@"ic_pic_default.png"]];
     if ( ![ShowBox isEmptyString:pic] ) {
-        self.titlePic.width = 58;
-        self.contentLabel.frame = CGRectMake(CGRectGetMaxX(self.titlePic.frame) + 8, self.contentLabel.top, SCREEN_WIDTH - 30 - 58 - 8, 39);
+        self.titlePic.width = 95;
+        self.contentLabel.frame = CGRectMake(CGRectGetMaxX(self.titlePic.frame) + 5, self.contentLabel.top, SCREEN_WIDTH - 30 - 5 - self.titlePic.width, 58);
+        self.contentLabel.text = [dic getStringValueForKey:@"subject" defaultValue:@""];
+         [self.contentLabel sizeToFit];
+        self.categoryLabel.top = 68;
     }
     else{
         self.titlePic.width = 0;
-        self.contentLabel.frame = CGRectMake(15, self.contentLabel.top, SCREEN_WIDTH - 30, 39);
+        self.contentLabel.frame = CGRectMake(15, self.contentLabel.top, SCREEN_WIDTH - 30, 58);
+        self.contentLabel.text = [dic getStringValueForKey:@"subject" defaultValue:@""];
+        [self.contentLabel sizeToFit];
+        self.categoryLabel.top = self.contentLabel.bottom + 10;
     }
-    self.contentLabel.text = [dic getStringValueForKey:@"subject" defaultValue:@""];
-    self.categoryLabel.left = self.contentLabel.left;
+    
     self.categoryLabel.text = [dic getStringValueForKey:@"name" defaultValue:@""];
+    self.integratorImgView.left = self.contentLabel.left;
+    self.integratorImgView.top = self.categoryLabel.top;
     
     BOOL questions = [dic getBoolValueForKey:@"questions" defaultValue:NO];
-    if ( questions ) {
-        self.answerImgView.hidden = NO;
-        self.answerImgView.width = 17;
-    }
-    else{
-        self.answerImgView.hidden = YES;
-        self.answerImgView.width = 0;
-    }
-    
     BOOL spread = [dic getBoolValueForKey:@"spread" defaultValue:NO];
-    if ( spread ) {
+    if ( questions || spread ) {
         self.integratorImgView.hidden = NO;
-        self.integratorImgView.width = 17;
-
-        if ( self.answerImgView.width == 0 ) {
-            self.integratorImgView.left = self.answerImgView.left;
-        }
-        else{
-            self.integratorImgView.left = CGRectGetMinX(self.answerImgView.frame)-17 - 4;
-        }
     }
     else{
         self.integratorImgView.hidden = YES;
-        self.integratorImgView.width = 0;
     }
 }
 

@@ -104,7 +104,10 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    UIViewController *vc = [self.navigationController.viewControllers lastObject];
+    if ( ![vc isKindOfClass:[RYCorporateHomePageViewController class]] ) {
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+    }
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 

@@ -43,30 +43,27 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setNavigationItem];
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];    
+    UIViewController *vc = [self.navigationController.viewControllers lastObject];
+    if ( ![vc isKindOfClass:[RYArticleViewController class]] ) {
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-- (void)setNavigationItem
-{
-    UIButton *rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 18)];
-    [rightBtn setImage:[UIImage imageNamed:@"ic_default_select.png"] forState:UIControlStateNormal];
-    rightBtn.backgroundColor = [UIColor clearColor];
-    [rightBtn addTarget:self action:@selector(rightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
-    self.navigationItem.rightBarButtonItem = rightItem;
 }
 
 -(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
@@ -144,7 +141,7 @@
 -(MJRefreshTableView *)tableView
 {
     if ( _tableView == nil ) {
-        _tableView = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+        _tableView = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
@@ -175,12 +172,7 @@
             return 0;
         }
         else{
-            if (self.dataModel.isAttention) {
-                return 1;
-            }
-            else{
-                return 2;
-            }
+            return 1;
         }
     }
     else{
@@ -191,41 +183,46 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( indexPath.section == 0 ) {
-        if ( indexPath.row == 0 ) {
-            NSString *titleStr = [self.dataModel.corporateBody getStringValueForKey:@"username" defaultValue:@""];
-            CGSize size = [titleStr sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(170, 39)];
-            return  size.height + 48;
-        }
-        else{
-            return 56;
-        }
+        return 160;
     }
     else{
-        return 75;
+        NSDictionary *dic = [self.dataModel.corporateArticles objectAtIndex:indexPath.row];
+        NSString *pic = [dic getStringValueForKey:@"pic" defaultValue:@""];
+        if ( ![ShowBox isEmptyString:pic] ) {
+            return 90;
+        }
+        else{
+            NSString *subject = [dic getStringValueForKey:@"subject" defaultValue:@""];
+            NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+            CGRect rect = [subject boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                                options:NSStringDrawingUsesLineFragmentOrigin
+                                             attributes:attributes
+                                                context:nil];
+            return 42 + rect.size.height;
+        }
     }
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( indexPath.section == 0 ) {
-        if ( indexPath.row == 0 ) {
-            NSString *topCell = @"topCell";
-            RYCorporateHomePageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:topCell];
-            if ( !cell ) {
-                cell = [[RYCorporateHomePageTableViewCell alloc] initWithTopCellStyle:UITableViewCellStyleDefault reuseIdentifier:topCell];
-            }
-            [cell setValueWithDic:self.dataModel.corporateBody];
-            return cell;
+        NSString *topCell = @"topCell";
+        RYCorporateHomePageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:topCell];
+        if ( !cell ) {
+            cell = [[RYCorporateHomePageTableViewCell alloc] initWithTopCellStyle:UITableViewCellStyleDefault reuseIdentifier:topCell];
+        }
+        [cell setValueWithDic:self.dataModel.corporateBody];
+        
+        if (self.dataModel.isAttention) {
+            [cell.attentionBtn setImage:[UIImage imageNamed:@"ic_company_attent.png"] forState:UIControlStateNormal];
         }
         else{
-            NSString *attention = @"attention";
-            RYCorporateAttentionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:attention];
-            if ( !cell ) {
-                cell = [[RYCorporateAttentionTableViewCell alloc] initWithAttentionStyle:UITableViewCellStyleDefault reuseIdentifier:attention];
-            }
-            [cell.attentionButton addTarget:self action:@selector(attentionButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-            return cell;
+            [cell.attentionBtn setImage:[UIImage imageNamed:@"ic_company_cancel.png"] forState:UIControlStateNormal];
         }
+        [cell.attentionBtn addTarget:self action:@selector(attentionButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.aboutCompanyBtn addTarget:self action:@selector(aboutCompanyBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        return cell;
     }
     else{
         NSString *publishedArticles = @"PublishedArticles";
@@ -241,14 +238,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if ( indexPath.section == 0 ) {
-        if ( indexPath.row == 0 ) {
-            RYCorporateViewController *vc = [[RYCorporateViewController alloc] initWithCategoryData:self.dataModel];
-            vc.delegate = self;
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-    }
-    else{
+    if ( indexPath.section != 0 ) {
         NSDictionary *dict = [self.dataModel.corporateArticles  objectAtIndex:indexPath.row];
         RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
         [self.navigationController pushViewController:vc animated:YES];
@@ -257,8 +247,8 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    if ( section == 0 ) {
-        return 8;
+    if ( section == 0 && [self.dataModel.corporateBody allKeys].count ) {
+        return 40;
     }
     else{
         return 0;
@@ -270,6 +260,74 @@
     return 0;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if ( [self.dataModel.corporateBody allKeys].count ) {
+        if ( section == 0 ) {
+            UIButton *view = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
+            view.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
+            
+            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 42, 40)];
+            titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+            titleLabel.font = [UIFont systemFontOfSize:14];
+            titleLabel.text = @"分类：";
+            [view addSubview:titleLabel];
+            
+            UILabel *categoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabel.right+5, 0, 225, 40)];
+            categoryLabel.font = [UIFont boldSystemFontOfSize:16];
+            categoryLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+            
+            NSArray *arr = self.dataModel.categoryArray;
+            NSString *title = @"全部";
+            for ( NSInteger i = 0 ; i < arr.count; i ++ ) {
+                NSDictionary *dict = [arr objectAtIndex:i];
+                NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@""];
+                if ( [self.corporateFid isEqualToString:fid] ) {
+                    title = [dict getStringValueForKey:@"name" defaultValue:@""];
+                    break;
+                }
+            }
+            categoryLabel.text = title;
+            [view addSubview:categoryLabel];
+            
+            UIImageView *arrows = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 10, 13, 10, 14)];
+            arrows.image =[UIImage imageNamed:@"ic_right_arrow.png"];;
+            [view addSubview:arrows];
+            
+            [view addTarget:self action:@selector(categorySelect:) forControlEvents:UIControlEventTouchUpInside];
+            
+            return view;
+            
+        }else{
+            return nil;
+        }
+    }
+    return nil;
+}
+
+- (void)backBtnClick:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)aboutCompanyBtnClick:(id)sender
+{
+    RYCorporateViewController *vc = [[RYCorporateViewController alloc] initWithCategoryData:self.dataModel];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)categorySelect:(id)sender
+{
+    if ( self.dataModel.categoryArray.count == 0) {
+        [ShowBox showError:@"数据出错"];
+        return;
+    }
+    RYCorporateProductCategoryViewController *vc = [[RYCorporateProductCategoryViewController alloc] initWithCategoryData:self.dataModel];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
+
+}
 
 - (void)attentionButtonClick:(id)sender
 {
@@ -278,47 +336,52 @@
         [alertView show];
     }
     else{
-        
         if ( [ShowBox checkCurrentNetwork] ) {
+            UIButton *btn = (UIButton *)sender;
             __weak typeof(self) wSelf = self;
-            [NetRequestAPI addFriendactionWithSessionId:[RYUserInfo sharedManager].session
-                                                 foruid:self.corporateID
-                                                success:^(id responseDic) {
-                                                    NSLog(@"收藏 : responseDic : %@",responseDic);
-                                                    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-                                                        [ShowBox showError:@"收藏失败，请稍候重试"];
-                                                        return ;
-                                                    }
-                                                    
-                                                    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-                                                    if (meta == nil) {
-                                                        [ShowBox showError:@"收藏失败，请稍候重试"];
-                                                        return ;
-                                                    }
-                                                    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
-                                                    if ( !success ) {
-                                                        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"收藏失败，请稍候重试"]];
-                                                        return ;
-                                                    }
-                                                   
-                                                   wSelf.dataModel.isAttention = YES;
-                                                   [wSelf.tableView beginUpdates];
-                                                   [wSelf.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
-                                                   [wSelf.tableView endUpdates];
-
-                                                   [wSelf afreshData];
-            } failure:^(id errorString) {
-                NSLog(@"收藏失败 %@",errorString);
-                [ShowBox showError:@"收藏失败，请稍候重试"];
-            }];
-        }
+            if ( self.dataModel.isAttention ) {
+                [NetRequestAPI delFriendactionWithSessionId:[RYUserInfo sharedManager].session
+                                                     foruid:self.corporateID
+                                                    success:^(id responseDic) {
+                                                        
+                                                        NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                                        BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                                        if ( !success ) {
+                                                            [ShowBox showError:@"取消收藏失败,请稍候重试"];
+                                                            return ;
+                                                        }
+                                                        wSelf.dataModel.isAttention = NO;
+                                                        [btn setImage:[UIImage imageNamed:@"ic_company_cancel.png"] forState:UIControlStateNormal];
+                                                        
+                                                    } failure:^(id errorString) {
+                                                        [ShowBox showError:@"取消收藏失败,请稍候重试"];
+                                                    }];
+            }
+            else{
+                [NetRequestAPI addFriendactionWithSessionId:[RYUserInfo sharedManager].session
+                                                     foruid:self.corporateID
+                                                    success:^(id responseDic) {
         
+                                                        NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                                        BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                                        if ( !success ) {
+                                                            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"收藏失败，请稍候重试"]];
+                                                            return ;
+                                                        }
+
+                                                        wSelf.dataModel.isAttention = YES;
+                                                        [btn setImage:[UIImage imageNamed:@"ic_company_attent.png"] forState:UIControlStateNormal];
+                                                    } failure:^(id errorString) {
+                                                        NSLog(@"收藏失败 %@",errorString);
+                                                        [ShowBox showError:@"收藏失败，请稍候重试"];
+                                                    }];
+            }
+        }
     }
 }
 
 - (void)afreshData
 {
-//    self.dataModel = nil;
     [self.tableView headerBeginRefreshing];
 }
 
@@ -328,24 +391,10 @@
     [self afreshData];
 }
 
-
-
-- (void)rightBtnClick:(id)sender
-{
-    if ( self.dataModel.categoryArray.count == 0) {
-        [ShowBox showError:@"数据出错"];
-        return;
-    }
-    RYCorporateProductCategoryViewController *vc = [[RYCorporateProductCategoryViewController alloc] initWithCategoryData:self.dataModel];
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
 -(void)categorySelectDidWithFid:(NSString *)fid
 {
     if ( ![self.corporateFid isEqualToString:fid] ) {
         self.corporateFid = fid;
-//        self.dataModel = nil;
         [self.tableView headerBeginRefreshing];
     }
 }

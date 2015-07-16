@@ -11,9 +11,9 @@
 @interface RYEnshrineTableViewCell : UITableViewCell
 
 @property (nonatomic , strong) UILabel     *contentLabel;
-//@property (nonatomic , strong) UILabel     *timeLabel;
 @property (nonatomic , strong) UIImageView *icoImageView;
 @property (nonatomic , strong) UILabel     *tallyLabel;
+@property (nonatomic , strong) UIButton    *editBtn;
 
 
 - (void)setValueWithDict:(NSDictionary *)dict;

@@ -77,6 +77,7 @@
         self.textField.layer.borderColor = [Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0].CGColor;
         self.textField.layer.cornerRadius = 4;
         self.textField.layer.masksToBounds = YES;
+        [self.textField seperatorWidth:10];
         self.textField.font = [UIFont systemFontOfSize:16];
         self.textField.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         [self.contentView addSubview:self.textField];

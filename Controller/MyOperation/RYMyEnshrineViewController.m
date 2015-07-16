@@ -12,6 +12,7 @@
 #import "MJRefreshTableView.h"
 #import "RYArticleViewController.h"
 #import "RYLiteratureDetailsViewController.h"
+#import "RYTallyTokenViewController.h"
 
 
 @interface RYMyEnshrineViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate,MJRefershTableViewDelegate>
@@ -146,7 +147,7 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 75;
+    return 85;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -156,6 +157,9 @@
     if ( !cell ) {
         cell = [[RYEnshrineTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    cell.editBtn.tag = indexPath.row;
+    [cell.editBtn addTarget:self action:@selector(editBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    
     if ( dataArray.count ) {
         [cell setValueWithDict:[dataArray objectAtIndex:indexPath.row]];
     }
@@ -251,7 +255,19 @@
 }
 
 
-
+#pragma mark 编辑标签
+-(void)editBtnClick:(id)sender
+{
+    NSLog(@"编辑标签");
+    UIButton *btn = (UIButton *)sender;
+    NSDictionary *dict = [dataArray objectAtIndex:btn.tag];
+    NSString *tid = [dict getStringValueForKey:@"tid" defaultValue:@""];
+    if ( ![ShowBox isEmptyString:tid] ) {
+        RYTallyTokenViewController *vc = [[RYTallyTokenViewController alloc] initWithTid:tid];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
+}
 
 
 @end

@@ -289,6 +289,12 @@
                            success:(void(^)(id responseDic))success
                            failure:(void(^)(id errorString))failure;
 
+#pragma mark -获取编辑标签的数据
++(void)getEditTallyWithSessionId:(NSString *)session
+                             tid:(NSString *)_tid
+                         success:(void(^)(id responseDic))success
+                         failure:(void(^)(id errorString))failure;
+
 
 
 @end

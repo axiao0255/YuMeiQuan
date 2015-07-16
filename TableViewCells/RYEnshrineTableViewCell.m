@@ -31,24 +31,27 @@
         self.contentLabel.numberOfLines = 2;
         [self.contentView addSubview:self.contentLabel];
         
-//        self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 48, 100, 20)];
-//        self.timeLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-//        self.timeLabel.font = [UIFont systemFontOfSize:10];
-//        self.timeLabel.backgroundColor = [UIColor clearColor];
-//        [self.contentView addSubview:self.timeLabel];
-        
         UIImage *icoImage = [UIImage imageNamed:@"ico_default.png"];
-        self.icoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 55, icoImage.size.width, icoImage.size.height)];
+        self.icoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 60, icoImage.size.width, icoImage.size.height)];
         self.icoImageView.backgroundColor = [UIColor clearColor];
         self.icoImageView.image = icoImage;
         [self.contentView addSubview:self.icoImageView];
         
-        self.tallyLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.icoImageView.right + 5,  self.contentLabel.bottom + 8, 200, 12)];
+        self.tallyLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.icoImageView.right + 5,  self.icoImageView.top, 190, 12)];
         self.tallyLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-//        self.tallyLabel.textAlignment = NSTextAlignmentRight;
-        self.tallyLabel.backgroundColor = [UIColor clearColor];
         self.tallyLabel.font = [UIFont systemFontOfSize:12];
         [self.contentView addSubview:self.tallyLabel];
+        
+        
+        self.editBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 75, 50, 75, 30)];
+        self.editBtn.layer.cornerRadius = 4;
+        self.editBtn.layer.masksToBounds = YES;
+        self.editBtn.layer.borderWidth = 1.0;
+        self.editBtn.layer.borderColor = [Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0].CGColor;
+        [self.editBtn setTitle:@"编辑标签" forState:UIControlStateNormal];
+        [self.editBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [self.editBtn setTitleColor:[Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0] forState:UIControlStateNormal];
+        [self.contentView addSubview:self.editBtn];
     }
     return self;
 }
@@ -61,23 +64,6 @@
     
     self.contentLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
     [self.contentLabel sizeToFit];
-    
-//    self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
-//    [self.timeLabel sizeToFit];
-    
-//    NSString *str = [dict getStringValueForKey:@"class" defaultValue:@""];
-//    CGSize labelsize = [str sizeWithFont:self.tallyLabel.font];
-//    self.tallyLabel.frame = CGRectMake(SCREEN_WIDTH - 15 - labelsize.width,
-//                                       CGRectGetMinY(self.tallyLabel.frame),
-//                                       labelsize.width,
-//                                       CGRectGetHeight(self.tallyLabel.frame));
-//    self.tallyLabel.text = str;
-//    [self.tallyLabel sizeToFit];
-//    
-//    CGRect icoRect = self.icoImageView.frame;
-//    icoRect.origin.x = CGRectGetMinX(self.tallyLabel.frame) - 2 - CGRectGetWidth(self.icoImageView.bounds);
-//    self.icoImageView.frame = icoRect;
-    
     self.tallyLabel.text = [dict getStringValueForKey:@"name" defaultValue:@""];
 }
 

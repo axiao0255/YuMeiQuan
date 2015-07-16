@@ -109,7 +109,7 @@
     [searchBar setShowsCancelButton:YES];
     
     UITextField *searchField = [searchBar valueForKey:@"_searchField"];
-    searchField.font = [UIFont systemFontOfSize:12];
+    searchField.font = [UIFont systemFontOfSize:14];
     searchField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
     searchField.enablesReturnKeyAutomatically = NO;
     searchField.returnKeyType = UIReturnKeySearch;

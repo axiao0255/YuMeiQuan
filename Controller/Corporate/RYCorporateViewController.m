@@ -158,7 +158,7 @@
                                                     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
                                                     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
                                                     if ( !success ) {
-                                                        [ShowBox showError:@"取消收藏失败,请稍候重试"];
+                                                        [ShowBox showError:@"收藏失败,请稍候重试"];
                                                     }
                                                     else{
                                                         wSelf.dataModel.isAttention = !wSelf.dataModel.isAttention;

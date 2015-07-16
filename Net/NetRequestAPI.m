@@ -852,4 +852,22 @@
     
 }
 
+
+#pragma mark -获取编辑标签的数据
++(void)getEditTallyWithSessionId:(NSString *)session
+                             tid:(NSString *)_tid
+                         success:(void(^)(id responseDic))success
+                         failure:(void(^)(id errorString))failure
+{
+    
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"favoriteaction" forKey:@"mod"];
+    [parDic setValue:@"index" forKey:@"ac"];
+    [parDic setValue:session forKey:@"sid"];
+    [parDic setValue:_tid forKey:@"thid"];
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+}
+
 @end
