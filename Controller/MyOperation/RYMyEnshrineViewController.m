@@ -37,6 +37,7 @@
     [self.view addSubview:self.tableView];
     [self.tableView setTableHeaderView:[self tabelViewheadView]];
     [self.tableView headerBeginRefreshing];
+    [self setNavigationBar];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tallyChangeUpdate:) name:@"tallyChangeUpdate" object:nil];
 }
@@ -45,6 +46,15 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)setNavigationBar
+{
+    UIButton *rightBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 40)];
+    [rightBtn setImage:[UIImage imageNamed:@"ic_Tally_category.png"] forState:UIControlStateNormal];
+    [rightBtn addTarget:self action:@selector(goToClassify) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
+    self.navigationItem.rightBarButtonItem = rightItem;
 }
 
 -(void)tallyChangeUpdate:(NSNotification *)notic
@@ -186,24 +196,24 @@
 {
     UIView *headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 35)];
     headView.backgroundColor = [Utils getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(15, 4, 260, 28)];
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 4, SCREEN_WIDTH , 28)];
     searchBar.layer.cornerRadius = 5.0f;
     searchBar.layer.masksToBounds = YES;
     searchBar.placeholder = @"搜索收藏";
     searchBar.delegate = self;
     
     UITextField *searchField = [searchBar valueForKey:@"_searchField"];
-    searchField.font = [UIFont systemFontOfSize:12];
+    searchField.font = [UIFont systemFontOfSize:14];
     searchBar.backgroundImage = [UIImage new];
     [headView addSubview:searchBar];
     
-    UIImage *selectImg = [UIImage imageNamed:@"icon_select.png"];
-    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - selectImg.size.width, 0, selectImg.size.width, 35)];
-    btn.backgroundColor = [UIColor clearColor];
-    [btn setBackgroundImage:selectImg forState:UIControlStateNormal];
-    [btn setAdjustsImageWhenHighlighted:NO];
-    [btn addTarget:self action:@selector(goToClassify) forControlEvents:UIControlEventTouchUpInside];
-    [headView addSubview:btn];
+//    UIImage *selectImg = [UIImage imageNamed:@"icon_select.png"];
+//    UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - selectImg.size.width, 0, selectImg.size.width, 35)];
+//    btn.backgroundColor = [UIColor clearColor];
+//    [btn setBackgroundImage:selectImg forState:UIControlStateNormal];
+//    [btn setAdjustsImageWhenHighlighted:NO];
+//    [btn addTarget:self action:@selector(goToClassify) forControlEvents:UIControlEventTouchUpInside];
+//    [headView addSubview:btn];
     
     self.searchBar = searchBar;
     return headView;

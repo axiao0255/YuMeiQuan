@@ -33,6 +33,10 @@
         self.numLabel.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         self.numLabel.font = [UIFont systemFontOfSize:12];
         [self.contentView addSubview:self.numLabel];
+        
+        self.hintImageView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 85, 11, 85, 30)];
+        self.hintImageView.image = [UIImage imageNamed:@"ic_Enshrine_hint.png"];
+        [self.contentView addSubview:self.hintImageView];
     }
     return self;
 }

@@ -23,6 +23,9 @@
 
 @property (nonatomic,strong) NSString                 *corporateID;      // 直达号id
 @property (nonatomic,strong) NSString                 *corporateFid;     // 类别 id
+@property (nonatomic,strong) UIButton                 *bottomView;
+@property (nonatomic,assign) CGFloat                  lastOffsetY;       // 纪录上一个点的位置
+@property (nonatomic,assign) CGFloat                  beginOffsetY;
 
 @end
 
@@ -51,6 +54,7 @@
     // Do any additional setup after loading the view.
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
+    [self.view addSubview:self.bottomView];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -158,6 +162,15 @@
     }
     return _dataModel;
 }
+- (UIView*)bottomView
+{
+    if (_bottomView==nil) {
+        _bottomView = [[UIButton alloc] initWithFrame:CGRectMake(7, SCREEN_HEIGHT - 3 - 80 , 80, 80)];
+        [_bottomView setImage:[UIImage imageNamed:@"ic_company_toTop.png"] forState:UIControlStateNormal];
+        [_bottomView addTarget:self action:@selector(toTop) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _bottomView;
+}
 
 #pragma mark - UITableView 代理方法
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -221,7 +234,7 @@
         }
         [cell.attentionBtn addTarget:self action:@selector(attentionButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         [cell.aboutCompanyBtn addTarget:self action:@selector(aboutCompanyBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+//        [cell.backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         return cell;
     }
     else{
@@ -303,6 +316,34 @@
         }
     }
     return nil;
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    NSLog(@"kais");
+    CGFloat offsetY = scrollView.contentOffset.y;
+//    NSLog(@"offsetY : %f",offsetY);
+    self.beginOffsetY = offsetY;
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    NSLog(@"offsetY 1: %f",offsetY);
+//    offsetY -= 50;
+    NSLog(@"offsetY 2: %f",offsetY);
+    if ( self.lastOffsetY - offsetY < 0 ) {
+        NSLog(@"上滚");
+    }
+    else{
+        NSLog(@"下滚");
+        CGFloat sety = self.beginOffsetY - offsetY;
+         NSLog(@"sety 3: %f",sety);
+        if (sety>50) {
+            sety = 50;
+        }
+//        self.bottomView.frame = CGRectMake(0, SCREEN_HEIGHT - (50 - sety), SCREEN_WIDTH, (50 - sety));
+    }
+    self.lastOffsetY = offsetY;
 }
 
 - (void)backBtnClick:(id)sender
@@ -410,6 +451,12 @@
         }];
         [self.navigationController pushViewController:nextVC animated:YES];
     }
+}
+
+
+-(void)toTop
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 

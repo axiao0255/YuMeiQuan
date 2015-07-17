@@ -12,6 +12,7 @@
 
 #import "RYArticleViewController.h"
 #import "RYLiteratureDetailsViewController.h"
+#import "RYTallyTokenViewController.h"
 
 @interface RYEnshrineSubClassifyViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
 {
@@ -42,11 +43,18 @@
     dataArray = [NSMutableArray array];
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tallyChangeUpdate:) name:@"tallyChangeUpdate" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+-(void)tallyChangeUpdate:(NSNotification *)notic
+{
+    self.tableView.totlePage = 1;
+    self.tableView.currentPage = 0;
+    [self getDataWithIsHeaderReresh:YES andCurrentPage:self.tableView.currentPage];
 }
 
 -(MJRefreshTableView *)tableView
@@ -132,7 +140,7 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 75;
+    return 85;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -142,6 +150,12 @@
     if ( !cell ) {
         cell = [[RYEnshrineTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
+    cell.editBtn.tag = indexPath.row;
+    [cell.editBtn addTarget:self action:@selector(editBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    if ( dataArray.count ) {
+        [cell setValueWithDict:[dataArray objectAtIndex:indexPath.row]];
+    }
+
     if ( dataArray.count ) {
         [cell setValueWithDict:[dataArray objectAtIndex:indexPath.row]];
     }
@@ -163,6 +177,21 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
+
+#pragma mark 编辑标签
+-(void)editBtnClick:(id)sender
+{
+    NSLog(@"编辑标签");
+    UIButton *btn = (UIButton *)sender;
+    NSDictionary *dict = [dataArray objectAtIndex:btn.tag];
+    NSString *tid = [dict getStringValueForKey:@"tid" defaultValue:@""];
+    if ( ![ShowBox isEmptyString:tid] ) {
+        RYTallyTokenViewController *vc = [[RYTallyTokenViewController alloc] initWithTid:tid];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
+}
+
 
 
 @end

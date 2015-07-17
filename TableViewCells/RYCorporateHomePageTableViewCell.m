@@ -57,9 +57,9 @@
         [self.aboutCompanyBtn setImage:[UIImage imageNamed:@"ic_aboutCompant.png"] forState:UIControlStateNormal];
         [self.contentView addSubview:self.aboutCompanyBtn];
         
-        self.backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 35, 24, 24)];
-        [self.backBtn setImage:[UIImage imageNamed:@"ic_company_back.png"] forState:UIControlStateNormal];
-        [self.contentView addSubview:self.backBtn];
+//        self.backBtn = [[UIButton alloc] initWithFrame:CGRectMake(10, 35, 24, 24)];
+//        [self.backBtn setImage:[UIImage imageNamed:@"ic_company_back.png"] forState:UIControlStateNormal];
+//        [self.contentView addSubview:self.backBtn];
     }
     return self;
 }

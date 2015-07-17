@@ -16,7 +16,7 @@
 @property (nonatomic , strong) UIButton      *directBtn;       // 直达号背景图
 @property (nonatomic , strong) UILabel       *titleLabel;          // 企业直达号 标题
 @property (nonatomic , strong) UILabel       *declareLabel;        // 副标题
-@property (nonatomic , strong) UIButton      *backBtn;             // 返回按钮
+//@property (nonatomic , strong) UIButton      *backBtn;             // 返回按钮
 @property (nonatomic , strong) UIButton      *aboutCompanyBtn;     // 更多公司信息
 @property (nonatomic , strong) UIButton      *attentionBtn;        // 关注按钮
 

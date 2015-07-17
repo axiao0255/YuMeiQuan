@@ -145,16 +145,23 @@ typedef enum : NSUInteger {
 //    else{
 //        cell.rightUtilityButtons = @[];
 //    }
-
+    
     NSDictionary *dic = [dataArray objectAtIndex:indexPath.row];
     
     NSString *idStr = [dic getStringValueForKey:@"id" defaultValue:@"0"];
     if ( ![idStr isEqualToString:@"0"] ) {
         cell.rightUtilityButtons = [self rightButtons];
+        if ( indexPath.row == 0) {
+            cell.hintImageView.hidden = NO;
+        }
+        else{
+            cell.hintImageView.hidden = YES;
+        }
     }
     else{
         // id 为 0 的时候 说明时未定义的标签， 不可修改和删除
         cell.rightUtilityButtons = @[];
+        cell.hintImageView.hidden = YES;
     }
     
     if ( dataArray.count ) {

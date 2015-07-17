@@ -16,14 +16,16 @@
 
 @interface RYTallyTokenViewController ()<ZFTokenFieldDataSource,ZFTokenFieldDelegate,UITableViewDelegate,UITableViewDataSource>
 
-@property (nonatomic,strong)UITableView         *tableView;      //
+@property (nonatomic,strong)UITableView         *tableView;        //
 @property (nonatomic,strong)ZFTokenField        *tokenField;
-@property (strong,nonatomic) NSArray            *officialTagsArr; // 默认标签
-@property (strong,nonatomic) NSArray            *customTagsArr;   // 自定义标签
-@property (strong,nonatomic) NSString           *articleID;       // 文章id
+@property (strong,nonatomic) NSString           *articleID;        // 文章id
 @property (nonatomic,strong)NSMutableArray      *tokens;
 
-@property (nonatomic,strong)NSString            *tid;             // 文章id
+@property (nonatomic,strong)NSString            *tid;              // 文章id
+@property (nonatomic,strong)NSMutableArray      *systemTallyArray; // 系统标签数组
+@property (nonatomic,strong)NSMutableArray      *customTallyArray; // 自定义标签
+@property (nonatomic,strong)NSArray             *articleTallyArray;//本文已经定义好的标签
+@property (nonatomic,strong)UIButton            *submitBtn;        //提交按钮
 
 
 @end
@@ -43,7 +45,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.tokenField];
+    [self.view addSubview:self.tableView];
+    [self.view addSubview:self.submitBtn];
+    self.systemTallyArray = [NSMutableArray array];
+    self.customTallyArray = [NSMutableArray array];
+    self.articleTallyArray = [NSArray array];
     [self getNetData];
 }
 
@@ -65,26 +73,135 @@
 - (void)getNetData
 {
     if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
         [NetRequestAPI getEditTallyWithSessionId:[RYUserInfo sharedManager].session
                                              tid:self.tid
                                          success:^(id responseDic) {
                                              NSLog(@"编辑标签 ：responseDic %@",responseDic);
+                                             [wSelf analysisDataWithDict:responseDic];
             
         } failure:^(id errorString) {
             NSLog(@"编辑标签 ：errorString %@",errorString);
+            [ShowBox showError:@"获取数据失败，请稍候重试"];
         }];
     }
 }
 
+- (void)analysisDataWithDict:(NSDictionary *)responseDic
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            [RYUserInfo logout];
+            __weak typeof(self) wSelf = self;
+            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+                if ( isLogin ) {
+                    NSLog(@"登录完成");
+                    // 登录完成 重新获取数据
+                    [wSelf getNetData];
+                }
+            }];
+            [self.navigationController pushViewController:nextVC animated:YES];
+            return;
+        }
+        else{
+            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+            return;
+        }
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    if ( !info ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+        return;
+    }
+    // 系统标签
+    NSArray *tagsmessage = [info getArrayValueForKey:@"tagsmessage" defaultValue:nil];
+
+    // 自定义标签
+    NSArray *customTagsArray = [info getArrayValueForKey:@"favoritecatmessage" defaultValue:nil];
+    
+    // 已经拥有的标签
+    NSArray *favoritefcidmessage = [info getArrayValueForKey:@"favoritefcidmessage" defaultValue:nil];
+    self.articleTallyArray = [self getTagsNameWithArray:favoritefcidmessage];
+
+    
+    [self manageTagsWithSystemTags:tagsmessage andCustomArr:customTagsArray];
+  
+}
+
+- (void)manageTagsWithSystemTags:(NSArray *)systemArr andCustomArr:(NSArray *)customArr;
+{
+    NSMutableArray  *systemTagsArr = systemArr.mutableCopy;
+    NSMutableArray  *customTagsArr = customArr.mutableCopy;
+    
+    if ( systemTagsArr.count && customTagsArr.count ) {
+        for ( NSInteger i = 0 ; i < systemTagsArr.count ; i ++ ) {
+            //遍历系统标签
+            NSDictionary *systemTagDict = [systemTagsArr objectAtIndex:i];
+            NSString     *systemTagName = [systemTagDict getStringValueForKey:@"name" defaultValue:@""];
+            if ( [ShowBox isEmptyString:systemTagName] ) {
+                [systemTagsArr removeObject:systemTagDict];
+                i --;
+                continue;
+            }
+            
+            // 遍历 自定义标签
+            for ( NSInteger j = 0 ; j < customTagsArr.count; j ++ ) {
+                NSDictionary *customTagDict = [customTagsArr objectAtIndex:j];
+                NSString     *custopTagName = [customTagDict getStringValueForKey:@"name" defaultValue:@""];
+                if ( [ShowBox isEmptyString:custopTagName] ) {
+                    [customTagsArr removeObject:customTagDict];
+                    j --;
+                    continue;
+                }
+                //如果系统标签和 自定义标签相同 则把该标签从系统标签中移除
+                if ( [systemTagName isEqualToString:custopTagName] ) {
+                    [systemTagsArr removeObject:systemTagDict];
+                    i --;
+                    break;
+                }
+            }
+        }
+    }
+    
+    self.systemTallyArray = [self getTagsNameWithArray:systemTagsArr].mutableCopy;
+    self.customTallyArray = [self getTagsNameWithArray:customTagsArr].mutableCopy;
+    [self.tokens addObjectsFromArray:self.articleTallyArray];
+    [self.tokenField reloadData];
+    
+    [self.tableView reloadData];
+}
+
+// 取 标签中的name
+- (NSArray *)getTagsNameWithArray:(NSArray *)arr
+{
+    if ( arr.count == 0 ) {
+        return nil;
+    }
+    NSMutableArray *tempTitleArray = [NSMutableArray array];
+    for ( int i = 0 ; i < arr.count; i ++ ) {
+        NSDictionary *temDict = [arr objectAtIndex:i];
+        NSString *name = [temDict getStringValueForKey:@"name" defaultValue:@""];
+        
+        if ( ![ShowBox isEmptyString:name] ) {
+            [tempTitleArray addObject:name];
+        }
+    }
+    return tempTitleArray;
+}
+
+
 - (UITableView *)tableView
 {
     if ( _tableView == nil ) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 60, SCREEN_WIDTH, 115)];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 60, SCREEN_WIDTH, VIEW_HEIGHT - 60 - 60)];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.backgroundColor = [UIColor clearColor];
         [Utils setExtraCellLineHidden:_tableView];
         [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-        _tableView.backgroundColor = [UIColor clearColor];
     }
     return _tableView;
 }
@@ -100,6 +217,16 @@
         _tokenField.textField.placeholder = @"请输入标签";
     }
     return _tokenField;
+}
+
+- (UIButton *)submitBtn
+{
+    if ( _submitBtn == nil ) {
+        _submitBtn = [Utils getCustomLongButton:@"提交"];
+        _submitBtn.frame = CGRectMake(40, VIEW_HEIGHT - 10 - 40, SCREEN_WIDTH - 80, 40);
+        [_submitBtn addTarget:self action:@selector(submitBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _submitBtn;
 }
 
 -(NSMutableArray *)tokens
@@ -158,10 +285,8 @@
 
 - (void)textFieldViewOffsetY:(CGFloat)offsetY
 {
-    NSLog(@"aaaa");
-//    self.tableView.top = offsetY + 8 + 30;
-//    self.tableView.height = VIEW_HEIGHT - 66 - (offsetY + 8 + 30);
-    
+    self.tableView.top = offsetY + 8 + 30;
+    self.tableView.height = VIEW_HEIGHT - (offsetY + 8 + 30) -60;
 }
 
 
@@ -251,6 +376,209 @@
         }
     }
     return YES;
+}
+
+
+#pragma mark  UITableView delegate and dataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if ( section == 0 ) {
+        if (self.systemTallyArray.count) {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+    else{
+        if (self.customTallyArray.count) {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ( indexPath.section == 0 ) {
+        if ( self.systemTallyArray.count ) {
+            CGFloat height = [self cellHeightWithArrar:self.systemTallyArray];
+            return height;
+        }
+        else{
+            return 0;
+        }
+    }
+    else{
+        if ( self.customTallyArray.count ) {
+            CGFloat height = [self cellHeightWithArrar:self.customTallyArray];
+            return height;
+        }
+        return 0;
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *token_Cell = @"token_Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:token_Cell];
+    CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
+    if ( !cell ) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:token_Cell];
+        SelectLabelGroup *selectLabel = [[SelectLabelGroup alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, height)];
+        selectLabel.tag = 1230 + indexPath.section;
+        selectLabel.font = [UIFont systemFontOfSize:14];
+        selectLabel.textColor = [UIColor blackColor];
+        selectLabel.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:selectLabel];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    SelectLabelGroup *selectLabel = (SelectLabelGroup *)[cell.contentView viewWithTag:1230 + indexPath.section];
+    selectLabel.height = height;
+    if ( indexPath.section == 0 ) {
+        [selectLabel setItems:self.systemTallyArray];
+    }
+    else{
+        [selectLabel setItems:self.customTallyArray];
+    }
+    __weak typeof(self) wSelf = self;
+    selectLabel.itemClick = ^(SelectLabelGroup* lable, int i){
+        __strong typeof(wSelf) sSelf = wSelf;
+        if (sSelf.tokens.count < 4) {
+            
+            if ( lable.tag - 1230 == 0  ) {
+                sSelf.tokenField.textField.text = [sSelf.systemTallyArray objectAtIndex:i];
+            }
+            else{
+                sSelf.tokenField.textField.text = [sSelf.customTallyArray objectAtIndex:i];
+            }
+            [sSelf tokenField:sSelf.tokenField didReturnWithText:sSelf.tokenField.textField.text];
+        }
+        else{
+            [ShowBox showError:@"最多只能输入4个标签哦！"];
+        }
+    };
+    
+    return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if ( section == 0 ) {
+        if ( self.systemTallyArray.count ) {
+            return 28;
+        }
+        else{
+            return 0;
+        }
+    }
+    else{
+        if ( self.customTallyArray.count ) {
+            return 28;
+        }
+        else{
+            return 0;
+        }
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 28)];
+    view.backgroundColor = [UIColor whiteColor];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 28)];
+    label.font = [UIFont systemFontOfSize:12];
+    label.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+    if ( section == 0) {
+        label.text = @"默认标签";
+    }
+    else{
+        label.text = @"自定义标签";
+    }
+    [view addSubview:label];
+    return view;
+}
+
+
+/**
+ *
+ * 根据数组 长度 计算 cell的高度
+ */
+- (CGFloat)cellHeightWithArrar:(NSArray *)array
+{
+    if ( array.count == 0 ) {
+        return 0;
+    }
+    int row = 1;
+    int totalWidth = 0;
+    int cl = 0;
+    for ( int i = 0 ; i < array.count; i ++ ) {
+        NSString *str = [array objectAtIndex:i];
+        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:14]];
+        cl ++;
+        totalWidth += (size.width + 20) + (cl - 1)*8;
+        if ( totalWidth > SCREEN_WIDTH - 30 ) {
+            row ++ ;
+            totalWidth = (size.width + 20) ;//+ 20;
+            cl = 0;
+        }
+    }
+    //    NSLog(@"row : %d",row);
+    return row * 8 + row * 26 + 8;
+}
+
+- (void)submitBtnClick:(id)sender
+{
+    NSLog(@"提交");
+    if ( [ShowBox checkCurrentNetwork] ) {
+        UIButton *tempBtn = (UIButton *)sender;
+        __weak typeof(self) wSelf = self;
+        [tempBtn setEnabled:NO];
+        [NetRequestAPI additionCollectWithSessionId:[RYUserInfo sharedManager].session
+                                               thid:self.tid
+                                               tags:self.tokens
+                                            success:^(id responseDic) {
+                                                NSLog(@"添加收藏 responseDic : %@",responseDic);
+                                                [tempBtn setEnabled:YES];
+                                                [wSelf collectWithDict:responseDic];
+                                            } failure:^(id errorString) {
+                                                NSLog(@"添加收藏 errorString :%@",errorString);
+                                                [ShowBox showError:@"收藏失败，请稍候重试"];
+                                                [tempBtn setEnabled:YES];
+                                            }];
+        
+    }
+}
+
+- (void)collectWithDict:(NSDictionary *)responseDic
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"收藏失败，请稍候重试"]];
+        return;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"collectStateChange" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"tallyChangeUpdate" object:nil];
+    [self.navigationController popViewControllerAnimated:YES];
+    
 }
 
 
