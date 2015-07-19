@@ -437,11 +437,13 @@
 #pragma mark - 取第几期周报内容
 +(void)getSelectWeeklyDataWithSessionId:(NSString *)session
                                weeklyId:(NSString *)_weeklyId
+                                 cateid:(NSString *)_cateid
                                 success:(void(^)(id responseDic))success
                                 failure:(void(^)(id errorString))failure
 {
     NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
     [parDic setValue:@"weekly" forKey:@"mod"];
+    [parDic setValue:_cateid forKey:@"cateid"];
     [parDic setValue:session forKey:@"sid"];
     [parDic setValue:_weeklyId forKey:@"id"];
     

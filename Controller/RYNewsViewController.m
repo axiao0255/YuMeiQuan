@@ -34,6 +34,7 @@
 #import "RYMyInformListViewController.h"
 #import "RYCorporateHomePageViewController.h"
 #import "RYLiteratureCategoryViewController.h"
+#import "RYQRcodeViewViewController.h"
 
 
 @interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate,RYLiteratureCategoryViewControllerDelegate>
@@ -110,6 +111,22 @@
     UIImageView *logoView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 48, 20)];
     logoView.image = [UIImage imageNamed:@"ic_yimeiquan_logo.png"];
     self.navigationItem.titleView = logoView;
+    
+    //右边 二维码扫描
+    UIImage *img = [UIImage imageNamed: @"erweima.png"];
+    UIButton *rightbutton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, img.size.width , img.size.height)];
+    [rightbutton setExclusiveTouch:YES];
+    [rightbutton setBackgroundImage:img forState:UIControlStateNormal];
+    [rightbutton addTarget:self action:@selector(gotoQRcode) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *qrButton = [[UIBarButtonItem alloc] initWithCustomView:rightbutton];
+    self.navigationItem.rightBarButtonItem = qrButton;
+}
+
+- (void)gotoQRcode
+{
+    NSLog(@"二维码");
+    RYQRcodeViewViewController *vc = [[RYQRcodeViewViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)updatePeak:(NSTimer *)timer
@@ -384,7 +401,7 @@
         [NetRequestAPI getPastweeklylistWithSessionId:[RYUserInfo sharedManager].session
                                                  page:currentPage
                                               success:^(id responseDic) {
-//                                                  NSLog(@"往期周报 responseDic : %@",responseDic);
+                                                  NSLog(@"往期周报 responseDic : %@",responseDic);
                                                   [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
                                                   [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                   

@@ -149,6 +149,7 @@
 #pragma mark - 取第几期周报内容
 +(void)getSelectWeeklyDataWithSessionId:(NSString *)session
                                weeklyId:(NSString *)_weeklyId
+                                 cateid:(NSString *)_cateid
                                 success:(void(^)(id responseDic))success
                                 failure:(void(^)(id errorString))failure;
 

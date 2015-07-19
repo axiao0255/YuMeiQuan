@@ -77,6 +77,9 @@
 #pragma mark - 从数组中取出 首字母相同key字典 归类
 + (NSArray *)findSameKeyWithArray:(NSArray *)originalArray;
 
+#pragma mark - 判读是否照相机授权
++(BOOL)isCaptureAuthorizationed;
+
 
 
 

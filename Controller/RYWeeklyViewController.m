@@ -17,6 +17,7 @@
 @interface RYWeeklyViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , strong) UITableView      *tableView;
+@property (nonatomic , strong) NSString         *cateid;      //分类的id
 
 @end
 
@@ -59,12 +60,14 @@
         _tableView.dataSource = self;
          _tableView.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
         [Utils setExtraCellLineHidden:_tableView];
+        
     }
     return _tableView;
 }
 
 - (void)setup
 {
+    self.cateid = nil;
     [self.view addSubview:self.tableView];
     [self getNetData];
 }
@@ -75,6 +78,7 @@
         __weak typeof(self) wSelf = self;
         [NetRequestAPI getSelectWeeklyDataWithSessionId:[RYUserInfo sharedManager].session
                                                weeklyId:[self.weeklyDict objectForKey:@"id"]
+                                                 cateid:self.cateid
                                                 success:^(id responseDic) {
                                                     NSLog(@"选择的周报 responseDic: %@",responseDic);
                                                     [wSelf analysisDataWithDict:responseDic];

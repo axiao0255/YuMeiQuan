@@ -7,6 +7,8 @@
 //
 
 #import "Utils.h"
+#import <AVFoundation/AVCaptureDevice.h>
+#import <AVFoundation/AVMediaFormat.h>
 
 @implementation Utils
 
@@ -314,6 +316,22 @@
     }
 //    NSLog(@"分组后的数组 %@",_groupArr);
     return _groupArr;
+}
+
+#pragma mark - 判读是否照相机授权
++(BOOL)isCaptureAuthorizationed
+{
+    if (!IsIOS7)//only ios7 need to do this
+    {
+        return YES;
+    }
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (status == AVAuthorizationStatusDenied)
+    {
+        [ShowBox showError:@"无法访问您的摄像头！请在设置->隐私->摄像机 中允许医美圈访问摄像头。"];
+        return NO;
+    }
+    return YES;
 }
 
 

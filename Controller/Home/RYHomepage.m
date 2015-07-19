@@ -98,10 +98,7 @@
                 return 85;
             }
             else{
-                if ( IS_IPHONE_5 ) {
-                    return 220;
-                }
-                return 172;
+                return 220;
             }
         }
      }
@@ -164,18 +161,9 @@
                     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:log_cell];
                     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
                     
-                    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 172)];
-                    imgView.image = [UIImage imageNamed:@"ic_log_cell.jpg"];
+                    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 220)];
+                    imgView.image = [UIImage imageNamed:@"ic_log_cell.png"];
                     [cell.contentView addSubview:imgView];
-                    
-                    UIButton *gotoLoginBtn = [[UIButton alloc] initWithFrame:CGRectMake(128, 30, 67, 67)];
-                    [gotoLoginBtn setTitle:@"登录" forState:UIControlStateNormal];
-                    [gotoLoginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                    [gotoLoginBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
-                    [gotoLoginBtn addTarget:self action:@selector(gotoLogin:) forControlEvents:UIControlEventTouchUpInside];
-                    
-                    [cell.contentView addSubview:gotoLoginBtn];
-                    
                 }
                 return cell;
             }
@@ -371,7 +359,6 @@
         [signInBtn setBackgroundImage:[UIImage imageNamed:@"ic_big_register.png"] forState:UIControlStateNormal];
         [cell.contentView addSubview:signInBtn];
         
-     
         UILabel *inviteSignInLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, signInBtn.width, 14)];
         inviteSignInLabel.font = [UIFont systemFontOfSize:14];
         inviteSignInLabel.textColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
