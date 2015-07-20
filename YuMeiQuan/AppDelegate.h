@@ -20,7 +20,7 @@
 /*
  * 分享数据 配置
  */
--(void)shareWithIndex:(NSUInteger) index shareContent:(NSString *)content sharePicUrl:(NSString *)picUrl callbackId:(NSString *)_callbackId shareUrl:(NSString *)_shareUrl thid:(NSString *)_thid;
+-(void)shareWithIndex:(NSUInteger) index shareContent:(NSString *)content sharePicUrl:(NSString *)picUrl callbackId:(NSString *)_callbackId shareUrl:(NSString *)_shareUrl thid:(NSString *)_thid andPresentController:(UIViewController *)viewController;
 
 
 @end

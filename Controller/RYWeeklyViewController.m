@@ -14,10 +14,12 @@
 #import "RYWeeklyCategoryViewController.h"
 
 
-@interface RYWeeklyViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface RYWeeklyViewController ()<UITableViewDelegate,UITableViewDataSource,RYWeeklyCategoryViewControllerDelegate>
 
 @property (nonatomic , strong) UITableView      *tableView;
-@property (nonatomic , strong) NSString         *cateid;      //分类的id
+@property (nonatomic , strong) NSString         *cateid;          //分类的id
+@property (nonatomic , strong) NSArray          *categoryArray;   //分类数组
+@property (nonatomic , strong) NSString         *currentSelectName;//当前选择的分类名称
 
 @end
 
@@ -119,11 +121,13 @@
     
     self.title = [NSString stringWithFormat:@"第%@期",[self.weeklyDict objectForKey:@"id"]];
     
+    // 取分类
+    self.categoryArray = [info getArrayValueForKey:@"catemessage" defaultValue:nil];
+    
     // 取周报内容
-    NSArray *weeklydetailmessage = [info getArrayValueForKey:@"weeklydetailmessage" defaultValue:nil];
+    NSArray *weeklydetailmessage = [info getArrayValueForKey:@"weeklymessage" defaultValue:nil];
     self.listData = weeklydetailmessage;
     [self.tableView reloadData];
-
 }
 
 
@@ -184,7 +188,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if ( self.listData.count > 0 ) {
+    if ( self.categoryArray.count > 0 ) {
         if ( section == 0 ) {
             return 40;
         }
@@ -197,7 +201,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if ( self.listData.count ) {
+    if ( self.categoryArray.count ) {
         if ( section == 0 ) {
             UIButton *view = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
             view.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
@@ -211,7 +215,12 @@
             UILabel *categoryLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabel.right+5, 0, 225, 40)];
             categoryLabel.font = [UIFont boldSystemFontOfSize:16];
             categoryLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
-            categoryLabel.text = @"全部";
+            if ( [ShowBox isEmptyString:self.currentSelectName] ) {
+                categoryLabel.text = @"全部";
+            }else{
+                categoryLabel.text = self.currentSelectName;
+            }
+            
             [view addSubview:categoryLabel];
             
             UIImageView *arrows = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 15 - 10, 13, 10, 14)];
@@ -219,7 +228,6 @@
             [view addSubview:arrows];
             
             [view addTarget:self action:@selector(categorySelect:) forControlEvents:UIControlEventTouchUpInside];
-            
             
             return view;
             
@@ -251,8 +259,19 @@
 - (void)categorySelect:(id)sender
 {
     NSLog(@"分类选择");
-    RYWeeklyCategoryViewController *vc = [[RYWeeklyCategoryViewController alloc] init];
+    RYWeeklyCategoryViewController *vc = [[RYWeeklyCategoryViewController alloc] initWithCategory:self.categoryArray];
+    vc.delegate = self;
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark RYWeeklyCategoryViewControllerDelegate
+
+-(void)selectDidCategoryDict:(NSDictionary *)dict
+{
+//    NSLog(@"dict :%@",dict);
+    self.currentSelectName =  [dict getStringValueForKey:@"catename" defaultValue:nil];
+    self.cateid = [dict getStringValueForKey:@"id" defaultValue:nil];
+    [self getNetData];
 }
 
 @end

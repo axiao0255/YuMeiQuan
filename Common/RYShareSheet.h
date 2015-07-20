@@ -19,6 +19,7 @@
 
 // 分享数据
 @property (nonatomic ,strong) NSDictionary             *shareDataDict;
+@property (nonatomic ,strong) UIViewController         *viewController;
 
 
 - (void)showShareView;

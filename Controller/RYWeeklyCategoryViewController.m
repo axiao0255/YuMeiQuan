@@ -18,38 +18,47 @@
 
 @implementation RYWeeklyCategoryViewController
 
+-(id)initWithCategory:(NSArray *)categoryArray
+{
+    self = [super init];
+    if ( self ) {
+        self.listData = categoryArray;
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
     self.title = @"分类";
     
-    NSMutableArray *arr = [NSMutableArray array];
-    for ( NSInteger i = 0; i < 3; i ++ ) {
-        
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        
-        NSMutableArray *second_list = [NSMutableArray array];
-        for ( NSInteger j = 0 ; j < 6; j ++ ) {
-            NSMutableDictionary *secondDict = [NSMutableDictionary dictionary];
-            [secondDict setValue:@"整形外科" forKey:@"name"];
-            [secondDict setValue:[NSNumber numberWithInteger:j] forKey:@"id"];
-            [second_list addObject:secondDict];
-        }
-        if ( i == 0 ){
-            [dict setValue:@"时讯报道" forKey:@"name"];
-        }
-        else if ( i == 1 ){
-            [dict setValue:@"文献导读" forKey:@"name"];
-        }
-        else {
-            [dict setValue:@"书籍推荐" forKey:@"name"];
-        }
-        [dict setValue:second_list forKey:@"second_list"];
-        [arr addObject:dict];
-    }
-    
-    self.listData = arr;
+//    NSMutableArray *arr = [NSMutableArray array];
+//    for ( NSInteger i = 0; i < 3; i ++ ) {
+//        
+//        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+//        
+//        NSMutableArray *second_list = [NSMutableArray array];
+//        for ( NSInteger j = 0 ; j < 6; j ++ ) {
+//            NSMutableDictionary *secondDict = [NSMutableDictionary dictionary];
+//            [secondDict setValue:@"整形外科" forKey:@"name"];
+//            [secondDict setValue:[NSNumber numberWithInteger:j] forKey:@"id"];
+//            [second_list addObject:secondDict];
+//        }
+//        if ( i == 0 ){
+//            [dict setValue:@"时讯报道" forKey:@"name"];
+//        }
+//        else if ( i == 1 ){
+//            [dict setValue:@"文献导读" forKey:@"name"];
+//        }
+//        else {
+//            [dict setValue:@"书籍推荐" forKey:@"name"];
+//        }
+//        [dict setValue:second_list forKey:@"second_list"];
+//        [arr addObject:dict];
+//    }
+//    
+//    self.listData = arr;
     
     self.currentSelectIndex = 0;
     [self.view addSubview:self.tableView];
@@ -114,7 +123,7 @@
     }
     else{
         NSDictionary *resultDic = [self.listData objectAtIndex:indexPath.section];
-        NSArray *secondList = [resultDic getArrayValueForKey:@"second_list" defaultValue:nil];
+        NSArray *secondList = [resultDic getArrayValueForKey:@"second" defaultValue:nil];
         return ceil(secondList.count/3.0)*40 + 20 + 4.5 * (ceil(secondList.count/3.0) - 1);
     }
 }
@@ -147,7 +156,7 @@
         }
         if ( self.listData.count ) {
             NSDictionary *resultDic = [self.listData objectAtIndex:indexPath.section];
-            NSString *nameStr = [resultDic getStringValueForKey:@"name" defaultValue:@""];
+            NSString *nameStr = [resultDic getStringValueForKey:@"catename" defaultValue:@""];
             UILabel *tempLabel = (UILabel *)[cell viewWithTag:1001];
             [tempLabel setText:nameStr];
             
@@ -172,11 +181,11 @@
         [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
         
         NSDictionary *resultDic = [self.listData objectAtIndex:indexPath.section];
-        NSArray *secondList = [resultDic getArrayValueForKey:@"second_list" defaultValue:nil];
+        NSArray *secondList = [resultDic getArrayValueForKey:@"second" defaultValue:nil];
         NSMutableArray *titleArray = [NSMutableArray array];
         for (NSDictionary *tempDic in secondList)
         {
-            NSString *tempStr = [tempDic getStringValueForKey:@"name" defaultValue:@""];
+            NSString *tempStr = [tempDic getStringValueForKey:@"catename" defaultValue:@""];
             [titleArray addObject:tempStr];
         }
         
@@ -233,6 +242,15 @@
 #pragma mark GridMenuViewDelegate
 - (void)GridMenuViewButtonSelected:(NSInteger)btntag selfTag:(NSInteger)selftag
 {
+//    NSLog(@"btntag :%ld,selftag :%ld",btntag,selftag);
+    NSInteger index = selftag - 500;
+    NSDictionary *dict = [self.listData objectAtIndex:index];
+    NSArray *arr = [dict getArrayValueForKey:@"second" defaultValue:nil];
+    NSDictionary *selectDict = [arr objectAtIndex:btntag];
+    if ( [self.delegate respondsToSelector:@selector(selectDidCategoryDict:)] ) {
+        [self.delegate selectDidCategoryDict:selectDict];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
     
 }
 

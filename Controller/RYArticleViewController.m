@@ -16,9 +16,10 @@
 #import "RYAnswerSheet.h"
 #import "RYShareSheet.h"
 #import "RYTokenView.h"
+#import "RYBillboardView.h"
 
 #define BROWSER_TITLE_LBL_TAG 12731
-@interface RYArticleViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate,UIAlertViewDelegate,RYAnswerSheetDelegate,UINavigationControllerDelegate>
+@interface RYArticleViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate,UIAlertViewDelegate,RYAnswerSheetDelegate,UINavigationControllerDelegate,UIScrollViewDelegate,RYBillboardViewDelegate>
 {
     CXBrowserNavBarView *navBarView;
     BOOL                showButtomView;    // 用于判断 点击下载pdf文件
@@ -31,7 +32,7 @@
 @property (strong, nonatomic)  UILabel          *sourceLabel;
 @property (strong, nonatomic)  UILabel          *dateLabel;
 @property (strong, nonatomic)  UILabel          *bodeyTitleLabel;
-@property (strong, nonatomic)  UIView           *topTextDemarcation;       // 标题与正文的分界
+@property (strong, nonatomic)  UIView           *topTextDemarcation;       // 作者的背景
 //@property (strong, nonatomic)  UIButton         *originalBtn;
 @property (strong, nonatomic)  UIButton         *textShareButton;          // 正文 头的分享 按钮
 
@@ -46,6 +47,9 @@
 @property (nonatomic, assign)  CGFloat          webViewHeight;
 
 @property (nonatomic, strong)  CXPhotoBrowser   *browser;
+
+@property (nonatomic, strong)  RYBillboardView  *billboardView;      // top 答题或分享的提示页
+@property (nonatomic, strong)  UIButton         *billboardLucencyBtn;// 答题和分享提示页出现时的透明背景
 
 // 收藏和分享
 @property (nonatomic, strong)   UIButton         *stowButton; // 收藏按钮
@@ -64,6 +68,10 @@
 @property (nonatomic, assign)   BOOL             isAward;        // 是否有奖转发
 
 @property (nonatomic, strong)   UIView           *toobar;
+
+@property (nonatomic, assign)   BOOL             isCanNnswer;    // 有答题权限
+
+
 
 
 @end
@@ -111,12 +119,10 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
-
 - (BOOL)prefersStatusBarHidden
 {
     return YES;//隐藏为YES，显示为NO
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -153,20 +159,22 @@
 - (void)setupMainView
 {
     [self addTapOnWebView];
-//    [self.view addSubview:self.backgroundView];
     self.webView.scrollView.scrollEnabled = NO;
     [self.scrollView addSubview:self.webView];
-    [self.scrollView addSubview:self.textShareButton];
-    [self.scrollView addSubview:self.sourceLabel];
-    [self.scrollView addSubview:self.dateLabel];
-    [self.scrollView addSubview:self.bodeyTitleLabel];
-    [self.scrollView addSubview:self.sourceButton];
-//    [self.scrollView addSubview:self.originalBtn];
+//    [self.scrollView addSubview:self.textShareButton];
     [self.scrollView addSubview:self.topTextDemarcation];
-//    [self.scrollView addSubview:self.buttomView];
+    [self.topTextDemarcation addSubview:self.sourceButton];
+    [self.topTextDemarcation addSubview:self.dateLabel];
+    [self.scrollView addSubview:self.bodeyTitleLabel];
+    
+    [self.scrollView addSubview:self.sourceLabel];
+    
     [self.scrollView addSubview:self.answerSheet];
     [self.view addSubview:self.scrollView];
     [self.view addSubview:self.toobar];
+    [self.view addSubview:self.billboardLucencyBtn];
+    [self.view addSubview:self.billboardView];
+    
     [self.webView.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
 }
 
@@ -256,13 +264,9 @@
     
     // 取答题
     self.questionsDict = [info getDicValueForKey:@"questionsmessage" defaultValue:nil];
+    // 是否有答题权限
+    self.isCanNnswer = [self.questionsDict getBoolValueForKey:@"questions" defaultValue:NO];
     
-//    // 取 文章内容
-//    NSArray *threadmessage = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
-//    if ( !threadmessage.count ) {
-//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
-//        return;
-//    }
     NSDictionary *dataDict = [info getDicValueForKey:@"threadmessage" defaultValue:nil];
     [self setBodDatayWithDict:dataDict];
 }
@@ -272,15 +276,6 @@
     if ( !dic ) {
         return;
     }
-    
-    // 是否收藏
-    if ( self.iscollect ) {
-         [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
-    }
-    else{
-        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
-    }
-    
     self.articleData.author = [dic getStringValueForKey:@"author" defaultValue:@""];
     self.articleData.dateline = [dic getStringValueForKey:@"time" defaultValue:@""];
     self.articleData.message = [dic getStringValueForKey:@"message" defaultValue:@""];
@@ -297,30 +292,84 @@
 
 - (void)refreshMainView
 {
-    self.bodeyTitleLabel.text = self.articleData.subject;
-    
-    self.sourceLabel.text = self.articleData.author;
-    self.dateLabel.text = [NSString stringWithFormat:@"%@",self.articleData.dateline];
-    
-    // 是否显示有奖转发
-    if ( self.isAward ) {
-        self.textShareButton.height = 35;
-    }else{
-        self.textShareButton.height = 0;
+    // 是否收藏
+    if ( self.iscollect ) {
+        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
+    }
+    else{
+        [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
     }
     
-    CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(300, MAXFLOAT)];
+    if ( !self.isCanNnswer && !self.isAward) {  // 没有答题权限同时也没用转发
+        self.topTextDemarcation.top = 0;
+        self.billboardView.hidden = YES;
+        self.billboardView.height = 0;
+    }
+    else{
+        self.topTextDemarcation.top = 55;
+        self.billboardView.hidden = NO;
+        self.billboardView.height = 380;
+        self.billboardView.top = -332;
+    }
+    self.dateLabel.text = self.articleData.dateline;
+    
+    
+//    [self.view bringSubviewToFront:self.billboardView];
+    
+    // 设置 作者名称
+    NSDictionary *nameAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:15]};
+    CGRect nameRect = [self.articleData.author boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 95, MAXFLOAT)
+                                        options:NSStringDrawingUsesLineFragmentOrigin
+                                     attributes:nameAttributes
+                                        context:nil];
+    self.sourceButton.width = nameRect.size.width + 30;
+    [self.sourceButton setTitle:self.articleData.author forState:UIControlStateNormal];
+    
+    // 设置标题
+    NSDictionary *bodeyAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:21]};
+    CGRect bodeyRect = [self.articleData.subject boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                                            options:NSStringDrawingUsesLineFragmentOrigin
+                                                         attributes:bodeyAttributes
+                                                            context:nil];
+    self.bodeyTitleLabel.top = self.topTextDemarcation.bottom + 15;
+    self.bodeyTitleLabel.height = bodeyRect.size.height;
     self.bodeyTitleLabel.text = self.articleData.subject;
-    self.bodeyTitleLabel.height = size.height;
-    self.bodeyTitleLabel.top = self.textShareButton.bottom + 8;
-    self.sourceLabel.top = self.bodeyTitleLabel.bottom + 8;
-    self.dateLabel.top = self.bodeyTitleLabel.bottom + 8;
-    self.sourceButton.top = self.bodeyTitleLabel.bottom;
-//    self.originalBtn.top = self.sourceLabel.bottom;
-    self.topTextDemarcation.top = self.dateLabel.bottom + 8;
-//    self.webView.top = self.originalBtn.bottom;
-    self.webView.top = self.topTextDemarcation.bottom;
+    
+    self.webView.top  = self.bodeyTitleLabel.bottom + 15;
     self.webView.height -= self.webView.top;
+
+    
+    
+    // 取问题的id
+    NSString *questionID = [self.questionsDict getStringValueForKey:@"id" defaultValue:nil];
+    
+    if ( ![ShowBox isEmptyString:questionID] ) { // 有答题
+        
+    }
+
+    
+//    self.sourceLabel.text = self.articleData.author;
+//    self.dateLabel.text = [NSString stringWithFormat:@"%@",self.articleData.dateline];
+//    
+//    // 是否显示有奖转发
+//    if ( self.isAward ) {
+//        self.textShareButton.height = 35;
+//    }else{
+//        self.textShareButton.height = 0;
+//    }
+//    
+//    CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+//    self.bodeyTitleLabel.text = self.articleData.subject;
+//    self.bodeyTitleLabel.height = size.height;
+//    self.bodeyTitleLabel.top = self.textShareButton.bottom + 8;
+//    self.sourceLabel.top = self.bodeyTitleLabel.bottom + 8;
+//    self.dateLabel.top = self.bodeyTitleLabel.bottom + 8;
+//    self.sourceButton.top = self.bodeyTitleLabel.bottom;
+////    self.originalBtn.top = self.sourceLabel.bottom;
+//    self.topTextDemarcation.top = self.dateLabel.bottom + 8;
+////    self.webView.top = self.originalBtn.bottom;
+//    self.webView.top = self.topTextDemarcation.bottom;
+//    self.webView.height -= self.webView.top;
 
     //
     NSMutableString *htmlString = [NSMutableString stringWithFormat:@"<div id='webHeight' style=\"padding-left:7px;padding-right:7px;line-height:24px;\">%@</div>", self.articleData.message ];
@@ -368,7 +417,6 @@
     if ( _stowButton == nil ) {
         _stowButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
         [_stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
-//        [_stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateHighlighted];
         [_stowButton addTarget:self action:@selector(stowButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _stowButton;
@@ -388,6 +436,7 @@
 {
     if ( _shareSheet == nil ) {
         _shareSheet = [[RYShareSheet alloc] init];
+        _shareSheet.viewController = self;
     }
     return _shareSheet;
 }
@@ -429,9 +478,9 @@
 - (UIScrollView *)scrollView
 {
     if (_scrollView == nil) {
-//        _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 40)];
         _scrollView.backgroundColor = [UIColor whiteColor];
+        _scrollView.delegate = self;
     }
     return _scrollView;
 }
@@ -440,7 +489,6 @@
 - (UIWebView *)webView
 {
     if (_webView == nil) {
-//        _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
         _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 40)];
         _webView.backgroundColor = [UIColor clearColor];
         _webView.opaque = NO;
@@ -466,10 +514,12 @@
 {
     if ( _sourceButton == nil ) {
         _sourceButton = [[UIButton alloc] initWithFrame:CGRectZero];
-        _sourceButton.backgroundColor = [UIColor clearColor];
+        _sourceButton.backgroundColor = [Utils getRGBColor:0x31 g:0x55 b:0x6b a:1.0];
         _sourceButton.width = 130;
-        _sourceButton.height = 20;
-        _sourceButton.left = SCREEN_WIDTH - 130 - 15;
+        _sourceButton.height = 35;
+        _sourceButton.left = 0;
+        _sourceButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+        [_sourceButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_sourceButton addTarget:self action:@selector(sourceButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _sourceButton;
@@ -494,10 +544,11 @@
 {
     if (_dateLabel == nil) {
         _dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _dateLabel.left = 15;
-        _dateLabel.height = 12;
-        _dateLabel.width = 130;
+        _dateLabel.left = SCREEN_WIDTH - 15 - 80;;
+        _dateLabel.height = 35;
+        _dateLabel.width = 80;
         _dateLabel.backgroundColor = [UIColor clearColor];
+        _dateLabel.textAlignment = NSTextAlignmentRight;
         _dateLabel.font = [UIFont systemFontOfSize:12];
         _dateLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
     }
@@ -510,10 +561,9 @@
         UILabel *bodeyTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         bodeyTitleLabel.width = SCREEN_WIDTH - 30;
         bodeyTitleLabel.left = 15;
-        bodeyTitleLabel.top = 10;
-        bodeyTitleLabel.numberOfLines = 2;
+        bodeyTitleLabel.numberOfLines = 0;
         bodeyTitleLabel.backgroundColor = [UIColor clearColor];
-        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:18];
+        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:21];
         bodeyTitleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         _bodeyTitleLabel = bodeyTitleLabel;
     }
@@ -527,7 +577,7 @@
         _topTextDemarcation.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
         _topTextDemarcation.left = 0;
         _topTextDemarcation.width = SCREEN_WIDTH;
-        _topTextDemarcation.height = 8;
+        _topTextDemarcation.height = 35;
     }
     return _topTextDemarcation;
 }
@@ -626,6 +676,29 @@
     return _answerSheet;
 }
 
+- (RYBillboardView *)billboardView
+{
+    if ( _billboardView == nil ) {
+        _billboardView = [[RYBillboardView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 380)];
+        _billboardView.hidden = YES;
+        _billboardView.delegate = self;
+    }
+    return _billboardView;
+}
+
+- (UIButton *)billboardLucencyBtn
+{
+    if ( _billboardLucencyBtn == nil ) {
+        _billboardLucencyBtn = [[UIButton alloc] initWithFrame:CGRectZero];
+        _billboardLucencyBtn.left = 0;
+        _billboardLucencyBtn.top = 0;
+        _billboardLucencyBtn.width = SCREEN_WIDTH;
+        [_billboardLucencyBtn setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.5]];
+        [_billboardLucencyBtn addTarget:self action:@selector(billboardLucencyBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _billboardLucencyBtn;
+}
+
 #pragma mark RYAnswerSheetDelegate
 - (void)submitAnawerDidFinish
 {
@@ -707,11 +780,11 @@
         self.answerSheet.hidden = YES;
     }
    
-    self.answerSheet.top = self.webViewHeight + self.topTextDemarcation.bottom;
+    self.answerSheet.top = self.webViewHeight + self.bodeyTitleLabel.bottom + 15;
     CGSize scrollViewContentSize = self.scrollView.contentSize;
-    scrollViewContentSize.height = self.webViewHeight + self.topTextDemarcation.bottom + self.answerSheet.height;
+    scrollViewContentSize.height = self.webViewHeight + self.bodeyTitleLabel.bottom + 15 + self.answerSheet.height;
     self.scrollView.contentSize = scrollViewContentSize ;
-    self.webView.height = self.webViewHeight + self.answerSheet.height + self.topTextDemarcation.bottom;
+    self.webView.height = self.webViewHeight + self.answerSheet.height + self.bodeyTitleLabel.bottom + 15;
  }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -943,6 +1016,50 @@
     self.iscollect = NO;
     [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
     
+}
+
+#pragma mark UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if ( offsetY >= 50 ) {
+        offsetY = 50;
+    }
+    
+    if ( offsetY <= 0 ) {
+        offsetY = 0;
+    }
+    self.billboardView.top = -332 - offsetY;
+}
+
+#pragma mark RYBillboardViewDelegate
+-(void)bottomBtnClickIsShow:(BOOL)isShow
+{
+    CGFloat   height;
+    if ( isShow ) {
+        height = 0;
+        self.billboardLucencyBtn.height = SCREEN_HEIGHT;
+    }
+    else{
+        height = -332;
+        self.billboardLucencyBtn.height = 0;
+    }
+    [UIView animateWithDuration:0.3 animations:^{
+        self.billboardView.top = height;
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)billboardLucencyBtnClick:(id)sender
+{
+    [UIView animateWithDuration:0.25 animations:^{
+        self.billboardView.top = -332;
+    } completion:^(BOOL finished) {
+        [self.billboardView.bottomBtn setSelected:NO];
+        self.billboardLucencyBtn.height = 0;
+    }];
 }
 
 @end

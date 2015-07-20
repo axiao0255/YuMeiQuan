@@ -371,6 +371,8 @@
 		96D2382F1AF7681A00936721 /* ic_jifen_jewel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D2382E1AF7681A00936721 /* ic_jifen_jewel@2x.png */; };
 		96D238311AF76AC000936721 /* ic_showJifen_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D238301AF76AC000936721 /* ic_showJifen_bg@2x.png */; };
 		96D238331AF77AD600936721 /* ic_bulge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D238321AF77AD600936721 /* ic_bulge@2x.png */; };
+		96D934A61B5CD7F60085F15B /* RYBillboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D934A51B5CD7F60085F15B /* RYBillboardView.m */; };
+		96D934A81B5CDD700085F15B /* ic_billboard_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D934A71B5CDD700085F15B /* ic_billboard_background@2x.png */; };
 		96D9C9881AE49A7500997430 /* RYRegisterSpecialtyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C9871AE49A7500997430 /* RYRegisterSpecialtyViewController.m */; };
 		96D9C98C1AE4CD4200997430 /* RYRegisterData.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C98B1AE4CD4200997430 /* RYRegisterData.m */; };
 		96D9C98F1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C98E1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m */; };
@@ -1027,6 +1029,9 @@
 		96D2382E1AF7681A00936721 /* ic_jifen_jewel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_jifen_jewel@2x.png"; sourceTree = "<group>"; };
 		96D238301AF76AC000936721 /* ic_showJifen_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_showJifen_bg@2x.png"; sourceTree = "<group>"; };
 		96D238321AF77AD600936721 /* ic_bulge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_bulge@2x.png"; sourceTree = "<group>"; };
+		96D934A41B5CD7F60085F15B /* RYBillboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYBillboardView.h; sourceTree = "<group>"; };
+		96D934A51B5CD7F60085F15B /* RYBillboardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYBillboardView.m; sourceTree = "<group>"; };
+		96D934A71B5CDD700085F15B /* ic_billboard_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_billboard_background@2x.png"; sourceTree = "<group>"; };
 		96D9C9861AE49A7500997430 /* RYRegisterSpecialtyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterSpecialtyViewController.h; sourceTree = "<group>"; };
 		96D9C9871AE49A7500997430 /* RYRegisterSpecialtyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYRegisterSpecialtyViewController.m; sourceTree = "<group>"; };
 		96D9C98A1AE4CD4200997430 /* RYRegisterData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYRegisterData.h; sourceTree = "<group>"; };
@@ -1633,6 +1638,8 @@
 				96CCB3901B12C5880007C151 /* UIView+CJ_Extention.m */,
 				96D149441B1407B800C05809 /* HTCopyableLabel.h */,
 				96D149451B1407B800C05809 /* HTCopyableLabel.m */,
+				96D934A41B5CD7F60085F15B /* RYBillboardView.h */,
+				96D934A51B5CD7F60085F15B /* RYBillboardView.m */,
 			);
 			path = Common;
 			sourceTree = SOURCE_ROOT;
@@ -2033,6 +2040,7 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96D934A71B5CDD700085F15B /* ic_billboard_background@2x.png */,
 				96CD08221B5B74F1009D8FFF /* ic_log_cell@2x.png */,
 				96CD084C1B5B821A009D8FFF /* 13-touming@2x.png */,
 				96CD08251B5B78C9009D8FFF /* erweima@2x.png */,
@@ -2517,6 +2525,7 @@
 				96D0A5651B183A9800BF6D90 /* ic_recusalImge_1@2x.png in Resources */,
 				96C24D0F1B0ADF700044C86B /* ic_grid_default@2x.png in Resources */,
 				96D2380D1AF721ED00936721 /* ic_cell_selected@2x.png in Resources */,
+				96D934A81B5CDD700085F15B /* ic_billboard_background@2x.png in Resources */,
 				96CF02841B4F71B40053537C /* ic_right_arrow@2x.png in Resources */,
 				9667D81D1B00600F0099C424 /* UMSocialLocalizable.strings in Resources */,
 				96C5AEEC1AF0744400F9195A /* ic_wasteBasket@2x.png in Resources */,
@@ -2652,6 +2661,7 @@
 				96CC39631AD4DDF100D5D157 /* AppDelegate.m in Sources */,
 				96CE2A461B43F0AD004FA4BF /* UIImage+FSExtension.m in Sources */,
 				96C4C4051AE77CC700151A84 /* IQUIView+IQKeyboardToolbar.m in Sources */,
+				96D934A61B5CD7F60085F15B /* RYBillboardView.m in Sources */,
 				96C4C4031AE77CC700151A84 /* IQTitleBarButtonItem.m in Sources */,
 				96C822371AFC6651000ED614 /* GlobleModel.m in Sources */,
 				96C3A9E11ADFB89A008011D3 /* SDWebImageDecoder.m in Sources */,

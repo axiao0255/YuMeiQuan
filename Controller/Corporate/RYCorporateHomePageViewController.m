@@ -24,8 +24,6 @@
 @property (nonatomic,strong) NSString                 *corporateID;      // 直达号id
 @property (nonatomic,strong) NSString                 *corporateFid;     // 类别 id
 @property (nonatomic,strong) UIButton                 *bottomView;
-@property (nonatomic,assign) CGFloat                  lastOffsetY;       // 纪录上一个点的位置
-@property (nonatomic,assign) CGFloat                  beginOffsetY;
 
 @end
 
@@ -316,34 +314,6 @@
         }
     }
     return nil;
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    NSLog(@"kais");
-    CGFloat offsetY = scrollView.contentOffset.y;
-//    NSLog(@"offsetY : %f",offsetY);
-    self.beginOffsetY = offsetY;
-}
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    CGFloat offsetY = scrollView.contentOffset.y;
-    NSLog(@"offsetY 1: %f",offsetY);
-//    offsetY -= 50;
-    NSLog(@"offsetY 2: %f",offsetY);
-    if ( self.lastOffsetY - offsetY < 0 ) {
-        NSLog(@"上滚");
-    }
-    else{
-        NSLog(@"下滚");
-        CGFloat sety = self.beginOffsetY - offsetY;
-         NSLog(@"sety 3: %f",sety);
-        if (sety>50) {
-            sety = 50;
-        }
-//        self.bottomView.frame = CGRectMake(0, SCREEN_HEIGHT - (50 - sety), SCREEN_WIDTH, (50 - sety));
-    }
-    self.lastOffsetY = offsetY;
 }
 
 - (void)backBtnClick:(id)sender

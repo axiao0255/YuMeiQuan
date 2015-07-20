@@ -92,7 +92,9 @@
 {
     __weak AppDelegate *_appDelegate;
     _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [_appDelegate.window.rootViewController.view addSubview:self];
+//    [_appDelegate.window.rootViewController.view addSubview:self];
+    [_appDelegate.window addSubview:self];
+//    [self.viewController.navigationController.view addSubview:self];
     self.frame = _appDelegate.window.bounds;
     self.transparencyBtn.frame = self.bounds;
     [self addSubview:self.transparencyBtn];
@@ -184,6 +186,7 @@
         }
     }
     
+    [self dismissShareView];
     __weak AppDelegate *_appDelegate;
     _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
@@ -192,7 +195,8 @@
                       sharePicUrl:[self.shareDataDict getStringValueForKey:SHARE_PIC defaultValue:@""]
                        callbackId:[self.shareDataDict getStringValueForKey:SHARE_CALLBACK_DI defaultValue:@""]
                          shareUrl:[self.shareDataDict getStringValueForKey:SHARE_URL defaultValue:@""]
-                             thid:[self.shareDataDict getStringValueForKey:SHARE_TID defaultValue:@""]];
+                             thid:[self.shareDataDict getStringValueForKey:SHARE_TID defaultValue:@""]
+             andPresentController:self.viewController];
 }
 
 

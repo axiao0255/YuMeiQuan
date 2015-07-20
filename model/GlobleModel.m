@@ -24,7 +24,7 @@ DEF_SINGLETON(GlobleModel);
 {
     NSNumber *fontSize = [[NSUserDefaults standardUserDefaults] objectForKey:AIR_BODYFONTSIZE];
     if (!fontSize) {
-        fontSize = @(100);
+        fontSize = @(110);
     }
     return fontSize.floatValue;
 }

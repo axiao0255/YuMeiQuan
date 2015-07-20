@@ -164,7 +164,8 @@
                      sharePicUrl:[self.inviteData getStringValueForKey:@"logo" defaultValue:@""]
                       callbackId:nil
                         shareUrl:[self.inviteData getStringValueForKey:@"inviteurl" defaultValue:@""]
-                            thid:nil];
+                            thid:nil
+            andPresentController:self];
 }
 
 

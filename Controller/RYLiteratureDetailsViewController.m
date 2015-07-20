@@ -446,6 +446,7 @@
 {
     if ( _shareSheet == nil ) {
         _shareSheet = [[RYShareSheet alloc] init];
+        _shareSheet.viewController = self;
     }
     return _shareSheet;
 }

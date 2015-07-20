@@ -259,7 +259,7 @@
  *  _shareUrl    分享的web地址
  *  _thid        分享文章的ID
  */
--(void)shareWithIndex:(NSUInteger) index shareContent:(NSString *)content sharePicUrl:(NSString *)picUrl callbackId:(NSString *)_callbackId shareUrl:(NSString *)_shareUrl thid:(NSString *)_thid
+-(void)shareWithIndex:(NSUInteger) index shareContent:(NSString *)content sharePicUrl:(NSString *)picUrl callbackId:(NSString *)_callbackId shareUrl:(NSString *)_shareUrl thid:(NSString *)_thid andPresentController:(UIViewController *)viewController
 {
     //设置微信好友或者朋友圈的分享url,下面是微信好友，微信朋友圈对应wechatTimelineData
     UMSocialUrlResource *source = nil ;
@@ -337,7 +337,7 @@
                                                           image:nil
                                                        location:nil
                                                     urlResource:source
-                                            presentedController:self.window.rootViewController
+                                            presentedController:viewController
                                                      completion:^(UMSocialResponseEntity *response){
                                                          
         if (response.responseCode == UMSResponseCodeSuccess) {
