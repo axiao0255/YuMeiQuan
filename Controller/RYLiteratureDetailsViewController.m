@@ -19,8 +19,11 @@
 #import "RYCopyAddressView.h"
 #import "RYcommentDetailsViewController.h"
 
+#import "RYBillboardView.h"
+#import "LiteratureTopView.h"
+
 #define BROWSER_TITLE_LBL_TAG 12731
-@interface RYLiteratureDetailsViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate>
+@interface RYLiteratureDetailsViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate,RYBillboardViewDelegate,UIScrollViewDelegate>
 
 {
     CXBrowserNavBarView *navBarView;
@@ -32,15 +35,21 @@
 @property (strong, nonatomic)  UIWebView        *webView;
 
 @property (strong, nonatomic)  UILabel          *bodeyTitleLabel;         // 标题
-@property (strong, nonatomic)  UILabel          *subheadLabel;            // 副标题
-@property (strong, nonatomic)  UILabel          *authorLabel;             // 作者
-@property (strong, nonatomic)  UILabel          *periodicalLabel;         // 期刊
-@property (strong, nonatomic)  UILabel          *dateLabel;               // 日期
-@property (strong, nonatomic)  UILabel          *DOILabel;                // DOI
+//@property (strong, nonatomic)  UILabel          *subheadLabel;            // 副标题
+//@property (strong, nonatomic)  UILabel          *authorLabel;             // 作者
+//@property (strong, nonatomic)  UILabel          *periodicalLabel;         // 期刊
+//@property (strong, nonatomic)  UILabel          *dateLabel;               // 日期
+//@property (strong, nonatomic)  UILabel          *DOILabel;                // DOI
+
+@property (strong, nonatomic) LiteratureTopView *literatureTopView;       // top 作者 ～ DOD
 
 @property (strong, nonatomic)  UIView           *topTextDemarcation;       // 标题与正文的分界
 
-@property (strong, nonatomic)  UIButton         *textShareButton;          // 正文 头的分享 按钮
+//@property (strong, nonatomic)  UIButton         *textShareButton;          // 正文 头的分享 按钮
+
+@property (nonatomic, strong)  RYBillboardView  *billboardView;            // top 答题或分享的提示页
+@property (nonatomic, strong)  UIButton         *billboardLucencyBtn;      // 答题和分享提示页出现时的透明背景
+@property (nonatomic, strong)  NSMutableDictionary *billboardDict;         // 答题和分享提示页的数据
 
 @property (strong, nonatomic)  RYArticleData    *articleData;
 @property (nonatomic, strong)  NSMutableArray   *photoDataSource;
@@ -87,8 +96,6 @@
     if ( self ) {
         self.tid = tid;
     }
-#warning 53 为测试数据  应删除
-    //    self.tid = @"53";
     return self;
 }
 
@@ -129,7 +136,7 @@
     showButtomView = YES;
     [self setup];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(collectStateChange:) name:@"collectStateChange" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(collectStateChange:) name:@"collectStateChange" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -140,25 +147,18 @@
     [self.webView.scrollView removeObserver:self forKeyPath:@"contentSize"];
 }
 
-- (void)collectStateChange:(NSNotification *)notice
-{
-    self.iscollect = YES;
-    [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
-}
+//- (void)collectStateChange:(NSNotification *)notice
+//{
+//    self.iscollect = YES;
+//    [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
+//}
 
 - (void)setup
 {
     [self setupMainView];
     [self getBodyData];
-//    [self setNavigationItem];
 }
 
-//- (void)setNavigationItem
-//{
-//    UIBarButtonItem *stowItem = [[UIBarButtonItem alloc] initWithCustomView:self.stowButton];
-//    UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:self.shareButton];
-//    self.navigationItem.rightBarButtonItems = @[shareItem,stowItem];
-//}
 
 - (void)setupMainView
 {
@@ -168,16 +168,21 @@
    
     self.webView.scrollView.scrollEnabled = NO;
     [self.scrollView addSubview:self.webView];
-    [self.scrollView addSubview:self.textShareButton];
+//    [self.scrollView addSubview:self.textShareButton];
     [self.scrollView addSubview:self.bodeyTitleLabel];
-    [self.scrollView addSubview:self.subheadLabel];
-    [self.scrollView addSubview:self.authorLabel];
-    [self.scrollView addSubview:self.periodicalLabel];
-    [self.scrollView addSubview:self.dateLabel];
-    [self.scrollView addSubview:self.DOILabel];
+    [self.scrollView addSubview:self.literatureTopView];
+//    [self.scrollView addSubview:self.subheadLabel];
+//    [self.scrollView addSubview:self.authorLabel];
+//    [self.scrollView addSubview:self.periodicalLabel];
+//    [self.scrollView addSubview:self.dateLabel];
+//    [self.scrollView addSubview:self.DOILabel];
     [self.scrollView addSubview:self.topTextDemarcation];
     [self.view addSubview:self.scrollView];
     [self.view addSubview:self.toobar];
+    
+    [self.view addSubview:self.billboardLucencyBtn];
+    [self.view addSubview:self.billboardView];
+
     
     [self.webView.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
 }
@@ -325,47 +330,89 @@
     
     // 是否显示有奖转发
     if ( self.isAward ) {
-        self.textShareButton.height = 35;
+//        self.textShareButton.height = 35;
+        
+        self.billboardView.height = 380;
+        self.billboardView.top = -332;
+         NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
+        [mutableDict setValue:@"分享本文" forKey:@"topTitle"];
+        [mutableDict setValue:@"获得积分奖励" forKey:@"jiangli"];
+        [mutableDict setValue:@"(阅读次数越多，获得奖励越多)" forKey:@"duihuan"];
+        [mutableDict setValue:@"由医美圈提供" forKey:@"zanzhu"];
+        [mutableDict setValue:@"share" forKey:@"type"];
+        [mutableDict setValue:@"" forKey:@"slogan"];
+        self.billboardDict = mutableDict;
+        self.billboardView.hidden = NO;
+        self.billboardView.dataDict = self.billboardDict;
+        
+        self.bodeyTitleLabel.top = 55;
+        
     }else{
-        self.textShareButton.height = 0;
+//        self.textShareButton.height = 0;
+        
+        self.billboardView.hidden = YES;
+        self.billboardView.height = 0;
+        self.bodeyTitleLabel.top = 6;
     }
-    // 标题
-    CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-    self.bodeyTitleLabel.text = self.articleData.subject;
-    self.bodeyTitleLabel.height = size.height;
-    self.bodeyTitleLabel.top = self.textShareButton.bottom + 6;
-    // 副标题
-    NSString *subhead = [NSString stringWithFormat:@"标题：%@",self.articleData.subhead];
-    CGSize subheadSize = [subhead sizeWithFont:self.subheadLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-    self.subheadLabel.height = subheadSize.height;
-    [self.subheadLabel setAttributedText:[Utils getAttributedString:subhead hightlightString:[subhead substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.subheadLabel.font]];
-    self.subheadLabel.top = self.bodeyTitleLabel.bottom + 6;
-    // 作者
-    NSString *author = [NSString stringWithFormat:@"作者：%@",self.articleData.author];
-    CGSize authorSize = [author sizeWithFont:self.authorLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-    self.authorLabel.height = authorSize.height;
-    [self.authorLabel setAttributedText:[Utils getAttributedString:author hightlightString:[author substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.authorLabel.font]];
-    self.authorLabel.top = self.subheadLabel.bottom + 6;
-    // 期刊
-    NSString *periodical = [NSString stringWithFormat:@"期刊：%@",self.articleData.periodical];
-    CGSize periodicalSize = [periodical sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-    self.periodicalLabel.height = periodicalSize.height;
-    [self.periodicalLabel setAttributedText:[Utils getAttributedString:periodical hightlightString:[periodical substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.periodicalLabel.font]];
-    self.periodicalLabel.top = self.authorLabel.bottom + 6;
-    // 日期
-    NSString *date = [NSString stringWithFormat:@"日期：%@",self.articleData.dateline];
-    CGSize dateSize = [date sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-    self.dateLabel.height = dateSize.height;
-    [self.dateLabel setAttributedText:[Utils getAttributedString:date hightlightString:[date substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.dateLabel.font]];
-    self.dateLabel.top = self.periodicalLabel.bottom + 6;
-    // DOI
-    NSString *doi = [NSString stringWithFormat:@"DOI：%@",self.articleData.DOI];
-    CGSize doiSize = [doi sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-    self.DOILabel.height = doiSize.height;
-    [self.DOILabel setAttributedText:[Utils getAttributedString:doi hightlightString:[doi substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.DOILabel.font]];
-    self.DOILabel.top = self.dateLabel.bottom + 6;
-
-    self.topTextDemarcation.top = self.DOILabel.bottom + 6;
+    
+    NSDictionary *bodeyAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:21]};
+    CGRect bodeyRect = [self.articleData.subject boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                                           attributes:bodeyAttributes
+                                                              context:nil];
+     self.bodeyTitleLabel.height = bodeyRect.size.height;
+     self.bodeyTitleLabel.text = self.articleData.subject;
+    
+   
+    self.literatureTopView.articleData = self.articleData;
+    CGFloat height = [self.literatureTopView getLiteratureTopViewHeight];
+    self.literatureTopView.left = 0;
+    self.literatureTopView.top = self.bodeyTitleLabel.bottom + 10;
+    self.literatureTopView.width = SCREEN_WIDTH;
+    self.literatureTopView.height = height;
+//    self.literatureTopView.backgroundColor = [UIColor redColor];
+    
+    self.topTextDemarcation.top = self.literatureTopView.bottom;
+    
+    
+    
+//    // 标题
+//    CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+//    self.bodeyTitleLabel.text = self.articleData.subject;
+//    self.bodeyTitleLabel.height = size.height;
+//    self.bodeyTitleLabel.top = self.textShareButton.bottom + 6;
+//    // 副标题
+//    NSString *subhead = [NSString stringWithFormat:@"标题：%@",self.articleData.subhead];
+//    CGSize subheadSize = [subhead sizeWithFont:self.subheadLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+//    self.subheadLabel.height = subheadSize.height;
+//    [self.subheadLabel setAttributedText:[Utils getAttributedString:subhead hightlightString:[subhead substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.subheadLabel.font]];
+//    self.subheadLabel.top = self.bodeyTitleLabel.bottom + 6;
+//    // 作者
+//    NSString *author = [NSString stringWithFormat:@"作者：%@",self.articleData.author];
+//    CGSize authorSize = [author sizeWithFont:self.authorLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+//    self.authorLabel.height = authorSize.height;
+//    [self.authorLabel setAttributedText:[Utils getAttributedString:author hightlightString:[author substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.authorLabel.font]];
+//    self.authorLabel.top = self.subheadLabel.bottom + 6;
+//    // 期刊
+//    NSString *periodical = [NSString stringWithFormat:@"期刊：%@",self.articleData.periodical];
+//    CGSize periodicalSize = [periodical sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+//    self.periodicalLabel.height = periodicalSize.height;
+//    [self.periodicalLabel setAttributedText:[Utils getAttributedString:periodical hightlightString:[periodical substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.periodicalLabel.font]];
+//    self.periodicalLabel.top = self.authorLabel.bottom + 6;
+//    // 日期
+//    NSString *date = [NSString stringWithFormat:@"日期：%@",self.articleData.dateline];
+//    CGSize dateSize = [date sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+//    self.dateLabel.height = dateSize.height;
+//    [self.dateLabel setAttributedText:[Utils getAttributedString:date hightlightString:[date substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.dateLabel.font]];
+//    self.dateLabel.top = self.periodicalLabel.bottom + 6;
+//    // DOI
+//    NSString *doi = [NSString stringWithFormat:@"DOI：%@",self.articleData.DOI];
+//    CGSize doiSize = [doi sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+//    self.DOILabel.height = doiSize.height;
+//    [self.DOILabel setAttributedText:[Utils getAttributedString:doi hightlightString:[doi substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.DOILabel.font]];
+//    self.DOILabel.top = self.dateLabel.bottom + 6;
+//
+//    self.topTextDemarcation.top = self.DOILabel.bottom + 6;
 
     self.webView.top = self.topTextDemarcation.bottom;
     self.webView.height -= self.webView.top;
@@ -491,6 +538,7 @@
 //        _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 40)];
         _scrollView.backgroundColor = [UIColor whiteColor];
+        _scrollView.delegate = self;
     }
     return _scrollView;
 }
@@ -508,73 +556,73 @@
     return _webView;
 }
 
-- (UILabel *)subheadLabel
-{
-    if ( _subheadLabel == nil ) {
-        _subheadLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _subheadLabel.font = [UIFont systemFontOfSize:14];
-        _subheadLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        _subheadLabel.left = 15;
-        _subheadLabel.width = SCREEN_WIDTH - 30;
-        _subheadLabel.numberOfLines = 0;
-    }
-    return _subheadLabel;
-}
+//- (UILabel *)subheadLabel
+//{
+//    if ( _subheadLabel == nil ) {
+//        _subheadLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+//        _subheadLabel.font = [UIFont systemFontOfSize:14];
+//        _subheadLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+//        _subheadLabel.left = 15;
+//        _subheadLabel.width = SCREEN_WIDTH - 30;
+//        _subheadLabel.numberOfLines = 0;
+//    }
+//    return _subheadLabel;
+//}
+//
+//- (UILabel *)authorLabel
+//{
+//    if ( _authorLabel == nil ) {
+//        _authorLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+//        _authorLabel.font = [UIFont systemFontOfSize:14];
+//        _authorLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+//        _authorLabel.left = 15;
+//        _authorLabel.width = SCREEN_WIDTH - 30;
+//        _authorLabel.numberOfLines = 0;
+//    }
+//    return _authorLabel;
+//}
 
-- (UILabel *)authorLabel
-{
-    if ( _authorLabel == nil ) {
-        _authorLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _authorLabel.font = [UIFont systemFontOfSize:14];
-        _authorLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        _authorLabel.left = 15;
-        _authorLabel.width = SCREEN_WIDTH - 30;
-        _authorLabel.numberOfLines = 0;
-    }
-    return _authorLabel;
-}
+//- (UILabel *)periodicalLabel
+//{
+//    if ( _periodicalLabel == nil ) {
+//        _periodicalLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+//        _periodicalLabel.font = [UIFont systemFontOfSize:14];
+//        _periodicalLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+//        _periodicalLabel.left = 15;
+//        _periodicalLabel.width = SCREEN_WIDTH - 30;
+//        _periodicalLabel.numberOfLines = 0;
+//    }
+//    return _periodicalLabel;
+//}
 
-- (UILabel *)periodicalLabel
-{
-    if ( _periodicalLabel == nil ) {
-        _periodicalLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _periodicalLabel.font = [UIFont systemFontOfSize:14];
-        _periodicalLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        _periodicalLabel.left = 15;
-        _periodicalLabel.width = SCREEN_WIDTH - 30;
-        _periodicalLabel.numberOfLines = 0;
-    }
-    return _periodicalLabel;
-}
-
-- (UILabel *)DOILabel
-{
- 
-    if ( _DOILabel == nil ) {
-        _DOILabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _DOILabel.font = [UIFont systemFontOfSize:14];
-        _DOILabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        _DOILabel.left = 15;
-        _DOILabel.width = SCREEN_WIDTH - 30;
-        _DOILabel.numberOfLines = 0;
-    }
-    return _DOILabel;
-}
+//- (UILabel *)DOILabel
+//{
+// 
+//    if ( _DOILabel == nil ) {
+//        _DOILabel = [[UILabel alloc] initWithFrame:CGRectZero];
+//        _DOILabel.font = [UIFont systemFontOfSize:14];
+//        _DOILabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+//        _DOILabel.left = 15;
+//        _DOILabel.width = SCREEN_WIDTH - 30;
+//        _DOILabel.numberOfLines = 0;
+//    }
+//    return _DOILabel;
+//}
 
 
-- (UILabel *)dateLabel
-{
-    if (_dateLabel == nil) {
-        _dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _dateLabel.left = 15;
-        _dateLabel.height = 11;
-        _dateLabel.width = 200;
-        _dateLabel.backgroundColor = [UIColor clearColor];
-        _dateLabel.font = [UIFont systemFontOfSize:14];
-        _dateLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-    }
-    return _dateLabel;
-}
+//- (UILabel *)dateLabel
+//{
+//    if (_dateLabel == nil) {
+//        _dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+//        _dateLabel.left = 15;
+//        _dateLabel.height = 11;
+//        _dateLabel.width = 200;
+//        _dateLabel.backgroundColor = [UIColor clearColor];
+//        _dateLabel.font = [UIFont systemFontOfSize:14];
+//        _dateLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+//    }
+//    return _dateLabel;
+//}
 
 - (UILabel *)bodeyTitleLabel
 {
@@ -583,13 +631,21 @@
         bodeyTitleLabel.width = SCREEN_WIDTH - 30;
         bodeyTitleLabel.left = 15;
         bodeyTitleLabel.top = 10;
-        bodeyTitleLabel.numberOfLines = 2;
+        bodeyTitleLabel.numberOfLines = 0;
         bodeyTitleLabel.backgroundColor = [UIColor clearColor];
-        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:18];
+        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:21];
         bodeyTitleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         _bodeyTitleLabel = bodeyTitleLabel;
     }
     return _bodeyTitleLabel;
+}
+
+- (LiteratureTopView *)literatureTopView
+{
+    if ( _literatureTopView == nil ) {
+        _literatureTopView = [[LiteratureTopView alloc] initWithFrame:CGRectZero];
+    }
+    return _literatureTopView;
 }
 
 - (UIView *)topTextDemarcation
@@ -604,18 +660,51 @@
     return _topTextDemarcation;
 }
 
-- (UIButton *)textShareButton
+
+- (RYBillboardView *)billboardView
 {
-    if ( _textShareButton == nil ) {
-        _textShareButton = [[UIButton alloc] initWithFrame:CGRectZero];
-        _textShareButton.left = 15;
-        _textShareButton.top = 3;
-        _textShareButton.width = SCREEN_WIDTH - 30;
-        [_textShareButton setImage:[UIImage imageNamed:@"ic_textShare.png"] forState:UIControlStateNormal];
-        [_textShareButton addTarget:self action:@selector(shareButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    if ( _billboardView == nil ) {
+        _billboardView = [[RYBillboardView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 380)];
+        _billboardView.hidden = YES;
+        _billboardView.delegate = self;
     }
-    return _textShareButton;
+    return _billboardView;
 }
+
+- (UIButton *)billboardLucencyBtn
+{
+    if ( _billboardLucencyBtn == nil ) {
+        _billboardLucencyBtn = [[UIButton alloc] initWithFrame:CGRectZero];
+        _billboardLucencyBtn.left = 0;
+        _billboardLucencyBtn.top = 0;
+        _billboardLucencyBtn.width = SCREEN_WIDTH;
+        [_billboardLucencyBtn setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.5]];
+        [_billboardLucencyBtn addTarget:self action:@selector(billboardLucencyBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _billboardLucencyBtn;
+}
+
+- (NSMutableDictionary *)billboardDict
+{
+    if ( _billboardDict == nil ) {
+        _billboardDict = [NSMutableDictionary dictionary];
+    }
+    return _billboardDict;
+}
+
+
+//- (UIButton *)textShareButton
+//{
+//    if ( _textShareButton == nil ) {
+//        _textShareButton = [[UIButton alloc] initWithFrame:CGRectZero];
+//        _textShareButton.left = 15;
+//        _textShareButton.top = 3;
+//        _textShareButton.width = SCREEN_WIDTH - 30;
+//        [_textShareButton setImage:[UIImage imageNamed:@"ic_textShare.png"] forState:UIControlStateNormal];
+//        [_textShareButton addTarget:self action:@selector(shareButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+//    }
+//    return _textShareButton;
+//}
 - (RYCopyAddressView *)ryCopyView
 {
     if ( _ryCopyView == nil ) {
@@ -1099,6 +1188,56 @@
     self.iscollect = NO;
     [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
     
+}
+
+#pragma mark UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat offsetY = scrollView.contentOffset.y;
+    if ( offsetY >= 50 ) {
+        offsetY = 50;
+    }
+    if ( offsetY <= 0 ) {
+        offsetY = 0;
+    }
+    self.billboardView.top = -332 - offsetY;
+}
+
+
+#pragma mark RYBillboardViewDelegate
+-(void)bottomBtnClickIsShow:(BOOL)isShow
+{
+    CGFloat   height;
+    if ( isShow ) {
+        height = 0;
+        self.billboardLucencyBtn.height = SCREEN_HEIGHT;
+    }
+    else{
+        height = -332;
+        self.billboardLucencyBtn.height = 0;
+    }
+    [UIView animateWithDuration:0.3 animations:^{
+        self.billboardView.top = height;
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+// 立即转发按钮的点击
+- (void)billboardViewShareBtnDidCilck:(id)sender
+{
+    [self shareButtonClick:sender];
+}
+
+#pragma mark RYBillboardView弹出时  背景点击
+- (void)billboardLucencyBtnClick:(id)sender
+{
+    [UIView animateWithDuration:0.25 animations:^{
+        self.billboardView.top = -332;
+    } completion:^(BOOL finished) {
+        [self.billboardView.bottomBtn setSelected:NO];
+        self.billboardLucencyBtn.height = 0;
+    }];
 }
 
 

@@ -12,12 +12,16 @@
 
 - (void)bottomBtnClickIsShow:(BOOL) isShow;
 
+@optional
+- (void)billboardViewShareBtnDidCilck:(id)sender;
+
 @end
 
 @interface RYBillboardView : UIView
 
 @property (nonatomic ,   weak) id <RYBillboardViewDelegate>delegate;
 @property (nonatomic , strong) UIButton                    *bottomBtn;
+@property (nonatomic , strong) NSDictionary                *dataDict;
 
 - (id)initWithFrame:(CGRect)frame;
 

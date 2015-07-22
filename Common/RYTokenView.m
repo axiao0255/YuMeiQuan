@@ -259,7 +259,6 @@
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"collectStateChange" object:nil];
     [self dismissTokenView];
-    
 }
 
 /**

@@ -124,78 +124,56 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+   
     if ( indexPath.section == 0 ) {
+        
         if ( indexPath.row == 0 ) {
             return 58;
         }
-        else if ( indexPath.row == 1 ){
-            // 设置标题
-            if ( [ShowBox isEmptyString:self.articleData.subject] ) {
-                return 0;
-            }
-            else{
-                NSString *subject = self.articleData.subject;
-                CGSize size =  [subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-                return size.height + 8 ;
-            }
-        }
-        else if ( indexPath.row == 2 ){
-            // 设置 标题
-            if ( [ShowBox isEmptyString:self.articleData.subhead] ) {
-                return 0;
-            }
-            else{
-                NSString *subhead = [NSString stringWithFormat:@"标题：%@",self.articleData.subhead];
-                CGSize size = [subhead sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-                return size.height + 8;
-            }
-        }
-        else if ( indexPath.row == 3 ){
-            // 设置作者
-            if ( [ShowBox isEmptyString:self.articleData.author] ) {
-                return 0;
-            }
-            else{
-                NSString *author = [NSString stringWithFormat:@"作者：%@",self.articleData.author];
-                CGSize size =  [author sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-                return size.height + 8;
-            }
-        }
-        else if ( indexPath.row == 4 ){
-            // 设置 期刊
-            if ( [ShowBox isEmptyString:self.articleData.periodical] ) {
-                return 0;
-            }
-            else{
-                NSString *periodical = [NSString stringWithFormat:@"期刊：%@",self.articleData.periodical];
-                CGSize size =  [periodical sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-                return size.height + 8;
-            }
-        }
-        else if ( indexPath.row == 5 ){
-            // 设置 日期
-            if ( [ShowBox isEmptyString:self.articleData.dateline] ) {
-                return 0;
-            }
-            else{
-                NSString *dateline = [NSString stringWithFormat:@"日期：%@",self.articleData.dateline];
-                CGSize size =  [dateline sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-                return size.height + 8;
-            }
-        }
-        else if ( indexPath.row == 6 ){
-            // 设置 DOI
-            if ( [ShowBox isEmptyString:self.articleData.DOI] ) {
-                return 0;
-            }
-            else{
-                NSString *doi = [NSString stringWithFormat:@"DOI：%@",self.articleData.DOI];
-                CGSize size =  [doi sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-                return size.height + 8;
-            }
-        }
         else{
-            return 0;
+            NSString *content;
+            if ( indexPath.row == 1 ){
+                content = self.articleData.subject;
+                NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18]};
+                CGRect rect = [content boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                                    options:NSStringDrawingUsesLineFragmentOrigin
+                                                 attributes:attributes
+                                                    context:nil];
+                return rect.size.height + 10;
+            }
+            else if ( indexPath.row == 2 ){
+                // 设置 标题
+                content = self.articleData.subhead;
+            }
+            else if ( indexPath.row == 3 ){
+                // 设置作者
+                content = self.articleData.author;
+            }
+            else if ( indexPath.row == 4 ){
+                // 设置 期刊
+                content = self.articleData.periodical;
+            }
+            else if ( indexPath.row == 5 ){
+                // 设置 日期
+                content = self.articleData.dateline;
+            }
+            else{
+                // 设置 DOI
+                content = self.articleData.DOI;
+            }
+            
+            if ( [ShowBox isEmptyString:content] ) {
+                return 0;
+            }
+            else{
+                NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:14]};
+                CGRect rect = [content boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 50, MAXFLOAT)
+                                                   options:NSStringDrawingUsesLineFragmentOrigin
+                                                attributes:attributes
+                                                   context:nil];
+                return rect.size.height + 31;
+
+            }
         }
     }
     else{
@@ -243,44 +221,49 @@
             }
             
             if ( indexPath.row == 2 ) {
+                
                 // 设置 标题
-                NSString *subhead;
                 if ( ![ShowBox isEmptyString:self.articleData.subhead] ) {
-                    subhead = [NSString stringWithFormat:@"标题：%@",self.articleData.subhead];
+                    cell.leftView.backgroundColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
+                    cell.titleLabel.text = @"标题";
+                    [cell setValueWithString:self.articleData.subhead];
                 }
-                [cell setValueWithString:subhead];
             }
             else if ( indexPath.row == 3 ){
+                
                 // 设置作者
-                NSString *author;
                 if ( ![ShowBox isEmptyString:self.articleData.author] ) {
-                   author = [NSString stringWithFormat:@"作者：%@",self.articleData.author];
+                    cell.leftView.backgroundColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
+                    cell.titleLabel.text = @"作者";
+                    [cell setValueWithString:self.articleData.author];
                 }
-                [cell setValueWithString:author];
             }
             else if ( indexPath.row == 4 ){
+               
                 // 设置 期刊
-                NSString *periodical;
                 if ( ![ShowBox isEmptyString:self.articleData.periodical] ) {
-                     periodical = [NSString stringWithFormat:@"期刊：%@",self.articleData.periodical];
+                     cell.leftView.backgroundColor = [Utils getRGBColor:0xea g:0x73 b:0xc5 a:1.0];
+                    cell.titleLabel.text = @"期刊";
+                    [cell setValueWithString:self.articleData.periodical];
                 }
-                [cell setValueWithString:periodical];
             }
             else if ( indexPath.row == 5 ){
+                
                 // 设置 日期
-                NSString *dateline;
                 if ( ![ShowBox isEmptyString:self.articleData.dateline] ) {
-                     dateline = [NSString stringWithFormat:@"日期：%@",self.articleData.dateline];
+                    cell.leftView.backgroundColor = [Utils getRGBColor:0x0b g:0xcd b:0xd3 a:1.0];
+                    cell.titleLabel.text = @"日期";
+                    [cell setValueWithString:self.articleData.dateline];
                 }
-                [cell setValueWithString:dateline];
             }
             else if ( indexPath.row == 6 ){
+                
                 // 设置 DOI
-                NSString *doi;
                 if ( ![ShowBox isEmptyString:self.articleData.DOI] ) {
-                     doi = [NSString stringWithFormat:@"DOI：%@",self.articleData.DOI];
+                    cell.leftView.backgroundColor = [Utils getRGBColor:0xee g:0x18 b:0x18 a:1.0];
+                    cell.titleLabel.text = @"DOI";
+                    [cell setValueWithString:self.articleData.DOI];
                 }
-                [cell setValueWithString:doi];
             }
             
             return cell;

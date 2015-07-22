@@ -371,6 +371,8 @@
 		96D2382F1AF7681A00936721 /* ic_jifen_jewel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D2382E1AF7681A00936721 /* ic_jifen_jewel@2x.png */; };
 		96D238311AF76AC000936721 /* ic_showJifen_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D238301AF76AC000936721 /* ic_showJifen_bg@2x.png */; };
 		96D238331AF77AD600936721 /* ic_bulge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D238321AF77AD600936721 /* ic_bulge@2x.png */; };
+		96D3BF5C1B5F764500D71A61 /* ic_Billboard_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D3BF5B1B5F764500D71A61 /* ic_Billboard_share@2x.png */; };
+		96D3BF5F1B5FC0FD00D71A61 /* LiteratureTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D3BF5E1B5FC0FD00D71A61 /* LiteratureTopView.m */; };
 		96D934A61B5CD7F60085F15B /* RYBillboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D934A51B5CD7F60085F15B /* RYBillboardView.m */; };
 		96D934A81B5CDD700085F15B /* ic_billboard_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D934A71B5CDD700085F15B /* ic_billboard_background@2x.png */; };
 		96D9C9881AE49A7500997430 /* RYRegisterSpecialtyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C9871AE49A7500997430 /* RYRegisterSpecialtyViewController.m */; };
@@ -1029,6 +1031,9 @@
 		96D2382E1AF7681A00936721 /* ic_jifen_jewel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_jifen_jewel@2x.png"; sourceTree = "<group>"; };
 		96D238301AF76AC000936721 /* ic_showJifen_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_showJifen_bg@2x.png"; sourceTree = "<group>"; };
 		96D238321AF77AD600936721 /* ic_bulge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_bulge@2x.png"; sourceTree = "<group>"; };
+		96D3BF5B1B5F764500D71A61 /* ic_Billboard_share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_Billboard_share@2x.png"; sourceTree = "<group>"; };
+		96D3BF5D1B5FC0FD00D71A61 /* LiteratureTopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiteratureTopView.h; sourceTree = "<group>"; };
+		96D3BF5E1B5FC0FD00D71A61 /* LiteratureTopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiteratureTopView.m; sourceTree = "<group>"; };
 		96D934A41B5CD7F60085F15B /* RYBillboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYBillboardView.h; sourceTree = "<group>"; };
 		96D934A51B5CD7F60085F15B /* RYBillboardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYBillboardView.m; sourceTree = "<group>"; };
 		96D934A71B5CDD700085F15B /* ic_billboard_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_billboard_background@2x.png"; sourceTree = "<group>"; };
@@ -1640,6 +1645,8 @@
 				96D149451B1407B800C05809 /* HTCopyableLabel.m */,
 				96D934A41B5CD7F60085F15B /* RYBillboardView.h */,
 				96D934A51B5CD7F60085F15B /* RYBillboardView.m */,
+				96D3BF5D1B5FC0FD00D71A61 /* LiteratureTopView.h */,
+				96D3BF5E1B5FC0FD00D71A61 /* LiteratureTopView.m */,
 			);
 			path = Common;
 			sourceTree = SOURCE_ROOT;
@@ -2040,6 +2047,7 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96D3BF5B1B5F764500D71A61 /* ic_Billboard_share@2x.png */,
 				96D934A71B5CDD700085F15B /* ic_billboard_background@2x.png */,
 				96CD08221B5B74F1009D8FFF /* ic_log_cell@2x.png */,
 				96CD084C1B5B821A009D8FFF /* 13-touming@2x.png */,
@@ -2413,6 +2421,7 @@
 				96D1206B1B0C36DF00BF8062 /* ic_textShare@2x.png in Resources */,
 				96CC39C81AD4FF3900D5D157 /* Images-2.xcassets in Resources */,
 				96CA43251B56117E005A7881 /* ic_reduce_disabled@2x.png in Resources */,
+				96D3BF5C1B5F764500D71A61 /* ic_Billboard_share@2x.png in Resources */,
 				96CD084D1B5B821A009D8FFF /* 13-touming@2x.png in Resources */,
 				96AB36D21B09CCB2002EB3E2 /* ic_default_small@2x.png in Resources */,
 				96CAEDA11AF899100067BC2F /* jifen_img0@2x.png in Resources */,
@@ -2591,6 +2600,7 @@
 				96D238251AF75AE100936721 /* RYMyShareViewController.m in Sources */,
 				96C5BFC41AFB5B9C00BC5744 /* RYArticleData.m in Sources */,
 				96C44D6C1B44E108000C3EB9 /* replyView.m in Sources */,
+				96D3BF5F1B5FC0FD00D71A61 /* LiteratureTopView.m in Sources */,
 				96D9C98F1AE4EA8300997430 /* RYRegisterSpecialtyTableViewCell.m in Sources */,
 				96C5BFE21AFB648600BC5744 /* CXTapDetectingView.m in Sources */,
 				96C56D011AEE158400B127FF /* SWUtilityButtonView.m in Sources */,

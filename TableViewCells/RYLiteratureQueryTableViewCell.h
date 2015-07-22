@@ -29,7 +29,9 @@
 
 @interface RYLiteratureQueryOrdinaryTableViewCell : UITableViewCell
 
+@property (strong , nonatomic) UIView             *leftView;
 @property (strong , nonatomic) UILabel            *titleLabel;
+@property (strong , nonatomic) UILabel            *contentLabel;
 
 - (void)setValueWithString:(NSString *)string;
 

@@ -93,11 +93,22 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 36)];
-        self.titleLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        self.titleLabel.numberOfLines = 0;
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        
+        self.leftView = [[UIView alloc] initWithFrame:CGRectMake(15, 5, 4, 16)];
+        self.leftView.layer.cornerRadius = 1;
+        self.leftView.layer.masksToBounds = YES;
+        [self.contentView addSubview:self.leftView];
+        
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftView.right + 15, 5, 100, 16)];
+        self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
         [self.contentView addSubview:self.titleLabel];
+        
+        self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.titleLabel.left, self.titleLabel.bottom + 5, SCREEN_WIDTH - 50, 50)];
+        self.contentLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        self.contentLabel.font = [UIFont systemFontOfSize:14];
+        self.contentLabel.numberOfLines = 0;
+        [self.contentView addSubview:self.contentLabel];
 
     }
     return self;
@@ -110,9 +121,18 @@
         return;
     }
     
-    CGSize size = [string sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-    self.titleLabel.height = size.height;
-    [self.titleLabel setAttributedText:[Utils getAttributedString:string hightlightString:[string substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.titleLabel.font]];
+    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:14]};
+    CGRect rect = [string boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 50, MAXFLOAT)
+                                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                                           attributes:attributes
+                                                              context:nil];
+    self.contentLabel.height = rect.size.height;
+    self.contentLabel.text = string;
+
+    
+//    CGSize size = [string sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+//    self.titleLabel.height = size.height;
+//    [self.titleLabel setAttributedText:[Utils getAttributedString:string hightlightString:[string substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.titleLabel.font]];
 }
 
 @end
