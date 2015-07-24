@@ -58,8 +58,14 @@
     
     self.contentLabel.text = [dic getStringValueForKey:@"subject" defaultValue:@""];
     NSString *jifen = [dic getStringValueForKey:@"jifen" defaultValue:@""];
-    CGSize size = [jifen sizeWithFont:self.jifenLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH, 12)];
-    self.jifenLabel.frame = CGRectMake(SCREEN_WIDTH - 15 - size.width, self.jifenLabel.top, size.width, 12);
+//    CGSize size = [jifen sizeWithFont:self.jifenLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH, 12)];
+    NSDictionary *attributes = @{NSFontAttributeName:self.jifenLabel.font};
+    CGRect rect = [jifen boundingRectWithSize:CGSizeMake(SCREEN_WIDTH , 12)
+                                      options:NSStringDrawingUsesLineFragmentOrigin
+                                   attributes:attributes
+                                      context:nil];
+
+    self.jifenLabel.frame = CGRectMake(SCREEN_WIDTH - 15 - rect.size.width, self.jifenLabel.top, rect.size.width, 12);
     self.jifenLabel.text = jifen;
     self.iconImageView.left = self.jifenLabel.left - 4 - self.iconImageView.width;
     

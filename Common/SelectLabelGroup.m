@@ -91,6 +91,7 @@
 
 -(CGSize)btnSizeWithItem:(NSString*)item{
     CGSize sz = [item sizeWithFont:self.font];
+    
     if(self.lineItemCount > 0){
         float width = self.CJ_WIDTH / self.lineItemCount;
         sz.width = width;

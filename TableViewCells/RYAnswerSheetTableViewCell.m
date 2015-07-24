@@ -48,10 +48,15 @@
     if ( [ShowBox isEmptyString:string] ) {
         return;
     }
-    CGSize size = [string sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 69, MAXFLOAT)];
-    self.titleLabel.height = size.height;
+//    CGSize size = [string sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 69, MAXFLOAT)];
+    NSDictionary *attributes = @{NSFontAttributeName:self.titleLabel.font};
+    CGRect rect = [string boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 69, MAXFLOAT)
+                                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                                           attributes:attributes
+                                                              context:nil];
+    self.titleLabel.height = rect.size.height;
     self.titleLabel.text = string;
-    self.leftImgView.top = (size.height + 32)/2.0 - self.leftImgView.height/2.0;
+    self.leftImgView.top = (rect.size.height + 32)/2.0 - self.leftImgView.height/2.0;
 }
 
 -(void)changeSelectHighlighted:(BOOL)highlighted

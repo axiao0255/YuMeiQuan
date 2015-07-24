@@ -92,7 +92,7 @@
                                             options:NSStringDrawingUsesLineFragmentOrigin
                                          attributes:attributes
                                             context:nil];
-        return rect.size.height + 31;
+        return rect.size.height + 30;
     }
 }
 
@@ -157,15 +157,7 @@
 
 - (CGFloat)getLiteratureTopViewHeight
 {
-//    NSInteger sectionNum = [self numberOfSectionsInTableView:self.tableView];
     CGFloat   height = 0;
-//    for ( NSInteger i = 0; i < sectionNum; i ++ ) {
-//        height += [self tableView:self.tableView heightForHeaderInSection:i];
-//        for ( NSInteger j = 0; j < 5; j ++ ) {
-//            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
-//            height += [self tableView:self.tableView heightForRowAtIndexPath:indexPath];
-//        }
-//    }
     for ( NSInteger i = 0 ; i < 5; i ++ ) {
          NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
          height += [self tableView:self.tableView heightForRowAtIndexPath:indexPath];

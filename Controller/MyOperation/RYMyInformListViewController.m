@@ -161,14 +161,17 @@
     if ( self.listData.count ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.section];
         NSString *title = [dict getStringValueForKey:@"note" defaultValue:@""];
-        CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-        return size.height + 16;
+        // 设置标题
+        NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+        CGRect rect = [title boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                                                  options:NSStringDrawingUsesLineFragmentOrigin
+                                                               attributes:attributes
+                                                                  context:nil];
+        return rect.size.height + 16;
     }
     else{
         return 0;
     }
-    
-//    return 98;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

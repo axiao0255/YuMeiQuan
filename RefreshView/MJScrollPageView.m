@@ -72,16 +72,19 @@
 
 - (void) getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
 {
-
     if ( [self.delegate respondsToSelector:@selector(freshContentTableWithCurrentPage:andTableIndex:isHead:)]) {
         [self.delegate freshContentTableWithCurrentPage:currentPage andTableIndex:tableIndex isHead:isHeaderReresh];
     }
 }
--(void)refreshEndAtTableViewIndex:(NSInteger)index;
+-(void)refreshEndAtTableViewIndex:(NSInteger) index isHead:(BOOL)ishead
 {
     MJRefreshTableView *v = [_contentItems objectAtIndex:index];
-    [v footerFinishRereshing];
-    [v headerFinishRefreshing];
+    if ( ishead ) {
+        [v headerFinishRefreshing];
+    }
+    else{
+        [v footerFinishRereshing];
+    }
 }
 
 -(void)moveScrollowViewAthIndex:(NSInteger)aIndex
@@ -187,7 +190,7 @@
         v.currentPage = 0;
     }
     MJRefreshTableView *v = [_contentItems objectAtIndex:tableIndex];
-    [v headerBeginRefreshing];
+    [self getDataWithIsHeaderReresh:YES andCurrentPage:v.currentPage];
 }
 
 @end

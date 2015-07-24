@@ -11,6 +11,8 @@
 #import "RYcommentTableViewCell.h"
 #import "RYShareSheet.h"
 #import "RYCommentData.h"
+#import "CafToMp3.h"
+#import "recordListeningView.h"
 
 @interface RYcommentDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,FSVoiceBubbleDelegate,AVAudioRecorderDelegate,RYcommentTableViewCellDelegate,RYShareSheetDelegate,UIAlertViewDelegate>
 {
@@ -47,6 +49,8 @@
 @property (nonatomic , assign) NSInteger          replyIndex;       // 当前回复评论第几条回复。      当对文字进行评论时 为 －1
 @property (nonatomic , assign) BOOL               keyboardShow;     // 用于判断 textView是否是编辑
 @property (nonatomic , assign) BOOL               myzanmessage;     // 是否点赞过
+
+@property (nonatomic , strong) recordListeningView *listeningView;  // 录音完成 试听界面
 
 @end
 
@@ -133,6 +137,14 @@
     return _tableView;
 }
 
+- (recordListeningView *)listeningView
+{
+    if ( _listeningView == nil ) {
+        _listeningView = [[recordListeningView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    }
+    return _listeningView;
+}
+
 -(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
 {
     if ( [ShowBox checkCurrentNetwork] ) {
@@ -209,7 +221,6 @@
     self.articleData.shareArticleUrl = [dict getStringValueForKey:@"spreadurl" defaultValue:@""];
     self.articleData.shareId = [dict getStringValueForKey:@"spid" defaultValue:@""];
     self.articleData.sharePicUrl = [dict getStringValueForKey:@"pic" defaultValue:@""];
-    
     
     NSMutableDictionary *tempDict = [NSMutableDictionary dictionary];
     [tempDict setValue:self.articleData.subject forKey:@"subject"];
@@ -329,7 +340,7 @@
         return cell;
     }
     else{
-        NSString *voice_cell = @"voice_cell";
+        static NSString *voice_cell = @"voice_cell";
         RYcommentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:voice_cell];
         if ( !cell ) {
             cell = [[RYcommentTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:voice_cell];
@@ -337,21 +348,28 @@
         }
         if ( self.commentList.count ) {
             NSDictionary *tempDict = [self.commentList objectAtIndex:indexPath.row];
-            NSString *voice = [tempDict getStringValueForKey:@"voice" defaultValue:nil];
+//            NSString *voice = [tempDict getStringValueForKey:@"voice" defaultValue:nil];
 //            voice = @"http://music.baidutt.com/up/kwcawswc/yuydsw.mp3";
-            if ( ![ShowBox isEmptyString:voice] ) {
-                cell.bubble.tag = indexPath.row;
-                cell.bubble.contentURL = [NSURL URLWithString:voice];
-                cell.bubble.delegate = self;
-                
-                if ( _currentRow == indexPath.row && cell.bubble.playing ) {
-                    [cell.bubble startAnimating];
-                }
-                else{
-                    [cell.bubble stopAnimating];
-                }
+//            if ( ![ShowBox isEmptyString:voice] ) {
+//                cell.bubble.tag = indexPath.row;
+//                cell.bubble.contentURL = [NSURL URLWithString:voice];
+//                cell.bubble.delegate = self;
+//                
+//                if ( _currentRow == indexPath.row && cell.bubble.playing ) {
+//                    [cell.bubble startAnimating];
+//                }
+//                else{
+//                    [cell.bubble stopAnimating];
+//                }
+//            }
+            cell.bubble.tag = indexPath.row;
+            cell.bubble.delegate = self;
+            if ( _currentRow == indexPath.row && cell.bubble.playing ) {
+                [cell.bubble startAnimating];
             }
-            
+            else{
+                [cell.bubble stopAnimating];
+            }
             [cell setValueWithDict:tempDict];
         }
         cell.delegate = self;
@@ -608,18 +626,57 @@
     
     recordBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     recordBtn.frame = textView.frame;
-    recordBtn.backgroundColor = [UIColor lightGrayColor];
-    [recordBtn setTitle:@"按住  说话(60s)" forState:UIControlStateNormal];
-    [recordBtn setTitle:@"松开  结束" forState:UIControlEventTouchDown];
-    [recordBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [recordBtn setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
-//    [recordBtn setTitleShadowOffset:CGSizeMake(1, 1)];
-    [recordBtn addTarget:self action:@selector(recordStart:) forControlEvents:UIControlEventTouchDown];
-    [recordBtn addTarget:self action:@selector(recordStop:) forControlEvents:UIControlEventTouchUpInside];
-    [recordBtn addTarget:self action:@selector(recordCancel:) forControlEvents:UIControlEventTouchUpOutside];
-    recordBtn.selected = NO;
+    [recordBtn setBackgroundImage:[UIImage imageNamed:@"ic_recordBtn_normal.png"] forState:UIControlStateNormal];
+//    recordBtn.backgroundColor = [UIColor whiteColor];
+//    recordBtn.layer.borderColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0].CGColor;
+//    recordBtn.layer.borderWidth = 1.0;
+//    recordBtn.layer.cornerRadius = 4;
+//    recordBtn.layer.masksToBounds = YES;
+//    [recordBtn setTitle:@"按住  说话(60s)" forState:UIControlStateNormal];
+//    [recordBtn setTitle:@"松开  结束" forState:UIControlEventTouchDown];
+//    [recordBtn setTitle:@"松开  结束" forState:UIControlStateSelected];
+//    [recordBtn setTitle:@"松开  结束" forState:UIControlStateHighlighted];
+//    
+//    [recordBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+////    [recordBtn setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+////    [recordBtn setTitleShadowOffset:CGSizeMake(1, 1)];
+//    [recordBtn addTarget:self action:@selector(recordStart:) forControlEvents:UIControlEventTouchDown];
+//    [recordBtn addTarget:self action:@selector(recordStart:) forControlEvents:UIControlEventTouchDragInside];
+//    [recordBtn addTarget:self action:@selector(recordStop:) forControlEvents:UIControlEventTouchUpInside];
+//    [recordBtn addTarget:self action:@selector(recordCancel:) forControlEvents:UIControlEventTouchUpOutside];
+//    recordBtn.selected = NO;
+    
+    UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
+                                             initWithTarget:self
+                                             action:@selector(recordButtonLongPressed:)];
+    // you can control how many seconds before the gesture is recognized
+    gesture.minimumPressDuration =0;
+    [recordBtn addGestureRecognizer:gesture];
+
+    
     [containerView addSubview:recordBtn];
 }
+
+- (void)recordButtonLongPressed:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"Touch down");
+        
+        [recordBtn setBackgroundImage:[UIImage imageNamed:@"ic_recordBtn_Highlight.png"] forState:UIControlStateNormal];
+//        [self startRecording];
+        [self recordStart:nil];
+        
+    }
+    if (gesture.state == UIGestureRecognizerStateEnded) {
+        
+        NSLog(@"Long press Ended");
+//        [self stopRecording];
+        [recordBtn setBackgroundImage:[UIImage imageNamed:@"ic_recordBtn_normal.png"] forState:UIControlStateNormal];
+        [self recordStop:nil];
+        [self recordCancel:nil];
+    }
+}
+
 
 /**
  * 语音和文字输入 切换
@@ -833,8 +890,7 @@
     [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayAndRecord error: nil];
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     
-    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(
-                                                            NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docsDir = [dirPaths objectAtIndex:0];
     docsDir = [docsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[RYUserInfo sharedManager].uid]];
     
@@ -894,23 +950,34 @@
 //         NSLog(@"上传录音 errorString： %@",errorString);
 //    }];
     
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    docsDir = [docsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[RYUserInfo sharedManager].uid]];
     
-    if ( self.replyIndex != -1 ) {
-        NSDictionary *dict = [self.commentList objectAtIndex:self.replyIndex];
-        NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
-        self.commentData.tid = self.tid;
-        self.commentData.voiceURL = pathURL;
-        self.commentData.pid = pid;
-        self.commentData.word = nil;
-        [self submitComment];
-    }
-    else{
-        self.commentData.tid = self.tid;
-        self.commentData.voiceURL = pathURL;
-        self.commentData.pid = nil;
-        self.commentData.word = nil;
-        [self submitComment];
-    }
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyyMMddHHmmss";
+    NSString *str = [formatter stringFromDate:[NSDate date]];
+    NSString *mp3FilePath = [docsDir stringByAppendingFormat:@"%@.mp3",str];
+    
+    [CafToMp3 cafToMp3:pathURL.path toMp3Path:mp3FilePath];
+    [self.listeningView showListeningViewWithSoundURL:pathURL];
+    
+//    if ( self.replyIndex != -1 ) {
+//        NSDictionary *dict = [self.commentList objectAtIndex:self.replyIndex];
+//        NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
+//        self.commentData.tid = self.tid;
+//        self.commentData.voiceURL = pathURL;
+//        self.commentData.pid = pid;
+//        self.commentData.word = nil;
+//        [self submitComment];
+//    }
+//    else{
+//        self.commentData.tid = self.tid;
+//        self.commentData.voiceURL = pathURL;
+//        self.commentData.pid = nil;
+//        self.commentData.word = nil;
+//        [self submitComment];
+//    }
 }
 
 -(void)recordCancel:(UIButton *)sender

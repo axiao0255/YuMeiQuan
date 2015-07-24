@@ -36,7 +36,6 @@
 #import "RYLiteratureCategoryViewController.h"
 #import "RYQRcodeViewViewController.h"
 
-
 @interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate,RYLiteratureCategoryViewControllerDelegate>
 {
     MJScrollBarView    *scrollBarView;
@@ -65,6 +64,7 @@
 @property (assign, nonatomic) CGFloat          barlastOffsetY;
 @property (assign, nonatomic) NSInteger        lastTabelViewIndex;
 @property (assign, nonatomic) CGFloat          scrollLastOffsetY;
+@property (assign, nonatomic) BOOL             notStretch;         // 不是上下啦刷新。 用于自动登录 ， 避免试图上移引起bug
 
 @end
 
@@ -387,13 +387,13 @@
         [NetRequestAPI getHomePageWithSessionId:[RYUserInfo sharedManager].session
                                         success:^(id responseDic) {
 //                                            NSLog(@"首页 responseDic： %@",responseDic);
-                                            [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                            [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                             [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                             
                                         } failure:^(id errorString) {
                                             //                                            NSLog(@"首页 ： %@",errorString);
                                             [ShowBox showError:@"获取数据失败，请稍候重试"];
-                                            [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                            [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                         }];
     }
     else if ( aIndex == 1 ){
@@ -402,13 +402,13 @@
                                                  page:currentPage
                                               success:^(id responseDic) {
                                                   NSLog(@"往期周报 responseDic : %@",responseDic);
-                                                  [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                  [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                   [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                   
                                               } failure:^(id errorString) {
 //                                                  NSLog(@"往期周报 errorString : %@",errorString);
                                                   [ShowBox showError:@"获取数据失败，请稍候重试"];
-                                                  [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                  [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                               }];
     }
     else if ( aIndex == 2 ) {
@@ -419,13 +419,13 @@
                                                 success:^(id responseDic) {
                                                     NSLog(@"新闻 ：responseDic  %@",responseDic);
                                                     // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
-                                                    [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                    [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                     [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                 } failure:^(id errorString) {
                                                     [ShowBox showError:@"获取数据失败，请稍候重试"];
                                                     NSLog(@"新闻 ：errorString  %@",errorString);
                                                     // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
-                                                     [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                    [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                 }];
     }
     else if ( aIndex == 3 )
@@ -436,14 +436,14 @@
                                                    page:currentPage
                                                 success:^(id responseDic) {
                                                     NSLog(@"会讯 ：responseDic  %@",responseDic);
-                                                    [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                    [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                     [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                     
                                                     
                                                 } failure:^(id errorString) {
                                                     //            NSLog(@"会讯 ： %@",errorString);
                                                     [ShowBox showError:@"获取数据失败，请稍候重试"];
-                                                    [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                    [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                 }];
         
     }
@@ -465,13 +465,13 @@
                                                      page:currentPage
                                                   success:^(id responseDic) {
                                                      NSLog(@"文献 ：responseDic  %@",responseDic);
-                                                       [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                      [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                       [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                       
                                                   } failure:^(id errorString) {
                                                       //            NSLog(@"文献 ： %@",errorString);
                                                       [ShowBox showError:@"获取数据失败，请稍候重试"];
-                                                     [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                     [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                   }];
     }
     else if ( aIndex == 5 )
@@ -482,13 +482,13 @@
                                               page:currentPage
                                            success:^(id responseDic) {
                                                NSLog(@"播客 ：responseDic  %@",responseDic);
-                                               [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                               [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                
                                            } failure:^(id errorString) {
                                                //            NSLog(@"播客 ： %@",errorString);
                                                [ShowBox showError:@"获取数据失败，请稍候重试"];
-                                               [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                               [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                
                                            }];
     }
@@ -499,16 +499,29 @@
                                                  page:currentPage
                                               success:^(id responseDic) {
                                                   NSLog(@"百家 responseDic：%@",responseDic);
-                                                  [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                  [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                   [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                   
                                               } failure:^(id errorString) {
                                                   NSLog(@"百家 errorString：%@",errorString);
                                                   [ShowBox showError:@"获取数据失败，请稍候重试"];
-                                                  [wSelf->scrollPageView refreshEndAtTableViewIndex:tempIndex];
+                                                  [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                               }];
     }
  
+}
+
+
+// 获取数据之后，tableview回到原来的位置
+- (void)tableViewRefreshEndAtTableViewIndex:(NSInteger)index isHeadRefresh:(BOOL)isHead
+{
+    if ( !self.notStretch ) { // 为 NO tableView上啦或下啦刷新，需要调此才能回到原来的位置
+        [scrollPageView refreshEndAtTableViewIndex:index isHead:isHead];
+    }
+    else{
+        // 此为 自动登录或 从登录界面登录之后调用，没用下拉刷新
+        self.notStretch = NO;
+    }
 }
 
 - (void)setValueWithDict:(NSDictionary *)responseDic andIndex:(NSInteger)aIndex isHead:(BOOL)isHead
@@ -518,12 +531,19 @@
     if ( !success ) {
         int  login = [meta getIntValueForKey:@"login" defaultValue:0];
         if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
-            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-                if ( isLogin ) {
-                    NSLog(@"登录完成"); // 重新获取数据 
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    wSelf.notStretch = YES;
+                    [scrollPageView removeAlldataSources];
                 }
+                else{// 失败则 打开登录界面 手动登录
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [wSelf openLoginVC];
             }];
-            [self.navigationController pushViewController:nextVC animated:YES];
             return;
         }
         else{
@@ -536,7 +556,6 @@
         [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
         return;
     }
-    
     // 刷新 userinfo的数据 
     NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
     if ( usermassage ) {
@@ -1119,5 +1138,15 @@
     }
 }
 
+#pragma  mark 如果自动登录不上则 需要打开登录界面手动登录
+-(void)openLoginVC
+{
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            NSLog(@"登录完成"); // 重新获取数据  由于本ViewController中有注册通知，登录成功后通知能重新刷新数据，所有在此不做任何操作
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
 
 @end

@@ -52,7 +52,7 @@
 #pragma mark 设置 totlePage
 -(void)setTotlePageWithNum:(NSInteger)aTotlePage atIndex:(NSInteger)aIndex;
 #pragma mark 刷新结束
--(void)refreshEndAtTableViewIndex:(NSInteger) index;
+-(void)refreshEndAtTableViewIndex:(NSInteger) index isHead:(BOOL)ishead;
 
 #pragma mark 清楚所有数据
 -(void)removeAlldataSources;

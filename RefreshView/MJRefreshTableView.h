@@ -38,6 +38,7 @@
 
 @property (assign,nonatomic)NSInteger                     currentPage;
 @property (assign,nonatomic)NSInteger                     totlePage;
+@property (assign,nonatomic)BOOL                          isRereshing;
 
 /**
  *  初始化方法

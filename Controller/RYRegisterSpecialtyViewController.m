@@ -106,7 +106,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"aaa : %ld",indexPath.row);
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ( [self.delegate respondsToSelector:@selector(selectSpecialtyTypeWithTag:didStr:)] ) {
         RYRegisterSpecialtyTableViewCell *cell = (RYRegisterSpecialtyTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];

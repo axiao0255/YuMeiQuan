@@ -275,12 +275,17 @@
     int cl = 0;
     for ( int i = 0 ; i < array.count; i ++ ) {
         NSString *str = [array objectAtIndex:i];
-        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:14]];
+//        CGSize size = [str sizeWithFont:[UIFont systemFontOfSize:14]];
+        NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:14]};
+        CGRect rect = [str boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                           options:NSStringDrawingUsesLineFragmentOrigin
+                                        attributes:attributes
+                                           context:nil];
         cl ++;
-        totalWidth += (size.width + 20) + (cl - 1)*8;
+        totalWidth += (rect.size.width + 20) + (cl - 1)*8;
         if ( totalWidth > SCREEN_WIDTH - 30 ) {
             row ++ ;
-            totalWidth = (size.width + 20) ;//+ 20;
+            totalWidth = (rect.size.width + 20) ;//+ 20;
             cl = 0;
         }
     }

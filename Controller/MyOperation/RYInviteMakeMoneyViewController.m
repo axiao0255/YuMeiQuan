@@ -171,8 +171,13 @@
     if ( self.listData.count ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
         NSString *title = [dict getStringValueForKey:@"subject" defaultValue:@""];
-        CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-        return size.height + 16;
+//        CGSize size = [title sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+        NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+        CGRect rect = [title boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                                                  options:NSStringDrawingUsesLineFragmentOrigin
+                                                               attributes:attributes
+                                                                  context:nil];
+        return rect.size.height + 16;
     }
     else{
         return 0;

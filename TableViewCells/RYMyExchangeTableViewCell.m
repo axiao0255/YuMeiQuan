@@ -25,8 +25,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
         self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 95, 70)];
-        self.leftImgView.layer.cornerRadius = 4;
-        self.leftImgView.layer.masksToBounds = YES;
+//        self.leftImgView.layer.cornerRadius = 4;
+//        self.leftImgView.layer.masksToBounds = YES;
         self.leftImgView.layer.borderWidth = 0.5;
         self.leftImgView.layer.borderColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0].CGColor;
         [self.contentView addSubview:self.leftImgView];

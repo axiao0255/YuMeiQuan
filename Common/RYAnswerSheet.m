@@ -312,8 +312,12 @@
     }
     
     if ( answerStr.length ) {
-        CGSize size = [answerStr sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 75, MAXFLOAT)];
-        return size.height + 32;
+        NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+        CGRect rect = [answerStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 75, MAXFLOAT)
+                                                                  options:NSStringDrawingUsesLineFragmentOrigin
+                                                               attributes:attributes
+                                                                  context:nil];
+        return rect.size.height + 32;
     }
     else{
         return 0;
@@ -322,14 +326,16 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-//    NSString *string = @"诺龙独有的eMatrix水滴阵替治疗";
-//    CGSize size = [string sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-//    return size.height + 16;
     NSDictionary *q = [self.questions objectAtIndex:section];
     NSString *string = [q getStringValueForKey:@"question" defaultValue:@""];
     if ( ![ShowBox isEmptyString:string] ) {
-        CGSize size = [string sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-        return size.height + 16;
+        NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:18]};
+        CGRect rect = [string boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                              options:NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:attributes
+                                              context:nil];
+        return rect.size.height + 16;
+
     }
     else{
         return 0;

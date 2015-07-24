@@ -807,7 +807,7 @@
     UILabel *titleLabel = (UILabel *)[navBarView viewWithTag:BROWSER_TITLE_LBL_TAG];
     if (titleLabel)
     {
-        titleLabel.text = [NSString stringWithFormat:@"%lu of %lu", index+1, (unsigned long)photoBrowser.photoCount];
+        titleLabel.text = [NSString stringWithFormat:@"%u of %lu", index+1, (unsigned long)photoBrowser.photoCount];
     }
 }
 

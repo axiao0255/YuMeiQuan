@@ -62,15 +62,20 @@
 - (void)footerRereshing
 {
      NSLog(@"脚 开始刷新");
-    [self headerEndRefreshing];
-    
+    if ( self.isRereshing ) {
+        return;
+    }
+  
+//    [self headerEndRefreshing];
     self.currentPage ++;
     if ( self.currentPage >= self.totlePage ) {
         self.currentPage --;
         [self footerEndRefreshing];
+        self.isRereshing = NO;
         return;
     }
-    
+   
+    self.isRereshing = YES;
 //    if ( [self.delegateRefersh respondsToSelector:@selector(footerRereshingData)] ) {
 //        [self.delegateRefersh footerRereshingData];
 //    }
@@ -85,7 +90,11 @@
 - (void)headerRereshing
 {
     NSLog(@"头 开始刷新");
-    [self footerEndRefreshing];
+//    [self footerEndRefreshing];
+    if ( self.isRereshing ) {
+        return;
+    }
+    self.isRereshing = YES;
     self.currentPage = 0;
     self.totlePage = 1;
 //    if ( [self.delegateRefersh respondsToSelector:@selector(headerRereshingData)] ) {
@@ -100,11 +109,14 @@
 
 - (void)footerFinishRereshing
 {
+    self.isRereshing = NO;
     [self footerEndRefreshing];
+   
 }
 
 - (void)headerFinishRefreshing
 {
+    self.isRereshing = NO;
     [self headerEndRefreshing];
 }
 
@@ -116,6 +128,7 @@
 {
     [self footerEndRefreshing];
     [self headerEndRefreshing];
+    self.isRereshing = NO;
 }
 
 

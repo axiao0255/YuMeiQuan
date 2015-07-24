@@ -78,8 +78,14 @@
         return;
     }
     
-    CGSize size = [string sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-    self.titleLabel.height = size.height;
+//    CGSize size = [string sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
+    NSDictionary *attributes = @{NSFontAttributeName:self.titleLabel.font};
+    CGRect rect = [string boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                      options:NSStringDrawingUsesLineFragmentOrigin
+                                   attributes:attributes
+                                      context:nil];
+
+    self.titleLabel.height = rect.size.height;
     self.titleLabel.text = string;
 }
 

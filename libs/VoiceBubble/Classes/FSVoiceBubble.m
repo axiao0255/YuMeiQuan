@@ -9,6 +9,7 @@
 #import "FSVoiceBubble.h"
 #import "UIImage+FSExtension.h"
 #import <AVFoundation/AVFoundation.h>
+//#import <MediaPlayer/MediaPlayer.h>
 
 
 #define kFSVoiceBubbleShouldStopNotification @"FSVoiceBubbleShouldStopNotification"
@@ -16,7 +17,8 @@
 
 @interface FSVoiceBubble () <AVAudioPlayerDelegate>
 
-@property (strong, nonatomic) AVAudioPlayer *player;
+//@property (strong, nonatomic) AVAudioPlayer *player;
+@property (strong, nonatomic) AVPlayer      *myPlayer;
 @property (strong, nonatomic) AVURLAsset    *asset;
 @property (strong, nonatomic) NSArray       *animationImages;
 @property (weak  , nonatomic) UIButton      *contentButton;
@@ -188,9 +190,9 @@
             }
             NSData *data = [NSData dataWithContentsOfURL:_contentURL];
             NSError *error=nil;
-            _player = [[AVAudioPlayer alloc] initWithData:data error:&error];
-            _player.delegate = self;
-            [_player prepareToPlay];
+//            _player = [[AVAudioPlayer alloc] initWithData:data error:&error];
+//            _player.delegate = self;
+//            [_player prepareToPlay];
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *title = [NSString stringWithFormat:@"%@\"",@(seconds)];
                 [_contentButton setTitle:title forState:UIControlStateNormal];
@@ -198,14 +200,13 @@
                 [self setNeedsLayout];
             });
         });
-        
     }
 }
 
-- (BOOL)isPlaying
-{
-    return _player.isPlaying;
-}
+//- (BOOL)isPlaying
+//{
+//    return _player.isPlaying;
+//}
 
 #pragma mark - AVAudioPlayer Delegate
 
@@ -228,26 +229,26 @@
 
 - (void)bubbleShouldStop:(NSNotification *)notification
 {
-    if (_player.isPlaying) {
-        [self stop];
-    }
+//    if (_player.isPlaying) {
+//        [self stop];
+//    }
 }
 
 #pragma mark - Target Action
 
 - (void)voiceClicked:(id)sender
 {
-    if (_player.playing && _contentButton.imageView.isAnimating) {
-        [self stop];
-    } else {
-        if (_exclusive) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFSVoiceBubbleShouldStopNotification object:nil];
-        }
-        [self play];
-        if (_delegate && [_delegate respondsToSelector:@selector(voiceBubbleDidStartPlaying:)]) {
-            [_delegate voiceBubbleDidStartPlaying:self];
-        }
-    }
+//    if (_player.playing && _contentButton.imageView.isAnimating) {
+//        [self stop];
+//    } else {
+//        if (_exclusive) {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFSVoiceBubbleShouldStopNotification object:nil];
+//        }
+//        [self play];
+//        if (_delegate && [_delegate respondsToSelector:@selector(voiceBubbleDidStartPlaying:)]) {
+//            [_delegate voiceBubbleDidStartPlaying:self];
+//        }
+//    }
 }
 
 #pragma mark - Public
@@ -276,27 +277,27 @@
         NSLog(@"ContentURL of voice bubble was not set");
         return;
     }
-    if (!_player.playing) {
-        [_player play];
-        [self startAnimating];
-    }
+//    if (!_player.playing) {
+//        [_player play];
+//        [self startAnimating];
+//    }
 }
 
 - (void)pause
 {
-    if (_player.playing) {
-        [_player pause];
-        [self stopAnimating];
-    }
+//    if (_player.playing) {
+//        [_player pause];
+//        [self stopAnimating];
+//    }
 }
 
 - (void)stop
 {
-    if (_player.playing) {
-        [_player stop];
-        _player.currentTime = 0;
-        [self stopAnimating];
-    }
+//    if (_player.playing) {
+//        [_player stop];
+//        _player.currentTime = 0;
+//        [self stopAnimating];
+//    }
 }
 
 @end

@@ -20,6 +20,7 @@
 
 @property (nonatomic , strong) UILabel        *nameLabel;
 @property (nonatomic , strong) FSVoiceBubble  *bubble;
+@property (nonatomic , strong) NSString       *voicePath;
 @property (nonatomic , strong) UILabel        *commentLabel;
 @property (nonatomic , strong) UILabel        *timeLabel;
 @property (nonatomic , strong) replyView      *replyMenu;

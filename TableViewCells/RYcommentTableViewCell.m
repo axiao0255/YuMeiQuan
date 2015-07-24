@@ -79,20 +79,27 @@
     
     // 判断声音是否 空
     NSString *voice = [dict getStringValueForKey:@"voice" defaultValue:@""];
+//    voice = @"http://music.baidutt.com/up/kwcawswc/yuydsw.mp3";
     if ( [ShowBox isEmptyString:voice] ) {
         self.bubble.hidden = YES;
         self.bubble.height = 0;
         self.commentLabel.top = self.bubble.bottom;
     }
     else{
-         self.bubble.hidden = NO;
+        self.bubble.hidden = NO;
         self.bubble.height = 40;
+        if ( ![self.voicePath isEqualToString:voice] ) {
+            self.voicePath = voice;
+            self.bubble.contentURL = [NSURL URLWithString:self.voicePath];
+        }
+       
         self.commentLabel.top = self.bubble.bottom + 5;
     }
-    
+    // 判断是否有文字
     NSString *word = [dict getStringValueForKey:@"word" defaultValue:@""];
     if ( [ShowBox isEmptyString:word] ) {
         self.commentLabel.height = 0;
+        self.commentLabel.hidden = YES;
         self.timeLabel.top = self.bubble.bottom + 15;
         self.replyMenu.top = self.bubble.bottom + 10;
     }
@@ -105,10 +112,10 @@
                                                context:nil];
         self.commentLabel.height = rect.size.height;
         self.commentLabel.text = word;
+        self.commentLabel.hidden = NO;
         self.timeLabel.top = self.commentLabel.bottom + 15;
         self.replyMenu.top = self.commentLabel.bottom + 10;
     }
-    
     
     self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
     // 取作者id  并 判断 是否 和本人uid 是否一致
@@ -119,8 +126,6 @@
     else{
         [self.replyMenu menuType:shareAndReply];
     }
-    
-    
 }
 
 #pragma mark replyViewDelegate

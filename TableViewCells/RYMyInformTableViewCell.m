@@ -97,7 +97,7 @@
     NSInteger count = [dict getIntValueForKey:@"count" defaultValue:0];
     if (count > 0) {
         self.numLabel.hidden = NO;
-        self.numLabel.text = [NSString stringWithFormat:@"%li",count];
+        self.numLabel.text = [NSString stringWithFormat:@"%li",(long)count];
     }
     else{
         self.numLabel.hidden = YES;

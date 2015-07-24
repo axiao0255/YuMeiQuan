@@ -15,7 +15,7 @@
 #import "RYCorporateHomePageViewController.h"
 
 #import "RYShareSheet.h"
-#import "RYTokenView.h"
+//#import "RYTokenView.h"
 #import "RYCopyAddressView.h"
 #import "RYcommentDetailsViewController.h"
 
@@ -35,21 +35,12 @@
 @property (strong, nonatomic)  UIWebView        *webView;
 
 @property (strong, nonatomic)  UILabel          *bodeyTitleLabel;         // 标题
-//@property (strong, nonatomic)  UILabel          *subheadLabel;            // 副标题
-//@property (strong, nonatomic)  UILabel          *authorLabel;             // 作者
-//@property (strong, nonatomic)  UILabel          *periodicalLabel;         // 期刊
-//@property (strong, nonatomic)  UILabel          *dateLabel;               // 日期
-//@property (strong, nonatomic)  UILabel          *DOILabel;                // DOI
 
 @property (strong, nonatomic) LiteratureTopView *literatureTopView;       // top 作者 ～ DOD
-
 @property (strong, nonatomic)  UIView           *topTextDemarcation;       // 标题与正文的分界
-
-//@property (strong, nonatomic)  UIButton         *textShareButton;          // 正文 头的分享 按钮
 
 @property (nonatomic, strong)  RYBillboardView  *billboardView;            // top 答题或分享的提示页
 @property (nonatomic, strong)  UIButton         *billboardLucencyBtn;      // 答题和分享提示页出现时的透明背景
-@property (nonatomic, strong)  NSMutableDictionary *billboardDict;         // 答题和分享提示页的数据
 
 @property (strong, nonatomic)  RYArticleData    *articleData;
 @property (nonatomic, strong)  NSMutableArray   *photoDataSource;
@@ -71,7 +62,7 @@
 @property (nonatomic, strong)   UIButton         *commentButton;// 评论按钮
 
 @property (nonatomic, strong)   RYShareSheet     *shareSheet; // 分享
-@property (nonatomic, strong)   RYTokenView      *tokenView;  // 标签view
+//@property (nonatomic, strong)   RYTokenView      *tokenView;  // 标签view
 
 
 // 帖子id
@@ -165,25 +156,16 @@
     // 添加手势
     [self addTapOnWebView];
     
-   
     self.webView.scrollView.scrollEnabled = NO;
     [self.scrollView addSubview:self.webView];
-//    [self.scrollView addSubview:self.textShareButton];
     [self.scrollView addSubview:self.bodeyTitleLabel];
     [self.scrollView addSubview:self.literatureTopView];
-//    [self.scrollView addSubview:self.subheadLabel];
-//    [self.scrollView addSubview:self.authorLabel];
-//    [self.scrollView addSubview:self.periodicalLabel];
-//    [self.scrollView addSubview:self.dateLabel];
-//    [self.scrollView addSubview:self.DOILabel];
     [self.scrollView addSubview:self.topTextDemarcation];
     [self.view addSubview:self.scrollView];
     [self.view addSubview:self.toobar];
-    
     [self.view addSubview:self.billboardLucencyBtn];
     [self.view addSubview:self.billboardView];
 
-    
     [self.webView.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
 }
 
@@ -317,7 +299,7 @@
         [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
     }
 
-    
+    // 评论为空时，隐藏其提示框
     if ( [ShowBox isEmptyString:self.articleData.comment] ) {
         self.hintCoverView.hidden = YES;
     }
@@ -330,91 +312,44 @@
     
     // 是否显示有奖转发
     if ( self.isAward ) {
-//        self.textShareButton.height = 35;
-        
-        self.billboardView.height = 380;
-        self.billboardView.top = -332;
-         NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
+        NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
         [mutableDict setValue:@"分享本文" forKey:@"topTitle"];
         [mutableDict setValue:@"获得积分奖励" forKey:@"jiangli"];
         [mutableDict setValue:@"(阅读次数越多，获得奖励越多)" forKey:@"duihuan"];
         [mutableDict setValue:@"由医美圈提供" forKey:@"zanzhu"];
         [mutableDict setValue:@"share" forKey:@"type"];
         [mutableDict setValue:@"" forKey:@"slogan"];
-        self.billboardDict = mutableDict;
-        self.billboardView.hidden = NO;
-        self.billboardView.dataDict = self.billboardDict;
+        self.billboardView.dataDict = mutableDict;
         
+        self.billboardView.height = 380;
+        self.billboardView.top = -332;
+        self.billboardView.hidden = NO;
         self.bodeyTitleLabel.top = 55;
         
     }else{
-//        self.textShareButton.height = 0;
-        
         self.billboardView.hidden = YES;
         self.billboardView.height = 0;
-        self.bodeyTitleLabel.top = 6;
+        self.bodeyTitleLabel.top = 10;
     }
-    
-    NSDictionary *bodeyAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:21]};
+    // 设置 大标题
+    NSDictionary *bodeyAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:20]};
     CGRect bodeyRect = [self.articleData.subject boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
                                                               options:NSStringDrawingUsesLineFragmentOrigin
                                                            attributes:bodeyAttributes
                                                               context:nil];
-     self.bodeyTitleLabel.height = bodeyRect.size.height;
-     self.bodeyTitleLabel.text = self.articleData.subject;
+    self.bodeyTitleLabel.height = bodeyRect.size.height;
+    self.bodeyTitleLabel.text = self.articleData.subject;
     
-   
+    // 设置 文章小标题～DOI
     self.literatureTopView.articleData = self.articleData;
     CGFloat height = [self.literatureTopView getLiteratureTopViewHeight];
-    self.literatureTopView.left = 0;
-    self.literatureTopView.top = self.bodeyTitleLabel.bottom + 10;
-    self.literatureTopView.width = SCREEN_WIDTH;
+    self.literatureTopView.top = self.bodeyTitleLabel.bottom + 5;
     self.literatureTopView.height = height;
-//    self.literatureTopView.backgroundColor = [UIColor redColor];
+    self.literatureTopView.backgroundColor = [UIColor yellowColor];
     
-    self.topTextDemarcation.top = self.literatureTopView.bottom;
+    self.topTextDemarcation.top = self.literatureTopView.bottom + 5;
     
-    
-    
-//    // 标题
-//    CGSize size =  [self.articleData.subject sizeWithFont:[UIFont systemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-//    self.bodeyTitleLabel.text = self.articleData.subject;
-//    self.bodeyTitleLabel.height = size.height;
-//    self.bodeyTitleLabel.top = self.textShareButton.bottom + 6;
-//    // 副标题
-//    NSString *subhead = [NSString stringWithFormat:@"标题：%@",self.articleData.subhead];
-//    CGSize subheadSize = [subhead sizeWithFont:self.subheadLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-//    self.subheadLabel.height = subheadSize.height;
-//    [self.subheadLabel setAttributedText:[Utils getAttributedString:subhead hightlightString:[subhead substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.subheadLabel.font]];
-//    self.subheadLabel.top = self.bodeyTitleLabel.bottom + 6;
-//    // 作者
-//    NSString *author = [NSString stringWithFormat:@"作者：%@",self.articleData.author];
-//    CGSize authorSize = [author sizeWithFont:self.authorLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-//    self.authorLabel.height = authorSize.height;
-//    [self.authorLabel setAttributedText:[Utils getAttributedString:author hightlightString:[author substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.authorLabel.font]];
-//    self.authorLabel.top = self.subheadLabel.bottom + 6;
-//    // 期刊
-//    NSString *periodical = [NSString stringWithFormat:@"期刊：%@",self.articleData.periodical];
-//    CGSize periodicalSize = [periodical sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-//    self.periodicalLabel.height = periodicalSize.height;
-//    [self.periodicalLabel setAttributedText:[Utils getAttributedString:periodical hightlightString:[periodical substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.periodicalLabel.font]];
-//    self.periodicalLabel.top = self.authorLabel.bottom + 6;
-//    // 日期
-//    NSString *date = [NSString stringWithFormat:@"日期：%@",self.articleData.dateline];
-//    CGSize dateSize = [date sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-//    self.dateLabel.height = dateSize.height;
-//    [self.dateLabel setAttributedText:[Utils getAttributedString:date hightlightString:[date substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.dateLabel.font]];
-//    self.dateLabel.top = self.periodicalLabel.bottom + 6;
-//    // DOI
-//    NSString *doi = [NSString stringWithFormat:@"DOI：%@",self.articleData.DOI];
-//    CGSize doiSize = [doi sizeWithFont:self.periodicalLabel.font constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)];
-//    self.DOILabel.height = doiSize.height;
-//    [self.DOILabel setAttributedText:[Utils getAttributedString:doi hightlightString:[doi substringToIndex:3] hightlightColor:[Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0] andFont:self.DOILabel.font]];
-//    self.DOILabel.top = self.dateLabel.bottom + 6;
-//
-//    self.topTextDemarcation.top = self.DOILabel.bottom + 6;
-
-    self.webView.top = self.topTextDemarcation.bottom;
+    self.webView.top = self.topTextDemarcation.bottom ;
     self.webView.height -= self.webView.top;
     
     NSMutableString *htmlString = [NSMutableString stringWithFormat:@"<div id='webHeight' style=\"padding-left:7px;padding-right:8px;line-height:24px;\">%@</div>", self.articleData.message ];
@@ -498,13 +433,13 @@
     return _shareSheet;
 }
 
-- (RYTokenView *)tokenView
-{
-    if ( _tokenView == nil ) {
-        _tokenView = [[RYTokenView alloc] initWithTokenDict:self.tagLibDict andArticleID:self.tid];
-    }
-    return _tokenView;
-}
+//- (RYTokenView *)tokenView
+//{
+//    if ( _tokenView == nil ) {
+//        _tokenView = [[RYTokenView alloc] initWithTokenDict:self.tagLibDict andArticleID:self.tid];
+//    }
+//    return _tokenView;
+//}
 
 
 - (RYArticleData *)articleData
@@ -535,7 +470,6 @@
 - (UIScrollView *)scrollView
 {
     if (_scrollView == nil) {
-//        _scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
         _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 40)];
         _scrollView.backgroundColor = [UIColor whiteColor];
         _scrollView.delegate = self;
@@ -547,7 +481,6 @@
 - (UIWebView *)webView
 {
     if (_webView == nil) {
-//        _webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
         _webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 40)];
         _webView.backgroundColor = [UIColor clearColor];
         _webView.opaque = NO;
@@ -556,84 +489,15 @@
     return _webView;
 }
 
-//- (UILabel *)subheadLabel
-//{
-//    if ( _subheadLabel == nil ) {
-//        _subheadLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-//        _subheadLabel.font = [UIFont systemFontOfSize:14];
-//        _subheadLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-//        _subheadLabel.left = 15;
-//        _subheadLabel.width = SCREEN_WIDTH - 30;
-//        _subheadLabel.numberOfLines = 0;
-//    }
-//    return _subheadLabel;
-//}
-//
-//- (UILabel *)authorLabel
-//{
-//    if ( _authorLabel == nil ) {
-//        _authorLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-//        _authorLabel.font = [UIFont systemFontOfSize:14];
-//        _authorLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-//        _authorLabel.left = 15;
-//        _authorLabel.width = SCREEN_WIDTH - 30;
-//        _authorLabel.numberOfLines = 0;
-//    }
-//    return _authorLabel;
-//}
-
-//- (UILabel *)periodicalLabel
-//{
-//    if ( _periodicalLabel == nil ) {
-//        _periodicalLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-//        _periodicalLabel.font = [UIFont systemFontOfSize:14];
-//        _periodicalLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-//        _periodicalLabel.left = 15;
-//        _periodicalLabel.width = SCREEN_WIDTH - 30;
-//        _periodicalLabel.numberOfLines = 0;
-//    }
-//    return _periodicalLabel;
-//}
-
-//- (UILabel *)DOILabel
-//{
-// 
-//    if ( _DOILabel == nil ) {
-//        _DOILabel = [[UILabel alloc] initWithFrame:CGRectZero];
-//        _DOILabel.font = [UIFont systemFontOfSize:14];
-//        _DOILabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-//        _DOILabel.left = 15;
-//        _DOILabel.width = SCREEN_WIDTH - 30;
-//        _DOILabel.numberOfLines = 0;
-//    }
-//    return _DOILabel;
-//}
-
-
-//- (UILabel *)dateLabel
-//{
-//    if (_dateLabel == nil) {
-//        _dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-//        _dateLabel.left = 15;
-//        _dateLabel.height = 11;
-//        _dateLabel.width = 200;
-//        _dateLabel.backgroundColor = [UIColor clearColor];
-//        _dateLabel.font = [UIFont systemFontOfSize:14];
-//        _dateLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-//    }
-//    return _dateLabel;
-//}
-
 - (UILabel *)bodeyTitleLabel
 {
     if (_bodeyTitleLabel == nil) {
         UILabel *bodeyTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         bodeyTitleLabel.width = SCREEN_WIDTH - 30;
         bodeyTitleLabel.left = 15;
-        bodeyTitleLabel.top = 10;
         bodeyTitleLabel.numberOfLines = 0;
         bodeyTitleLabel.backgroundColor = [UIColor clearColor];
-        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:21];
+        bodeyTitleLabel.font = [UIFont boldSystemFontOfSize:20];
         bodeyTitleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         _bodeyTitleLabel = bodeyTitleLabel;
     }
@@ -644,6 +508,8 @@
 {
     if ( _literatureTopView == nil ) {
         _literatureTopView = [[LiteratureTopView alloc] initWithFrame:CGRectZero];
+        _literatureTopView.left = 0;
+        _literatureTopView.width = SCREEN_WIDTH;
     }
     return _literatureTopView;
 }
@@ -684,27 +550,6 @@
     return _billboardLucencyBtn;
 }
 
-- (NSMutableDictionary *)billboardDict
-{
-    if ( _billboardDict == nil ) {
-        _billboardDict = [NSMutableDictionary dictionary];
-    }
-    return _billboardDict;
-}
-
-
-//- (UIButton *)textShareButton
-//{
-//    if ( _textShareButton == nil ) {
-//        _textShareButton = [[UIButton alloc] initWithFrame:CGRectZero];
-//        _textShareButton.left = 15;
-//        _textShareButton.top = 3;
-//        _textShareButton.width = SCREEN_WIDTH - 30;
-//        [_textShareButton setImage:[UIImage imageNamed:@"ic_textShare.png"] forState:UIControlStateNormal];
-//        [_textShareButton addTarget:self action:@selector(shareButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-//    }
-//    return _textShareButton;
-//}
 - (RYCopyAddressView *)ryCopyView
 {
     if ( _ryCopyView == nil ) {
@@ -939,6 +784,9 @@
     
     self.ryCopyView.top = self.webViewHeight + self.topTextDemarcation.bottom;
     
+    CGSize scrollViewContentSize = self.scrollView.contentSize;
+    scrollViewContentSize.height = self.webViewHeight + self.self.topTextDemarcation.bottom + self.ryCopyView.height;
+    self.scrollView.contentSize = scrollViewContentSize ;
     self.webView.height = self.webViewHeight + self.topTextDemarcation.bottom + self.ryCopyView.height;
 }
 
@@ -1062,7 +910,7 @@
     UILabel *titleLabel = (UILabel *)[navBarView viewWithTag:BROWSER_TITLE_LBL_TAG];
     if (titleLabel)
     {
-        titleLabel.text = [NSString stringWithFormat:@"%lu of %lu", index+1, (unsigned long)photoBrowser.photoCount];
+        titleLabel.text = [NSString stringWithFormat:@"%u of %lu", index+1, (unsigned long)photoBrowser.photoCount];
     }
 }
 
@@ -1132,8 +980,19 @@
             [alertView show];
         }
         else{
-            [self.view addSubview:self.tokenView];
-            [self.tokenView showTokenView];
+//            [self.view addSubview:self.tokenView];
+//            [self.tokenView showTokenView];
+            __weak typeof(self) wSelf = self;
+            [NetRequestAPI additionCollectWithSessionId:[RYUserInfo sharedManager].session
+                                                   thid:self.tid
+                                                   tags:nil
+                                                success:^(id responseDic) {
+//                                                    NSLog(@"添加收藏 responseDic : %@",responseDic);
+                                                    [wSelf collectWithDict:responseDic];
+                                                } failure:^(id errorString) {
+                                                    //        NSLog(@"添加收藏 errorString :%@",errorString);
+                                                    [ShowBox showError:@"收藏失败，请稍候重试"];
+                                                }];
         }
     }
     else{
@@ -1147,6 +1006,20 @@
     }
 }
 
+- (void)collectWithDict:(NSDictionary *)responseDic
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    
+    if ( !success ) {
+        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"收藏失败，请稍候重试"]];
+        return;
+    }
+    self.iscollect = YES;
+    [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_highlighted.png"] forState:UIControlStateNormal];
+}
+
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ( alertView.tag == 9090 ) {
@@ -1156,11 +1029,11 @@
             [NetRequestAPI cancelCollectWithSessionId:[RYUserInfo sharedManager].session
                                                  thid:self.tid
                                               success:^(id responseDic) {
-                                                  NSLog(@"取消收藏responseDic : %@",responseDic);
+//                                                  NSLog(@"取消收藏responseDic : %@",responseDic);
                                                   [wSelf cancelCollectWithDict:responseDic];
                                                   
                                               } failure:^(id errorString) {
-                                                  NSLog(@"取消收藏 errorString : %@",errorString);
+//                                                  NSLog(@"取消收藏 errorString : %@",errorString);
                                                   [ShowBox showError:@"取消收藏失败，请稍候重试"];
                                               }];
         }
@@ -1168,17 +1041,7 @@
 
 - (void)cancelCollectWithDict:(NSDictionary *)responseDic
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"取消收藏失败，请稍候重试"];
-        return;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( meta == nil ) {
-        [ShowBox showError:@"取消收藏失败，请稍候重试"];
-        return;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     
     if ( !success ) {
