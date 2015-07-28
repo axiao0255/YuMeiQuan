@@ -379,6 +379,7 @@
 		96D2382F1AF7681A00936721 /* ic_jifen_jewel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D2382E1AF7681A00936721 /* ic_jifen_jewel@2x.png */; };
 		96D238311AF76AC000936721 /* ic_showJifen_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D238301AF76AC000936721 /* ic_showJifen_bg@2x.png */; };
 		96D238331AF77AD600936721 /* ic_bulge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D238321AF77AD600936721 /* ic_bulge@2x.png */; };
+		96D2ECDD1B6781D9003AA08B /* RYWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2ECDC1B6781D9003AA08B /* RYWebViewController.m */; };
 		96D38BF91B60DCA100EC4913 /* CafToMp3.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D38BF61B60DCA100EC4913 /* CafToMp3.m */; };
 		96D38BFA1B60DCA100EC4913 /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96D38BF81B60DCA100EC4913 /* libmp3lame.a */; };
 		96D3BF5C1B5F764500D71A61 /* ic_Billboard_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D3BF5B1B5F764500D71A61 /* ic_Billboard_share@2x.png */; };
@@ -1050,6 +1051,8 @@
 		96D2382E1AF7681A00936721 /* ic_jifen_jewel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_jifen_jewel@2x.png"; sourceTree = "<group>"; };
 		96D238301AF76AC000936721 /* ic_showJifen_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_showJifen_bg@2x.png"; sourceTree = "<group>"; };
 		96D238321AF77AD600936721 /* ic_bulge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_bulge@2x.png"; sourceTree = "<group>"; };
+		96D2ECDB1B6781D9003AA08B /* RYWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYWebViewController.h; sourceTree = "<group>"; };
+		96D2ECDC1B6781D9003AA08B /* RYWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYWebViewController.m; sourceTree = "<group>"; };
 		96D38BF51B60DCA100EC4913 /* CafToMp3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CafToMp3.h; sourceTree = "<group>"; };
 		96D38BF61B60DCA100EC4913 /* CafToMp3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CafToMp3.m; sourceTree = "<group>"; };
 		96D38BF71B60DCA100EC4913 /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
@@ -2306,6 +2309,8 @@
 				96AB36D41B09E22F002EB3E2 /* RYAuthorArticleViewController.m */,
 				96CD08271B5B7A24009D8FFF /* RYQRcodeViewViewController.h */,
 				96CD08281B5B7A24009D8FFF /* RYQRcodeViewViewController.m */,
+				96D2ECDB1B6781D9003AA08B /* RYWebViewController.h */,
+				96D2ECDC1B6781D9003AA08B /* RYWebViewController.m */,
 			);
 			path = Controller;
 			sourceTree = SOURCE_ROOT;
@@ -2623,6 +2628,7 @@
 				96CE2A451B43F0AD004FA4BF /* FSVoiceBubble.m in Sources */,
 				96CFB3B21AF9B9180078C225 /* RYMyInviteViewController.m in Sources */,
 				96C5AEFA1AF0C18000F9195A /* RYMyHomeLeftTableViewCell.m in Sources */,
+				96D2ECDD1B6781D9003AA08B /* RYWebViewController.m in Sources */,
 				96C7ACBC1AD611FA00FA2E22 /* UIImageView+AFNetworking.m in Sources */,
 				96CA432B1B564C2D005A7881 /* RYExchangeHistoryViewController.m in Sources */,
 				96C3A9B51ADFB84D008011D3 /* albumlistTableViewCell.m in Sources */,

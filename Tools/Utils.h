@@ -80,6 +80,9 @@
 #pragma mark - 判读是否照相机授权
 +(BOOL)isCaptureAuthorizationed;
 
+#pragma mark 获取音乐文件路径
++ (NSString *)getDocumnetsVoicePath;
+
 
 
 

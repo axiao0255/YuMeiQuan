@@ -88,11 +88,7 @@
     else{
         self.bubble.hidden = NO;
         self.bubble.height = 40;
-        if ( ![self.voicePath isEqualToString:voice] ) {
-            self.voicePath = voice;
-            self.bubble.contentURL = [NSURL URLWithString:self.voicePath];
-        }
-       
+        self.bubble.contentURL = [NSURL URLWithString:voice];
         self.commentLabel.top = self.bubble.bottom + 5;
     }
     // 判断是否有文字

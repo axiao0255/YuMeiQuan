@@ -9,7 +9,6 @@
 #import "FSVoiceBubble.h"
 #import "UIImage+FSExtension.h"
 #import <AVFoundation/AVFoundation.h>
-//#import <MediaPlayer/MediaPlayer.h>
 
 
 #define kFSVoiceBubbleShouldStopNotification @"FSVoiceBubbleShouldStopNotification"
@@ -17,8 +16,8 @@
 
 @interface FSVoiceBubble () <AVAudioPlayerDelegate>
 
-//@property (strong, nonatomic) AVAudioPlayer *player;
-@property (strong, nonatomic) AVPlayer      *myPlayer;
+@property (strong, nonatomic) AVAudioPlayer *player;
+@property (nonatomic ,strong) AVPlayerItem  *playerItem;
 @property (strong, nonatomic) AVURLAsset    *asset;
 @property (strong, nonatomic) NSArray       *animationImages;
 @property (weak  , nonatomic) UIButton      *contentButton;
@@ -177,36 +176,97 @@
         if (self.isPlaying) {
             [self stop];
         }
-        _contentButton.enabled = NO;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            _asset = [[AVURLAsset alloc] initWithURL:contentURL options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
-            CMTime duration = _asset.duration;
-            NSInteger seconds = CMTimeGetSeconds(duration);
-            if (seconds > 60) {
-                NSLog(@"A voice audio should't last longer than 60 seconds");
-                _contentURL = nil;
-                _asset = nil;
-                return;
-            }
-            NSData *data = [NSData dataWithContentsOfURL:_contentURL];
-            NSError *error=nil;
-//            _player = [[AVAudioPlayer alloc] initWithData:data error:&error];
-//            _player.delegate = self;
-//            [_player prepareToPlay];
-            dispatch_async(dispatch_get_main_queue(), ^{
+        
+        // 取本地录音 文件
+        NSString *documentViocePath = [Utils getDocumnetsVoicePath];
+        NSFileManager *manage=[NSFileManager defaultManager];
+        NSArray  *voiceArray = [manage subpathsAtPath:documentViocePath];
+        // 取网络 音频文件 后缀名
+        NSString *voicePath = [self getLastStrWithVoicePath:[_contentURL absoluteString]];
+        // 判断 网络音频在本地是否存在
+        if ( [voiceArray indexOfObject:voicePath] != NSNotFound ) {
+            //如果存在则播放本地音频文件
+            _contentButton.enabled = YES;
+            _contentURL = [NSURL URLWithString:[documentViocePath stringByAppendingPathComponent:voicePath]];
+            AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+            [audioSession setCategory:AVAudioSessionCategorySoloAmbient error:nil];
+            NSError *error;
+            _player = [[AVAudioPlayer alloc] initWithContentsOfURL:_contentURL error:&error];
+             _player.delegate = self;
+            [_player prepareToPlay];
+            
+            float seconds = _player.duration;
+            NSString *tiemStr = [NSString stringWithFormat:@"%0.0f\"",seconds];
+            [_contentButton setTitle:tiemStr forState:UIControlStateNormal];
+             [self setNeedsLayout];
+        }else{
+            _contentButton.enabled = NO;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^{
+                
+                _asset = [[AVURLAsset alloc] initWithURL:contentURL options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
+                CMTime duration = _asset.duration;
+                NSInteger seconds = CMTimeGetSeconds(duration);
                 NSString *title = [NSString stringWithFormat:@"%@\"",@(seconds)];
                 [_contentButton setTitle:title forState:UIControlStateNormal];
-                _contentButton.enabled = YES;
-                [self setNeedsLayout];
+                
+                NSString *savePath = [documentViocePath stringByAppendingPathComponent:voicePath];
+                NSData *data = [NSData dataWithContentsOfURL:_contentURL];
+                [data writeToFile:savePath atomically:YES];
+                NSError *error=nil;
+                _player = [[AVAudioPlayer alloc] initWithData:data error:&error];
+                _player.delegate = self;
+                [_player prepareToPlay];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    _contentButton.enabled = YES;
+                    [self setNeedsLayout];
+                });
+
             });
-        });
+        }
+
+        
+//        _contentButton.enabled = NO;
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            _asset = [[AVURLAsset alloc] initWithURL:contentURL options:@{AVURLAssetPreferPreciseDurationAndTimingKey: @YES}];
+//            CMTime duration = _asset.duration;
+//            NSInteger seconds = CMTimeGetSeconds(duration);
+//            if (seconds > 60) {
+//                NSLog(@"A voice audio should't last longer than 60 seconds");
+//                _contentURL = nil;
+//                _asset = nil;
+//                return;
+//            }
+//            
+//            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:_playerPath]];
+//            NSError *error=nil;
+//            _player = [[AVAudioPlayer alloc] initWithData:data error:&error];
+////            _player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:_playerPath] error:&error];
+//
+//            _player.delegate = self;
+//            [_player prepareToPlay];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                NSString *title = [NSString stringWithFormat:@"%@\"",@(seconds)];
+//                [_contentButton setTitle:title forState:UIControlStateNormal];
+//                _contentButton.enabled = YES;
+//                [self setNeedsLayout];
+//            });
+//        });
     }
 }
 
-//- (BOOL)isPlaying
-//{
-//    return _player.isPlaying;
-//}
+- (NSString *)getLastStrWithVoicePath:(NSString *)str
+{
+    if ( str == nil ) {
+        return nil;
+    }
+    NSArray *arr = [str componentsSeparatedByString:NSLocalizedString(@"/", nil)];
+    return [arr lastObject];
+}
+
+- (BOOL)isPlaying
+{
+    return _player.isPlaying;
+}
 
 #pragma mark - AVAudioPlayer Delegate
 
@@ -229,26 +289,26 @@
 
 - (void)bubbleShouldStop:(NSNotification *)notification
 {
-//    if (_player.isPlaying) {
-//        [self stop];
-//    }
+    if (_player.isPlaying) {
+        [self stop];
+    }
 }
 
 #pragma mark - Target Action
 
 - (void)voiceClicked:(id)sender
 {
-//    if (_player.playing && _contentButton.imageView.isAnimating) {
-//        [self stop];
-//    } else {
-//        if (_exclusive) {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFSVoiceBubbleShouldStopNotification object:nil];
-//        }
-//        [self play];
-//        if (_delegate && [_delegate respondsToSelector:@selector(voiceBubbleDidStartPlaying:)]) {
-//            [_delegate voiceBubbleDidStartPlaying:self];
-//        }
-//    }
+    if (_player.playing && _contentButton.imageView.isAnimating) {
+        [self stop];
+    } else {
+        if (_exclusive) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFSVoiceBubbleShouldStopNotification object:nil];
+        }
+        [self play];
+        if (_delegate && [_delegate respondsToSelector:@selector(voiceBubbleDidStartPlaying:)]) {
+            [_delegate voiceBubbleDidStartPlaying:self];
+        }
+    }
 }
 
 #pragma mark - Public
@@ -277,27 +337,27 @@
         NSLog(@"ContentURL of voice bubble was not set");
         return;
     }
-//    if (!_player.playing) {
-//        [_player play];
-//        [self startAnimating];
-//    }
+    if (!_player.playing) {
+        [_player play];
+        [self startAnimating];
+    }
 }
 
 - (void)pause
 {
-//    if (_player.playing) {
-//        [_player pause];
-//        [self stopAnimating];
-//    }
+    if (_player.playing) {
+        [_player pause];
+        [self stopAnimating];
+    }
 }
 
 - (void)stop
 {
-//    if (_player.playing) {
-//        [_player stop];
-//        _player.currentTime = 0;
-//        [self stopAnimating];
-//    }
+    if (_player.playing) {
+        [_player stop];
+        _player.currentTime = 0;
+        [self stopAnimating];
+    }
 }
 
 @end

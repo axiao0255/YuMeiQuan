@@ -706,6 +706,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         self.lookOriginalView.frame = CGRectMake(0, 220, SCREEN_WIDTH, 0);
     } completion:^(BOOL finished) {
+        [self.lookOriginalView removeFromSuperview];
         
     }];
 }

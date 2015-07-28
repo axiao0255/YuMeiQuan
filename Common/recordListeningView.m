@@ -66,16 +66,18 @@
     return _playView;
 }
 
-- (void)showListeningViewWithSoundURL:(NSURL *)soundURL
+- (void)showListeningViewWithRecordData:(RYCommentData *)recordData
 {
-    if ( soundURL == nil ) {
+    if ( recordData == nil ) {
         return;
     }
     __weak AppDelegate *_appDelegate;
     _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [_appDelegate.window addSubview:self];
     [self.playBtn setSelected:NO];
-    self.soundURL = soundURL;
+    
+    self.recordData = recordData;
+    self.soundURL = self.recordData.voiceURL;
     [self setAudioPlayer];
     
     [UIView animateWithDuration:0.3 animations:^{
@@ -175,12 +177,68 @@
 {
     [self dismissListeningView];
     [self stopPlaying];
+    NSFileManager* fileManager=[NSFileManager defaultManager];
+    BOOL blDele= [fileManager removeItemAtURL:self.recordData.voiceURL error:nil];
+    if (blDele) {
+        NSLog(@"dele success");
+    }else {
+        NSLog(@"dele fail");
+    }
 }
 
 - (void)sendBtnClick
 {
     NSLog(@"发送");
+    if ([ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"正在发送..." maskType:SVProgressHUDMaskTypeBlack];
+        [NetRequestAPI submitCommentWithSessionId:[RYUserInfo sharedManager].session
+                                              tid:self.recordData.tid
+                                              pid:self.recordData.pid
+                                             word:self.recordData.word
+                                            voice:self.recordData.voiceURL
+                                          success:^(id responseDic) {
+                                              [SVProgressHUD dismiss];
+                                              NSLog(@"上传录音 responseDic： %@",responseDic);
+                                              NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                              BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                              if ( !success ) {
+                                                  [wSelf submitCommentFailureShowAlert];
+                                                  return ;
+                                              }
+                                              if ( [wSelf.delegate respondsToSelector:@selector(recordSendSuccess)] ) {
+                                                  [wSelf.delegate recordSendSuccess];
+                                              }
+                                              [wSelf dismissListeningView];
+                                              
+                                          } failure:^(id errorString) {
+                                              NSLog(@"上传录音 errorString： %@",errorString);
+                                              [SVProgressHUD dismiss];
+                                              [wSelf submitCommentFailureShowAlert];
+                                          }];
+    }
 }
+/**
+ *上传评论 失败  弹出提示框
+ */
+- (void)submitCommentFailureShowAlert
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"发送失败，是否重新发送！" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alertView.tag = 1000;
+    [alertView show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ( alertView.tag == 1000 ) {
+        // 发送失败 从新发送
+        if ( buttonIndex == 1 ) {
+            [self sendBtnClick];
+        }
+        return;
+    }
+}
+
 
 -(void)playBtnClick:(id)sender
 {

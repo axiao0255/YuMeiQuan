@@ -525,10 +525,11 @@
         [textField seperatorWidth:15];
         textField.backgroundColor = [UIColor whiteColor];
         textField.delegate = self;
-        textField.tag = 110 + indexPath.row;
+//        textField.tag = 110 + indexPath.row;
+         textField.tag = 1010;
         [cell.contentView addSubview:textField];
     }
-    UITextField *textField = (UITextField *)[cell.contentView viewWithTag:110 + indexPath.row];
+    UITextField *textField = (UITextField *)[cell.contentView viewWithTag:1010 ];
     [textField setSecureTextEntry:NO];
     [textField setEnabled:YES];
     switch ( indexPath.row ) {
@@ -561,7 +562,6 @@
             userNameText.text = registerData.userName;
             userNameText.placeholder = @"姓名";
         }
-            break;
             break;
         case 8:
         {
@@ -794,6 +794,10 @@
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     NSLog(@"textField.text : %@",textField.text);
+    if ( [ShowBox isEmptyString:string] ) {
+        return YES;
+    }
+    
     NSUInteger textLength = [Utils getTextFieldActualLengthWithTextField:textField shouldChangeCharactersInRange:range replacementString:string];
     if ( textField == userPhoneText ) {
         if ( textLength > 11 ) {

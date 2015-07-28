@@ -17,6 +17,11 @@
 #import "RYMyInformRewardListViewController.h"
 #import "RYCorporateHomePageViewController.h"
 
+#import "RYWebViewController.h"
+#import "RYLiteratureDetailsViewController.h"
+#import "RYArticleViewController.h"
+#import "RYCorporateHomePageViewController.h"
+
 @interface RYHomepage ()<UISearchBarDelegate,UINavigationControllerDelegate>
 
 @end
@@ -246,6 +251,31 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ( indexPath.section == 0 ) {
+        if ( indexPath.row == 1 ){
+            // 广告点击
+            NSString *type = [self.advmessage getStringValueForKey:@"type" defaultValue:@""];
+            NSString *content = [self.advmessage getStringValueForKey:@"content" defaultValue:@""];
+            if ( [type isEqualToString:@"url"] ) {
+                // 网页打开
+                RYWebViewController *vc = [[RYWebViewController alloc] initWithUrl:content];
+                [self.viewControll.navigationController pushViewController:vc animated:YES];
+            }
+            else if ( [type isEqualToString:@"137"] ){
+                // 进入文献
+                RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:content];
+                [self.viewControll.navigationController pushViewController:vc animated:YES];
+            }
+            else if ( [type isEqualToString:@"136"] ){
+                // 进入文章
+                RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:content];
+                [self.viewControll.navigationController pushViewController:vc animated:YES];
+            }
+            else if ( [type isEqualToString:@"company"] ){
+                // 进入企业微主页
+                RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] initWithCorporateID:content];
+                [self.viewControll.navigationController pushViewController:vc animated:YES];
+            }
+        }
         if ( ![ShowBox isLogin] && indexPath.row == 2 ) {
             [self gotoLogin:nil];
         }

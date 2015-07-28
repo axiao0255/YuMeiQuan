@@ -334,6 +334,17 @@
     return YES;
 }
 
+#pragma mark 获取音乐文件路径
++ (NSString *)getDocumnetsVoicePath
+{
+    NSArray *dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsDir = [dirPaths objectAtIndex:0];
+    docsDir = [docsDir stringByAppendingPathComponent:@"voice"];
+    if ( ![[NSFileManager defaultManager] fileExistsAtPath:docsDir] ) {
+         [[NSFileManager defaultManager] createDirectoryAtPath:docsDir withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    return docsDir;
+}
 
 
 @end

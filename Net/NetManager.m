@@ -36,6 +36,7 @@ static NetManager *_manager;
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer.HTTPShouldHandleCookies = YES;
+    [manager.requestSerializer setValue:@"V5" forHTTPHeaderField:@"Accept"];
     
     __weak typeof(self) wSelf = self;
     @synchronized(wSelf){
@@ -85,6 +86,7 @@ static NetManager *_manager;
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer.HTTPShouldHandleCookies = YES;
+    [manager.requestSerializer setValue:@"V5" forHTTPHeaderField:@"Accept"];
     // 设置请求格式
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     // 设置返回格式

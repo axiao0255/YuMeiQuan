@@ -35,6 +35,7 @@
 #import "RYCorporateHomePageViewController.h"
 #import "RYLiteratureCategoryViewController.h"
 #import "RYQRcodeViewViewController.h"
+#import "RYWebViewController.h"
 
 @interface RYNewsViewController ()<MJScrollBarViewDelegate,MJScrollPageViewDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,RFSegmentViewDelegate,RYLiteratureCategoryViewControllerDelegate>
 {
@@ -386,7 +387,7 @@
         NSInteger tempIndex = aIndex;
         [NetRequestAPI getHomePageWithSessionId:[RYUserInfo sharedManager].session
                                         success:^(id responseDic) {
-//                                            NSLog(@"首页 responseDic： %@",responseDic);
+                                            NSLog(@"首页 responseDic： %@",responseDic);
                                             [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                             [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                             
@@ -538,7 +539,7 @@
                     wSelf.notStretch = YES;
                     [scrollPageView removeAlldataSources];
                 }
-                else{// 失败则 打开登录界面 手动登录
+                else{// 登录失败 打开登录界面 手动登录
                     [wSelf openLoginVC];
                 }
             } failure:^(id errorString) {
@@ -855,9 +856,36 @@
         [self baiJiaTableView:tableView didSelectRowAtIndexPath:indexPath];
     }
     else if ( aIndex == 4 ){
-        NSDictionary *dict = [self.literaturePage.listData objectAtIndex:indexPath.row];
-        RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
-        [self.navigationController pushViewController:vc animated:YES];
+        if ( indexPath.section == 0 ) {
+            // 广告点击
+            NSString *type = [self.literaturePage.adverData getStringValueForKey:@"type" defaultValue:@""];
+            NSString *content = [self.literaturePage.adverData getStringValueForKey:@"content" defaultValue:@""];
+            if ( [type isEqualToString:@"url"] ) {
+                // 网页打开
+                RYWebViewController *vc = [[RYWebViewController alloc] initWithUrl:content];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            else if ( [type isEqualToString:@"137"] ){
+                // 进入文献
+                RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:content];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            else if ( [type isEqualToString:@"136"] ){
+                // 进入文章
+                RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:content];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            else if ( [type isEqualToString:@"company"] ){
+                // 进入企业微主页
+                RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] initWithCorporateID:content];
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+        }
+        else{
+            NSDictionary *dict = [self.literaturePage.listData objectAtIndex:indexPath.row];
+            RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:[dict getStringValueForKey:@"tid" defaultValue:@""]];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
 }
 

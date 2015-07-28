@@ -8,7 +8,12 @@
 
 #import "RYNewsPage.h"
 #import "RYNewsPageTableViewCell.h"
+
 #import "RYArticleViewController.h"
+#import "RYWebViewController.h"
+#import "RYLiteratureDetailsViewController.h"
+#import "RYCorporateHomePageViewController.h"
+
 
 @implementation RYNewsPage
 
@@ -107,6 +112,29 @@
 {
     if ( indexPath.section == 0 ) {
         NSLog(@"点击广告");
+        // 广告点击
+        NSString *type = [self.adverData getStringValueForKey:@"type" defaultValue:@""];
+        NSString *content = [self.adverData getStringValueForKey:@"content" defaultValue:@""];
+        if ( [type isEqualToString:@"url"] ) {
+            // 网页打开
+            RYWebViewController *vc = [[RYWebViewController alloc] initWithUrl:content];
+            [self.viewController.navigationController pushViewController:vc animated:YES];
+        }
+        else if ( [type isEqualToString:@"137"] ){
+            // 进入文献
+            RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:content];
+            [self.viewController.navigationController pushViewController:vc animated:YES];
+        }
+        else if ( [type isEqualToString:@"136"] ){
+            // 进入文章
+            RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:content];
+            [self.viewController.navigationController pushViewController:vc animated:YES];
+        }
+        else if ( [type isEqualToString:@"company"] ){
+            // 进入企业微主页
+            RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] initWithCorporateID:content];
+            [self.viewController.navigationController pushViewController:vc animated:YES];
+        }
     }
     else{
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
