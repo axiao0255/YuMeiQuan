@@ -82,16 +82,30 @@
                                             keywords:nil
                                              success:^(id responseDic) {
                                                  NSLog(@"标签 呵呵 ： %@",responseDic);
-                                                 [wSelf.tableView endRefreshing];
+                                                 [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
                                                  [wSelf analysisDataWithDict:responseDic isHeadRefresh:isHeaderReresh];
                                                  
                                              } failure:^(id errorString) {
                                                  NSLog(@"errorString : %@",errorString);
-                                                 [wSelf.tableView endRefreshing];
+                                                 [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
                                              }];
     }
+}
 
-    
+// 列表获取数据之后， 回到原来的位置  ，如果不是上下拉刷新，则不需要调用 endRefreshing方法，会引起显示错误
+- (void)tableViewRefreshEndWithIsHead:(BOOL)isHead
+{
+    //    if ( !self.notStretch ) {
+    if ( isHead ) {
+        [self.tableView headerFinishRefreshing];
+    }
+    else{
+        [self.tableView footerFinishRereshing];
+    }
+    //    }
+    //    else{
+    //        self.notStretch = NO;
+    //    }
 }
 
 -(void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRefresh:(BOOL)isHead

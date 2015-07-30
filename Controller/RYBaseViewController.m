@@ -11,6 +11,8 @@
 
 @interface RYBaseViewController ()
 
+@property (nonatomic,strong)UIImageView *errorMessageView;
+
 @end
 
 @implementation RYBaseViewController
@@ -74,6 +76,43 @@
     //  return UIInterfaceOrientationMaskAll &
     //         (~UIInterfaceOrientationMaskPortraitUpsideDown);
     return UIInterfaceOrientationMaskPortrait;//UIInterfaceOrientationMaskLandscape;
+}
+
+- (UIImageView *)errorMessageView
+{
+    if ( _errorMessageView == nil ) {
+        _errorMessageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _errorMessageView.width = 105;
+        _errorMessageView.height = 64;
+        _errorMessageView.image = [UIImage imageNamed:@"ic_loadError.png"];
+    }
+    return _errorMessageView;
+}
+
+-(void)showErrorView:(UIView*)parent
+{
+    if (parent) {
+        NSLog(@"parent :: %@",parent);
+        [parent addSubview:self.errorMessageView];
+        self.errorMessageView.left = parent.width/2-105/2;
+        if ( IS_IPHONE_5 ) {
+            if ( parent.height > 510  ) {
+                self.errorMessageView.top = 188 + 64;
+            }
+            else{
+                self.errorMessageView.top = 188;
+            }
+        }
+        else{
+            self.errorMessageView.top = 150;
+        }
+    }
+}
+
+-(void)removeErroeView
+{
+    if(_errorMessageView)
+        [_errorMessageView removeFromSuperview];
 }
 
 

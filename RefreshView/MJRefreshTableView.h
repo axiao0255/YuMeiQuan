@@ -59,9 +59,9 @@
  */
 - (void)headerFinishRefreshing;
 
-/**
- * 刷新 结束
- */
-- (void)endRefreshing;
+///**
+// * 刷新 结束
+// */
+//- (void)endRefreshing;
 
 @end

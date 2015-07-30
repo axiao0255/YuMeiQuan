@@ -24,6 +24,7 @@
 @property (nonatomic,strong) NSString                 *corporateID;      // 直达号id
 @property (nonatomic,strong) NSString                 *corporateFid;     // 类别 id
 @property (nonatomic,strong) UIButton                 *bottomView;
+@property (nonatomic,assign) BOOL                     notStretch;
 
 @end
 
@@ -72,50 +73,84 @@
 {
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeBlack];
         [NetRequestAPI getCompanyHomePageWithSessionId:[RYUserInfo sharedManager].session
                                                   cuid:self.corporateID
                                                    fid:self.corporateFid
                                                   page:currentPage
                                                success:^(id responseDic) {
                                                    NSLog(@"企业主页 ： responseDic ：%@",responseDic);
-                                                   [wSelf.tableView endRefreshing];
+                                                   [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
                                                    [wSelf analysisDataWithDict:responseDic isHeadRersh:isHeaderReresh];
                                                    
                                                } failure:^(id errorString) {
                                                    NSLog(@"企业主页 ： errorString ：%@",errorString);
-                                                   [wSelf.tableView endRefreshing];
+                                                   [SVProgressHUD dismiss];
+                                                   [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
                                                    if ( wSelf.dataModel.corporateArticles.count == 0 ) {
-                                                       [ShowBox showError:@"数据出错"];
+                                                       [wSelf showErrorView:wSelf.tableView];
                                                    }
-
                                                }];
+    }else{
+ 
+        [self tableViewRefreshEndWithIsHead:isHeaderReresh];
+        if ( self.dataModel.corporateArticles.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
+    }
+}
+
+// 列表获取数据之后， 回到原来的位置  ，如果不是上下拉刷新，则不需要调用 endRefreshing方法，会引起显示错误
+- (void)tableViewRefreshEndWithIsHead:(BOOL)isHead
+{
+    if ( !self.notStretch ) {
+        if ( isHead ) {
+            [self.tableView headerFinishRefreshing];
+        }
+        else{
+            [self.tableView footerFinishRereshing];
+        }
+    }
+    else{
+        self.notStretch = NO;
     }
 }
 
 - (void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRersh:(BOOL)isHead
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( meta == nil ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
-        return;
+        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    wSelf.notStretch = YES;
+                    [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
+                }
+                else{// 登录失败 打开登录界面 手动登录
+                    [SVProgressHUD dismiss];
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [SVProgressHUD dismiss];
+                [wSelf openLoginVC];
+            }];
+            return;
+        }
     }
+    [SVProgressHUD dismiss];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     if ( info == nil ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        if ( self.dataModel.corporateArticles.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
         return;
     }
     
+    [self removeErroeView];
     self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
     
     // 文章分类
@@ -427,6 +462,21 @@
 -(void)toTop
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+#pragma  mark 如果自动登录不上则 需要打开登录界面手动登录
+-(void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            NSLog(@"登录完成"); // 重新获取数据  由于本ViewController中有注册通知，登录成功后通知能重新刷新数据，所有在此不做任何操作
+            wSelf.notStretch = YES;
+           [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
 }
 
 

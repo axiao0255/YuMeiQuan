@@ -173,59 +173,60 @@
 {
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeBlack];
         [NetRequestAPI getArticleDetailWithSessionId:[RYUserInfo sharedManager].session
                                                  tid:self.tid
                                              success:^(id responseDic) {
                                                  NSLog(@"帖子 ：responseDic %@",responseDic);
                                                  [wSelf analysisDataWithDict:responseDic];
                                              } failure:^(id errorString) {
-                                                 [ShowBox showError:@"网络"];
                                                  NSLog(@"帖子 ：errorString %@",errorString);
+                                                 [SVProgressHUD dismiss];
                                              }];
+    }
+    else{
+        [self showErrorView:self.scrollView];
     }
 
 }
 
 - (void)analysisDataWithDict:(NSDictionary *)responseDic
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"获取数据失败，请稍候重试"];
-        return ;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( !meta ) {
-        [ShowBox showError:@"获取数据失败，请稍候重试"];
-        return ;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
         int  login = [meta getIntValueForKey:@"login" defaultValue:0];
         if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
             [RYUserInfo logout];
-            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-                if ( isLogin ) {
-                    NSLog(@"登录完成");
-                    // 登录完成 重新获取数据
-                    [self getBodyData];
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    [wSelf getBodyData];
                 }
+                else{// 登录失败 打开登录界面 手动登录
+                    [SVProgressHUD dismiss];
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [SVProgressHUD dismiss];
+                [wSelf openLoginVC];
             }];
-            [self.navigationController pushViewController:nextVC animated:YES];
             return;
         }
         else{
-            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+            [SVProgressHUD dismiss];
+            [self showErrorView:self.scrollView];
             return;
         }
     }
-    
+    [SVProgressHUD dismiss];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     if ( !info ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+        [self showErrorView:self.view];
         return;
     }
-    
+    [self removeErroeView];
     // 刷新 userinfo的数据
     NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
     if ( usermassage ) {
@@ -257,10 +258,7 @@
     // 取 文章内容
     NSDictionary *dataDict = [info getDicValueForKey:@"threadmessage" defaultValue:nil];
     [self setBodDatayWithDict:dataDict];
-
 }
-
-
 
 - (void)setBodDatayWithDict:(NSDictionary *)dic
 {
@@ -672,13 +670,7 @@
         
         __weak typeof(self) wSelf = self;
         if ( ![ShowBox isLogin] ) {
-            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-                if ( isLogin ) {
-                    NSLog(@"登录完成");    // 重新获取数据
-                    [wSelf getBodyData];  // 登录之后重新 刷新数据
-                }
-            }];
-            [self.navigationController pushViewController:nextVC animated:YES];
+            [wSelf openLoginVC];
             return;
         }
         
@@ -700,7 +692,13 @@
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"网络出错，请稍候重试"]];
+         NSInteger  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {
+            [self openLoginVC];
+        }
+        else{
+            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"网络出错，请稍候重试"]];
+        }
         return;
     }
     [UIView animateWithDuration:0.3 animations:^{
@@ -783,12 +781,12 @@
     self.lookOriginalLabel.text = self.articleData.check;
     [self.ryCopyView addSubview:self.lookOriginalView];
     
-    self.ryCopyView.top = self.webViewHeight + self.topTextDemarcation.bottom;
+    self.ryCopyView.top = self.webViewHeight + self.topTextDemarcation.bottom + 15;
     
     CGSize scrollViewContentSize = self.scrollView.contentSize;
-    scrollViewContentSize.height = self.webViewHeight + self.self.topTextDemarcation.bottom + self.ryCopyView.height;
+    scrollViewContentSize.height = self.webViewHeight + self.self.topTextDemarcation.bottom + self.ryCopyView.height + 15;
     self.scrollView.contentSize = scrollViewContentSize ;
-    self.webView.height = self.webViewHeight + self.topTextDemarcation.bottom + self.ryCopyView.height;
+    self.webView.height = self.webViewHeight + self.topTextDemarcation.bottom + self.ryCopyView.height + 15;
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -936,6 +934,9 @@
 - (void)shareButtonClick:(id)sender
 {
     NSLog(@"分享");
+    if ( [ShowBox isEmptyString:self.articleData.subject] ) {
+        return;
+    }
     NSMutableDictionary *tempDict = [NSMutableDictionary dictionary];
     [tempDict setValue:self.articleData.shareArticleUrl forKey:SHARE_URL];
     [tempDict setValue:self.articleData.subject forKey:SHARE_TEXT];
@@ -953,14 +954,7 @@
 {
     NSLog(@"点击评论");
     if ( ![ShowBox isLogin] ) {
-        RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-            if ( isLogin ) {
-                NSLog(@"登录完成");
-                [self getBodyData]; // 登录之后重新 刷新数据
-            }
-        }];
-        [self.navigationController pushViewController:nextVC animated:YES];
-        return;
+        [self openLoginVC];
     }
      RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleTid:self.tid];
     [self.navigationController pushViewController:vc animated:YES];
@@ -997,13 +991,7 @@
         }
     }
     else{
-        RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-            if ( isLogin ) {
-                NSLog(@"登录完成");
-                [self getBodyData]; // 登录之后重新 刷新数据
-            }
-        }];
-        [self.navigationController pushViewController:nextVC animated:YES];
+        [self openLoginVC];
     }
 }
 
@@ -1013,7 +1001,12 @@
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"收藏失败，请稍候重试"]];
+        NSInteger  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {
+            [self openLoginVC];
+        }else{
+            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"收藏失败，请稍候重试"]];
+        }
         return;
     }
     self.iscollect = YES;
@@ -1046,7 +1039,12 @@
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"取消收藏失败，请稍候重试"]];
+        NSInteger  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {
+            [self openLoginVC];
+        }else{
+            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"取消收藏失败，请稍候重试"]];
+        }
         return;
     }
     self.iscollect = NO;
@@ -1104,6 +1102,18 @@
     }];
 }
 
-
+#pragma mark 打开登录界面重现登录
+- (void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            NSLog(@"登录完成");
+            // 登录完成 重新获取数据
+            [wSelf getBodyData];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
 
 @end

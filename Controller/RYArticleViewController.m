@@ -165,58 +165,59 @@
 {
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeBlack];
         [NetRequestAPI getArticleDetailWithSessionId:[RYUserInfo sharedManager].session
                                                  tid:self.tid
                                              success:^(id responseDic) {
                                                  NSLog(@"帖子 ：responseDic %@",responseDic);
                                                  [wSelf analysisDataWithDict:responseDic];
                                              } failure:^(id errorString) {
-                                                 [ShowBox showError:@"网络"];
+                                                 [wSelf showErrorView:wSelf.scrollView];
                                                  NSLog(@"帖子 ：errorString %@",errorString);
+                                                 [SVProgressHUD dismiss];
                                              }];
+    }else{
+        [self showErrorView:self.scrollView];
     }
 }
 
 - (void)analysisDataWithDict:(NSDictionary *)responseDic
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"获取数据失败，请稍候重试"];
-        return ;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( !meta ) {
-        [ShowBox showError:@"获取数据失败，请稍候重试"];
-        return ;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        NSInteger  login = [meta getIntValueForKey:@"login" defaultValue:0];
         if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
             [RYUserInfo logout];
-            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-                if ( isLogin ) {
-                    NSLog(@"登录完成");
-                    // 登录完成 重新获取数据
-                    [self getBodyData];
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    [wSelf getBodyData];
                 }
+                else{// 登录失败 打开登录界面 手动登录
+                    [SVProgressHUD dismiss];
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [SVProgressHUD dismiss];
+                [wSelf openLoginVC];
             }];
-            [self.navigationController pushViewController:nextVC animated:YES];
             return;
         }
         else{
-            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+            [SVProgressHUD dismiss];
+            [self showErrorView:self.scrollView];
             return;
         }
     }
-    
+    [SVProgressHUD dismiss];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     if ( !info ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+        [self showErrorView:self.view];
         return;
     }
-    
+    [self removeErroeView];
     // 刷新 userinfo的数据
     NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
     if ( usermassage ) {
@@ -283,7 +284,7 @@
     else{
         [self.stowButton setImage:[UIImage imageNamed:@"ic_stow_normal.png"] forState:UIControlStateNormal];
     }
-    
+    self.topTextDemarcation.height = 35;
     if ( !self.isCanNnswer && !self.isAward) {  // 没有答题权限同时也没用转发
         self.topTextDemarcation.top = 0;
         self.billboardView.hidden = YES;
@@ -366,8 +367,6 @@
 
 -(void)handleSingleTap:(UITapGestureRecognizer *)sender
 {
-    NSLog(@"点击");
-    
     CGPoint pt = [sender locationInView:self.webView];
     NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", pt.x, pt.y];
     NSString *urlToSave = [self.webView stringByEvaluatingJavaScriptFromString:imgURL];
@@ -474,7 +473,6 @@
     if ( _sourceButton == nil ) {
         _sourceButton = [[UIButton alloc] initWithFrame:CGRectZero];
         _sourceButton.backgroundColor = [Utils getRGBColor:0x31 g:0x55 b:0x6b a:1.0];
-        _sourceButton.width = 130;
         _sourceButton.height = 35;
         _sourceButton.left = 0;
         _sourceButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
@@ -521,7 +519,6 @@
         _topTextDemarcation.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
         _topTextDemarcation.left = 0;
         _topTextDemarcation.width = SCREEN_WIDTH;
-        _topTextDemarcation.height = 35;
     }
     return _topTextDemarcation;
 }
@@ -682,9 +679,9 @@
    
     self.answerSheet.top = self.webViewHeight + self.bodeyTitleLabel.bottom + 15;
     CGSize scrollViewContentSize = self.scrollView.contentSize;
-    scrollViewContentSize.height = self.webViewHeight + self.bodeyTitleLabel.bottom + 15 + self.answerSheet.height;
+    scrollViewContentSize.height = self.webViewHeight + self.bodeyTitleLabel.bottom + 25 + self.answerSheet.height;
     self.scrollView.contentSize = scrollViewContentSize ;
-    self.webView.height = self.webViewHeight + self.answerSheet.height + self.bodeyTitleLabel.bottom + 15;
+    self.webView.height = self.webViewHeight + self.answerSheet.height + self.bodeyTitleLabel.bottom + 25;
  }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -729,7 +726,7 @@
             CGSize scrollViewContentSize = self.scrollView.contentSize;
 //            scrollViewContentSize.height = size.height + self.originalBtn.bottom;
 //             scrollViewContentSize.height = size.height + self.topTextDemarcation.bottom;
-            self.scrollView.contentSize = scrollViewContentSize ;
+            self.scrollView.contentSize = scrollViewContentSize;
             self.webView.height = size.height;
         }
     }
@@ -833,7 +830,9 @@
 - (void)shareButtonClick:(id)sender
 {
     NSLog(@"分享");
-    
+    if ( [ShowBox isEmptyString:self.articleData.subject] ) {
+        return;
+    }
     NSMutableDictionary *tempDict = [NSMutableDictionary dictionary];
     [tempDict setValue:self.articleData.shareArticleUrl forKey:SHARE_URL];
     [tempDict setValue:self.articleData.subject forKey:SHARE_TEXT];
@@ -875,14 +874,7 @@
         }
     }
     else{
-        RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-            if ( isLogin ) {
-                NSLog(@"登录完成");
-                [self getBodyData]; // 登录之后重新 刷新数据
-            }
-        }];
-        
-        [self.navigationController pushViewController:nextVC animated:YES];
+        [self openLoginVC];
     }
 
 }
@@ -984,5 +976,21 @@
         self.billboardLucencyBtn.height = 0;
     }];
 }
+
+
+#pragma mark 打开登录界面重现登录
+- (void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            NSLog(@"登录完成");
+            // 登录完成 重新获取数据
+            [wSelf getBodyData];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
+
 
 @end

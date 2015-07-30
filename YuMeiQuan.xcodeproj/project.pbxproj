@@ -353,6 +353,8 @@
 		96D120731B0C952600BF8062 /* RYAnswerSheetTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D120721B0C952600BF8062 /* RYAnswerSheetTableViewCell.m */; };
 		96D120761B0CA04200BF8062 /* ic_answer_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D120741B0CA04200BF8062 /* ic_answer_highlighted@2x.png */; };
 		96D120771B0CA04200BF8062 /* ic_answer_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D120751B0CA04200BF8062 /* ic_answer_normal@2x.png */; };
+		96D133061B69CDB5008E0DCA /* ic_loadError@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D133051B69CDB5008E0DCA /* ic_loadError@2x.png */; };
+		96D133091B6A24D2008E0DCA /* RYNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D133081B6A24D2008E0DCA /* RYNavigationViewController.m */; };
 		96D149461B1407B800C05809 /* HTCopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D149451B1407B800C05809 /* HTCopyableLabel.m */; };
 		96D1494A1B1453FB00C05809 /* RYMyLiteratureTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D149491B1453FB00C05809 /* RYMyLiteratureTableViewCell.m */; };
 		96D1494D1B1459D800C05809 /* ic_successful@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D1494B1B1459D800C05809 /* ic_successful@2x.png */; };
@@ -1010,6 +1012,9 @@
 		96D120721B0C952600BF8062 /* RYAnswerSheetTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYAnswerSheetTableViewCell.m; sourceTree = "<group>"; };
 		96D120741B0CA04200BF8062 /* ic_answer_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_answer_highlighted@2x.png"; sourceTree = "<group>"; };
 		96D120751B0CA04200BF8062 /* ic_answer_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_answer_normal@2x.png"; sourceTree = "<group>"; };
+		96D133051B69CDB5008E0DCA /* ic_loadError@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_loadError@2x.png"; sourceTree = "<group>"; };
+		96D133071B6A24D2008E0DCA /* RYNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYNavigationViewController.h; sourceTree = "<group>"; };
+		96D133081B6A24D2008E0DCA /* RYNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYNavigationViewController.m; sourceTree = "<group>"; };
 		96D149441B1407B800C05809 /* HTCopyableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTCopyableLabel.h; sourceTree = "<group>"; };
 		96D149451B1407B800C05809 /* HTCopyableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTCopyableLabel.m; sourceTree = "<group>"; };
 		96D149481B1453FB00C05809 /* RYMyLiteratureTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyLiteratureTableViewCell.h; sourceTree = "<group>"; };
@@ -1383,6 +1388,8 @@
 				96CBAA3C1B15ADF600D13C27 /* RYCorporateProductCategoryViewController.m */,
 				96C878831B2693FC00F81DBC /* RYCorporateSearchViewController.h */,
 				96C878841B2693FC00F81DBC /* RYCorporateSearchViewController.m */,
+				96D133071B6A24D2008E0DCA /* RYNavigationViewController.h */,
+				96D133081B6A24D2008E0DCA /* RYNavigationViewController.m */,
 			);
 			path = Corporate;
 			sourceTree = "<group>";
@@ -2088,6 +2095,7 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96D133051B69CDB5008E0DCA /* ic_loadError@2x.png */,
 				96D003C01B62110000EFAB00 /* ic_listenView_startPlay@2x.png */,
 				96D003C11B62110000EFAB00 /* ic_listenView_stopPlay@2x.png */,
 				96D003BC1B61EE5000EFAB00 /* ic_listenView_cancelBtn@2x.png */,
@@ -2502,6 +2510,7 @@
 				96D0A5641B183A9800BF6D90 /* ic_recusalImge_0@2x.png in Resources */,
 				96C3E0DC1B578AF800F0E273 /* ic_company_bj@2x.png in Resources */,
 				96CC396E1AD4DDF100D5D157 /* LaunchScreen.xib in Resources */,
+				96D133061B69CDB5008E0DCA /* ic_loadError@2x.png in Resources */,
 				96C44D711B44ECE4000C3EB9 /* ic_comment_reply@2x.png in Resources */,
 				96CD08CA1B5BA01F009D8FFF /* zbar-samples.png in Resources */,
 				96D0A5701B18738800BF6D90 /* ic_small_jifen@2x.png in Resources */,
@@ -2818,6 +2827,7 @@
 				96C606E81B4CCB750054044E /* RYCommentData.m in Sources */,
 				96CBAA3A1B15A85A00D13C27 /* RYPastWeeklyTableViewCell.m in Sources */,
 				96D0979B1B0DD22F00C24FB1 /* RYShareSheet.m in Sources */,
+				96D133091B6A24D2008E0DCA /* RYNavigationViewController.m in Sources */,
 				96CFB3DC1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorScale.m in Sources */,
 				96CC39B91AD4E3BB00D5D157 /* MJRefreshConst.m in Sources */,
 				96C5BFB51AFB4F3500BC5744 /* RYArticleViewController.m in Sources */,

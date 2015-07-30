@@ -21,6 +21,7 @@
 #import "RYLiteratureDetailsViewController.h"
 #import "RYArticleViewController.h"
 #import "RYCorporateHomePageViewController.h"
+#import "RYNavigationViewController.h"
 
 @interface RYHomepage ()<UISearchBarDelegate,UINavigationControllerDelegate>
 
@@ -418,7 +419,7 @@
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     NSString *placeholder = searchBar.placeholder;
     RYCorporateSearchViewController *vc = [[RYCorporateSearchViewController alloc] initWithSearchBarPlaceholder:placeholder];
-    UINavigationController* nc = [[UINavigationController alloc]initWithRootViewController:vc];
+    RYNavigationViewController* nc = [[RYNavigationViewController alloc]initWithRootViewController:vc];
     nc.delegate = self;
     [self.viewControll.navigationController presentViewController:nc animated:YES completion:^{
         [searchBar resignFirstResponder];

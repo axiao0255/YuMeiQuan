@@ -11,4 +11,9 @@
 
 @interface RYBaseViewController : UIViewController
 
+// 删除错误提示
+-(void)removeErroeView;
+-(void)showErrorView:(UIView*)parent;
+//-(void)showErrorView:(UIView*)parent Info:(NSString*)info Image:(UIImage*)image;
+
 @end

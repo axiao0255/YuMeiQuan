@@ -121,16 +121,16 @@
 }
 
 
-/**
- * 刷新 结束
- */
-- (void)endRefreshing
-{
-    [self footerEndRefreshing];
-    [self headerEndRefreshing];
-    self.isRereshing = NO;
-}
-
+///**
+// * 刷新 结束
+// */
+//- (void)endRefreshing
+//{
+//    [self footerEndRefreshing];
+//    [self headerEndRefreshing];
+//    self.isRereshing = NO;
+//}
+//
 
 /*
 // Only override drawRect: if you perform custom drawing.

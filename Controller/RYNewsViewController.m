@@ -210,7 +210,6 @@
                 if ( aIndex == 6 ) {
                     [tableView setSectionIndexColor:[Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0]];
                     tableView.tableHeaderView = [self baiJiaTableViewHeadView];
-
                 }
             }
         }
@@ -393,7 +392,10 @@
                                             
                                         } failure:^(id errorString) {
                                             //                                            NSLog(@"首页 ： %@",errorString);
-                                            [ShowBox showError:@"获取数据失败，请稍候重试"];
+                                            NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+                                            if ( [arr count] == 0  ) {
+                                                [wSelf showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+                                            }
                                             [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                         }];
     }
@@ -408,7 +410,10 @@
                                                   
                                               } failure:^(id errorString) {
 //                                                  NSLog(@"往期周报 errorString : %@",errorString);
-                                                  [ShowBox showError:@"获取数据失败，请稍候重试"];
+                                                  NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+                                                  if ( [arr count] == 0  ) {
+                                                       [wSelf showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+                                                  }
                                                   [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                               }];
     }
@@ -423,7 +428,10 @@
                                                     [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                     [wSelf setValueWithDict:responseDic andIndex:tempIndex isHead:isHead];
                                                 } failure:^(id errorString) {
-                                                    [ShowBox showError:@"获取数据失败，请稍候重试"];
+                                                    NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+                                                    if ( [arr count] == 0  ) {
+                                                        [wSelf showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+                                                    }
                                                     NSLog(@"新闻 ：errorString  %@",errorString);
                                                     // (最好在刷新表格后调用)调用endRefreshing可以结束刷新状态
                                                     [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
@@ -443,7 +451,10 @@
                                                     
                                                 } failure:^(id errorString) {
                                                     //            NSLog(@"会讯 ： %@",errorString);
-                                                    [ShowBox showError:@"获取数据失败，请稍候重试"];
+                                                    NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+                                                    if ( [arr count] == 0  ) {
+                                                        [wSelf showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+                                                    }
                                                     [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                 }];
         
@@ -471,7 +482,10 @@
                                                       
                                                   } failure:^(id errorString) {
                                                       //            NSLog(@"文献 ： %@",errorString);
-                                                      [ShowBox showError:@"获取数据失败，请稍候重试"];
+                                                      NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+                                                      if ( [arr count] == 0  ) {
+                                                          [wSelf showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+                                                      }
                                                      [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                   }];
     }
@@ -488,7 +502,10 @@
                                                
                                            } failure:^(id errorString) {
                                                //            NSLog(@"播客 ： %@",errorString);
-                                               [ShowBox showError:@"获取数据失败，请稍候重试"];
+                                               NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+                                               if ( [arr count] == 0  ) {
+                                                   [wSelf showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+                                               }
                                                [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                                
                                            }];
@@ -505,7 +522,10 @@
                                                   
                                               } failure:^(id errorString) {
                                                   NSLog(@"百家 errorString：%@",errorString);
-                                                  [ShowBox showError:@"获取数据失败，请稍候重试"];
+                                                  NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+                                                  if ( [arr count] == 0  ) {
+                                                      [wSelf showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+                                                  }
                                                   [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                               }];
     }
@@ -548,15 +568,25 @@
             return;
         }
         else{
-            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+//            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+            NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+            if ( [arr count] == 0  ) {
+                [self showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+            }
             return;
         }
     }
+    
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     if ( !info ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
+        NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+        if ( [arr count] == 0  ) {
+            [self showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+        }
         return;
     }
+    [self removeErroeView];
     // 刷新 userinfo的数据 
     NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
     if ( usermassage ) {
