@@ -97,6 +97,7 @@
 
 - (void)loginStateChange:(NSNotification *)notice
 {
+     self.notStretch = YES;
     [scrollPageView removeAlldataSources];
 }
 
@@ -529,7 +530,6 @@
                                                   [wSelf tableViewRefreshEndAtTableViewIndex:tempIndex isHeadRefresh:isHead];
                                               }];
     }
- 
 }
 
 

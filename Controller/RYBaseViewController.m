@@ -92,7 +92,7 @@
 -(void)showErrorView:(UIView*)parent
 {
     if (parent) {
-        NSLog(@"parent :: %@",parent);
+//        NSLog(@"parent :: %@",parent);
         [parent addSubview:self.errorMessageView];
         self.errorMessageView.left = parent.width/2-105/2;
         if ( IS_IPHONE_5 ) {

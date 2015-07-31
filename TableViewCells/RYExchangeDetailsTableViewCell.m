@@ -48,7 +48,7 @@
     }
     [self.imgView setImageWithURL:[NSURL URLWithString:[dict objectForKey:@"pic"]] placeholderImage:[UIImage imageNamed:@"ic_bigPic_defaule.png"]];
     
-    NSString *title = [dict getStringValueForKey:@"name" defaultValue:@""];
+    NSString *title = [dict getStringValueForKey:@"subject" defaultValue:@""];
     NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
     CGRect rect = [title boundingRectWithSize:CGSizeMake(self.titleLabel.width, 40)
                                         options:NSStringDrawingUsesLineFragmentOrigin
@@ -164,7 +164,7 @@
         [self.addBtn setEnabled:YES];
     }
     //每个礼品所需要的积分
-    NSInteger singleJifen = [self.dict getIntValueForKey:@"jifen" defaultValue:0];
+    NSInteger singleJifen = [self.dict getIntValueForKey:@"needcredit" defaultValue:0];
     NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen*self.number];
     [self adjustSiteWithString:jifenStr];
   
@@ -182,7 +182,7 @@
     }
     
     //每个礼品所需要的积分
-    NSInteger singleJifen = [self.dict getIntValueForKey:@"jifen" defaultValue:0];
+    NSInteger singleJifen = [self.dict getIntValueForKey:@"needcredit" defaultValue:0];
     NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen*self.number];
     [self adjustSiteWithString:jifenStr];
 }
@@ -194,31 +194,46 @@
     }
     self.dict = dict;
     
-    // 取出最大兑换上限
-    NSInteger maxNumber = [dict getIntValueForKey:@"maxNumber" defaultValue:1];
-    //我当前的总积分
-    NSInteger myJifen = [[RYUserInfo sharedManager].credits integerValue];
-    //每个礼品所需要的积分
-    NSInteger singleJifen = [dict getIntValueForKey:@"jifen" defaultValue:0];
-    if ( singleJifen == 0 ) {
-        self.canExchangeMaxNumber = maxNumber;
+    // 活动状态
+    NSInteger status = [dict getIntValueForKey:@"status" defaultValue:0];
+    if ( status == 0 ) {
+        self.canExchangeMaxNumber = 0;
     }
     else{
-        //我的总积分能换多少个礼品
-        NSInteger myMaxNum = myJifen / singleJifen;
-        if ( myMaxNum > maxNumber ) {
-            self.canExchangeMaxNumber = maxNumber;
+        // 剩余总数
+        NSInteger totalNum = [dict getIntValueForKey:@"totalrest" defaultValue:0];
+        if ( totalNum == 0 ) {
+            self.canExchangeMaxNumber = 0;
         }
         else{
-            self.canExchangeMaxNumber = myMaxNum;
+            // 能兑换的数量上限
+            NSInteger canExchangeNum = [dict getIntValueForKey:@"everyrest" defaultValue:0];
+            if ( canExchangeNum == 0 ) {
+                self.canExchangeMaxNumber = 0;
+            }
+            else{
+                //每个礼品所需要的积分
+                NSInteger singleJifen = [dict getIntValueForKey:@"needcredit" defaultValue:0];
+                if ( singleJifen == 0 ) {
+                    self.canExchangeMaxNumber = totalNum>canExchangeNum?canExchangeNum:totalNum;
+                }else{
+                    //我当前的总积分
+                    NSInteger myJifen = [[RYUserInfo sharedManager].credits integerValue];
+                    //我的总积分能换多少个礼品
+                    NSInteger myMaxNum = myJifen / singleJifen;
+                    myMaxNum = myMaxNum>totalNum?totalNum:myMaxNum;
+                    myMaxNum = myMaxNum>canExchangeNum?canExchangeNum:myMaxNum;
+                    self.canExchangeMaxNumber = myMaxNum;
+                }
+            }
         }
     }
-    
     if ( self.canExchangeMaxNumber <= 1 ) {
         [self.reduceBtn setEnabled:NO];
         [self.addBtn setEnabled:NO];
     }
-    
+    //每个礼品所需要的积分
+    NSInteger singleJifen = [dict getIntValueForKey:@"needcredit" defaultValue:0];
     NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen];
     [self adjustSiteWithString:jifenStr];
 }

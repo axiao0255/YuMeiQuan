@@ -296,6 +296,28 @@
                          success:(void(^)(id responseDic))success
                          failure:(void(^)(id errorString))failure;
 
+#pragma mark -兑换列表
++(void)getExchangeListWithSessionId:(NSString *)session
+                               page:(NSInteger )_page
+                            success:(void(^)(id responseDic))success
+                            failure:(void(^)(id errorString))failure;
+
+#pragma mark -提交兑换数据
++(void)submitExchangeDataWithSessionId:(NSString *)session
+                                   eid:(NSString *)_eid
+                                   num:(NSInteger)_num
+                                  name:(NSString *)_name
+                               address:(NSString *)_address
+                                mobile:(NSString *)_mobile
+                               success:(void(^)(id responseDic))success
+                               failure:(void(^)(id errorString))failure;
+
+#pragma mark -兑换历史列表
++(void)getExchangeHistoryListWithSessionId:(NSString *)session
+                                      page:(NSInteger )_page
+                                   success:(void(^)(id responseDic))success
+                                   failure:(void(^)(id errorString))failure;
+
 
 
 @end

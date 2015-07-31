@@ -61,22 +61,46 @@
     [self.leftImgView setImageWithURL:[NSURL URLWithString:pic] placeholderImage:[UIImage imageNamed:@"ic_pic_default.png"]];
     self.titleLabel.width = SCREEN_WIDTH - 130;
     self.titleLabel.height = 58;
-    self.titleLabel.text = [dict getStringValueForKey:@"name" defaultValue:@""];
+    self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];
     [self.titleLabel sizeToFit];
     
-    self.jifenLabel.text = [dict getStringValueForKey:@"jifen" defaultValue:@""];
-    NSInteger jifen = [dict getIntValueForKey:@"jifen" defaultValue:0];
+    self.jifenLabel.text = [dict getStringValueForKey:@"needcredit" defaultValue:@""];
+    // 每个产品需要的积分
+    NSInteger jifen = [dict getIntValueForKey:@"needcredit" defaultValue:0];
+    // 我的剩余积分
     NSInteger myJifen = [[RYUserInfo sharedManager].credits integerValue];
     
-    if ( myJifen >= jifen ) {
-        [self.exchangeBtn setEnabled:NO];
-        [self.exchangeBtn setBackgroundColor:[Utils getRGBColor:0x8c g:0xd2 b:0x32 a:1.0]];
-        [self.exchangeBtn setTitle:@"可以兑换" forState:UIControlStateNormal];
+    NSInteger status = [dict getIntValueForKey:@"status" defaultValue:0];
+    [self.exchangeBtn setEnabled:NO];
+    if ( status == 0  ) { // 活动已结束
+        [self.exchangeBtn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
+        [self.exchangeBtn setTitle:@"已结束" forState:UIControlStateNormal];
     }
     else{
-        [self.exchangeBtn setEnabled:NO];
-        [self.exchangeBtn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
-        [self.exchangeBtn setTitle:@"积分不足" forState:UIControlStateNormal];
+         // 总数为0  已经兑换完
+        NSInteger totalrest = [dict getIntValueForKey:@"totalrest" defaultValue:0];
+        if ( totalrest == 0 ) {
+            [self.exchangeBtn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
+            [self.exchangeBtn setTitle:@"已兑完" forState:UIControlStateNormal];
+        }
+        else{
+            // everyrest==0  兑换已达上限
+            NSInteger everyrest = [dict getIntValueForKey:@"everyrest" defaultValue:0];
+            if ( everyrest == 0 ) {
+                [self.exchangeBtn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
+                [self.exchangeBtn setTitle:@"已兑换" forState:UIControlStateNormal];
+            }
+            else{
+                if ( myJifen >= jifen ) {
+                    [self.exchangeBtn setBackgroundColor:[Utils getRGBColor:0x8c g:0xd2 b:0x32 a:1.0]];
+                    [self.exchangeBtn setTitle:@"可以兑换" forState:UIControlStateNormal];
+                }
+                else{
+                    [self.exchangeBtn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
+                    [self.exchangeBtn setTitle:@"积分不足" forState:UIControlStateNormal];
+                }
+            }
+        }
     }
 }
 

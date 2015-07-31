@@ -136,23 +136,25 @@
                               success:^(BOOL isSucceed) {
                                   if (isSucceed)
                                   {
-                                      if (wSelf.finishBlock != nil) {
+                                      if (wSelf.finishBlock != nil ) {
                                           wSelf.finishBlock(YES, nil);
                                       }
+                                      
                                      [[NSNotificationCenter defaultCenter] postNotificationName:@"loginStateChange" object:nil];
                                      [wSelf.navigationController popViewControllerAnimated:YES];
                                   }
                                   else
                                   {
                                       [ShowBox showError:@"登录出错！"];
-                                      if (wSelf.finishBlock != nil) {
-                                          wSelf.finishBlock(NO, nil);
+                                      if (wSelf.finishBlock != nil ) {
+                                          wSelf.finishBlock(YES, nil);
                                       }
+
                                   }
         } failure:^(id errorString) {
             [ShowBox showError:errorString];
-            if (wSelf.finishBlock != nil) {
-                wSelf.finishBlock(NO, nil);
+            if (wSelf.finishBlock != nil ) {
+                wSelf.finishBlock(YES, nil);
             }
         }];
     }

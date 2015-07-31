@@ -23,7 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"兑换纪录";
+    self.title = @"兑换记录";
     
     NSMutableArray *arr = [NSMutableArray array];
     for ( NSInteger i = 0 ; i < 10; i ++ ) {

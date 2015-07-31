@@ -19,6 +19,7 @@
 @property (strong , nonatomic) UILabel               *hintLabel;     // 每次消耗多少积分 提示
 
 @property (strong , nonatomic) NSMutableArray        *dataArray;
+@property (assign , nonatomic) BOOL                  notStretch;
 
 
 @end
@@ -71,7 +72,7 @@
                                                     NSLog(@"文献查询 errorString : %@",errorString);
                                                     [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
                                                     if ( wSelf.dataArray.count ) {
-                                                        [ShowBox showError:@"数据出错"];
+                                                        [wSelf showErrorView:wSelf.tableView];
                                                     }
                                                 }];
     }
@@ -80,46 +81,59 @@
 // 列表获取数据之后， 回到原来的位置  ，如果不是上下拉刷新，则不需要调用 endRefreshing方法，会引起显示错误
 - (void)tableViewRefreshEndWithIsHead:(BOOL)isHead
 {
-    //    if ( !self.notStretch ) {
-    if ( isHead ) {
-        [self.tableView headerFinishRefreshing];
+    if ( !self.notStretch ) {
+        if ( isHead ) {
+            [self.tableView headerFinishRefreshing];
+        }
+        else{
+            [self.tableView footerFinishRereshing];
+        }
     }
     else{
-        [self.tableView footerFinishRereshing];
+        self.notStretch = NO;
     }
-    //    }
-    //    else{
-    //        self.notStretch = NO;
-    //    }
 }
 
 
 - (void)analysisDataWithDict:(NSDictionary *)responseDic isHeadRefresh:(BOOL)isHead
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( meta == nil ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
-        return;
+        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    wSelf.notStretch = YES;
+                    wSelf.tableView.currentPage = 0;
+                    [self getDataWithIsHeaderReresh:YES andCurrentPage:0];
+                }
+                else{// 登录失败 打开登录界面 手动登录
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [wSelf openLoginVC];
+            }];
+            return;
+        }
+        else{
+            if ( self.dataArray.count ) {
+                [self showErrorView:self.tableView];
+            }
+            return;
+        }
     }
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     if ( info == nil ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        if ( self.dataArray.count ) {
+            [self showErrorView:self.tableView];
+        }
         return;
     }
-    
+    [self removeErroeView];
     self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
-    
     
     if ( isHead ) {
         [self.dataArray removeAllObjects];
@@ -308,6 +322,21 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     RYLiteratureQueryViewController *vc = [[RYLiteratureQueryViewController alloc] initWithLiteratureDict:[self.dataArray objectAtIndex:indexPath.row]];
     [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma  mark 如果自动登录不上则 需要打开登录界面手动登录
+-(void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            NSLog(@"登录完成");
+            wSelf.notStretch = YES;
+            wSelf.tableView.currentPage = 0;
+            [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
 }
 
 

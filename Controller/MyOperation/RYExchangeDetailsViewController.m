@@ -121,7 +121,7 @@
             cell.textLabel.font = [UIFont systemFontOfSize:13];
             cell.textLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         }
-        cell.textLabel.text = [self.exchangeDict getStringValueForKey:@"subject" defaultValue:@""];
+        cell.textLabel.text = [self.exchangeDict getStringValueForKey:@"message" defaultValue:@""];
         return cell;
     }
     else if ( indexPath.row == 2 || indexPath.row == 3 || indexPath.row == 4 ){
@@ -140,6 +140,7 @@
         else if ( indexPath.row == 3 ){
             self.addressTextField = cell.textField;
             self.addressTextField.placeholder = @"地址";
+            self.addressTextField.text = [RYUserInfo sharedManager].address;
         }
         else{
             self.phoneTextField = cell.textField;
@@ -171,19 +172,46 @@
             [cell.contentView addSubview:btn];
         }
         UIButton *btn = (UIButton *)[cell.contentView viewWithTag:120];
-        NSInteger jifen = [self.exchangeDict getIntValueForKey:@"jifen" defaultValue:0];
+        [btn setEnabled:NO];
+        // 每个产品所需要消耗的积分
+        NSInteger jifen = [self.exchangeDict getIntValueForKey:@"needcredit" defaultValue:0];
+        // 我剩余的积分
         NSInteger myJifen = [[RYUserInfo sharedManager].credits integerValue];
-        if ( myJifen >= jifen ) {
-            [btn setEnabled:YES];
-            [btn setBackgroundColor:[Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0]];
-            [btn setTitle:@"立即兑换" forState:UIControlStateNormal];
+        // 活动状态
+        NSInteger status = [self.exchangeDict getIntValueForKey:@"status" defaultValue:0];
+        if ( status == 0  ) { // 活动已结束
+            [btn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
+            [btn setTitle:@"已结束" forState:UIControlStateNormal];
         }
         else{
-            [btn setEnabled:NO];
-            [btn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
-            [btn setTitle:@"积分不足" forState:UIControlStateNormal];
+            // 总数为0  已经兑换完
+            NSInteger totalrest = [self.exchangeDict getIntValueForKey:@"totalrest" defaultValue:0];
+            if ( totalrest == 0 ) {
+                [btn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
+                [btn setTitle:@"已兑完" forState:UIControlStateNormal];
+            }
+            else{
+                // everyrest==0  兑换已达上限
+                NSInteger everyrest = [self.exchangeDict getIntValueForKey:@"everyrest" defaultValue:0];
+                if ( everyrest == 0 ) {
+                    [btn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
+                    [btn setTitle:@"已兑换" forState:UIControlStateNormal];
+                }
+                else{
+                    if ( myJifen >= jifen ) {
+                        [btn setBackgroundColor:[Utils getRGBColor:0x8c g:0xd2 b:0x32 a:1.0]];
+                        [btn setTitle:@"立即兑换" forState:UIControlStateNormal];
+                        [btn setEnabled:YES];
+                    }
+                    else{
+                        [btn setBackgroundColor:[Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0]];
+                        [btn setTitle:@"积分不足" forState:UIControlStateNormal];
+                    }
+                }
+            }
         }
-        return cell;
+
+     return cell;
     }
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

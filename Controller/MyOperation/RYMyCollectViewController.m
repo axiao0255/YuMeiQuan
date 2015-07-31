@@ -65,34 +65,46 @@
 
 - (void)analysisDataWithDict:(NSDictionary *)responseDic
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( meta == nil ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
-        return;
+//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    [wSelf getNetData];
+                }
+                else{// 登录失败 打开登录界面 手动登录
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [wSelf openLoginVC];
+            }];
+            return;
+        }
+        else{
+            if ( [arrayOfCharacters count] == 0  ) {
+                [self showErrorView:theTableView];
+            }
+            return;
+        }
     }
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     if ( info == nil ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+         [self showErrorView:theTableView];
         return;
     }
     
     NSArray *friendmessage = [info getArrayValueForKey:@"friendmessage" defaultValue:nil];
     if ( friendmessage.count == 0 ) {
-        [ShowBox showError:@"为找到所关注的企业"];
+        [self showErrorView:theTableView];
         return;
     }
-    
+    [self removeErroeView];
     arrayOfCharacters = [Utils findSameKeyWithArray:friendmessage];
     [theTableView reloadData];
     
@@ -257,6 +269,20 @@
     }
     return count;
 }
+
+#pragma  mark 如果自动登录不上则 需要打开登录界面手动登录
+-(void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            NSLog(@"登录完成");
+            [wSelf getNetData];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
+
 
 
 @end

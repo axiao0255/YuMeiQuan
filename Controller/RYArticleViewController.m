@@ -870,7 +870,6 @@
                                                     //        NSLog(@"添加收藏 errorString :%@",errorString);
                                                     [ShowBox showError:@"收藏失败，请稍候重试"];
                                                 }];
-            
         }
     }
     else{

@@ -16,6 +16,7 @@
 #define realnameKey    @"realnameKey"
 #define usernameKey    @"usernameKey"
 #define uidKey         @"uidKey"
+#define addressKey     @"addressKey"
 
 @interface RYUserInfo : NSObject
 
@@ -26,6 +27,7 @@
 @property (nonatomic ,strong) NSString       *realname;
 @property (nonatomic ,strong) NSString       *username; // 用户名。 注册电话号码
 @property (nonatomic ,strong) NSString       *uid;      // 账号uid
+@property (nonatomic ,strong) NSString       *address;
 
 + (instancetype)sharedManager;
 

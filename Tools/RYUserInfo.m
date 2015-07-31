@@ -40,6 +40,7 @@ static RYUserInfo * _userInfo;
     self.realname = [userDefaults stringForKey:realnameKey];
     self.username = [userDefaults stringForKey:usernameKey];
     self.uid = [userDefaults stringForKey:uidKey];
+    self.address = [userDefaults stringForKey:addressKey];
 }
 
 
@@ -53,6 +54,7 @@ static RYUserInfo * _userInfo;
     [userDefaults setObject:self.realname forKey:realnameKey];
     [userDefaults setObject:self.username forKey:usernameKey];
     [userDefaults setObject:self.uid forKey:uidKey];
+    [userDefaults setObject:self.address forKey:addressKey];
     [userDefaults synchronize];
 }
 
@@ -67,6 +69,7 @@ static RYUserInfo * _userInfo;
         [[RYUserInfo sharedManager] setRealname:@""];
         [[RYUserInfo sharedManager] setUsername:@""];
         [[RYUserInfo sharedManager] setUid:@""];
+        [[RYUserInfo sharedManager] setAddress:@""];
     }
     else{
         
@@ -92,6 +95,9 @@ static RYUserInfo * _userInfo;
             }
             if ( [key isEqualToString:@"uid"] ) {
                 [[RYUserInfo sharedManager] setUid:[dict getStringValueForKey:@"uid" defaultValue:@""]];
+            }
+            if ( [key isEqualToString:@"address"] ) {
+                [[RYUserInfo sharedManager] setAddress:[dict getStringValueForKey:@"address" defaultValue:@""]];
             }
         }
     }

@@ -10,11 +10,13 @@
 #import "RYMyExchangeTableViewCell.h"
 #import "RYExchangeDetailsViewController.h"
 #import "RYExchangeHistoryViewController.h"
+#import "MJRefreshTableView.h"
 
-@interface RYMyExchangeViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface RYMyExchangeViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
 
-@property (nonatomic , strong)  UITableView     *tableView;
-@property (nonatomic , strong)  NSArray         *listData;
+@property (nonatomic , strong)  MJRefreshTableView     *tableView;
+@property (nonatomic , strong)  NSMutableArray         *listData;
+@property (nonatomic , assign)  BOOL                   notStretch;
 
 @end
 
@@ -25,19 +27,20 @@
     // Do any additional setup after loading the view.
     self.title = @"积分兑换";
     
-    NSMutableArray *arr = [NSMutableArray array];
-    for ( NSInteger i = 0 ; i < 10; i ++ ) {
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        [dict setValue:@"http://img1.cache.netease.com/catchpic/3/35/35AFDF1C4CFF12DDB31C9811E4F1441A.jpg" forKey:@"pic"];
-        [dict setValue:@"精美礼品，吊坠挂件" forKey:@"name"];
-        [dict setValue:@"足球主题曲响彻操场，足球舞蹈展示着运动活力。在精彩的节目演出后，重庆市教委副巡视员帅逊、万盛经开区党工委副书记肖猛" forKey:@"subject"];
-        [dict setValue:@"20" forKey:@"maxNumber"];
-        [dict setValue:@"100" forKey:@"jifen"];
-        [arr addObject:dict];
-    }
+//    NSMutableArray *arr = [NSMutableArray array];
+//    for ( NSInteger i = 0 ; i < 10; i ++ ) {
+//        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+//        [dict setValue:@"http://img1.cache.netease.com/catchpic/3/35/35AFDF1C4CFF12DDB31C9811E4F1441A.jpg" forKey:@"pic"];
+//        [dict setValue:@"精美礼品，吊坠挂件" forKey:@"name"];
+//        [dict setValue:@"足球主题曲响彻操场，足球舞蹈展示着运动活力。在精彩的节目演出后，重庆市教委副巡视员帅逊、万盛经开区党工委副书记肖猛" forKey:@"subject"];
+//        [dict setValue:@"20" forKey:@"maxNumber"];
+//        [dict setValue:@"100" forKey:@"jifen"];
+//        [arr addObject:dict];
+//    }
     
-    self.listData = arr;
+//    self.listData = arr;
     [self.view addSubview:self.tableView];
+    [self.tableView headerBeginRefreshing];
     [self setNavigationItem];
 }
 
@@ -72,16 +75,116 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
--(UITableView *)tableView
+- (NSMutableArray *)listData
 {
-    if ( _tableView == nil ) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
+    if ( _listData == nil ) {
+        _listData = [NSMutableArray array];
+    }
+    return _listData;
+}
+
+-(MJRefreshTableView *)tableView
+{
+    if ( _tableView == nil ){
+        _tableView = [[MJRefreshTableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.delegate = self;
         _tableView.dataSource = self;
+        _tableView.delegateRefersh = self;
         [Utils setExtraCellLineHidden:_tableView];
     }
     return _tableView;
+}
+
+-(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
+{
+    if ( [ShowBox checkCurrentNetwork] ) {
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getExchangeListWithSessionId:[RYUserInfo sharedManager].session
+                                               page:currentPage
+                                            success:^(id responseDic) {
+                                                NSLog(@"兑换列表 responseDic : %@",responseDic);
+                                                [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
+                                                [wSelf analysisDataWithDict:responseDic isHead:isHeaderReresh];
+            
+        } failure:^(id errorString) {
+            NSLog(@"兑换列表 errorString : %@",errorString);
+            [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
+            if ( wSelf.listData.count == 0 ) {
+                [wSelf showErrorView:wSelf.tableView];
+            }
+        }];
+    }
+}
+
+// 列表获取数据之后， 回到原来的位置  ，如果不是上下拉刷新，则不需要调用 endRefreshing方法，会引起显示错误
+- (void)tableViewRefreshEndWithIsHead:(BOOL)isHead
+{
+    if ( !self.notStretch ) {
+        if ( isHead ) {
+            [self.tableView headerFinishRefreshing];
+        }
+        else{
+            [self.tableView footerFinishRereshing];
+        }
+    }
+    else{
+        self.notStretch = NO;
+    }
+}
+
+
+- (void)analysisDataWithDict:(NSDictionary *)responseDic isHead:(BOOL)isHead
+{
+    NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+    BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+    if ( !success ) {
+        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    wSelf.notStretch = YES;
+                    wSelf.tableView.currentPage = 0;
+                    [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
+                }
+                else{// 登录失败 打开登录界面 手动登录
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [wSelf openLoginVC];
+            }];
+            return;
+        }
+        else{
+            if ( self.listData.count == 0 ) {
+                [self showErrorView:self.tableView];
+            }
+            return;
+        }
+    }
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
+    if ( usermassage ) {
+        [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:usermassage];
+    }
+    self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
+    NSArray *exchangemessage = [info getArrayValueForKey:@"exchangemessage" defaultValue:nil];
+    if ( isHead ) {
+        [self.listData removeAllObjects];
+    }
+    if ( exchangemessage.count  ) {
+        [self.listData addObjectsFromArray:exchangemessage];
+    }
+    if ( self.listData.count == 0 ) {
+        [self showErrorView:self.tableView];
+    }
+    else{
+        [self removeErroeView];
+    }
+    
+    [self.tableView reloadData];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -92,7 +195,12 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ( section == 0 ) {
-        return 1;
+        if ( self.listData.count == 0 ) {
+             return 0;
+        }
+        else{
+            return 1;
+        }
     }
     else{
         return self.listData.count;
@@ -156,5 +264,21 @@
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
+
+#pragma  mark 如果自动登录不上则 需要打开登录界面手动登录
+-(void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            NSLog(@"登录完成");
+            wSelf.notStretch = YES;
+            wSelf.tableView.currentPage = 0;
+            [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
+
 
 @end
