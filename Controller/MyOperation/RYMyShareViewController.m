@@ -88,6 +88,12 @@
             }
         }];
     }
+    else{
+        [self tableViewRefreshEndWithIsHead:isHeaderReresh];
+        if ( self.dataArray.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
+    }
 }
 
 // 列表获取数据之后， 回到原来的位置  ，如果不是上下拉刷新，则不需要调用 endRefreshing方法，会引起显示错误

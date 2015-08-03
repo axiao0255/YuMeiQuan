@@ -568,7 +568,6 @@
             return;
         }
         else{
-//            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
             NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
             if ( [arr count] == 0  ) {
                 [self showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
@@ -579,7 +578,6 @@
     
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     if ( !info ) {
-//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
         NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
         if ( [arr count] == 0  ) {
             [self showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];

@@ -36,9 +36,6 @@
     // Do any additional setup after loading the view.
     self.title = @"文献查询";
     
-//    if ( self.literatureDict != nil ) {
-//        [self setdata];
-//    }
     [self setdataWithDict:self.literatureDict];
     [self setup];
 }

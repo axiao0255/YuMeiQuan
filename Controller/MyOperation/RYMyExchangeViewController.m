@@ -12,7 +12,7 @@
 #import "RYExchangeHistoryViewController.h"
 #import "MJRefreshTableView.h"
 
-@interface RYMyExchangeViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
+@interface RYMyExchangeViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,RYExchangeDetailsViewControllerDelegate>
 
 @property (nonatomic , strong)  MJRefreshTableView     *tableView;
 @property (nonatomic , strong)  NSMutableArray         *listData;
@@ -26,19 +26,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"积分兑换";
-    
-//    NSMutableArray *arr = [NSMutableArray array];
-//    for ( NSInteger i = 0 ; i < 10; i ++ ) {
-//        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-//        [dict setValue:@"http://img1.cache.netease.com/catchpic/3/35/35AFDF1C4CFF12DDB31C9811E4F1441A.jpg" forKey:@"pic"];
-//        [dict setValue:@"精美礼品，吊坠挂件" forKey:@"name"];
-//        [dict setValue:@"足球主题曲响彻操场，足球舞蹈展示着运动活力。在精彩的节目演出后，重庆市教委副巡视员帅逊、万盛经开区党工委副书记肖猛" forKey:@"subject"];
-//        [dict setValue:@"20" forKey:@"maxNumber"];
-//        [dict setValue:@"100" forKey:@"jifen"];
-//        [arr addObject:dict];
-//    }
-    
-//    self.listData = arr;
+
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
     [self setNavigationItem];
@@ -114,6 +102,12 @@
                 [wSelf showErrorView:wSelf.tableView];
             }
         }];
+    }
+    else{
+        [self tableViewRefreshEndWithIsHead:isHeaderReresh];
+        if ( self.listData.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
     }
 }
 
@@ -261,6 +255,7 @@
     if ( indexPath.section == 1 ) {
         NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
         RYExchangeDetailsViewController *vc = [[RYExchangeDetailsViewController alloc] initWithExchangeDict:dict];
+        vc.delegate = self;
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -278,6 +273,13 @@
         }
     }];
     [self.navigationController pushViewController:nextVC animated:YES];
+}
+
+#pragma mark RYExchangeDetailsViewControllerDelegate  兑换成功后的回调
+-(void)exchangeDidSuccess{
+    self.notStretch = YES;
+    self.tableView.currentPage = 0;
+    [self getDataWithIsHeaderReresh:YES andCurrentPage:0];
 }
 
 

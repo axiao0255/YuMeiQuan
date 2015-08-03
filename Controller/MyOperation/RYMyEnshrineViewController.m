@@ -89,6 +89,12 @@
                                                  NSLog(@"收藏 errorString： %@",errorString);
                                              }];
     }
+    else{
+        [self tableViewRefreshEndWithIsHead:isHeaderReresh];
+        if (dataArray.count == 0) {
+            [self showErrorView:self.tableView];
+        }
+    }
 }
 
 // 列表获取数据之后， 回到原来的位置  ，如果不是上下拉刷新，则不需要调用 endRefreshing方法，会引起显示错误
@@ -112,7 +118,6 @@
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据错误，请稍候重试"]];
         int  login = [meta getIntValueForKey:@"login" defaultValue:0];
         if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
             __weak typeof(self) wSelf = self;
@@ -138,16 +143,7 @@
     }
     
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( info == nil ) {
-//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据错误，请稍候重试"]];
-        if (dataArray.count == 0) {
-            [self showErrorView:self.tableView];
-        }
-        return;
-    }
-    
     self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
-    
     if ( isHead ) {
         [dataArray removeAllObjects];
     }
@@ -160,7 +156,6 @@
     [self removeErroeView];
     [self.tableView reloadData];
     if ( dataArray.count == 0 ) {
-//        [ShowBox showError:@"未找到相关信息"];
         [self showErrorView:self.tableView];
     }
 }

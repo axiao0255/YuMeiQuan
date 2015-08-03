@@ -66,7 +66,6 @@
         return;
     }
   
-//    [self headerEndRefreshing];
     self.currentPage ++;
     if ( self.currentPage >= self.totlePage ) {
         self.currentPage --;
@@ -76,9 +75,6 @@
     }
    
     self.isRereshing = YES;
-//    if ( [self.delegateRefersh respondsToSelector:@selector(footerRereshingData)] ) {
-//        [self.delegateRefersh footerRereshingData];
-//    }
     
     if ( [self.delegateRefersh respondsToSelector:@selector(getDataWithIsHeaderReresh:andCurrentPage:)] ) {
         [self.delegateRefersh getDataWithIsHeaderReresh:NO andCurrentPage:self.currentPage];
@@ -90,17 +86,12 @@
 - (void)headerRereshing
 {
     NSLog(@"头 开始刷新");
-//    [self footerEndRefreshing];
     if ( self.isRereshing ) {
         return;
     }
     self.isRereshing = YES;
     self.currentPage = 0;
     self.totlePage = 1;
-//    if ( [self.delegateRefersh respondsToSelector:@selector(headerRereshingData)] ) {
-//        [self.delegateRefersh headerRereshingData];
-//    }
-    
     if ( [self.delegateRefersh respondsToSelector:@selector(getDataWithIsHeaderReresh:andCurrentPage:)] ) {
         [self.delegateRefersh getDataWithIsHeaderReresh:YES andCurrentPage:self.currentPage];
     }
@@ -119,18 +110,6 @@
     self.isRereshing = NO;
     [self headerEndRefreshing];
 }
-
-
-///**
-// * 刷新 结束
-// */
-//- (void)endRefreshing
-//{
-//    [self footerEndRefreshing];
-//    [self headerEndRefreshing];
-//    self.isRereshing = NO;
-//}
-//
 
 /*
 // Only override drawRect: if you perform custom drawing.

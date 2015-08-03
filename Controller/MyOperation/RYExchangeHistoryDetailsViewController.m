@@ -83,7 +83,7 @@
             return 190;
         }
         else if ( indexPath.row == 1 ){
-            NSString *subject = [self.exchangeDict getStringValueForKey:@"subject" defaultValue:@""];
+            NSString *subject = [self.exchangeDict getStringValueForKey:@"message" defaultValue:@""];
             NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:13]};
             CGRect rect = [subject boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
                                                 options:NSStringDrawingUsesLineFragmentOrigin
@@ -108,7 +108,7 @@
         }
     }
     else{
-        NSString *explain = [self.exchangeDict getStringValueForKey:@"explain" defaultValue:@""];
+        NSString *explain = [self.exchangeDict getStringValueForKey:@"desc" defaultValue:@""];
         NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:14]};
         CGRect rect = [explain boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, MAXFLOAT)
                                             options:NSStringDrawingUsesLineFragmentOrigin
@@ -149,7 +149,7 @@
             UIView *line  = [cell.contentView viewWithTag:130];
             CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
             line.top = height- 0.5;
-            cell.textLabel.text = [self.exchangeDict getStringValueForKey:@"subject" defaultValue:@""];
+            cell.textLabel.text = [self.exchangeDict getStringValueForKey:@"message" defaultValue:@""];
             return cell;
             
         }
@@ -174,15 +174,15 @@
             }
             else if ( indexPath.row == 4 ){
                 title = @"电话：";
-                name = [self.exchangeDict getStringValueForKey:@"phone" defaultValue:@""];
+                name = [self.exchangeDict getStringValueForKey:@"mobile" defaultValue:@""];
             }
             else if ( indexPath.row == 5 ){
                 title = @"数量：";
-                name = [self.exchangeDict getStringValueForKey:@"number" defaultValue:@""];
+                name = [self.exchangeDict getStringValueForKey:@"num" defaultValue:@""];
             }
             else if ( indexPath.row == 6 ){
                 title = @"消耗积分：";
-                name = [self.exchangeDict getStringValueForKey:@"jifen" defaultValue:@""];
+                name = [self.exchangeDict getStringValueForKey:@"usecredit" defaultValue:@""];
                 cell.contentLabel.textColor = [Utils getRGBColor:0xcd g:0x24 b:0x2b a:1.0];
             }
             else{
@@ -216,7 +216,7 @@
             cell.textLabel.font = [UIFont systemFontOfSize:14];
             cell.textLabel.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         }
-        cell.textLabel.text = [self.exchangeDict getStringValueForKey:@"explain" defaultValue:@""];
+        cell.textLabel.text = [self.exchangeDict getStringValueForKey:@"desc" defaultValue:@""];
         return cell;
     }
 }

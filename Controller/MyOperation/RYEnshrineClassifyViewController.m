@@ -32,7 +32,6 @@ typedef enum : NSUInteger {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"我的标签";
-//    selectType = type_one;
     [self initSubviews];
     [self getNetData];
     
@@ -71,43 +70,39 @@ typedef enum : NSUInteger {
             
         } failure:^(id errorString) {
             NSLog(@"  我的标签  errorString : %@",errorString);
-            
+            if ( dataArray.count == 0 ) {
+                [wSelf showErrorView:theTableView];
+            }
         }];
+    }
+    else{
+        if ( dataArray.count == 0 ) {
+            [self showErrorView:theTableView];
+        }
     }
 }
 
 - (void)analysisDataWithDict:(NSDictionary *)responseDic
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( !meta ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        if ( dataArray.count == 0 ) {
+            [self showErrorView:theTableView];
+        }
         return;
     }
-    
+    [self removeErroeView];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( info == nil ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
-        return;
-    }
-    
     // 取标签列表
     NSArray *favoritecatmessage = [info getArrayValueForKey:@"favoritecatmessage" defaultValue:nil];
     if ( favoritecatmessage.count ) {
         dataArray = favoritecatmessage.mutableCopy;
         [theTableView reloadData];
     }
-    
+    else{
+        [self showErrorView:theTableView];
+    }
 }
 
 - (NSArray *)rightButtons

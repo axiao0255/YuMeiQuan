@@ -150,7 +150,7 @@
 - (void)setAudioPlayer
 {
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
     NSError *error;
     AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:self.soundURL error:&error];
     audioPlayer.numberOfLoops = 0;
@@ -195,6 +195,7 @@
         [NetRequestAPI submitCommentWithSessionId:[RYUserInfo sharedManager].session
                                               tid:self.recordData.tid
                                               pid:self.recordData.pid
+                                         authorId:self.recordData.authorId
                                              word:self.recordData.word
                                             voice:self.recordData.voiceURL
                                           success:^(id responseDic) {

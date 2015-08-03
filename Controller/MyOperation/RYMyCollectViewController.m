@@ -12,7 +12,6 @@
 @interface RYMyCollectViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate>
 {
     UITableView       *theTableView;
-    NSMutableArray    *dataArray;
     NSArray           *arrayOfCharacters;
 }
 @end
@@ -57,8 +56,15 @@
             
         } failure:^(id errorString) {
             NSLog(@"我的关注列表 errorString :: %@",errorString);
-            [ShowBox showError:@"数据出错"];
+            if (arrayOfCharacters.count == 0) {
+                [self showErrorView:theTableView];
+            }
         }];
+    }
+    else{
+        if (arrayOfCharacters.count == 0) {
+            [self showErrorView:theTableView];
+        }
     }
 }
 
@@ -68,7 +74,6 @@
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
         int  login = [meta getIntValueForKey:@"login" defaultValue:0];
         if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
             __weak typeof(self) wSelf = self;
@@ -83,30 +88,23 @@
             } failure:^(id errorString) {
                 [wSelf openLoginVC];
             }];
-            return;
         }
         else{
             if ( [arrayOfCharacters count] == 0  ) {
                 [self showErrorView:theTableView];
             }
-            return;
+           
         }
-    }
-    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( info == nil ) {
-//        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
-         [self showErrorView:theTableView];
-        return;
-    }
-    
-    NSArray *friendmessage = [info getArrayValueForKey:@"friendmessage" defaultValue:nil];
-    if ( friendmessage.count == 0 ) {
-        [self showErrorView:theTableView];
-        return;
+       return;
     }
     [self removeErroeView];
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
+    NSArray *friendmessage = [info getArrayValueForKey:@"friendmessage" defaultValue:nil];
     arrayOfCharacters = [Utils findSameKeyWithArray:friendmessage];
     [theTableView reloadData];
+    if ( arrayOfCharacters.count == 0 ) {
+        [self showErrorView:theTableView];
+    }
     
 }
 

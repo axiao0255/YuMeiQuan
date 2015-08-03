@@ -273,6 +273,7 @@
 +(void)submitCommentWithSessionId:(NSString *)session
                               tid:(NSString *)_tid
                               pid:(NSString *)_pid
+                         authorId:(NSString *)_authorId
                              word:(NSString *)_word
                             voice:(NSURL *)_voiceUrl
                           success:(void(^)(id responseDic))success

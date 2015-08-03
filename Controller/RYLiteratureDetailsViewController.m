@@ -673,15 +673,18 @@
             [wSelf openLoginVC];
             return;
         }
-        
+        UIButton *btn = (UIButton *)sender;
+        [btn setEnabled:NO];
         [NetRequestAPI getShowDoiWithSessionId:[RYUserInfo sharedManager].session
                                            tid:self.tid
                                        success:^(id responseDic) {
                                            NSLog(@"获取原文权限 responseDic： %@",responseDic);
+                                           [btn setEnabled:YES];
                                            [wSelf getLookResultWithDict:responseDic];
             
         } failure:^(id errorString) {
              NSLog(@"获取原文权限 errorString： %@",errorString);
+            [btn setEnabled:YES];
             [ShowBox showError:@"网络出错，请稍候重试"];
         }];
     }
@@ -922,13 +925,6 @@
     else {
         //loading failure
     }
-}
-
-- (void)sourceButtonClick:(id)sender
-{
-    NSLog(@"直达号");
-    RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)shareButtonClick:(id)sender

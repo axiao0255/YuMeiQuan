@@ -189,7 +189,7 @@
             _contentButton.enabled = YES;
             _contentURL = [NSURL URLWithString:[documentViocePath stringByAppendingPathComponent:voicePath]];
             AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-            [audioSession setCategory:AVAudioSessionCategorySoloAmbient error:nil];
+            [audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
             NSError *error;
             _player = [[AVAudioPlayer alloc] initWithContentsOfURL:_contentURL error:&error];
              _player.delegate = self;

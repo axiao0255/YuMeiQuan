@@ -87,6 +87,10 @@
 
 @end
 
+
+
+#pragma mark 兑换礼品数量选择
+
 @implementation RYExchangeNumberSelectTableViewCell
 
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -142,14 +146,13 @@
         self.jifenLabel.textColor = [Utils getRGBColor:0xcd g:0x24 b:0x2b a:1.0];
         self.jifenLabel.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:self.jifenLabel];
+        
     }
     return self;
 }
 
-
 -(void)reduceBtnClick:(id)sender
 {
-    NSLog(@"减少");
     if ( self.number > 1 ) {
         [self.reduceBtn setEnabled:YES];
         self.number --;
@@ -167,7 +170,10 @@
     NSInteger singleJifen = [self.dict getIntValueForKey:@"needcredit" defaultValue:0];
     NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen*self.number];
     [self adjustSiteWithString:jifenStr];
-  
+    
+    if ( [self.delegate respondsToSelector:@selector(currentSelectExchangeNumber:)] ) {
+        [self.delegate currentSelectExchangeNumber:self.number];
+    }
 }
 
 -(void)addBtnClick:(id)sender
@@ -185,6 +191,21 @@
     NSInteger singleJifen = [self.dict getIntValueForKey:@"needcredit" defaultValue:0];
     NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen*self.number];
     [self adjustSiteWithString:jifenStr];
+    
+    if ( [self.delegate respondsToSelector:@selector(currentSelectExchangeNumber:)] ) {
+        [self.delegate currentSelectExchangeNumber:self.number];
+    }
+}
+
+- (void)setDelegate:(id<RYExchangeNumberSelectTableViewCellDelegate>)delegate
+{
+    if (_delegate != delegate) {
+        _delegate = delegate;
+        
+        if ( [_delegate respondsToSelector:@selector(currentSelectExchangeNumber:)] ) {
+            [_delegate currentSelectExchangeNumber:self.number];
+        }
+    }
 }
 
 - (void)setValueWithDict:(NSDictionary *)dict
@@ -234,7 +255,7 @@
     }
     //每个礼品所需要的积分
     NSInteger singleJifen = [dict getIntValueForKey:@"needcredit" defaultValue:0];
-    NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen];
+    NSString *jifenStr = [NSString stringWithFormat:@"%ld",singleJifen*self.number];
     [self adjustSiteWithString:jifenStr];
 }
 

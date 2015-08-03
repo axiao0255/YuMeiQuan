@@ -14,5 +14,6 @@
 @property (nonatomic , strong) NSURL    *voiceURL;
 @property (nonatomic , strong) NSString *pid;
 @property (nonatomic , strong) NSString *word;
+@property (nonatomic , strong) NSString *authorId;
 
 @end

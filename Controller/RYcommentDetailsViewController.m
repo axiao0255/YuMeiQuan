@@ -52,6 +52,8 @@
 
 @property (nonatomic , strong) recordListeningView *listeningView;  // 录音完成 试听界面
 
+@property (nonatomic , assign) BOOL               notStretch;
+
 @end
 
 @implementation RYcommentDetailsViewController
@@ -160,26 +162,32 @@
              NSLog(@"评论列表 errorString :%@",errorString);
             [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
             if ( wSelf.commentList.count == 0 ) {
-                [ShowBox showError:@"数据出错"];
+                [wSelf showErrorView:self.tableView];
             }
         }];
+    }
+    else{
+        [self tableViewRefreshEndWithIsHead:isHeaderReresh];
+        if ( self.commentList.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
     }
 }
 
 // 列表获取数据之后， 回到原来的位置  ，如果不是上下拉刷新，则不需要调用 endRefreshing方法，会引起显示错误
 - (void)tableViewRefreshEndWithIsHead:(BOOL)isHead
 {
-    //    if ( !self.notStretch ) {
-    if ( isHead ) {
-        [self.tableView headerFinishRefreshing];
+    if ( !self.notStretch ) {
+        if ( isHead ) {
+            [self.tableView headerFinishRefreshing];
+        }
+        else{
+            [self.tableView footerFinishRereshing];
+        }
     }
     else{
-        [self.tableView footerFinishRereshing];
+        self.notStretch = NO;
     }
-    //    }
-    //    else{
-    //        self.notStretch = NO;
-    //    }
 }
 
 
@@ -188,14 +196,33 @@
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试！"]];
-        return;
+        int  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    wSelf.notStretch = YES;
+                    wSelf.tableView.currentPage = 0;
+                    [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
+                }
+                else{// 登录失败 打开登录界面 手动登录
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [wSelf openLoginVC];
+            }];
+            return;
+        }
+        else{
+            if ( self.commentList.count == 0 ) {
+                [self showErrorView:self.tableView];
+            }
+            return;
+        }
     }
+    [self removeErroeView];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( info == nil ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试！"]];
-        return;
-    }
     // 取会员信息
     NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
     if ( usermassage ) {
@@ -749,6 +776,7 @@
         self.commentData.tid = self.tid;
         self.commentData.voiceURL = nil;
         self.commentData.pid = pid;
+        self.commentData.authorId = [dict getStringValueForKey:@"authorid" defaultValue:nil];
         self.commentData.word = growingTextView.text;
         [self submitComment];
     }
@@ -756,6 +784,7 @@
         self.commentData.tid = self.tid;
         self.commentData.voiceURL = nil;
         self.commentData.pid = nil;
+        self.commentData.authorId = nil;
         self.commentData.word = growingTextView.text;
         [self submitComment];
     }
@@ -771,6 +800,7 @@
         [NetRequestAPI submitCommentWithSessionId:[RYUserInfo sharedManager].session
                                               tid:self.commentData.tid
                                               pid:self.commentData.pid
+                                         authorId:self.commentData.authorId
                                              word:self.commentData.word
                                             voice:self.commentData.voiceURL
                                           success:^(id responseDic) {
@@ -881,45 +911,60 @@
 
 -(void)recordStart:(UIButton *)sender
 {
-    if(recording)
-        return;
-    if (_currentRow>=0) {
-        RYcommentTableViewCell *cell = (RYcommentTableViewCell *)[self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_currentRow inSection:1]];
-        [cell.bubble stop];
-        [cell.bubble stopAnimating];
-    }
- 
-    recording=YES;
     
-    NSDictionary *settings=[NSDictionary dictionaryWithObjectsAndKeys:
-                            [NSNumber numberWithInt:kAudioFormatAppleIMA4],AVFormatIDKey,
-                            [NSNumber numberWithFloat:44100.0],AVSampleRateKey,
-                            [NSNumber numberWithInt:2],AVNumberOfChannelsKey,
-                            [NSNumber numberWithInt:12800],AVEncoderBitRateKey,
-                            [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
-                            [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
-                            nil];
+    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+        if (granted) {
+            // 用户同意获取数据
+            if(recording)
+                return;
+            if (_currentRow>=0) {
+                RYcommentTableViewCell *cell = (RYcommentTableViewCell *)[self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_currentRow inSection:1]];
+                [cell.bubble stop];
+                [cell.bubble stopAnimating];
+            }
+            
+            recording=YES;
+            
+            NSDictionary *settings=[NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithInt:kAudioFormatAppleIMA4],AVFormatIDKey,
+                                    [NSNumber numberWithFloat:44100.0],AVSampleRateKey,
+                                    [NSNumber numberWithInt:2],AVNumberOfChannelsKey,
+                                    [NSNumber numberWithInt:12800],AVEncoderBitRateKey,
+                                    [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
+                                    [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
+                                    nil];
+            
+            [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: nil];
+            [[AVAudioSession sharedInstance] setActive:YES error:nil];
+            
+            NSString *docsDir = [Utils getDocumnetsVoicePath];
+            docsDir = [docsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[RYUserInfo sharedManager].uid]];
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateFormat = @"yyyyMMddHHmmss";
+            NSString *str = [formatter stringFromDate:[NSDate date]];
+            NSString *soundFilePath = [docsDir stringByAppendingFormat:@"%@.caf",str];
+            
+            NSURL *url = [NSURL fileURLWithPath:soundFilePath];
+            pathURL = url;
+            NSError *error;
+            audioRecorder = [[AVAudioRecorder alloc] initWithURL:pathURL settings:settings error:&error];
+            audioRecorder.delegate = self;
+            audioRecorder.meteringEnabled = YES;
+            [audioRecorder record];
+            peakTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(updatePeak:) userInfo:nil repeats:YES];
+            [peakTimer fire]; 
+
+        } else {
+            // 可以显示一个提示框告诉用户这个app没有得到允许？
+            [[[UIAlertView alloc] initWithTitle:@"麦克风被禁用"
+                                         message:@"\n请启用麦克风-设置/隐私/麦克风"
+                                        delegate:nil
+                               cancelButtonTitle:@"关闭"
+                               otherButtonTitles:nil] show];
+        }
+    }];
     
-    [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: nil];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    
-    NSString *docsDir = [Utils getDocumnetsVoicePath];
-    docsDir = [docsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[RYUserInfo sharedManager].uid]];
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"yyyyMMddHHmmss";
-    NSString *str = [formatter stringFromDate:[NSDate date]];
-    NSString *soundFilePath = [docsDir stringByAppendingFormat:@"%@.caf",str];
-    
-    NSURL *url = [NSURL fileURLWithPath:soundFilePath];
-    pathURL = url;
-    NSError *error;
-    audioRecorder = [[AVAudioRecorder alloc] initWithURL:pathURL settings:settings error:&error];
-    audioRecorder.delegate = self;
-    audioRecorder.meteringEnabled = YES;
-    [audioRecorder record];
-    peakTimer = [NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(updatePeak:) userInfo:nil repeats:YES];
-    [peakTimer fire]; 
 }
 
 - (void)updatePeak:(NSTimer*)timer
@@ -941,7 +986,7 @@
     recording = NO;
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategorySoloAmbient error:nil];
+    [audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
     
     if ( _timeLen <= 2 ) {
         NSFileManager* fileManager=[NSFileManager defaultManager];
@@ -965,20 +1010,20 @@
 //    
 //    [CafToMp3 cafToMp3:pathURL.path toMp3Path:mp3FilePath];
     
-   
-    
     if ( self.replyIndex != -1 ) {
         NSDictionary *dict = [self.commentList objectAtIndex:self.replyIndex];
         NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
         self.commentData.tid = self.tid;
         self.commentData.voiceURL = pathURL;
         self.commentData.pid = pid;
+        self.commentData.authorId = [dict getStringValueForKey:@"authorid" defaultValue:nil];
         self.commentData.word = nil;
     }
     else{
         self.commentData.tid = self.tid;
         self.commentData.voiceURL = pathURL;
         self.commentData.pid = nil;
+        self.commentData.authorId = nil;
         self.commentData.word = nil;
     }
     [self dismissTextView];
@@ -1004,5 +1049,20 @@
     [self submitCommentsuccess];
     [self.tableView headerBeginRefreshing];
 }
+
+#pragma  mark 如果自动登录不上则 需要打开登录界面手动登录
+-(void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            wSelf.notStretch = YES;
+            wSelf.tableView.currentPage = 0;
+            [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
+
 
 @end

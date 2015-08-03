@@ -36,9 +36,6 @@
     if ( self ) {
         self.corporateID = corporateID;
     }
-   
-//    self.corporateFid = @"0";
-//    self.totlePage = 1;
     return self;
 }
 
@@ -128,6 +125,7 @@
                 // 自动登录一次
                 if ( isSucceed ) { // 自动登录成功 刷新数据，
                     wSelf.notStretch = YES;
+                    wSelf.tableView.currentPage = 0;
                     [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
                 }
                 else{// 登录失败 打开登录界面 手动登录
@@ -374,7 +372,9 @@
     [self.navigationController pushViewController:vc animated:YES];
 
 }
-
+/**
+ *关注按钮点击
+ */
 - (void)attentionButtonClick:(id)sender
 {
     if ( ![ShowBox isLogin] ) {
@@ -449,12 +449,7 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ( buttonIndex == 1 ) {
-        RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-            if ( isLogin ) {
-                NSLog(@"登录完成");
-            }
-        }];
-        [self.navigationController pushViewController:nextVC animated:YES];
+        [self openLoginVC];
     }
 }
 
@@ -473,6 +468,7 @@
         if ( isLogin ) {
             NSLog(@"登录完成"); // 重新获取数据  由于本ViewController中有注册通知，登录成功后通知能重新刷新数据，所有在此不做任何操作
             wSelf.notStretch = YES;
+            wSelf.tableView.currentPage = 0;
            [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
         }
     }];

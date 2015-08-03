@@ -8,7 +8,16 @@
 
 #import "RYBaseViewController.h"
 
+@protocol RYExchangeDetailsViewControllerDelegate <NSObject>
+
+- (void)exchangeDidSuccess;
+
+@end
+
+
 @interface RYExchangeDetailsViewController : RYBaseViewController
+
+@property (nonatomic,weak) id<RYExchangeDetailsViewControllerDelegate> delegate;
 
 -(id)initWithExchangeDict:(NSDictionary *)dict;
 

@@ -792,12 +792,15 @@
  *
  *_tid  文章 id
  *_pid  回复第几楼
+ *_authorId  被回复者id
  *_word 评论的 文字
  *_voiceUrl 音频文件
  */
+#pragma mark - 提交评论
 +(void)submitCommentWithSessionId:(NSString *)session
                               tid:(NSString *)_tid
                               pid:(NSString *)_pid
+                         authorId:(NSString *)_authorId
                              word:(NSString *)_word
                             voice:(NSURL *)_voiceUrl
                           success:(void(^)(id responseDic))success
@@ -810,6 +813,7 @@
     [dict setValue:session forKey:@"sid"];
     [dict setValue:_tid forKey:@"tid"];
     [dict setValue:_pid forKey:@"pid"];
+    [dict setValue:_authorId forKey:@"authorId"];
     [dict setValue:_word forKey:@"word"];
     
     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];

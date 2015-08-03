@@ -32,15 +32,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-//    
-//    NSMutableArray *arr = [NSMutableArray array];
-//    for ( int i = 0; i < 10; i ++ ) {
-//        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//        [dic setObject:@"http://image.tianjimedia.com/uploadImages/2015/131/49/6FPNGYZA50BS_680x500.jpg" forKey:@"pic"];
-//        [dic setObject:@"护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，护肤品中的生长因子安全吗，" forKey:@"title"];
-//        [arr addObject:dic];
-//    }
-//    self.articleLists = arr;
     [self getData];
     [self.view addSubview:self.tableView];
 }
@@ -72,37 +63,37 @@
             
         } failure:^(id errorString) {
             NSLog(@"文章errorString :%@",errorString);
-            [ShowBox showError:@"网络出错，请换个信号满满的地方重试！"];
+            if ( self.articleLists.count == 0 ) {
+                [self showErrorView:self.tableView];
+            }
         }];
+    }
+    else{
+        if ( self.articleLists.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
     }
 }
 
 - (void)analysisDataWithDict:(NSDictionary *)responseDic
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]]) {
-        [ShowBox showError:@"网络出错，请换个信号满满的地方重试！"];
-        return;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( meta == nil ) {
-        [ShowBox showError:@"网络出错，请换个信号满满的地方重试！"];
-        return;
-    }
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"网络出错,请稍候重试"]];
+        if ( self.articleLists.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
         return;
     }
+    [self removeErroeView];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( info == nil ) {
-       [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"网络出错,请稍候重试"]];
-        return;
-    }
     NSArray *writertheradmessage = [info getArrayValueForKey:@"writertheradmessage" defaultValue:nil];
     if ( writertheradmessage.count ) {
         self.articleLists = writertheradmessage;
-        [self.tableView reloadData];
+    }
+    [self.tableView reloadData];
+    if ( self.articleLists.count == 0 ) {
+        [self showErrorView:self.tableView];
     }
 }
 

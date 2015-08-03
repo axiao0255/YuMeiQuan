@@ -677,7 +677,7 @@
         self.answerSheet.hidden = YES;
     }
    
-    self.answerSheet.top = self.webViewHeight + self.bodeyTitleLabel.bottom + 15;
+    self.answerSheet.top = self.webViewHeight + self.bodeyTitleLabel.bottom + 25;
     CGSize scrollViewContentSize = self.scrollView.contentSize;
     scrollViewContentSize.height = self.webViewHeight + self.bodeyTitleLabel.bottom + 25 + self.answerSheet.height;
     self.scrollView.contentSize = scrollViewContentSize ;

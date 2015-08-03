@@ -74,8 +74,12 @@
                                                  }
                                              }];
     }
-
-    
+    else{
+        [self tableViewRefreshEndWithIsHead:isHeaderReresh];
+        if ( self.listData.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
+    }
 }
 
 // 列表获取数据之后， 回到原来的位置  ，如果不是上下拉刷新，则不需要调用 endRefreshing方法，会引起显示错误
@@ -124,25 +128,20 @@
             return;
         }
     }
-    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( info == nil ) {
-        if ( self.listData.count == 0 ) {
-            [self showErrorView:self.tableView];
-        }
-        return;
-    }
-    
     [self removeErroeView];
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
-    
+    if ( ishead ) {
+        [self.listData removeAllObjects];
+    }
     NSArray *questionlogmessage = [info getArrayValueForKey:@"questionlogmessage" defaultValue:nil];
     if ( questionlogmessage.count ) {
-        if ( ishead ) {
-            [self.listData removeAllObjects];
-        }
         [self.listData addObjectsFromArray:questionlogmessage];
     }
     [self.tableView reloadData];
+    if ( self.listData.count == 0 ) {
+        [self showErrorView:self.tableView];
+    }
 }
 
 -(MJRefreshTableView *)tableView

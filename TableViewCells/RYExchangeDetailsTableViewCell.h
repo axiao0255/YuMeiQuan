@@ -29,6 +29,7 @@
 #pragma mark 兑换礼品数量选择
 @protocol RYExchangeNumberSelectTableViewCellDelegate <NSObject>
 
+-(void)currentSelectExchangeNumber:(NSInteger) num;
 
 @end
 

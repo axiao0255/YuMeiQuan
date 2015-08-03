@@ -9,13 +9,15 @@
 #import "RYExchangeDetailsViewController.h"
 #import "RYExchangeDetailsTableViewCell.h"
 
-@interface RYExchangeDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
+@interface RYExchangeDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,RYExchangeNumberSelectTableViewCellDelegate>
 
 @property (nonatomic , strong)UITableView    *tableView;
 @property (nonatomic , strong)NSDictionary   *exchangeDict;
 @property (nonatomic , strong)UITextField    *nameTextField;
 @property (nonatomic , strong)UITextField    *addressTextField;
 @property (nonatomic , strong)UITextField    *phoneTextField;
+
+@property (nonatomic , assign)NSInteger      exchangeNum;
 
 @end
 
@@ -155,6 +157,7 @@
         if ( !cell ) {
             cell = [[RYExchangeNumberSelectTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:number_cell];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.delegate = self;
         }
         [cell setValueWithDict:self.exchangeDict];
         return cell;
@@ -223,6 +226,37 @@
 -(void)exchangeSubmit:(id)sender
 {
     NSLog(@"提交兑换");
+    if ( [ShowBox checkCurrentNetwork] ) {
+        UIButton *btn = (UIButton *)sender;
+        [btn setEnabled:NO];
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI submitExchangeDataWithSessionId:[RYUserInfo sharedManager].session
+                                                   eid:[self.exchangeDict getStringValueForKey:@"eid" defaultValue:@""]
+                                                   num:self.exchangeNum
+                                                  name:self.nameTextField.text
+                                               address:self.addressTextField.text
+                                                mobile:self.phoneTextField.text
+                                               success:^(id responseDic) {
+                                                   [btn setEnabled:YES];
+//                                                   NSLog(@"提交兑换 responseDic :%@",responseDic);
+                                                   NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                                   BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                                   if ( !success ) {
+                                                       [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试！"]];
+                                                   }
+                                                   else{
+                                                       if ( [wSelf.delegate respondsToSelector:@selector(exchangeDidSuccess)] ) {
+                                                           [wSelf.delegate exchangeDidSuccess];
+                                                       }
+                                                       [wSelf.navigationController popViewControllerAnimated:YES];
+                                                       [ShowBox showSuccess:@"兑换成功"];
+                                                   }
+        } failure:^(id errorString) {
+            [btn setEnabled:YES];
+//             NSLog(@"提交兑换 errorString :%@",errorString);
+            [ShowBox showError:@"数据出错，请稍候重试！"];
+        }];
+    }
 }
 
 #pragma mark UITextFieldDelegate
@@ -230,6 +264,13 @@
 {
     [textField resignFirstResponder];
     return YES;
+}
+
+
+#pragma mark RYExchangeNumberSelectTableViewCellDelegate
+- (void)currentSelectExchangeNumber:(NSInteger)num
+{
+    self.exchangeNum = num;
 }
 
 @end

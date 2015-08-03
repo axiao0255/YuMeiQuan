@@ -71,10 +71,16 @@
                                                 } failure:^(id errorString) {
                                                     NSLog(@"文献查询 errorString : %@",errorString);
                                                     [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
-                                                    if ( wSelf.dataArray.count ) {
+                                                    if ( wSelf.dataArray.count == 0 ) {
                                                         [wSelf showErrorView:wSelf.tableView];
                                                     }
                                                 }];
+    }
+    else{
+        [self tableViewRefreshEndWithIsHead:isHeaderReresh];
+        if ( self.dataArray.count == 0 ) {
+            [self showErrorView:self.tableView];
+        }
     }
 }
 
@@ -119,33 +125,28 @@
             return;
         }
         else{
-            if ( self.dataArray.count ) {
+            if ( self.dataArray.count == 0 ) {
                 [self showErrorView:self.tableView];
             }
             return;
         }
     }
-    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( info == nil ) {
-        if ( self.dataArray.count ) {
-            [self showErrorView:self.tableView];
-        }
-        return;
-    }
     [self removeErroeView];
+    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
     
     if ( isHead ) {
         [self.dataArray removeAllObjects];
     }
-    
     NSArray *mydoimessage = [info getArrayValueForKey:@"mydoimessage" defaultValue:nil];
     if ( mydoimessage.count ) {
         [self.dataArray addObjectsFromArray:mydoimessage];
     }
-    
     self.hintLabel.text = [info getStringValueForKey:@"msg" defaultValue:@""];
     [self.tableView reloadData];
+    if ( self.dataArray.count == 0 ) {
+        [self showErrorView:self.tableView];
+    }
 
 }
 
