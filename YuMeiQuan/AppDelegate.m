@@ -102,7 +102,8 @@
      [self performSelector:@selector(testLocalNotifi) withObject:nil afterDelay:1.0];
      */
     
-//    [Harpy checkVersion];
+    // 检查版本
+    [Harpy checkVersion];
 
     return YES;
 }

@@ -25,6 +25,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
         self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 95, 70)];
+        self.leftImgView.layer.borderColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0].CGColor;
+        self.leftImgView.layer.borderWidth = 0.5;
         [self.contentView addSubview:self.leftImgView];
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.leftImgView.right + 5, 8, SCREEN_WIDTH - 30 - 5 - self.leftImgView.width, 58)];

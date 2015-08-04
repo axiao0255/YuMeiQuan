@@ -319,6 +319,10 @@
                                    success:(void(^)(id responseDic))success
                                    failure:(void(^)(id errorString))failure;
 
+#pragma mark -检查版本更新
++(void)getVersionWithSuccess:(void(^)(id responseDic))success
+                     failure:(void(^)(id errorString))failure;
+
 
 
 @end

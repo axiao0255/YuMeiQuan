@@ -45,11 +45,11 @@
     // 设置文字(也可以不设置,默认的文字在MJRefreshConst中修改)
     self.headerPullToRefreshText = @"下拉可以刷新了";
     self.headerReleaseToRefreshText = @"松开马上刷新了";
-    self.headerRefreshingText = @"MJ哥正在帮你刷新中,不客气";
+    self.headerRefreshingText = @"正在刷新...";
     
     self.footerPullToRefreshText = @"上拉可以加载更多数据了";
     self.footerReleaseToRefreshText = @"松开马上加载更多数据了";
-    self.footerRefreshingText = @"MJ哥正在帮你加载中,不客气";
+    self.footerRefreshingText = @"正在刷新...";
     
     
     self.currentPage = 0;

@@ -211,15 +211,14 @@
                 }
             } failure:^(id errorString) {
                 [wSelf openLoginVC];
-            }];
-            return;
+            }]; 
         }
         else{
             if ( self.commentList.count == 0 ) {
                 [self showErrorView:self.tableView];
             }
-            return;
         }
+        return;
     }
     [self removeErroeView];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];

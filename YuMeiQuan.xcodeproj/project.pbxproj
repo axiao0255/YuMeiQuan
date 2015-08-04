@@ -239,7 +239,6 @@
 		96CC355A1B04938800EFA27A /* RYHuiXunTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC35591B04938800EFA27A /* RYHuiXunTableViewCell.m */; };
 		96CC39601AD4DDF100D5D157 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC395F1AD4DDF100D5D157 /* main.m */; };
 		96CC39631AD4DDF100D5D157 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39621AD4DDF100D5D157 /* AppDelegate.m */; };
-		96CC39661AD4DDF100D5D157 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39651AD4DDF100D5D157 /* ViewController.m */; };
 		96CC39691AD4DDF100D5D157 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96CC39671AD4DDF100D5D157 /* Main.storyboard */; };
 		96CC396B1AD4DDF100D5D157 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96CC396A1AD4DDF100D5D157 /* Images.xcassets */; };
 		96CC396E1AD4DDF100D5D157 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96CC396C1AD4DDF100D5D157 /* LaunchScreen.xib */; };
@@ -829,8 +828,6 @@
 		96CC395F1AD4DDF100D5D157 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		96CC39611AD4DDF100D5D157 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		96CC39621AD4DDF100D5D157 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		96CC39641AD4DDF100D5D157 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		96CC39651AD4DDF100D5D157 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		96CC39681AD4DDF100D5D157 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		96CC396A1AD4DDF100D5D157 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		96CC396D1AD4DDF100D5D157 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -1781,8 +1778,6 @@
 				96F3213D1AD50A2700CAFC51 /* images */,
 				96CC39611AD4DDF100D5D157 /* AppDelegate.h */,
 				96CC39621AD4DDF100D5D157 /* AppDelegate.m */,
-				96CC39641AD4DDF100D5D157 /* ViewController.h */,
-				96CC39651AD4DDF100D5D157 /* ViewController.m */,
 				96CC39671AD4DDF100D5D157 /* Main.storyboard */,
 				96CC396A1AD4DDF100D5D157 /* Images.xcassets */,
 				96CC396C1AD4DDF100D5D157 /* LaunchScreen.xib */,
@@ -2710,7 +2705,6 @@
 				96C77FDF1B54F2B400545F0E /* RYMyExchangeViewController.m in Sources */,
 				96CBAA321B157E0100D13C27 /* RYWeeklyTableViewCell.m in Sources */,
 				96C5BFBD1AFB50E100BC5744 /* NSString+Expand.m in Sources */,
-				96CC39661AD4DDF100D5D157 /* ViewController.m in Sources */,
 				96D9C9881AE49A7500997430 /* RYRegisterSpecialtyViewController.m in Sources */,
 				96D0A56E1B18708000BF6D90 /* RYAnswersRecordTableViewCell.m in Sources */,
 				96CFB3DF1AFA2AF70078C225 /* SlideNavigationContorllerAnimatorSlideAndFade.m in Sources */,

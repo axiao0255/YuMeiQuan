@@ -192,10 +192,16 @@
                 // 保存刷新时间
                 self.lastUpdateTime = [NSDate date];
                 
-                [UIView animateWithDuration:MJRefreshSlowAnimationDuration animations:^{
-#warning 这句代码修复了，top值不断累加的bug
-                    self.scrollView.mj_contentInsetTop -= self.mj_height;
-                }];
+                // 此处修复回到原来的刷新之前的位置
+                if ( self.scrollViewOriginalInset.top != self.scrollView.mj_contentInsetTop ) {
+                    [UIView animateWithDuration:MJRefreshSlowAnimationDuration animations:^{
+                        self.scrollView.mj_contentInsetTop = self.scrollViewOriginalInset.top;
+                    }];
+                }
+//                [UIView animateWithDuration:MJRefreshSlowAnimationDuration animations:^{
+//#warning 这句代码修复了，top值不断累加的bug
+//                    self.scrollView.mj_contentInsetTop -= self.mj_height;
+//                }];
             } else {
                 // 执行动画
                 [UIView animateWithDuration:MJRefreshFastAnimationDuration animations:^{

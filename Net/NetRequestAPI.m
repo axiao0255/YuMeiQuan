@@ -813,7 +813,7 @@
     [dict setValue:session forKey:@"sid"];
     [dict setValue:_tid forKey:@"tid"];
     [dict setValue:_pid forKey:@"pid"];
-    [dict setValue:_authorId forKey:@"authorId"];
+    [dict setValue:_authorId forKey:@"beauthorid"];
     [dict setValue:_word forKey:@"word"];
     
     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
@@ -922,6 +922,16 @@
     [parDic setValue:@"exchangelog" forKey:@"mod"];
     [parDic setValue:session forKey:@"sid"];
     [parDic setValue:[NSNumber numberWithInteger:_page] forKey:@"page"];
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+}
+
+#pragma mark -检查版本更新
++(void)getVersionWithSuccess:(void(^)(id responseDic))success
+                     failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"version" forKey:@"mod"];
     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
     [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 }

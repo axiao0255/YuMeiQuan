@@ -25,6 +25,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
         self.leftImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 95, 70)];
+        self.leftImgView.layer.borderColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0].CGColor;
+        self.leftImgView.layer.borderWidth = 0.5;
         [self.contentView addSubview:self.leftImgView];
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.leftImgView.frame) + 5, 8, SCREEN_WIDTH - 30 - 5 - self.leftImgView.width, 58)];
@@ -47,7 +49,7 @@
         return;
     }
     NSString *pic = [dict getStringValueForKey:@"pic" defaultValue:@""];
-    [self.leftImgView setImageWithURL:[NSURL URLWithString:pic] placeholderImage:[UIImage imageNamed:@"ic_default_small.png"]];
+    [self.leftImgView setImageWithURL:[NSURL URLWithString:pic] placeholderImage:[UIImage imageNamed:@"ic_pic_default.png"]];
     self.titleLabel.width = SCREEN_WIDTH - 130;
     self.titleLabel.height = 58;
     self.titleLabel.text = [dict getStringValueForKey:@"subject" defaultValue:@""];

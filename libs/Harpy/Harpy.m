@@ -23,7 +23,7 @@
 #pragma mark - Public Methods
 + (void)checkVersion
 {
-
+/* 从 App Store 检查版本
     // Asynchronously query iTunes AppStore for publically available version
     NSString *storeString = [NSString stringWithFormat:@"http://itunes.apple.com/lookup?id=%@", kHarpyAppID];
     NSURL *storeURL = [NSURL URLWithString:storeString];
@@ -66,6 +66,18 @@
             });
         }
         
+    }];
+ */
+    [NetRequestAPI getVersionWithSuccess:^(id responseDic) {
+//        NSLog(@"responseDic 版本 : %@",responseDic);
+        NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+        NSString *newVersion = [meta getStringValueForKey:@"version" defaultValue:@""];
+        if ([kHarpyCurrentVersion compare:newVersion options:NSNumericSearch] == NSOrderedAscending) {
+            [Harpy showAlertWithAppStoreVersion:newVersion];
+        }
+        
+    } failure:^(id errorString) {
+//        NSLog(@"errorString 版本 : %@",errorString);
     }];
 }
 
@@ -136,8 +148,6 @@
         }
         
     }
-
-    
 }
 
 @end

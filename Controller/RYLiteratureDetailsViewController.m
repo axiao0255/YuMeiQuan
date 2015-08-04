@@ -564,7 +564,7 @@
         _hintCoverView.backgroundColor = [UIColor clearColor];
         
         UIImageView *topCoverView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 388)];
-        topCoverView.backgroundColor = [Utils getRGBColor:0 g:0 b:0 a:0.56];
+        topCoverView.backgroundColor = [Utils getRGBColor:0 g:0 b:0 a:0.5];
         [_hintCoverView addSubview:topCoverView];
         
         UIImageView *bottomCoverView = [[UIImageView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT - 388, SCREEN_WIDTH, 388)];
@@ -572,18 +572,19 @@
         bottomCoverView.userInteractionEnabled = YES;
         [_hintCoverView addSubview:bottomCoverView];
         
-        UIButton *dismissCoverBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80,0 , 50, 50)];
+//        UIButton *dismissCoverBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 80,0 , 50, 50)];
+        UIButton *dismissCoverBtn = [[UIButton alloc] initWithFrame:CGRectMake(0,0 , SCREEN_WIDTH , SCREEN_HEIGHT)];
         dismissCoverBtn.backgroundColor = [UIColor clearColor];
         [dismissCoverBtn addTarget:self action:@selector(dismissCoverView:) forControlEvents:UIControlEventTouchUpInside];
-        [bottomCoverView addSubview:dismissCoverBtn];
+        [_hintCoverView addSubview:dismissCoverBtn];
 
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 80, 60, 180, 100)];
-        label.font = [UIFont systemFontOfSize:16];
-        label.textColor = [UIColor whiteColor];
-        label.backgroundColor = [UIColor clearColor];
-        label.numberOfLines = 0;
-        self.hintCoverLabel = label;
-        [bottomCoverView addSubview:label];
+//        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 80, 60, 180, 100)];
+//        label.font = [UIFont systemFontOfSize:16];
+//        label.textColor = [UIColor whiteColor];
+//        label.backgroundColor = [UIColor clearColor];
+//        label.numberOfLines = 0;
+//        self.hintCoverLabel = label;
+//        [bottomCoverView addSubview:label];
         
     }
     return _hintCoverView;
