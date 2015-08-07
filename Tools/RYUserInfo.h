@@ -47,7 +47,7 @@
  */
 + (void)loginWithUserName:(NSString *)userName
                  password:(NSString *)password
-                  success:(void (^)(BOOL isSucceed))success
+                  success:(void (^)(BOOL isSucceed ,id info))success
                   failure:(void (^)(id errorString))failure;
 
 

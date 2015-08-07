@@ -108,26 +108,27 @@ static RYUserInfo * _userInfo;
 + (void)logout
 {
     
-    NSHTTPCookie *cookie;
-    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (cookie in [storage cookies])
-    {
-        [storage deleteCookie:cookie];
-    }
+//    NSHTTPCookie *cookie;
+//    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+//    for (cookie in [storage cookies])
+//    {
+//        [storage deleteCookie:cookie];
+//    }
+    [self clearCache];
 
-    //  注销
-    __weak typeof(self) wSelf = self;
-    [NetRequestAPI userLogoutWithSessionId:[RYUserInfo sharedManager].session
-                                   success:^(id responseDic) {
-                                       NSLog(@"退出 登录 responseDic : %@",responseDic);
-                                       [wSelf clearCache];
-
-                                   } failure:^(id errorString) {
-                                       [wSelf clearCache];
-                                       NSLog(@"退出 登录 errorString : %@",errorString);
-
-                                   }];
-    
+//      注销
+//    __weak typeof(self) wSelf = self;
+//    [NetRequestAPI userLogoutWithSessionId:[RYUserInfo sharedManager].session
+//                                   success:^(id responseDic) {
+//                                       NSLog(@"退出 登录 responseDic : %@",responseDic);
+//                                       [wSelf clearCache];
+//
+//                                   } failure:^(id errorString) {
+//                                       [wSelf clearCache];
+//                                       NSLog(@"退出 登录 errorString : %@",errorString);
+//
+//                                   }];
+//    
 }
 
 
@@ -138,7 +139,9 @@ static RYUserInfo * _userInfo;
     NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *path = [docPath stringByAppendingPathComponent:LoginText];
     NSDictionary *savedDic = [NSDictionary dictionaryWithContentsOfFile:path];
-    [savedDic setValue:@"0" forKey:@"islogin"];
+    [savedDic setValue:@"0" forKey:ISLOGIN];
+//    [savedDic setValue:@"" forKey:USERNAME];
+//    [savedDic setValue:@"" forKey:PASSWORD];
     [savedDic writeToFile:path atomically:YES];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"loginStateChange" object:nil];
@@ -156,8 +159,8 @@ static RYUserInfo * _userInfo;
  */
 + (void)loginWithUserName:(NSString *)userName
                  password:(NSString *)password
-                  success:(void (^)(BOOL))success
-                  failure:(void (^)(id))failure
+                  success:(void (^)(BOOL isSucceed ,id info))success
+                  failure:(void (^)(id errorString))failure;
 {
     NSHTTPCookie *cookie;
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
@@ -167,32 +170,20 @@ static RYUserInfo * _userInfo;
     }
     
     [NetRequestAPI userLoginWithUserName:userName password:password success:^(id responseDic) {
-        NSLog(@"responseDic : %@",responseDic);
-        
-        if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-            [ShowBox showError:@"登录失败，请稍候重试"];
-            success(NO);
-            return ;
-        }
+//        NSLog(@"responseDic : %@",responseDic);
         
         NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-        if ( meta == nil || [meta isKindOfClass:[NSNull class]]) {
-            [ShowBox showError:@"登录失败，请稍候重试"];
-            success(NO);
-            return ;
-        }
-        
         BOOL su = [meta getBoolValueForKey:@"success" defaultValue:NO];
         if ( !su ) {
-            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"登录失败，请稍候重试"]];
-            success(NO);
+            success(NO,nil);
+            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"登录出错"]];
             return;
         }
         // 登录成功后 记住用户名和密码
         NSMutableDictionary *savedDic = [[NSMutableDictionary alloc] init];
-        [savedDic setObject:userName forKey:@"userName"];
-        [savedDic setObject:password forKey:@"password"];
-        [savedDic setObject:@"1" forKey:@"islogin"];
+        [savedDic setObject:userName forKey:USERNAME];
+        [savedDic setObject:password forKey:PASSWORD];
+        [savedDic setObject:@"1" forKey:ISLOGIN];
         
         NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
         NSString *path = [docPath stringByAppendingPathComponent:LoginText];
@@ -201,7 +192,7 @@ static RYUserInfo * _userInfo;
         NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
         [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:info];
         
-        success(YES);
+        success(YES,info);
         
     } failure:^(id errorString) {
         failure(@"网络出现问题，请稍候重试！");
@@ -219,13 +210,13 @@ static RYUserInfo * _userInfo;
     
     NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
     
-   [[self class] loginWithUserName:[dict getStringValueForKey:@"userName" defaultValue:@""]
-                          password:[dict getStringValueForKey:@"password" defaultValue:@""]
-                           success:^(BOOL isSucceed) {
-                               success (isSucceed);
-   } failure:^(id errorString) {
-       failure(errorString);
-   }];
+    [[self class] loginWithUserName:[dict getStringValueForKey:USERNAME defaultValue:@""]
+                           password:[dict getStringValueForKey:PASSWORD defaultValue:@""]
+                            success:^(BOOL isSucceed, id info) {
+                                success (isSucceed);
+    } failure:^(id errorString) {
+        failure(errorString);
+    }];
 }
 
 

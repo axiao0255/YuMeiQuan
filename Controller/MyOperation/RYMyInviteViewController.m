@@ -47,51 +47,58 @@
 {
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
-//        [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeGradient];
+        [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeNone];
         [NetRequestAPI getMyInviteRegisterWithSessionId:[RYUserInfo sharedManager].session
                                                 success:^(id responseDic) {
                                                     NSLog(@"邀请注册 responseDic :%@",responseDic);
-//                                                    [SVProgressHUD dismiss];
                                                     [wSelf analysisDataWithDict:responseDic];
-            
         } failure:^(id errorString) {
             NSLog(@"邀请注册 errorString :%@",errorString);
-//            [SVProgressHUD dismiss];
-            [ShowBox showError:@"数据出错，请稍候重试"];
+            [SVProgressHUD dismiss];
+            [wSelf showErrorView:wSelf.view];
         }];
     }
 }
 
 - (void)analysisDataWithDict:(NSDictionary *)responseDic
 {
-    if (responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( meta == nil ) {
-        [ShowBox showError:@"数据出错，请稍候重试"];
-        return;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+        NSInteger  login = [meta getIntValueForKey:@"login" defaultValue:0];
+        if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
+            [RYUserInfo logout];
+            __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    [wSelf getNetData];
+                }
+                else{// 登录失败 打开登录界面 手动登录
+                    [SVProgressHUD dismiss];
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [SVProgressHUD dismiss];
+                [wSelf openLoginVC];
+            }];
+        }
+        else{
+            [SVProgressHUD dismiss];
+            [self showErrorView:self.view];
+        }
         return;
     }
-    
+    [SVProgressHUD dismiss];
+    [self removeErroeView];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    
     NSDictionary *invitemessage = [info getDicValueForKey:@"invitemessage" defaultValue:nil];
-    
     self.inviteData = invitemessage;
     
     if ( self.inviteData ) {
         self.view.backgroundColor = [Utils  getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
         [self initSubviews];
     }
-    
 }
 
 // 获取 邀请 icon
@@ -119,7 +126,6 @@
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
-//    label.text = @"邀请同行注册，邀请成功可获得50积分";
     label.text = [self.inviteData getStringValueForKey:@"slogan" defaultValue:@""];
     [view addSubview:label];
     
@@ -140,6 +146,10 @@
     invite_View2.delegate = self;
     invite_View2.backgroundColor = [UIColor clearColor];
     [view addSubview:invite_View2];
+    
+    UIImageView *bottomView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 380, SCREEN_WIDTH, 148)];
+    bottomView.image = [UIImage imageNamed:@"ic_inviteVIewBottom.png"];
+    [self.view addSubview:bottomView];
 }
 
 #pragma mark - GridMenuViewDelegate
@@ -168,6 +178,17 @@
             andPresentController:self];
 }
 
-
+#pragma mark 打开登录界面重现登录
+- (void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            // 登录完成 重新获取数据
+            [wSelf getNetData];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
 
 @end

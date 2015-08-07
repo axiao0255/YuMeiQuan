@@ -160,17 +160,15 @@
     
     // 取公司 名称等数据
     self.dataModel.corporateBody = [info getDicValueForKey:@"companymessage" defaultValue:nil];
-    
+    if ( isHead ) {
+        [self.dataModel.corporateArticles removeAllObjects];
+    }
     // 取文章列表
     NSArray *articles = [info getArrayValueForKey:@"threadmessage" defaultValue:nil];
     if ( articles.count ) {
-        if ( isHead ) {
-            [self.dataModel.corporateArticles removeAllObjects];
-        }
         [self.dataModel.corporateArticles addObjectsFromArray:articles];
     }
     [self.tableView reloadData];
-
 }
 
 -(MJRefreshTableView *)tableView
@@ -452,7 +450,6 @@
         [self openLoginVC];
     }
 }
-
 
 -(void)toTop
 {

@@ -16,16 +16,18 @@
 @property (nonatomic , strong) NSString      *userPassword;          // 密码
 @property (nonatomic , strong) NSString      *userRepetPassword;     // 重复密码
 @property (nonatomic , strong) NSString      *userRofessional;       // 医生专业
-@property (nonatomic , strong) NSString      *userIdentity;          // 不是医生时      用户的专业
+@property (nonatomic , strong) NSString      *userIdentity;          // 不是医生时      用户的专业 即身份
 @property (nonatomic , strong) NSString      *userName;              // 姓名
 @property (nonatomic , strong) NSString      *userPosition;          // 职位
 @property (nonatomic , strong) NSString      *userOrdinaryPosition;  // 不是医生 用户的 职务
 @property (nonatomic , strong) NSString      *userCompany;           // 单位
+@property (nonatomic , strong) NSString      *userQualifications;    // 职称     (医生状态)
 
 @property (nonatomic , strong) NSArray       *doctorSpecialtyArray;   // 医生 临床专业
 @property (nonatomic , strong) NSArray       *ordinarySpecialtyArray; // 普通专业
 @property (nonatomic , strong) NSArray       *doctorPositionArray;    // 医生职务数组
 @property (nonatomic , strong) NSArray       *ordinaryPositionArray;  // 不是医生 职务数组
+@property (nonatomic , strong) NSArray       *QualificationsArray;    // 职称数组
 
 // 企业用户 注册
 @property (nonatomic , strong) NSArray       *companyTypeArray;       // 企业类型 数组

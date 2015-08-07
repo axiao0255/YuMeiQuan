@@ -9,8 +9,8 @@
 #import "RYRegisterData.h"
 
 @implementation RYRegisterData
-// 个人
-@synthesize userName,userSecurityCode,userPassword,userRepetPassword,userRofessional,userIdentity,userPhone,userPosition,userOrdinaryPosition,userCompany,doctorSpecialtyArray,ordinarySpecialtyArray,doctorPositionArray,ordinaryPositionArray;
+//// 个人
+//@synthesize userName,userSecurityCode,userPassword,userRepetPassword,userRofessional,userIdentity,userPhone,userPosition,userOrdinaryPosition,userCompany,doctorSpecialtyArray,ordinarySpecialtyArray,doctorPositionArray,ordinaryPositionArray;
 
 // 企业
 @synthesize companyTypeArray;

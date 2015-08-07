@@ -81,7 +81,7 @@
     
     
     theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-    [theTableView setScrollEnabled:YES];
+    [theTableView setScrollEnabled:NO];
     [theTableView setDelegate:self];
     [theTableView setDataSource:self];
     theTableView.backgroundColor = [UIColor clearColor];
@@ -137,6 +137,9 @@
             if ( [[[RYUserInfo sharedManager] groupid] isEqualToString:@"10"] ) {
                 [nameBtn setTitle:@"账号审核中" forState:UIControlStateNormal];
             }
+            else if ( [[[RYUserInfo sharedManager] groupid] isEqualToString:@"42"] ){
+                [nameBtn setTitle:@"账号审核失败" forState:UIControlStateNormal];
+            }
             else{
                 [nameBtn setTitle:[[RYUserInfo sharedManager] realname] forState:UIControlStateNormal];
             }
@@ -159,7 +162,7 @@
         }
         if ( islogin  ) {
             [cell setUserInteractionEnabled:YES];
-            if ( [[[RYUserInfo sharedManager] groupid] isEqualToString:@"10"] ) {
+            if ( [[[RYUserInfo sharedManager] groupid] isEqualToString:@"10"] || [[[RYUserInfo sharedManager] groupid] isEqualToString:@"42"] ) {
                 [cell setUserInteractionEnabled:NO];
                 NSString *normalImageName = [recusalImgeArrs objectAtIndex:indexPath.row];
                 cell.normalImage = [UIImage imageNamed:normalImageName];

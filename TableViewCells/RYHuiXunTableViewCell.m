@@ -48,13 +48,16 @@
         
         self.timeLable = [[UILabel alloc] initWithFrame:CGRectMake(15,
                                                                   CGRectGetMaxY(self.leftImageView.frame) + 10,
-                                                                  self.titleLabel.width,
+                                                                  70,
                                                                    12)];
         self.timeLable.font = [UIFont systemFontOfSize:12];
         self.timeLable.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         [self.contentView addSubview:self.timeLable];
         
-        
+        // 积分
+        self.integratorImgView = [[UIImageView alloc] initWithFrame:CGRectMake(self.timeLable.left + 75,self.timeLable.top+1, 35, 10)];
+        self.integratorImgView.image = [UIImage imageNamed:@"ic_integrator_pic.png"];
+        [self.contentView addSubview:self.integratorImgView];
     }
     return self;
 }
@@ -111,6 +114,15 @@
     self.subheadLabel.text = [dict getStringValueForKey:@"organizer" defaultValue:@""];
     self.timeLable.text = [dict getStringValueForKey:@"time" defaultValue:@""];
     
+    BOOL questions = [dict getBoolValueForKey:@"questions" defaultValue:NO];
+    BOOL spread = [dict getBoolValueForKey:@"spread" defaultValue:NO];
+    if ( questions || spread ) {
+        self.integratorImgView.hidden = NO;
+    }
+    else{
+        self.integratorImgView.hidden = YES;
+    }
+    self.integratorImgView.frame = CGRectMake(self.timeLable.left + 75,self.timeLable.top+1, 35, 10);
 }
 
 @end

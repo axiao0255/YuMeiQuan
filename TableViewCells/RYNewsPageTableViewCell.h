@@ -13,6 +13,7 @@
 @property (nonatomic , strong) UIImageView *leftImageView;
 @property (nonatomic , strong) UILabel     *titleLabel;
 @property (nonatomic , strong) UILabel     *timeLabel;
+@property (nonatomic , strong) UIImageView *integratorImgView;
 
 - (void)setValueWithDict:(NSDictionary *)dict;
 

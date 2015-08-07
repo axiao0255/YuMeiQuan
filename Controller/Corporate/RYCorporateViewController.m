@@ -70,7 +70,6 @@
 {
     if ( indexPath.section == 0 ) {
         NSString *realname = [self.dataModel.corporateBody getStringValueForKey:@"realname" defaultValue:@""];
-//        CGSize nameSize = [realname sizeWithFont:[UIFont boldSystemFontOfSize:18] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByWordWrapping];
         NSDictionary *nameAttributes = @{NSFontAttributeName:[UIFont boldSystemFontOfSize:18]};
         CGRect nameRect = [realname boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30 , MAXFLOAT)
                                           options:NSStringDrawingUsesLineFragmentOrigin
@@ -78,7 +77,6 @@
                                           context:nil];
         
         NSString *desc = [self.dataModel.corporateBody getStringValueForKey:@"depict" defaultValue:@""];
-//        CGSize  recommendSize = [desc sizeWithFont:[UIFont systemFontOfSize:16] constrainedToSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) lineBreakMode:NSLineBreakByCharWrapping];
         NSDictionary *descAttributes = @{NSFontAttributeName:[UIFont boldSystemFontOfSize:16]};
         CGRect recommendRect = [desc boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30 , MAXFLOAT)
                                                  options:NSStringDrawingUsesLineFragmentOrigin

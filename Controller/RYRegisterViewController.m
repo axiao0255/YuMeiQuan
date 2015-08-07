@@ -24,6 +24,7 @@
     UITextField *identityText;          // 专业
     UITextField *userNameText;          // 姓名
     UITextField *positionText;          // 职位
+    UITextField *qualificationsText;    // 职称
     UITextField *departmentText;        // 所属单位
     
     // 企业
@@ -41,6 +42,7 @@
     
     UIButton    *identityBtn;         // 专业选择 按钮
     UIButton    *positionBtn;         // 职务选择按钮
+    UIButton    *qualificationsBtn;   // 职称按钮
     UIButton    *securityCodeBtn;     // 获取验证码 按钮
     
     // 数据
@@ -77,6 +79,7 @@
     registerData.ordinarySpecialtyArray = @[@"临床助理",@"医学生",@"咨询师",@"厂商人员",@"医疗机构人员",@"协会人员",@"其他专业"];
     registerData.doctorPositionArray = @[@"院长",@"科主任",@"科室副主任",@"医生",@"其他职务"];
     registerData.ordinaryPositionArray = @[@"营销总监",@"销售人员",@"市场人员",@"其他职务"];
+    registerData.QualificationsArray = @[@"住院医师",@"主治医师",@"副主任医师",@"主任医师",@"其他职称"];
     // 企业
     registerData.companyTypeArray = @[@"厂商",@"医疗机构",@"其他(协会)"];
 }
@@ -102,9 +105,6 @@
     
     //登录按钮
     UIButton *btnNextStep = [Utils getCustomLongButton:@"完成注册"];
-//    CGRect r = CGRectMake(SCREEN_WIDTH / 2.0 - 240/2.0 , \
-//                          7, \
-//                          240, 35);
     btnNextStep.frame = CGRectMake(15, 5, SCREEN_WIDTH - 30, 40);
     [btnNextStep addTarget:self action:@selector(submitDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btnNextStep];
@@ -152,6 +152,9 @@
                 registerData.userOrdinaryPosition = str;
             }
         }
+        else{
+            registerData.userQualifications = str;
+        }
 
     }
     
@@ -178,7 +181,13 @@
 {
     if ( myType == typePersonal ) { // 个人注册
         if ( section == 0 ) {
-            return 9;
+            if ( isDoctor ) {
+                return 10;
+            }
+            else{
+                return 9;
+            }
+            
         }
         else{
             return 1;
@@ -202,6 +211,7 @@
             case 6:
             case 7:
             case 8:
+            case 9:
                 return 52;
                 break;
             default:
@@ -261,6 +271,7 @@
                 break;
             case 5:
             case 7:
+            case 9:
                 return [self career_cell_tableView:tableView indexPath:indexPath];
                 break;
             default:
@@ -429,7 +440,7 @@
             identityText.placeholder = @"身份";
         }
     }
-    else{
+    else if(indexPath.row == 7){
         positionBtn = btn;
         positionText = textField;
         positionText.placeholder = @"职务";
@@ -438,6 +449,12 @@
         }else{
             positionText.text = registerData.userOrdinaryPosition;
         }
+    }
+    else{
+        qualificationsBtn = btn;
+        qualificationsText = textField;
+        qualificationsText.placeholder = @"职称";
+        qualificationsText.text = registerData.userQualifications;
     }
     return cell;
 }
@@ -592,7 +609,7 @@
         textField.backgroundColor = [UIColor whiteColor];
         textField.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         textField.delegate = self;
-        textField.tag = 110 + indexPath.row;
+        textField.tag = 1314;
         [cell.contentView addSubview:textField];
         
         securityCodeBtn = [Utils getCustomLongButton:@"获取验证码"];
@@ -603,7 +620,7 @@
         textField.rightView = securityCodeBtn;
         textField.rightViewMode = UITextFieldViewModeAlways;
     }
-    UITextField *textField = (UITextField *)[cell.contentView viewWithTag:110 + indexPath.row];
+    UITextField *textField = (UITextField *)[cell.contentView viewWithTag:1314];
     securityCodeText = textField;
     securityCodeText.text = registerData.userSecurityCode;
     securityCodeText.placeholder = @"输入验证码";
@@ -642,7 +659,7 @@
             title = @"选择身份";
         }
     }
-    else{
+    else if ( btn == positionBtn ){
         tag = 107;
         title = @"选择职务";
         if ( isDoctor ) {
@@ -652,6 +669,11 @@
         else{
             dataArr = registerData.ordinaryPositionArray;
         }
+    }
+    else{
+        tag = 109;
+        title = @"选择职称";
+        dataArr = registerData.QualificationsArray;
     }
     
     RYRegisterSpecialtyViewController *vc = [[RYRegisterSpecialtyViewController alloc] initWIthSpecialtyArray:dataArr isFillout:YES andTitle:title];
@@ -663,8 +685,6 @@
 // 是否医生按钮点击
 - (void)segmentSelectedControl:(NYSegmentedControl *)sender
 {
-//    currentIndex = sender.selectedSegmentIndex;
-//    [self setSubviewWithIndex:currentIndex];
     NSUInteger index = sender.selectedSegmentIndex;
     if ( index == 0 ) {
         isDoctor = YES;
@@ -674,10 +694,6 @@
     }
     [theTableView beginUpdates];
     NSMutableArray *indexPaths = [NSMutableArray array];
-//    for ( int i = 4 ; i <= 5; i ++ ) {
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-//        [indexPaths addObject:indexPath];
-//    }
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:5 inSection:0];
     [indexPaths addObject:indexPath];
     NSIndexPath *index_path = [NSIndexPath indexPathForRow:7 inSection:0];
@@ -685,32 +701,14 @@
     if ( indexPaths.count ) {
         [theTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
     }
-    [theTableView endUpdates];
-
-}
-
-
-// 是否医生按钮点击
-- (void)checkedBtnClick:(id)sender
-{
-    UIButton *btn = (UIButton *)sender;
-    if ( btn.tag == 1300 ) {
-        isDoctor = YES;
+    if ( isDoctor ) {
+        [theTableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:9 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     }else{
-        isDoctor = NO;
+        [theTableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:9 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     }
-    [theTableView beginUpdates];
-    NSMutableArray *indexPaths = [NSMutableArray array];
-    for ( int i = 4 ; i <= 5; i ++ ) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-        [indexPaths addObject:indexPath];
-    }
-    NSIndexPath *index_path = [NSIndexPath indexPathForRow:7 inSection:0];
-    [indexPaths addObject:index_path];
-    if ( indexPaths.count ) {
-        [theTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-    }
+    
     [theTableView endUpdates];
+
 }
 
 // 提交注册 按钮点击
@@ -794,6 +792,17 @@
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     NSLog(@"textField.text : %@",textField.text);
+    NSLog(@"string :::: %@",string);
+    
+    if ( textField == userPhoneText ) {
+        NSString *phone = textField.text;
+        if ( ![ShowBox isEmptyString:string] ) {
+            phone = [phone stringByAppendingString:string];
+        }
+        registerData.userPhone = phone;
+        NSLog(@"userPhone : %@",registerData.userPhone);
+    }
+    
     if ( [ShowBox isEmptyString:string] ) {
         return YES;
     }
@@ -879,6 +888,9 @@
         else if ( textField == departmentText ){  // 单位
             registerData.userCompany = textField.text;
         }
+        else if ( textField == qualificationsText ){
+            registerData.userQualifications = textField.text;
+        }
     }
 }
 
@@ -920,6 +932,13 @@
         return;
     }
     
+    if ( isDoctor ) {
+        if ( [ShowBox isEmptyString:registerData.userQualifications]) {
+            [ShowBox showError:@"请填写职称"];
+            return;
+        }
+    }
+
     NSArray * imgArray = [proofImgView getImgArray];
     if ( imgArray.count <= 0 ) {
         [ShowBox showError:@"请选择证件图片"];
@@ -950,6 +969,18 @@
 {
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
+        NSArray * imgArray = [proofImgView getImgArray];
+        ALAsset *alas = [imgArray objectAtIndex:0];
+        UIImage *img = [self fullResolutionImageFromALAsset:alas];
+        
+        // 设置职称
+        NSString *qualifications;
+        if ( isDoctor ) {
+            qualifications = registerData.userQualifications;
+        }
+        else{
+            qualifications = nil;
+        }
         [SVProgressHUD showWithStatus:@"正在提交..." maskType:SVProgressHUDMaskTypeGradient];
         [NetRequestAPI submitRegisterDataWithUserName:registerData.userPhone
                                                  code:registerData.userSecurityCode
@@ -959,8 +990,11 @@
                                              realname:registerData.userName
                                              position:registerData.userPosition
                                               company:registerData.userCompany
+                                           occupation:qualifications
+                                                image:img
                                               success:^(id responseDic) {
                                                   NSLog(@" 提交注册 responseDic: %@",responseDic);
+                                                  [SVProgressHUD dismiss];
                                                   [wSelf manageRegisterNetWithDict:responseDic];
                                                   
                                               } failure:^(id errorString) {
@@ -976,46 +1010,45 @@
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
-        [SVProgressHUD dismiss];
         [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"服务器出错，请稍候重试"]];
         return;
     }
-    
-    NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    NSString *uid = [info getStringValueForKey:@"uid" defaultValue:@""];
-    [self uploadImageWithUid:uid];
+    [self successReguster];
+//
+//
+//    [self uploadImageWithUid:uid];
 }
 
-/**
- *uid 是提交资料时 后台生产 的uid
- */
-- (void)uploadImageWithUid:(NSString *)uid
-{
-    NSArray * imgArray = [proofImgView getImgArray];
-    if ( imgArray.count <= 0 || [ShowBox isEmptyString:uid] ) {
-        [SVProgressHUD dismiss];
-        [ShowBox showError:@"数据出错"];
-        return;
-    }
-    ALAsset *alas = [imgArray objectAtIndex:0];
-    UIImage *img = [self fullResolutionImageFromALAsset:alas];
-    __weak typeof(self) wSelf = self;
-    [NetRequestAPI uploadImageWithImage:img uid:uid success:^(id responseDic) {
-        [SVProgressHUD dismiss];
-        //        NSLog(@"上传图片 responseDic%@",responseDic);
-        NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-        BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
-        if ( !success ) {
-            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
-            return ;
-        }
-        [wSelf successReguster];
-    } failure:^(id errorString) {
-        [SVProgressHUD dismiss];
-        [ShowBox showError:@"上传失败，请稍候重试"];
-        NSLog(@"上传图片 errorString%@",errorString);
-    }];
-}
+///**
+// *uid 是提交资料时 后台生产 的uid
+// */
+//- (void)uploadImageWithUid:(NSString *)uid
+//{
+//    NSArray * imgArray = [proofImgView getImgArray];
+//    if ( imgArray.count <= 0 || [ShowBox isEmptyString:uid] ) {
+//        [SVProgressHUD dismiss];
+//        [ShowBox showError:@"数据出错"];
+//        return;
+//    }
+//    ALAsset *alas = [imgArray objectAtIndex:0];
+//    UIImage *img = [self fullResolutionImageFromALAsset:alas];
+//    __weak typeof(self) wSelf = self;
+//    [NetRequestAPI uploadImageWithImage:img uid:uid success:^(id responseDic) {
+//        [SVProgressHUD dismiss];
+//        //        NSLog(@"上传图片 responseDic%@",responseDic);
+//        NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+//        BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+//        if ( !success ) {
+//            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"数据出错，请稍候重试"]];
+//            return ;
+//        }
+//        [wSelf successReguster];
+//    } failure:^(id errorString) {
+//        [SVProgressHUD dismiss];
+//        [ShowBox showError:@"上传失败，请稍候重试"];
+//        NSLog(@"上传图片 errorString%@",errorString);
+//    }];
+//}
 
 /**
  *个人注册成功
@@ -1027,8 +1060,8 @@
     
     // 用户注册成功 记住用户名和密码
     NSMutableDictionary *savedDic = [[NSMutableDictionary alloc] init];
-    [savedDic setObject:registerData.userPhone forKey:@"userName"];
-    [savedDic setObject:registerData.userPassword forKey:@"password"];
+    [savedDic setValue:registerData.userPhone forKey:USERNAME];
+    [savedDic setValue:registerData.userPassword forKey:PASSWORD];
     
     NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *path = [docPath stringByAppendingPathComponent:LoginText];
@@ -1100,7 +1133,6 @@
         [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"服务器出错，请稍候重试"]];
         return;
     }
-    
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
     
     RYCompanyRegisterSuccessViewController *vc = [[RYCompanyRegisterSuccessViewController alloc] initWithDict:info];

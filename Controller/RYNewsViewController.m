@@ -385,6 +385,7 @@
     RYNewsViewController *wSelf = sSelf;
     if ( aIndex == 0 ) {
         NSInteger tempIndex = aIndex;
+        NSLog(@"[RYUserInfo sharedManager].session :: %@",[RYUserInfo sharedManager].session);
         [NetRequestAPI getHomePageWithSessionId:[RYUserInfo sharedManager].session
                                         success:^(id responseDic) {
                                             NSLog(@"首页 responseDic： %@",responseDic);

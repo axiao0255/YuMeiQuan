@@ -221,6 +221,8 @@
                              realname:(NSString *)_realname
                              position:(NSString *)_position
                               company:(NSString *)_company
+                           occupation:(NSString *)_occupation
+                                image:(UIImage *)_image
                               success:(void(^)(id responseDic))success
                               failure:(void(^)(id errorString))failure;
 
@@ -322,6 +324,23 @@
 #pragma mark -检查版本更新
 +(void)getVersionWithSuccess:(void(^)(id responseDic))success
                      failure:(void(^)(id errorString))failure;
+
+#pragma mark -获取编辑数据
++(void)getEditInformationWithSessionId:(NSString *)session
+                               success:(void(^)(id responseDic))success
+                               failure:(void(^)(id errorString))failure;
+
+#pragma mark - 提交编辑资料数据
++(void)submitEditInformationWithSessionId:(NSString *)session
+                                   doctor:(BOOL      )_doctor
+                             professional:(NSString *)_professional
+                                 realname:(NSString *)_realname
+                                 position:(NSString *)_position
+                                  company:(NSString *)_company
+                               occupation:(NSString *)_occupation
+                                    image:(UIImage *)_image
+                                  success:(void(^)(id responseDic))success
+                                  failure:(void(^)(id errorString))failure;
 
 
 

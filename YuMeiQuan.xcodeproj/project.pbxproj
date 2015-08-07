@@ -221,6 +221,7 @@
 		96CAEDA91AF8A7470067BC2F /* RYMyInformTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CAEDA81AF8A7470067BC2F /* RYMyInformTableViewCell.m */; };
 		96CAEDAC1AF8BBFF0067BC2F /* RYMyInformListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CAEDAB1AF8BBFF0067BC2F /* RYMyInformListViewController.m */; };
 		96CAEDAF1AF8BF490067BC2F /* RYMyInformListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CAEDAE1AF8BF490067BC2F /* RYMyInformListTableViewCell.m */; };
+		96CB13C41B735C9A00D02C6E /* ic_uploadVIew_top@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CB13C31B735C9A00D02C6E /* ic_uploadVIew_top@2x.png */; };
 		96CBAA2A1B155A2D00D13C27 /* RYHomepage.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CBAA291B155A2D00D13C27 /* RYHomepage.m */; };
 		96CBAA2F1B15777000D13C27 /* RYWeeklyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CBAA2E1B15777000D13C27 /* RYWeeklyViewController.m */; };
 		96CBAA321B157E0100D13C27 /* RYWeeklyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CBAA311B157E0100D13C27 /* RYWeeklyTableViewCell.m */; };
@@ -310,6 +311,7 @@
 		96CF028C1B4FA12C0053537C /* arrows_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CF028A1B4FA12C0053537C /* arrows_up@2x.png */; };
 		96CF028E1B4FA33A0053537C /* mallbtn_up_ic_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CF028D1B4FA33A0053537C /* mallbtn_up_ic_2@2x.png */; };
 		96CF17E71AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CF17E61AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m */; };
+		96CF8F1E1B71F9C80088D534 /* ic_inviteVIewBottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CF8F1D1B71F9C80088D534 /* ic_inviteVIewBottom@2x.png */; };
 		96CFB3B21AF9B9180078C225 /* RYMyInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3B11AF9B9180078C225 /* RYMyInviteViewController.m */; };
 		96CFB3B41AF9BC9A0078C225 /* ic_Invite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CFB3B31AF9BC9A0078C225 /* ic_Invite@2x.png */; };
 		96CFB3B81AF9C0090078C225 /* GridMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CFB3B71AF9C0090078C225 /* GridMenuView.m */; };
@@ -362,6 +364,7 @@
 		96D149541B1477BF00C05809 /* RYLiteratureQueryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D149531B1477BF00C05809 /* RYLiteratureQueryTableViewCell.m */; };
 		96D149561B1479DE00C05809 /* ic_query_failure@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D149551B1479DE00C05809 /* ic_query_failure@2x.png */; };
 		96D149591B14863900C05809 /* RYCopyAddressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D149581B14863900C05809 /* RYCopyAddressView.m */; };
+		96D181E31B7452DA001E3C64 /* RYEditInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D181E21B7452DA001E3C64 /* RYEditInformationViewController.m */; };
 		96D1D0E91B2970D000A93D71 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 96D1D0E61B2970D000A93D71 /* SVProgressHUD.bundle */; };
 		96D1D0EA1B2970D000A93D71 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D1D0E81B2970D000A93D71 /* SVProgressHUD.m */; };
 		96D2380D1AF721ED00936721 /* ic_cell_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D2380B1AF721ED00936721 /* ic_cell_selected@2x.png */; };
@@ -797,6 +800,7 @@
 		96CAEDAB1AF8BBFF0067BC2F /* RYMyInformListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyInformListViewController.m; sourceTree = "<group>"; };
 		96CAEDAD1AF8BF490067BC2F /* RYMyInformListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyInformListTableViewCell.h; sourceTree = "<group>"; };
 		96CAEDAE1AF8BF490067BC2F /* RYMyInformListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyInformListTableViewCell.m; sourceTree = "<group>"; };
+		96CB13C31B735C9A00D02C6E /* ic_uploadVIew_top@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_uploadVIew_top@2x.png"; sourceTree = "<group>"; };
 		96CBAA281B155A2D00D13C27 /* RYHomepage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYHomepage.h; sourceTree = "<group>"; };
 		96CBAA291B155A2D00D13C27 /* RYHomepage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYHomepage.m; sourceTree = "<group>"; };
 		96CBAA2D1B15777000D13C27 /* RYWeeklyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYWeeklyViewController.h; sourceTree = "<group>"; };
@@ -952,6 +956,7 @@
 		96CF028D1B4FA33A0053537C /* mallbtn_up_ic_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mallbtn_up_ic_2@2x.png"; sourceTree = "<group>"; };
 		96CF17E51AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYEnshrineClassifyTableViewCell.h; sourceTree = "<group>"; };
 		96CF17E61AEF566B006F54B9 /* RYEnshrineClassifyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYEnshrineClassifyTableViewCell.m; sourceTree = "<group>"; };
+		96CF8F1D1B71F9C80088D534 /* ic_inviteVIewBottom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_inviteVIewBottom@2x.png"; sourceTree = "<group>"; };
 		96CFB3B01AF9B9180078C225 /* RYMyInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYMyInviteViewController.h; sourceTree = "<group>"; };
 		96CFB3B11AF9B9180078C225 /* RYMyInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYMyInviteViewController.m; sourceTree = "<group>"; };
 		96CFB3B31AF9BC9A0078C225 /* ic_Invite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_Invite@2x.png"; sourceTree = "<group>"; };
@@ -1025,6 +1030,8 @@
 		96D149551B1479DE00C05809 /* ic_query_failure@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_query_failure@2x.png"; sourceTree = "<group>"; };
 		96D149571B14863900C05809 /* RYCopyAddressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCopyAddressView.h; sourceTree = "<group>"; };
 		96D149581B14863900C05809 /* RYCopyAddressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCopyAddressView.m; sourceTree = "<group>"; };
+		96D181E11B7452DA001E3C64 /* RYEditInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYEditInformationViewController.h; sourceTree = "<group>"; };
+		96D181E21B7452DA001E3C64 /* RYEditInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYEditInformationViewController.m; sourceTree = "<group>"; };
 		96D1D0E51B2970D000A93D71 /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
 		96D1D0E61B2970D000A93D71 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		96D1D0E71B2970D000A93D71 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
@@ -2090,6 +2097,8 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96CB13C31B735C9A00D02C6E /* ic_uploadVIew_top@2x.png */,
+				96CF8F1D1B71F9C80088D534 /* ic_inviteVIewBottom@2x.png */,
 				96D133051B69CDB5008E0DCA /* ic_loadError@2x.png */,
 				96D003C01B62110000EFAB00 /* ic_listenView_startPlay@2x.png */,
 				96D003C11B62110000EFAB00 /* ic_listenView_stopPlay@2x.png */,
@@ -2290,6 +2299,8 @@
 				96C7ACC61AD656E000FA2E22 /* RYLoginViewController.m */,
 				96C51A6B1AD76D7900C5374D /* RYRegisterViewController.h */,
 				96C51A6C1AD76D7900C5374D /* RYRegisterViewController.m */,
+				96D181E11B7452DA001E3C64 /* RYEditInformationViewController.h */,
+				96D181E21B7452DA001E3C64 /* RYEditInformationViewController.m */,
 				96DAB7221B424C0500565F30 /* RYCompanyRegisterSuccessViewController.h */,
 				96DAB7231B424C0500565F30 /* RYCompanyRegisterSuccessViewController.m */,
 				96D9C9861AE49A7500997430 /* RYRegisterSpecialtyViewController.h */,
@@ -2498,6 +2509,7 @@
 				96CA43261B56117E005A7881 /* ic_reduce_normal@2x.png in Resources */,
 				9667D8241B00600F0099C424 /* UMSLoginViewController.xib in Resources */,
 				96C24D121B0B0BC90044C86B /* ic_adown_arrow@2x.png in Resources */,
+				96CB13C41B735C9A00D02C6E /* ic_uploadVIew_top@2x.png in Resources */,
 				96CAB6101AF1CE6D00ECD350 /* ic_normalImage_4@2x.png in Resources */,
 				96CD4D631B32A02D00C3917B /* system_notice@2x.png in Resources */,
 				96C3CC6B1AE0AC44007266A0 /* arrows_right@2x.png in Resources */,
@@ -2593,6 +2605,7 @@
 				96C3A9BA1ADFB84D008011D3 /* imgsectiondown.png in Resources */,
 				96C3E0E11B57966B00F0E273 /* ic_company_attent@2x.png in Resources */,
 				96D0A5651B183A9800BF6D90 /* ic_recusalImge_1@2x.png in Resources */,
+				96CF8F1E1B71F9C80088D534 /* ic_inviteVIewBottom@2x.png in Resources */,
 				96C24D0F1B0ADF700044C86B /* ic_grid_default@2x.png in Resources */,
 				96D2380D1AF721ED00936721 /* ic_cell_selected@2x.png in Resources */,
 				96D934A81B5CDD700085F15B /* ic_billboard_background@2x.png in Resources */,
@@ -2655,6 +2668,7 @@
 				96C7ACB11AD611FA00FA2E22 /* AFHTTPSessionManager.m in Sources */,
 				96C44D7F1B455A9D000C3EB9 /* HPGrowingTextView.m in Sources */,
 				9663AB251B41110600E7BD72 /* RYInviteMakeMoneyViewController.m in Sources */,
+				96D181E31B7452DA001E3C64 /* RYEditInformationViewController.m in Sources */,
 				96CAEDA61AF89FFC0067BC2F /* RYMyInformViewController.m in Sources */,
 				96CD08AE1B02E1F700088B1E /* RYCorporateHomePageTableViewCell.m in Sources */,
 				96C7ACB21AD611FA00FA2E22 /* AFNetworkReachabilityManager.m in Sources */,

@@ -14,6 +14,7 @@
 @property (nonatomic , strong) UILabel        *titleLabel;
 @property (nonatomic , strong) UILabel        *timeLable;
 @property (nonatomic , strong) UILabel        *subheadLabel;
+@property (nonatomic , strong) UIImageView    *integratorImgView;
 
 - (void)setValueWithDict:(NSDictionary *)dict;
 

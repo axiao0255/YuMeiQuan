@@ -91,6 +91,8 @@
  */
 -(void)addUIwithImage:(id)img AndNum:(NSInteger)num{
     UIImageView* imgV                   = [[UIImageView alloc] initWithFrame:[self itemFrameWithNum:num]];
+    imgV.layer.borderColor = [Utils getRGBColor:0xbd g:0xbd b:0xbd a:1.0].CGColor;
+    imgV.layer.borderWidth = 0.5;
     if (editEnable == couldEdit) {
         [imgV setTag:baseetag+num];
         [imgV setUserInteractionEnabled:YES];
@@ -103,12 +105,13 @@
             [imgV addGestureRecognizer:tap];
         }else{
             CGFloat width = [self itemWidth];
-            UIButton* deletebtn         = [[UIButton alloc] initWithFrame:CGRectMake(0.5*width, 0, 0.5*width, 0.5*width)];
+            UIButton* deletebtn         = [[UIButton alloc] initWithFrame:CGRectMake(0.75*width, 0, 0.25*width, 0.25*width)];
             [deletebtn setTitle:@"X" forState:UIControlStateNormal];
             [deletebtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 //            deletebtn.layer.masksToBounds = YES;
 //            deletebtn.layer.cornerRadius = 0.25*width;
 //            deletebtn.backgroundColor = [UIColor lightGrayColor];
+            deletebtn.backgroundColor = [UIColor clearColor];
             [deletebtn addTarget:self action:@selector(deleteimg:) forControlEvents:UIControlEventTouchUpInside];
             if ([img isKindOfClass:[NSString class]]) {
                 if ([[NSFileManager defaultManager] fileExistsAtPath:img]) {

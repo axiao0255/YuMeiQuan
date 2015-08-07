@@ -61,7 +61,7 @@
     btn.frame = CGRectMake(0, 0, 60, 30);
     [btn setTitle:@"完成" forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btn setBackgroundColor:[UIColor redColor]];
+    [btn setBackgroundColor:[UIColor clearColor]];
     [btn addTarget:self action:@selector(handleComplete) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:btn];
     self.navigationItem.rightBarButtonItem = item;
@@ -69,7 +69,7 @@
     UIButton* backbtn = [UIButton buttonWithType:UIButtonTypeCustom];
     backbtn.frame = CGRectMake(0, 0, 60, 30);
     [backbtn setTitle:@"返回" forState:UIControlStateNormal];
-    [backbtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [backbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [backbtn addTarget:self action:@selector(handlebackComplete) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backitem = [[UIBarButtonItem alloc] initWithCustomView:backbtn];
     self.navigationItem.leftBarButtonItem = backitem;
@@ -85,12 +85,12 @@
         int num = _selectedArray.count;
         NSString* str = num==0?@"完成":[NSString stringWithFormat:@"完成(%d)",num];
         [btn setTitle:str forState:UIControlStateNormal];
-        [btn setEnabled:num>0];
-        if (num == 0) {
-            [btn setBackgroundColor:[UIColor grayColor]];
-        }else{
-            [btn setBackgroundColor:[UIColor redColor]];
-        }
+//        [btn setEnabled:num>0];
+//        if (num == 0) {
+//            [btn setBackgroundColor:[UIColor grayColor]];
+//        }else{
+//            [btn setBackgroundColor:[UIColor redColor]];
+//        }
     }
     
 }

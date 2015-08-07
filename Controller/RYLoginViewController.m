@@ -9,6 +9,8 @@
 #import "RYLoginViewController.h"
 #import "RYRetrievePasswordViewController.h"
 #import "RYRegisterSelectViewController.h"
+#import "RYEditInformationViewController.h"
+
 
 #define USERNAMELENGTH 11              // 用户名的长度
 #define PASSWORDLENGTH 15              // 密码长度
@@ -32,6 +34,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+     [self setUsernameAndPassword];
 }
 
 - (void)initSubviews
@@ -110,8 +113,8 @@
     NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
     
     if (dict) {
-        userNameText.text = [dict getStringValueForKey:@"userName" defaultValue:@""];
-        passWordText.text = [dict getStringValueForKey:@"password" defaultValue:@""];
+        userNameText.text = [dict getStringValueForKey:USERNAME defaultValue:@""];
+        passWordText.text = [dict getStringValueForKey:PASSWORD defaultValue:@""];
     }
 }
 
@@ -119,6 +122,8 @@
 -(void)gotoLogin:(id)sender
 {
     NSLog(@"登录");
+//    RYEditInformationViewController *editVC = [[RYEditInformationViewController alloc] init];
+//    [self.navigationController pushViewController:editVC animated:YES];
     
     if ( [ShowBox alertPhoneNo:userNameText.text] ) {
         return;
@@ -133,28 +138,34 @@
         __weak RYLoginViewController *wSelf = self;
         [RYUserInfo loginWithUserName:userNameText.text
                              password:passWordText.text
-                              success:^(BOOL isSucceed) {
+                              success:^(BOOL isSucceed, id info) {
                                   if (isSucceed)
                                   {
                                       if (wSelf.finishBlock != nil ) {
                                           wSelf.finishBlock(YES, nil);
                                       }
-                                      
-                                     [[NSNotificationCenter defaultCenter] postNotificationName:@"loginStateChange" object:nil];
-                                     [wSelf.navigationController popViewControllerAnimated:YES];
+                                       NSLog(@"info : %@", info);
+                                      [[NSNotificationCenter defaultCenter] postNotificationName:@"loginStateChange" object:nil];
+                                      NSString *groupid = [info getStringValueForKey:@"groupid" defaultValue:@""];
+                                      if ( [groupid isEqualToString:@"42"] ) {
+                                          UINavigationController *wNav = wSelf.navigationController;
+                                          [wSelf.navigationController popViewControllerAnimated:NO];
+                                          RYEditInformationViewController *vc = [[RYEditInformationViewController alloc] init];
+                                          [wNav pushViewController:vc animated:YES];
+                                          return;
+                                      }
+                                      [wSelf.navigationController popViewControllerAnimated:YES];
                                   }
                                   else
                                   {
-                                      [ShowBox showError:@"登录出错！"];
                                       if (wSelf.finishBlock != nil ) {
-                                          wSelf.finishBlock(YES, nil);
+                                          wSelf.finishBlock(NO, nil);
                                       }
-
                                   }
         } failure:^(id errorString) {
             [ShowBox showError:errorString];
             if (wSelf.finishBlock != nil ) {
-                wSelf.finishBlock(YES, nil);
+                wSelf.finishBlock(NO, nil);
             }
         }];
     }

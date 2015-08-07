@@ -275,7 +275,7 @@
     NSFileManager *fm = [NSFileManager defaultManager];
     if([fm fileExistsAtPath:path])
     {
-        if ([[texts objectForKey:@"islogin"] isEqualToString:@"1"]) {
+        if ([[texts objectForKey:ISLOGIN] isEqualToString:@"1"]) {
             return YES;
         }
         else{
@@ -298,7 +298,7 @@
     
     if([fm fileExistsAtPath:path])
     {
-        if ([[texts objectForKey:@"islogin"] isEqualToString:@"0"]) {
+        if ([[texts objectForKey:ISLOGIN] isEqualToString:@"0"]) {
             RYLoginViewController *login=[[RYLoginViewController alloc]initWithFinishBlock:^(BOOL isLogin, NSError *error) {
             }];
             [view.navigationController pushViewController:login animated:YES];

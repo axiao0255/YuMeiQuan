@@ -114,7 +114,7 @@
     [parDic setValue:session forKey:@"sid"];
     
     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
-    
+    NSLog(@"parDic :::     %@",parDic);
 //    [NetManager JSONDataWithUrl:url parameters:parDic success:success fail:failure];
      [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 }
@@ -639,6 +639,8 @@
  * _realname      姓名
  * _position      职务
  * _company       单位名称
+ * _occupation    医生职称
+ * _image         证件照
  *
  */
 +(void)submitRegisterDataWithUserName:(NSString *)username
@@ -649,6 +651,8 @@
                              realname:(NSString *)_realname
                              position:(NSString *)_position
                               company:(NSString *)_company
+                           occupation:(NSString *)_occupation
+                                image:(UIImage *)_image
                               success:(void(^)(id responseDic))success
                               failure:(void(^)(id errorString))failure
 {
@@ -662,10 +666,12 @@
     [parDic setValue:_realname forKey:@"realname"];
     [parDic setValue:_position forKey:@"position"];
     [parDic setValue:_company forKey:@"company"];
+    [parDic setValue:_occupation forKey:@"occupation"];
     
     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
     
-    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+//    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+     [[NetManager sharedManager] uploadImageWithUrl:url image:_image parameters:parDic success:success fail:failure];
 }
 
 #pragma mark - 获取短信验证码
@@ -694,7 +700,6 @@
     [dict setValue:_uid forKey:@"uid"];
 
      NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
-//    [[NetManager sharedManager] uploadImageWithUrl:url image:image success:success fail:failure];
     [[NetManager sharedManager] uploadImageWithUrl:url image:image parameters:dict success:success fail:failure];
 }
 
@@ -935,5 +940,61 @@
     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
     [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 }
+
+#pragma mark -获取编辑数据
++(void)getEditInformationWithSessionId:(NSString *)session
+                               success:(void(^)(id responseDic))success
+                               failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"profile" forKey:@"mod"];
+    [parDic setValue:session forKey:@"sid"];
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+}
+
+#pragma mark - 提交编辑资料数据
+/**
+ * _doctor        是否是医生，YES 医生，NO 非医生
+ * _professional  专业
+ * _realname      姓名
+ * _position      职务
+ * _company       单位名称
+ * _occupation    医生职称
+ * _image         证件照
+ *
+ */
+
++(void)submitEditInformationWithSessionId:(NSString *)session
+                                   doctor:(BOOL      )_doctor
+                             professional:(NSString *)_professional
+                                 realname:(NSString *)_realname
+                                 position:(NSString *)_position
+                                  company:(NSString *)_company
+                               occupation:(NSString *)_occupation
+                                    image:(UIImage *)_image
+                                  success:(void(^)(id responseDic))success
+                                  failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:session forKey:@"sid"];
+    [parDic setValue:@"profile" forKey:@"mod"];
+    [parDic setValue:@"update" forKey:@"ac"];
+    [parDic setValue:[NSNumber numberWithBool:_doctor] forKey:@"doctor"];
+    [parDic setValue:_professional forKey:@"professional"];
+    [parDic setValue:_realname forKey:@"realname"];
+    [parDic setValue:_position forKey:@"position"];
+    [parDic setValue:_company forKey:@"company"];
+    [parDic setValue:_occupation forKey:@"occupation"];
+    if ( _image == nil ) {
+        [parDic setValue:@"noimage" forKey:@"image"];
+    }
+    
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] uploadImageWithUrl:url image:_image parameters:parDic success:success fail:failure];
+}
+
+
 
 @end

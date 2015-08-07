@@ -53,7 +53,8 @@
         self.declareLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:self.declareLabel];
         
-        self.aboutCompanyBtn = [[UIButton alloc] initWithFrame:CGRectMake(285, 35, 24, 24)];
+        self.aboutCompanyBtn = [[UIButton alloc] initWithFrame:CGRectMake(280, 35, 30, 30)];
+        self.aboutCompanyBtn.backgroundColor = [UIColor clearColor];
         [self.aboutCompanyBtn setImage:[UIImage imageNamed:@"ic_aboutCompant.png"] forState:UIControlStateNormal];
         [self.contentView addSubview:self.aboutCompanyBtn];
         
@@ -119,7 +120,7 @@
 //        [self.contentView addSubview:self.answerImgView];
         // 积分
         self.integratorImgView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMinX(self.contentLabel.frame),
-                                                                               self.categoryLabel.top, 14, 11)];
+                                                                               self.categoryLabel.top, 35, 10)];
         self.integratorImgView.image = [UIImage imageNamed:@"ic_integrator_pic.png"];
         [self.contentView addSubview:self.integratorImgView];
 
