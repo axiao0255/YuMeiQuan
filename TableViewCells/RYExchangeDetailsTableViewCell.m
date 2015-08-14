@@ -24,11 +24,11 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, SCREEN_WIDTH - 30, 180)];
+        self.imgView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, SCREEN_WIDTH - 30, 160*SCREEN_WIDTH/320)];
         self.imgView.layer.borderWidth = 0.5;
         self.imgView.layer.borderColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0].CGColor;
         [self.contentView addSubview:self.imgView];
-        self.transparencyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 140,  self.imgView.width, 40)];
+        self.transparencyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.imgView.height-40,  self.imgView.width, 40)];
         [self.imgView addSubview:self.transparencyImageView];
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, self.transparencyImageView.width - 20, self.transparencyImageView.height)];
@@ -56,7 +56,7 @@
                                         context:nil];
     
     self.transparencyImageView.height = rect.size.height + 10;
-    self.transparencyImageView.top = 180 - self.transparencyImageView.height;
+    self.transparencyImageView.top = self.imgView.height - self.transparencyImageView.height;
     self.titleLabel.height = self.transparencyImageView.height;
     self.transparencyImageView.image = [UIImage imageNamed:@"ic_transparency.png"];
     self.titleLabel.text = title;

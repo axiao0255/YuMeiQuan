@@ -180,8 +180,6 @@
 
 - (void)submitBtnClick:(id)sender
 {
-    NSLog(@"提交");
-    
     if ( self.isDoctor ) {
         if ( [ShowBox isEmptyString:registerData.userRofessional] ) {
             [ShowBox showError:@"请选择专业"];
@@ -230,7 +228,6 @@
 - (void)submitRegisterNet
 {
     if ( [ShowBox checkCurrentNetwork] ) {
-        __weak typeof(self) wSelf = self;
         
         NSArray * imgArray = [proofImgView getImgArray];
         id imgPath = [imgArray objectAtIndex:0];
@@ -260,7 +257,7 @@
             position = registerData.userOrdinaryPosition;
         }
         [SVProgressHUD showWithStatus:@"正在提交..." maskType:SVProgressHUDMaskTypeGradient];
-        
+        __weak typeof(self) wSelf = self;
         [NetRequestAPI submitEditInformationWithSessionId:[RYUserInfo sharedManager].session
                                                    doctor:self.isDoctor
                                              professional:professional
@@ -271,13 +268,21 @@
                                                     image:img
                                                   success:^(id responseDic) {
                                                        [SVProgressHUD dismiss];
-                                                      NSLog(@"编辑提交 responseDic :: %@",responseDic);
+//                                                      NSLog(@"编辑提交 responseDic :: %@",responseDic);
                                                       NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-                                                      NSLog(@"%@",[meta getStringValueForKey:@"msg" defaultValue:@"数据出错"]);
+//                                                      NSLog(@"%@",[meta getStringValueForKey:@"msg" defaultValue:@"数据出错"]);
+                                                      BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                                      if ( !success ) {
+                                                          [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"网络出错，请稍候重试！"]];
+                                                          return ;
+                                                      }
+                                                      [[NSNotificationCenter defaultCenter] postNotificationName:@"loginStateChange" object:nil];
+                                                      [wSelf.navigationController popViewControllerAnimated:YES];
             
         } failure:^(id errorString) {
              [SVProgressHUD dismiss];
-              NSLog(@"编辑提交 errorString :: %@",errorString);
+            [ShowBox showError:@"网络出错，请稍候重试！"];
+//              NSLog(@"编辑提交 errorString :: %@",errorString);
         }];
     }
 }

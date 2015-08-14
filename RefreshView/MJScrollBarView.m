@@ -141,7 +141,7 @@
     float vButtonOrigin = [[vDic objectForKey:TOTALWIDTH] floatValue];
     if (vButtonOrigin >= 300) {
         if ((vButtonOrigin + 180) >= mScrollView.contentSize.width) {
-            [mScrollView setContentOffset:CGPointMake(mScrollView.contentSize.width - 320, mScrollView.contentOffset.y) animated:YES];
+            [mScrollView setContentOffset:CGPointMake(mScrollView.contentSize.width - SCREEN_WIDTH, mScrollView.contentOffset.y) animated:YES];
             return;
         }
         

@@ -37,7 +37,7 @@
     }
     int row = ceil((CGFloat)titleArray.count / 4);
     
-    GridMenuView *gridMenu = [[GridMenuView alloc] initWithFrame:CGRectMake(5, 10, SCREEN_WIDTH - 10,  (row-1)*10 + row*50)
+    GridMenuView *gridMenu = [[GridMenuView alloc] initWithFrame:CGRectMake(5, 10, SCREEN_WIDTH - 10,  (row-1)*10 + row*(50*SCREEN_WIDTH/320))
                                                        imgUpName:@"ic_literatureCategory.png"
                                                      imgDownName:@"ic_literatureCategory.png"
                                                       titleArray:titleArray

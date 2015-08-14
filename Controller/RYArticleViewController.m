@@ -17,6 +17,7 @@
 #import "RYShareSheet.h"
 //#import "RYTokenView.h"
 #import "RYBillboardView.h"
+#import "RYAuthorArticleViewController.h"
 
 #define BROWSER_TITLE_LBL_TAG 12731
 @interface RYArticleViewController ()<UIWebViewDelegate,UIGestureRecognizerDelegate,CXPhotoBrowserDelegate,CXPhotoBrowserDataSource,RYShareSheetDelegate,UIAlertViewDelegate,RYAnswerSheetDelegate,UINavigationControllerDelegate,UIScrollViewDelegate,RYBillboardViewDelegate>
@@ -322,11 +323,12 @@
     
     // 设置 作者名称
     NSDictionary *nameAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:15]};
-    CGRect nameRect = [self.articleData.author boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 95, MAXFLOAT)
+    CGRect nameRect = [self.articleData.author boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 80 - 30, MAXFLOAT)
                                         options:NSStringDrawingUsesLineFragmentOrigin
                                      attributes:nameAttributes
                                         context:nil];
     self.sourceButton.width = nameRect.size.width + 30;
+    [self.sourceButton setImage:[UIImage imageNamed:@"ic_left_article.png"] forState:UIControlStateNormal];
     [self.sourceButton setTitle:self.articleData.author forState:UIControlStateNormal];
     
     // 设置标题
@@ -370,15 +372,41 @@
     CGPoint pt = [sender locationInView:self.webView];
     NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", pt.x, pt.y];
     NSString *urlToSave = [self.webView stringByEvaluatingJavaScriptFromString:imgURL];
-    if (urlToSave.length > 0 && self.imageSourceArray.count > 0) {
-        NSInteger index = [self.imageSourceArray indexOfObject:urlToSave];
-        [self.browser setInitialPageIndex:index];
-        [self presentViewController:self.browser animated:YES completion:^{
-        }];
+    NSLog(@"urlToSave ::: %@",urlToSave);
+    if ( urlToSave.length > 0 ) {
+        NSArray *urlSplitArr = [urlToSave componentsSeparatedByString:@"."];
+        NSString *lastObj = [urlSplitArr lastObject];
+        if ( [lastObj isEqualToString:@"mp4"] ) {
+            return;
+        }
+        else{
+            if ( self.imageSourceArray.count > 0 ) {
+                NSInteger index = [self.imageSourceArray indexOfObject:urlToSave];
+                [self.browser setInitialPageIndex:index];
+                [self presentViewController:self.browser animated:YES completion:^{
+                }];
+            }
+            else{
+                return;
+            }
+        }
     }
     else{
         return;
     }
+
+//    CGPoint pt = [sender locationInView:self.webView];
+//    NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", pt.x, pt.y];
+//    NSString *urlToSave = [self.webView stringByEvaluatingJavaScriptFromString:imgURL];
+//    if (urlToSave.length > 0 && self.imageSourceArray.count > 0) {
+//        NSInteger index = [self.imageSourceArray indexOfObject:urlToSave];
+//        [self.browser setInitialPageIndex:index];
+//        [self presentViewController:self.browser animated:YES completion:^{
+//        }];
+//    }
+//    else{
+//        return;
+//    }
 }
 
 - (UIButton *)stowButton
@@ -472,12 +500,17 @@
 {
     if ( _sourceButton == nil ) {
         _sourceButton = [[UIButton alloc] initWithFrame:CGRectZero];
-        _sourceButton.backgroundColor = [Utils getRGBColor:0x31 g:0x55 b:0x6b a:1.0];
+//        _sourceButton.backgroundColor = [Utils getRGBColor:0x31 g:0x55 b:0x6b a:1.0];
         _sourceButton.height = 35;
-        _sourceButton.left = 0;
+        _sourceButton.left = 5;
         _sourceButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
-        [_sourceButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        _sourceButton.titleLabel.textColor = [Utils getRGBColor:0x00 g:0x9e b:0xff a:1.0];
+//         _sourceButton.left = 10;
+        [_sourceButton setTitleColor:[Utils getRGBColor:0x00 g:0x9e b:0xff a:1.0] forState:UIControlStateNormal];
         [_sourceButton addTarget:self action:@selector(sourceButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+//        [_sourceButton setImage:[UIImage imageNamed:@"ic_left_article.png"] forState:UIControlStateNormal];
+        
+//        UIImageView *imgV = [UIImageView alloc] initWithFrame:CGRectMake(<#CGFloat x#>, <#CGFloat y#>, <#CGFloat width#>, <#CGFloat height#>)
     }
     return _sourceButton;
 }
@@ -486,9 +519,9 @@
 {
     if (_dateLabel == nil) {
         _dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _dateLabel.left = SCREEN_WIDTH - 15 - 80;;
+        _dateLabel.left = SCREEN_WIDTH - 15 - 65;;
         _dateLabel.height = 35;
-        _dateLabel.width = 80;
+        _dateLabel.width = 65;
         _dateLabel.backgroundColor = [UIColor clearColor];
         _dateLabel.textAlignment = NSTextAlignmentRight;
         _dateLabel.font = [UIFont systemFontOfSize:12];
@@ -616,20 +649,20 @@
     //调整文字大小
     NSString *jsString = [[NSString alloc] initWithFormat:@"document.getElementsByTagName('body')[0].style.webkitTextSizeAdjust= '%ld%%'",(long)[GlobleModel sharedInstance].bodyFontSize];
     [webView stringByEvaluatingJavaScriptFromString:jsString];
-    
     //适配图片大小
-    [webView stringByEvaluatingJavaScriptFromString:
-     @"var script = document.createElement('script');"
-     "script.type = 'text/javascript';"
-     "script.text = \"function ResizeImages() { "
-     "var myimg,oldwidth,oldheight;"
-     "for(i=0;i <document.images.length;i++){"
-     "myimg = document.images[i];"
-     "oldwidth = myimg.width;"
-     "myimg.width = oldwidth/2 - 17;"
-     "}"
-     "}\";"
-     "document.getElementsByTagName('head')[0].appendChild(script);"];
+    NSString *str = [NSString stringWithFormat:
+                     @"var script = document.createElement('script');"
+                     "script.type = 'text/javascript';"
+                     "script.text = \"function ResizeImages() { "
+                     "var myimg,oldwidth,oldheight;"
+                     "for(i=0;i <document.images.length;i++){"
+                     "myimg = document.images[i];"
+                     "oldwidth = myimg.width;"
+                     "myimg.width = %f - 30;"
+                     "}"
+                     "}\";"
+                     "document.getElementsByTagName('head')[0].appendChild(script);",SCREEN_WIDTH];
+    [webView stringByEvaluatingJavaScriptFromString:str ];
     [webView stringByEvaluatingJavaScriptFromString:@"ResizeImages();"];
     
     //获取当前网页所有图片
@@ -824,6 +857,14 @@
     if ( self.articleData.isCompany ) {
         RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] initWithCorporateID:self.articleData.authorId];
         [self.navigationController pushViewController:vc animated:YES];
+    }
+    else{
+        NSString *authorID = self.articleData.authorId;
+        if ( ![ShowBox isEmptyString:authorID] ) {
+            RYAuthorArticleViewController *vc = [[RYAuthorArticleViewController alloc] initWithAuthorID:authorID];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+
     }
 }
 

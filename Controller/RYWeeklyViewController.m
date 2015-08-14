@@ -150,7 +150,7 @@
 {
     if ( self.listData.count ) {
         if ( indexPath.row == 0 ) {
-            return 180;
+            return 180*SCREEN_WIDTH/320;
         }
         else{
             return 90;

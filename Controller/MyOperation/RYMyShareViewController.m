@@ -75,13 +75,13 @@
         [NetRequestAPI getMyAwardShareListWithSessionId:[RYUserInfo sharedManager].session
                                                    page:currentPage
                                                 success:^(id responseDic) {
-                                                    NSLog(@"企业主页 ： responseDic ：%@",responseDic);
+                                                    NSLog(@"有奖分享 ： responseDic ：%@",responseDic);
                                                     [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
                                                     [wSelf analysisDataWithDict:responseDic isHeadRersh:isHeaderReresh];
 
             
         } failure:^(id errorString) {
-            NSLog(@"企业主页 ： errorString ：%@",errorString);
+            NSLog(@"有奖分享 ： errorString ：%@",errorString);
             [wSelf tableViewRefreshEndWithIsHead:isHeaderReresh];
             if ( wSelf.dataArray.count == 0 ) {
                 [wSelf showErrorView:wSelf.tableView];
@@ -153,12 +153,15 @@
     self.tableView.totlePage = [info getIntValueForKey:@"total" defaultValue:1];
     
     NSArray *spreadlogmessage = [info getArrayValueForKey:@"spreadlogmessage" defaultValue:nil];
-    
+    if ( isHead ) {
+        [self.dataArray removeAllObjects];
+    }
     if ( spreadlogmessage.count ) {
-        if ( isHead ) {
-            [self.dataArray removeAllObjects];
-        }
         [self.dataArray addObjectsFromArray:spreadlogmessage];
+    }
+    
+    if ( self.dataArray.count == 0 ) {
+        [self showErrorView:self.tableView];
     }
     
     [self.tableView reloadData];

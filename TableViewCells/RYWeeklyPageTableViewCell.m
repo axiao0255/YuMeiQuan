@@ -30,10 +30,10 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.adverImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, SCREEN_WIDTH - 30 , 160)];
+        self.adverImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, SCREEN_WIDTH - 30 , 160*SCREEN_WIDTH/320)];
         [self.contentView addSubview:self.adverImageView];
         
-        self.transparencyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 120, self.adverImageView.width, 40)];
+        self.transparencyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.adverImageView.height - 40, self.adverImageView.width, 40)];
         [self.adverImageView addSubview:self.transparencyImageView];
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0,self.transparencyImageView.width - 30, self.transparencyImageView.height)];
@@ -41,7 +41,7 @@
         self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
         [self.transparencyImageView addSubview:self.titleLabel];
         
-        self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 180, SCREEN_WIDTH - 30, 39)];
+        self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.adverImageView.bottom + 5, SCREEN_WIDTH - 30, 39)];
         self.contentLabel.font = [UIFont systemFontOfSize:16];
         self.contentLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         self.contentLabel.numberOfLines = 2;

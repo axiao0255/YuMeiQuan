@@ -123,7 +123,7 @@
 
 +(UIButton *)getCustomLongButton:(NSString *)string{
 
-    UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(10, 0, SCREEN_WIDTH - 20, 44)];
+    UIButton *baseButton = [[UIButton alloc] initWithFrame: CGRectMake(10, 0, SCREEN_WIDTH - 20, 40)];
     baseButton.titleLabel.font = [UIFont boldSystemFontOfSize:18];
     [baseButton setTitle:string forState:UIControlStateNormal];
     [baseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -282,6 +282,9 @@
 #pragma mark - 从数组中取出 首字母相同key字典 归类
 + (NSArray *)findSameKeyWithArray:(NSArray *)originalArray
 {
+    if ( originalArray.count == 0) {
+        return nil;
+    }
     // 1、对数组按firstcharter排序
     NSArray *sortDesc = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"firstcharter" ascending:YES]];
     NSArray *sortedArr = [originalArray sortedArrayUsingDescriptors:sortDesc];

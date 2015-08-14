@@ -126,6 +126,7 @@
                 if ( isSucceed ) { // 自动登录成功 刷新数据，
                     wSelf.notStretch = YES;
                     wSelf.tableView.currentPage = 0;
+                    wSelf.tableView.totlePage = 0;
                     [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
                 }
                 else{// 登录失败 打开登录界面 手动登录
@@ -138,6 +139,8 @@
             }];
             return;
         }
+        [self showErrorView:self.tableView];
+        return;
     }
     [SVProgressHUD dismiss];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
@@ -466,6 +469,7 @@
             NSLog(@"登录完成"); // 重新获取数据  由于本ViewController中有注册通知，登录成功后通知能重新刷新数据，所有在此不做任何操作
             wSelf.notStretch = YES;
             wSelf.tableView.currentPage = 0;
+            wSelf.tableView.totlePage = 1;
            [wSelf getDataWithIsHeaderReresh:YES andCurrentPage:0];
         }
     }];

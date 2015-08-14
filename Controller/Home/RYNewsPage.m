@@ -67,7 +67,7 @@
     if ( indexPath.section == 0 ) {
         NSString *adverPic = [self.adverData getStringValueForKey:@"pic" defaultValue:@""];
         if ( self.adverData && ![ShowBox isEmptyString:adverPic]) {
-            return 180;
+            return SCREEN_WIDTH *9/16.0 ;
         }
         else{
             return 0;

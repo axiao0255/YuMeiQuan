@@ -121,10 +121,6 @@
 #pragma mark 登录
 -(void)gotoLogin:(id)sender
 {
-    NSLog(@"登录");
-//    RYEditInformationViewController *editVC = [[RYEditInformationViewController alloc] init];
-//    [self.navigationController pushViewController:editVC animated:YES];
-    
     if ( [ShowBox alertPhoneNo:userNameText.text] ) {
         return;
     }
@@ -144,7 +140,7 @@
                                       if (wSelf.finishBlock != nil ) {
                                           wSelf.finishBlock(YES, nil);
                                       }
-                                       NSLog(@"info : %@", info);
+//                                       NSLog(@"info : %@", info);
                                       [[NSNotificationCenter defaultCenter] postNotificationName:@"loginStateChange" object:nil];
                                       NSString *groupid = [info getStringValueForKey:@"groupid" defaultValue:@""];
                                       if ( [groupid isEqualToString:@"42"] ) {

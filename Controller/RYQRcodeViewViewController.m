@@ -48,7 +48,7 @@
     [scanner setSymbology: ZBAR_I25 config: ZBAR_CFG_ENABLE to: 0];
     
     UIImageView *qroverimg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"13-touming.png"]];
-    qroverimg.frame = CGRectMake(0, 0, qroverimg.frame.size.width, qroverimg.frame.size.height);
+    qroverimg.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     [reader.view addSubview:qroverimg];
     
 //    UILabel *loadinglabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 200, VIEW_WIDTH, 30)];

@@ -53,6 +53,7 @@
 {
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeBlack];
         [NetRequestAPI getMyCreditsWithSessionId:[RYUserInfo sharedManager].session
                                          success:^(id responseDic) {
                                              NSLog(@"我的积分 responseDic :: %@",responseDic);
@@ -60,52 +61,43 @@
             
         } failure:^(id errorString) {
             NSLog(@"我的积分 errorString :: %@",errorString);
-            [ShowBox showError:@"数据出错"];
+            [SVProgressHUD dismiss];
         }];
     }
 }
 //
 - (void)analysisDataWithDict:(NSDictionary *)responseDic
 {
-    if ( responseDic == nil || [responseDic isKindOfClass:[NSNull class]] ) {
-        [ShowBox showError:@"获取数据失败，请稍候重试"];
-        return ;
-    }
     NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
-    if ( !meta ) {
-        [ShowBox showError:@"获取数据失败，请稍候重试"];
-        return ;
-    }
-    
     BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
     if ( !success ) {
         int  login = [meta getIntValueForKey:@"login" defaultValue:0];
         if ( login == 2 ) {  // login == 2 表示用户已过期 需要重新登录
-            RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
-                if ( isLogin ) {
-                    NSLog(@"登录完成");
+              __weak typeof(self) wSelf = self;
+            [RYUserInfo automateLoginWithLoginSuccess:^(BOOL isSucceed) {
+                // 自动登录一次
+                if ( isSucceed ) { // 自动登录成功 刷新数据，
+                    [wSelf getNetData];
                 }
+                else{// 登录失败 打开登录界面 手动登录
+                    [SVProgressHUD dismiss];
+                    [wSelf openLoginVC];
+                }
+            } failure:^(id errorString) {
+                [SVProgressHUD dismiss];
+                [wSelf openLoginVC];
             }];
-            [self.navigationController pushViewController:nextVC animated:YES];
-            return;
-        }
-        else{
-            [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
             return;
         }
     }
+    [SVProgressHUD dismiss];
+    [self removeErroeView];
     NSDictionary *info = [responseDic getDicValueForKey:@"info" defaultValue:nil];
-    if ( !info ) {
-        [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"获取数据失败，请稍候重试"]];
-        return;
-    }
-    
-    // 刷新 userinfo的数据
+     // 刷新 userinfo的数据
     NSDictionary *usermassage = [info getDicValueForKey:@"usermassage" defaultValue:nil];
     if ( usermassage ) {
         [[RYUserInfo sharedManager] refreshUserInfoDataWithDict:usermassage];
     }
-    
     [self.view addSubview:self.tableView];
 }
 
@@ -154,7 +146,13 @@
         return 250;
     }
     else{
-        return 43;
+        
+        if ( IS_IPHONE_6P || IS_IPHONE_6 ) {
+            return 55;
+        }
+        else{
+            return 43;
+        }
     }
 }
 
@@ -171,7 +169,8 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.backgroundColor = [UIColor clearColor];
             
-            UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 43)];
+            CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
+            UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
             imgView.tag = 1010;
             [cell.contentView addSubview:imgView];
         }
@@ -218,11 +217,11 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:top_cell];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(106, 24, 164, 164)];
+        UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-82+24, 24, 164, 164)];
         iconImageView.image = [UIImage imageNamed:@"ic_jifen_jewel.png"];
         [cell.contentView addSubview:iconImageView];
         
-        UILabel *jifenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(90, 161, 100, 14)];
+        UILabel *jifenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-80, 161, 80, 14)];
         jifenTitleLabel.text = @"积分余额";
         jifenTitleLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
         jifenTitleLabel.font = [UIFont systemFontOfSize:14];
@@ -230,9 +229,9 @@
         [cell.contentView addSubview:jifenTitleLabel];
         
         // 显示积分
-        UILabel *showJifenLabel = [[UILabel alloc] initWithFrame:CGRectMake(90,
+        UILabel *showJifenLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-80,
                                                                             jifenTitleLabel.bottom + 8,
-                                                                            SCREEN_WIDTH - 180,
+                                                                            170,
                                                                             35)];
         showJifenLabel.backgroundColor = [UIColor clearColor];
         showJifenLabel.font = [UIFont systemFontOfSize:35];
@@ -285,6 +284,21 @@
         [self.tableView endUpdates];
     }
 }
+
+#pragma mark 打开登录界面重现登录
+- (void)openLoginVC
+{
+    __weak typeof(self) wSelf = self;
+    RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
+        if ( isLogin ) {
+            NSLog(@"登录完成");
+            // 登录完成 重新获取数据
+            [wSelf getNetData];
+        }
+    }];
+    [self.navigationController pushViewController:nextVC animated:YES];
+}
+
 
 
 @end

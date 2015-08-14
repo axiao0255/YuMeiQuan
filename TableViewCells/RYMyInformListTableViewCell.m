@@ -24,9 +24,10 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, 30)];
-        self.titleLabel.font = [UIFont systemFontOfSize:14];
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 8, SCREEN_WIDTH - 30, 30)];
+        self.titleLabel.font = [UIFont systemFontOfSize:16];
         self.titleLabel.backgroundColor = [UIColor clearColor];
+        self.titleLabel.numberOfLines = 0;
         self.titleLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
         [self.contentView addSubview:self.titleLabel];
         
@@ -53,10 +54,17 @@
     if ( !dic ) {
         return;
     }
-    
-    self.titleLabel.text = [dic getStringValueForKey:@"title" defaultValue:@""];
-    self.contentLabel.text = [dic getStringValueForKey:@"note" defaultValue:@""];
-    self.timeLabel.text = [dic getStringValueForKey:@"time" defaultValue:@""];
+    NSString *title = [dic getStringValueForKey:@"title" defaultValue:@""];
+    // 设置标题
+    NSDictionary *attributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
+    CGRect rect = [title boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
+                                      options:NSStringDrawingUsesLineFragmentOrigin
+                                   attributes:attributes
+                                      context:nil];
+    self.titleLabel.height = rect.size.height;
+    self.titleLabel.text = title;
+//    self.contentLabel.text = [dic getStringValueForKey:@"note" defaultValue:@""];
+//    self.timeLabel.text = [dic getStringValueForKey:@"time" defaultValue:@""];
 }
 
 @end

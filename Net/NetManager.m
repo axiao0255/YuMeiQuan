@@ -143,9 +143,10 @@ static NetManager *_manager;
     [manager POST:urlStr parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
         if ( image ) {
+           
             NSData *imageData = UIImageJPEGRepresentation(image, 1);
             
-            NSLog(@"图片数据 ： %@",imageData);
+//            NSLog(@"图片数据 ： %@",imageData);
             
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             
@@ -156,7 +157,7 @@ static NetManager *_manager;
             [formData appendPartWithFileData:imageData name:@"file" fileName:fileName mimeType:@"image/jpeg"];
         }
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-    
+        
         if ( [responseObject isKindOfClass:[NSData class]] ) {
             NSDictionary *jsonObject =[NSJSONSerialization
                          JSONObjectWithData:responseObject

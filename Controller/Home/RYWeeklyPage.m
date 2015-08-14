@@ -41,16 +41,18 @@
     if ( self.listData.count ) {
         NSDictionary * dict = [self.listData objectAtIndex:indexPath.section];
         NSString *subject = [dict getStringValueForKey:@"subject" defaultValue:@""];
-        NSDictionary *praiseAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:14]};
+        NSDictionary *praiseAttributes = @{NSFontAttributeName:[UIFont systemFontOfSize:16]};
         CGRect praiseRect = [subject boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT)
                                                options:NSStringDrawingUsesLineFragmentOrigin
                                             attributes:praiseAttributes
                                                context:nil];
         if ( praiseRect.size.height > 28 ) {
-            return 240 + 15;
+//            return 240 + 15;
+            return 95 + 160*SCREEN_WIDTH/320;
         }
         else{
-            return 220 + 15;
+//            return 220 + 15;
+            return 72 + 160*SCREEN_WIDTH/320;
         }
     }
     else{

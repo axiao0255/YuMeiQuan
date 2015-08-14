@@ -30,7 +30,7 @@
         [self.backgroundView setImage:[UIImage imageNamed:@"ic_company_bj.png"]];
         [self.contentView addSubview:self.backgroundView];
         
-        self.directBtn = [[UIButton alloc] initWithFrame:CGRectMake(200, 50, 50, 17)];
+        self.directBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 110, 50, 50, 17)];
         [self.directBtn setBackgroundImage:[UIImage imageNamed:@"ic_direct.png"] forState:UIControlStateNormal];
         [self.directBtn.titleLabel setFont:[UIFont systemFontOfSize:12]];
         [self.directBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -53,7 +53,7 @@
         self.declareLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:self.declareLabel];
         
-        self.aboutCompanyBtn = [[UIButton alloc] initWithFrame:CGRectMake(280, 35, 30, 30)];
+        self.aboutCompanyBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-50, 35, 30, 30)];
         self.aboutCompanyBtn.backgroundColor = [UIColor clearColor];
         [self.aboutCompanyBtn setImage:[UIImage imageNamed:@"ic_aboutCompant.png"] forState:UIControlStateNormal];
         [self.contentView addSubview:self.aboutCompanyBtn];

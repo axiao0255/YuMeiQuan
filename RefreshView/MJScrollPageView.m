@@ -188,6 +188,8 @@
          MJRefreshTableView *v = [_contentItems objectAtIndex:i];
         v.totlePage = 1;
         v.currentPage = 0;
+        // 刷新表格
+        [v reloadData];
     }
     MJRefreshTableView *v = [_contentItems objectAtIndex:tableIndex];
     [self getDataWithIsHeaderReresh:YES andCurrentPage:v.currentPage];

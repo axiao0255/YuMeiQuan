@@ -97,7 +97,13 @@
 
 - (void)loginStateChange:(NSNotification *)notice
 {
-     self.notStretch = YES;
+    self.notStretch = YES;
+    self.newsPage.adverData = nil;
+    self.literaturePage.adverData = nil;
+    self.baiJiaPage.authorList = nil;
+    MJRefreshTableView *tableView = (MJRefreshTableView *)[scrollPageView.contentItems objectAtIndex:4];
+    tableView.tableHeaderView = nil;
+
     [scrollPageView removeAlldataSources];
 }
 
@@ -385,7 +391,7 @@
     RYNewsViewController *wSelf = sSelf;
     if ( aIndex == 0 ) {
         NSInteger tempIndex = aIndex;
-        NSLog(@"[RYUserInfo sharedManager].session :: %@",[RYUserInfo sharedManager].session);
+//        NSLog(@"[RYUserInfo sharedManager].session :: %@",[RYUserInfo sharedManager].session);
         [NetRequestAPI getHomePageWithSessionId:[RYUserInfo sharedManager].session
                                         success:^(id responseDic) {
                                             NSLog(@"首页 responseDic： %@",responseDic);

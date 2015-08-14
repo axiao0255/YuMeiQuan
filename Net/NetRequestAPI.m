@@ -674,19 +674,34 @@
      [[NetManager sharedManager] uploadImageWithUrl:url image:_image parameters:parDic success:success fail:failure];
 }
 
-#pragma mark - 获取短信验证码
-+(void)getSMS_codeWithPhoneNumber:(NSString *)phone
-                          success:(void(^)(id responseDic))success
-                          failure:(void(^)(id errorString))failure
+#pragma mark - 注册获取短信验证码
++(void)getRegSMS_codeWithPhoneNumber:(NSString *)phone
+                             success:(void(^)(id responseDic))success
+                             failure:(void(^)(id errorString))failure
 {
     NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"reg" forKey:@"ac"];
     [parDic setValue:@"duanxin" forKey:@"mod"];
     [parDic setValue:phone forKey:@"username"];
     
     NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
     
     [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+}
 
+#pragma mark - 找回密码获取短信验证码
++(void)getFindPasswordSMS_codeWithPhoneNumber:(NSString *)phone
+                                      success:(void(^)(id responseDic))success
+                                      failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"back" forKey:@"ac"];
+    [parDic setValue:@"duanxin" forKey:@"mod"];
+    [parDic setValue:phone forKey:@"username"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 }
 
 #pragma mark - 上传图片
@@ -995,6 +1010,33 @@
     [[NetManager sharedManager] uploadImageWithUrl:url image:_image parameters:parDic success:success fail:failure];
 }
 
+#pragma mark -修改 密码 提交验证码
++(void)submitSecurityCodeWithPhone:(NSString *)_phone
+                              code:(NSString *)_code
+                           success:(void(^)(id responseDic))success
+                           failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"back" forKey:@"mod"];
+    [parDic setValue:_phone forKey:@"username"];
+    [parDic setValue:_code forKey:@"code"];
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
 
+}
+
+#pragma mark -修改密码
++(void)submitNewPasswordWithPhone:(NSString *)_phone
+                         password:(NSString *)_password
+                          success:(void(^)(id responseDic))success
+                          failure:(void(^)(id errorString))failure
+{
+    NSMutableDictionary *parDic = [NSMutableDictionary dictionary];
+    [parDic setValue:@"changepwd" forKey:@"mod"];
+    [parDic setValue:_phone forKey:@"username"];
+    [parDic setValue:_password forKey:@"password"];
+    NSString *url = [NSString stringWithFormat:@"%@/ios.php",DEBUGADDRESS];
+    [[NetManager sharedManager] JSONDataWithUrl:url parameters:parDic success:success fail:failure];
+}
 
 @end

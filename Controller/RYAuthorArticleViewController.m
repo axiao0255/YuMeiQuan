@@ -55,14 +55,17 @@
 {
     if ( [ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
+        [SVProgressHUD showWithStatus:@"加载中..." maskType:SVProgressHUDMaskTypeNone];
         [NetRequestAPI getAuthorArticleWithSessionId:[RYUserInfo sharedManager].session
                                                 wuid:self.authorId
                                              success:^(id responseDic) {
+                                                 [SVProgressHUD dismiss];
                                                  NSLog(@"文章l :%@",responseDic);
                                                  [wSelf analysisDataWithDict:responseDic];
             
         } failure:^(id errorString) {
             NSLog(@"文章errorString :%@",errorString);
+            [SVProgressHUD dismiss];
             if ( self.articleLists.count == 0 ) {
                 [self showErrorView:self.tableView];
             }

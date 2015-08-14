@@ -75,7 +75,7 @@
 
 - (void)initSubviews
 {
-    UIImageView *topBackground = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 265, 195)];
+    UIImageView *topBackground = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 55, 195*SCREEN_WIDTH/320)];
     topBackground.image = [UIImage imageNamed:@"ic_leftVIew_background.png"];
     [self.view addSubview:topBackground];
     
@@ -109,10 +109,10 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ( indexPath.section == 0 ) {
-        return 195;
+        return 195*SCREEN_WIDTH/320;
     }
     else{
-        return 40;
+        return 40*SCREEN_WIDTH/320;
     }
 }
 
@@ -123,7 +123,7 @@
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        UIButton *nameBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 45, 160, 30)];
+        UIButton *nameBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 45*SCREEN_WIDTH/320, 160*SCREEN_WIDTH/320, 30)];
         [nameBtn setBackgroundImage:[UIImage imageNamed:@"ic_leftview_name.png"] forState:UIControlStateNormal];
         nameBtn.adjustsImageWhenHighlighted = NO;
         [nameBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];

@@ -381,15 +381,37 @@
     CGPoint pt = [sender locationInView:self.webView];
     NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", pt.x, pt.y];
     NSString *urlToSave = [self.webView stringByEvaluatingJavaScriptFromString:imgURL];
-    if (urlToSave.length > 0 && self.imageSourceArray.count > 0) {
-        NSInteger index = [self.imageSourceArray indexOfObject:urlToSave];
-        [self.browser setInitialPageIndex:index];
-        [self presentViewController:self.browser animated:YES completion:^{
-        }];
+    if ( urlToSave.length > 0 ) {
+        NSArray *urlSplitArr = [urlToSave componentsSeparatedByString:@"."];
+        NSString *lastObj = [urlSplitArr lastObject];
+        if ( [lastObj isEqualToString:@"mp4"] ) {
+            return;
+        }
+        else{
+            if ( self.imageSourceArray.count > 0 ) {
+                NSInteger index = [self.imageSourceArray indexOfObject:urlToSave];
+                [self.browser setInitialPageIndex:index];
+                [self presentViewController:self.browser animated:YES completion:^{
+                }];
+            }
+            else{
+                return;
+            }
+        }
     }
     else{
         return;
     }
+    
+//    if (urlToSave.length > 0 && self.imageSourceArray.count > 0) {
+//        NSInteger index = [self.imageSourceArray indexOfObject:urlToSave];
+//        [self.browser setInitialPageIndex:index];
+//        [self presentViewController:self.browser animated:YES completion:^{
+//        }];
+//    }
+//    else{
+//        return;
+//    }
 }
 
 - (UIButton *)stowButton
@@ -648,14 +670,25 @@
         [backBtn addTarget:self action:@selector(backBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [_toobar addSubview:backBtn];
         
+        CGFloat  space , width;
+        width = 40;
+        if ( IS_IPHONE_6 ) {
+            space = 23;
+        }
+        else if ( IS_IPHONE_6P ){
+             space = 28.5;
+        }
+        else{
+            space = 14.5;
+        }
         
-        self.shareButton.right = SCREEN_WIDTH - 15;
+        self.shareButton.left = SCREEN_WIDTH - (space+width);
         [_toobar addSubview:self.shareButton];
         
-        self.stowButton.right = SCREEN_WIDTH - 70;
+        self.stowButton.left = SCREEN_WIDTH - (width*2 + space*2);
         [_toobar addSubview:self.stowButton];
         
-        self.commentButton.right = SCREEN_WIDTH - 125;
+        self.commentButton.left = SCREEN_WIDTH - (width*3 + space*3);
         [_toobar addSubview:self.commentButton];
         
     }
@@ -725,20 +758,35 @@
     [webView stringByEvaluatingJavaScriptFromString:jsString];
     
     //适配图片大小
-    [webView stringByEvaluatingJavaScriptFromString:
-     @"var script = document.createElement('script');"
-     "script.type = 'text/javascript';"
-     "script.text = \"function ResizeImages() { "
-     "var myimg,oldwidth,oldheight;"
-     "for(i=0;i <document.images.length;i++){"
-     "myimg = document.images[i];"
-     "oldwidth = myimg.width;"
-     "myimg.width = oldwidth/2 - 17;"
-     "}"
-     "}\";"
-     "document.getElementsByTagName('head')[0].appendChild(script);"];
+//    [webView stringByEvaluatingJavaScriptFromString:
+//     @"var script = document.createElement('script');"
+//     "script.type = 'text/javascript';"
+//     "script.text = \"function ResizeImages() { "
+//     "var myimg,oldwidth,oldheight;"
+//     "for(i=0;i <document.images.length;i++){"
+//     "myimg = document.images[i];"
+//     "oldwidth = myimg.width;"
+//     "myimg.width = oldwidth/2 - 17;"
+//     "}"
+//     "}\";"
+//     "document.getElementsByTagName('head')[0].appendChild(script);"];
+//    [webView stringByEvaluatingJavaScriptFromString:@"ResizeImages();"];
+    //适配图片大小
+    NSString *imageStr = [NSString stringWithFormat:
+                     @"var script = document.createElement('script');"
+                     "script.type = 'text/javascript';"
+                     "script.text = \"function ResizeImages() { "
+                     "var myimg,oldwidth,oldheight;"
+                     "for(i=0;i <document.images.length;i++){"
+                     "myimg = document.images[i];"
+                     "oldwidth = myimg.width;"
+                     "myimg.width = %f - 30;"
+                     "}"
+                     "}\";"
+                     "document.getElementsByTagName('head')[0].appendChild(script);",SCREEN_WIDTH];
+    [webView stringByEvaluatingJavaScriptFromString:imageStr ];
     [webView stringByEvaluatingJavaScriptFromString:@"ResizeImages();"];
-    
+        
     //获取当前网页所有图片
     NSString *imageURLString = [webView stringByEvaluatingJavaScriptFromString:@"(function() {var images=document.querySelectorAll(\"img\");var imageUrls=[];[].forEach.call(images, function(el) { imageUrls[imageUrls.length] = el.src;}); return JSON.stringify(imageUrls);})()"];
     NSError *jsonError = nil;
@@ -952,6 +1000,7 @@
     NSLog(@"点击评论");
     if ( ![ShowBox isLogin] ) {
         [self openLoginVC];
+        return;
     }
      RYcommentDetailsViewController *vc = [[RYcommentDetailsViewController alloc] initWithArticleTid:self.tid];
     [self.navigationController pushViewController:vc animated:YES];

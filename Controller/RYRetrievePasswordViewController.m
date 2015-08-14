@@ -13,6 +13,7 @@
 @interface RYRetrievePasswordViewController ()<UITextFieldDelegate>
 {
     UITextField *phoneTextField;
+    UIButton    *securityCodeBtn; // 发送验证码按钮
 }
 @end
 
@@ -39,6 +40,7 @@
     sumbitBtn.center = CGPointMake(SCREEN_WIDTH / 2, CGRectGetMaxY(textField.frame) + 20 + CGRectGetHeight(sumbitBtn.frame)/2.0);
     [sumbitBtn addTarget:self action:@selector(submitDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:sumbitBtn];
+    securityCodeBtn = sumbitBtn;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -47,13 +49,24 @@
 
 - (void)submitDidClick:(id)sender
 {
-    NSLog(@"获取验证码");
     if ( [ShowBox alertPhoneNo:phoneTextField.text] ) {
         return;
     }
-    
-    RYPasswordAttestationViewController *vc = [[RYPasswordAttestationViewController alloc] initWithPhoneNum:phoneTextField.text];
-    [self.navigationController pushViewController:vc animated:YES];
+    if ( [ShowBox checkCurrentNetwork] ) {
+        [securityCodeBtn setEnabled:NO];
+        __weak typeof(self) wSelf = self;
+        [NetRequestAPI getFindPasswordSMS_codeWithPhoneNumber:phoneTextField.text
+                                                      success:^(id responseDic) {
+                                                          NSLog(@"responseDic :: %@",responseDic);
+                                                          [securityCodeBtn setEnabled:YES];
+                                                          RYPasswordAttestationViewController *vc = [[RYPasswordAttestationViewController alloc] initWithPhoneNum:phoneTextField.text];
+                                                          [wSelf.navigationController pushViewController:vc animated:YES];
+        } failure:^(id errorString) {
+            [securityCodeBtn setEnabled:YES];
+            RYPasswordAttestationViewController *vc = [[RYPasswordAttestationViewController alloc] initWithPhoneNum:phoneTextField.text];
+            [wSelf.navigationController pushViewController:vc animated:YES];
+        }];
+    }
 }
 
 #pragma mark -textField delegate

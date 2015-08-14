@@ -124,7 +124,9 @@
     else{
         NSDictionary *resultDic = [self.listData objectAtIndex:indexPath.section];
         NSArray *secondList = [resultDic getArrayValueForKey:@"second" defaultValue:nil];
-        return ceil(secondList.count/3.0)*40 + 20 + 4.5 * (ceil(secondList.count/3.0) - 1);
+//        return ceil(secondList.count/3.0)*40 + 20 + 4.5 * (ceil(secondList.count/3.0) - 1);
+        NSInteger row =  ceil(secondList.count/3.0);
+        return row*(40*SCREEN_WIDTH/320) + 20 + 4.5*(row-1);
     }
 }
 
@@ -189,7 +191,10 @@
             [titleArray addObject:tempStr];
         }
         
-        GridMenuView *categoryview = [[GridMenuView alloc] initWithFrame:CGRectMake(10, 10, 300, ceil(secondList.count/3.0)*40  + 4.5 *(ceil(secondList.count/3.0) - 1) )
+        NSInteger row =  ceil(secondList.count/3.0);
+        GridMenuView *categoryview = [[GridMenuView alloc] initWithFrame:CGRectMake(10, 10,
+                                                                                    SCREEN_WIDTH - 20,
+                                                                                    row*(40*SCREEN_WIDTH/320)  + 4.5 *(row - 1) )
                                                                imgUpName:@"mallbtn_up_ic_2.png"
                                                              imgDownName:@"mallbtn_up_ic_2.png"
                                                               titleArray:titleArray

@@ -88,10 +88,10 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.adverImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 180)];
+        self.adverImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 9 * SCREEN_WIDTH / 16.0)];
         [self.contentView addSubview:self.adverImageView];
         
-        self.transparencyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 140, SCREEN_WIDTH, 40)];
+        self.transparencyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,  self.adverImageView.height - 40, SCREEN_WIDTH, 40)];
         [self.adverImageView addSubview:self.transparencyImageView];
         
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, SCREEN_WIDTH - 30, self.transparencyImageView.height)];
@@ -121,8 +121,8 @@
                                                            attributes:attributes
                                                               context:nil];
 
-    self.transparencyImageView.height = rect.size.height + 8;
-    self.transparencyImageView.top = 180 - self.transparencyImageView.height;
+    self.transparencyImageView.height = rect.size.height + 10;
+    self.transparencyImageView.top = self.adverImageView.height - self.transparencyImageView.height;
     self.titleLabel.frame = CGRectMake(15, 0, SCREEN_WIDTH - 30, self.transparencyImageView.height);
     self.transparencyImageView.image = [UIImage imageNamed:@"ic_transparency.png"];
     self.titleLabel.text = title;//[dict getStringValueForKey:@"subject" defaultValue:@""];

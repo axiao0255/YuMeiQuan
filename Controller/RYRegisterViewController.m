@@ -45,6 +45,8 @@
     UIButton    *qualificationsBtn;   // 职称按钮
     UIButton    *securityCodeBtn;     // 获取验证码 按钮
     
+    UIButton    *submitBtn;           // 提交按钮
+    
     // 数据
     RYRegisterData *registerData;
 }
@@ -108,6 +110,7 @@
     btnNextStep.frame = CGRectMake(15, 5, SCREEN_WIDTH - 30, 40);
     [btnNextStep addTarget:self action:@selector(submitDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btnNextStep];
+    submitBtn = btnNextStep;
 }
 
 - (void)initSubviews
@@ -187,7 +190,6 @@
             else{
                 return 9;
             }
-            
         }
         else{
             return 1;
@@ -732,11 +734,16 @@
     [securityCodeBtn setEnabled:NO];
     __weak typeof(self) wSelf = self;
     if ( [ShowBox checkCurrentNetwork] ) {
-        [NetRequestAPI getSMS_codeWithPhoneNumber:registerData.userPhone
-                                          success:^(id responseDic) {
-                                              NSLog(@"获取短信验证码：responseDic  %@",responseDic);
-                                              [wSelf startRuntime];
-                                              
+        [NetRequestAPI getRegSMS_codeWithPhoneNumber:registerData.userPhone
+                                             success:^(id responseDic) {
+                                                 NSLog(@"获取短信验证码：responseDic  %@",responseDic);
+                                                 [wSelf startRuntime];
+                                                 NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
+                                                 BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
+                                                 if ( !success ) {
+                                                     [ShowBox showError:[meta getStringValueForKey:@"msg" defaultValue:@"网络出错，请稍候重试！"]];
+                                                 }
+            
         } failure:^(id errorString) {
             NSLog(@"获取短信验证码：errorString  %@",errorString);
             [wSelf startRuntime];
@@ -791,8 +798,8 @@
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    NSLog(@"textField.text : %@",textField.text);
-    NSLog(@"string :::: %@",string);
+//    NSLog(@"textField.text : %@",textField.text);
+//    NSLog(@"string :::: %@",string);
     
     if ( textField == userPhoneText ) {
         NSString *phone = textField.text;
@@ -800,7 +807,7 @@
             phone = [phone stringByAppendingString:string];
         }
         registerData.userPhone = phone;
-        NSLog(@"userPhone : %@",registerData.userPhone);
+//        NSLog(@"userPhone : %@",registerData.userPhone);
     }
     
     if ( [ShowBox isEmptyString:string] ) {
@@ -968,37 +975,48 @@
 - (void)personalRegisterNet
 {
     if ( [ShowBox checkCurrentNetwork] ) {
+        [SVProgressHUD showWithStatus:@"正在提交..." maskType:SVProgressHUDMaskTypeGradient];
         __weak typeof(self) wSelf = self;
+        [submitBtn setEnabled:NO];
         NSArray * imgArray = [proofImgView getImgArray];
         ALAsset *alas = [imgArray objectAtIndex:0];
         UIImage *img = [self fullResolutionImageFromALAsset:alas];
         
         // 设置职称
         NSString *qualifications;
+        // 设置专业
+        NSString *professional;
+        // 设置职务
+        NSString *position;
         if ( isDoctor ) {
             qualifications = registerData.userQualifications;
+            professional = registerData.userRofessional;
+            position = registerData.userPosition;
         }
         else{
             qualifications = nil;
+            professional = registerData.userIdentity;
+            position = registerData.userOrdinaryPosition;
         }
-        [SVProgressHUD showWithStatus:@"正在提交..." maskType:SVProgressHUDMaskTypeGradient];
         [NetRequestAPI submitRegisterDataWithUserName:registerData.userPhone
                                                  code:registerData.userSecurityCode
                                              password:registerData.userPassword
                                                doctor:isDoctor
-                                         professional:registerData.userRofessional
+                                         professional:professional
                                              realname:registerData.userName
-                                             position:registerData.userPosition
+                                             position:position
                                               company:registerData.userCompany
                                            occupation:qualifications
                                                 image:img
                                               success:^(id responseDic) {
                                                   NSLog(@" 提交注册 responseDic: %@",responseDic);
+                                                  [submitBtn setEnabled:YES];
                                                   [SVProgressHUD dismiss];
                                                   [wSelf manageRegisterNetWithDict:responseDic];
                                                   
                                               } failure:^(id errorString) {
                                                   NSLog(@" 提交注册 errorString: %@",errorString);
+                                                  [submitBtn setEnabled:YES];
                                                   [SVProgressHUD dismiss];
                                                   [ShowBox showError:@"提交失败，请稍候重试"];
                                               }];

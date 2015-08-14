@@ -96,7 +96,8 @@
     self.inviteData = invitemessage;
     
     if ( self.inviteData ) {
-        self.view.backgroundColor = [Utils  getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
+//        self.view.backgroundColor = [Utils  getRGBColor:0x99 g:0xe1 b:0xff a:1.0];
+        self.view.backgroundColor = [UIColor whiteColor];
         [self initSubviews];
     }
 }
@@ -117,7 +118,7 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 380)];
     view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view];
-    UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(106, 24, 164, 164)];
+    UIImageView *iconImageView = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-82+24, 24, 164, 164)];
     iconImageView.image = [UIImage imageNamed:@"ic_Invite.png"];
     [view addSubview:iconImageView];
     
@@ -129,7 +130,12 @@
     label.text = [self.inviteData getStringValueForKey:@"slogan" defaultValue:@""];
     [view addSubview:label];
     
-    GridMenuView *invite_View1 = [[GridMenuView alloc] initWithFrame:CGRectMake(62, CGRectGetMaxY(label.frame) + 32, SCREEN_WIDTH - 124, 60)
+    
+    BOOL isIphone6_or_6p = NO;
+    if ( IS_IPHONE_6 || IS_IPHONE_6P ) {
+        isIphone6_or_6p = YES;
+    }
+    GridMenuView *invite_View1 = [[GridMenuView alloc] initWithFrame:CGRectMake(62, CGRectGetMaxY(label.frame) + (isIphone6_or_6p?50:32), SCREEN_WIDTH - 124, 60)
                                                           imgUpArray:[ic_invite_array objectAtIndex:0]
                                                         imgDownArray:[ic_invite_array objectAtIndex:0]
                                                            perRowNum:3];
@@ -138,7 +144,7 @@
     invite_View1.backgroundColor = [UIColor clearColor];
     [view addSubview:invite_View1];
     
-    GridMenuView *invite_View2 = [[GridMenuView alloc] initWithFrame:CGRectMake(62, CGRectGetMaxY(invite_View1.frame) + 8, SCREEN_WIDTH - 124, 60)
+    GridMenuView *invite_View2 = [[GridMenuView alloc] initWithFrame:CGRectMake(62, CGRectGetMaxY(invite_View1.frame) + (isIphone6_or_6p?16:8), SCREEN_WIDTH - 124, 60)
                                                           imgUpArray:[ic_invite_array objectAtIndex:1]
                                                         imgDownArray:[ic_invite_array objectAtIndex:1]
                                                            perRowNum:2];
@@ -147,7 +153,10 @@
     invite_View2.backgroundColor = [UIColor clearColor];
     [view addSubview:invite_View2];
     
-    UIImageView *bottomView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 380, SCREEN_WIDTH, 148)];
+    UIImageView *bottomView = [[UIImageView alloc] initWithFrame:CGRectMake(0, VIEW_HEIGHT-148, SCREEN_WIDTH, 148)];
+    if ( IS_IPHONE_4_OR_LESS ) {
+        bottomView.frame = CGRectMake(0, 380, SCREEN_WIDTH, 148);
+    }
     bottomView.image = [UIImage imageNamed:@"ic_inviteVIewBottom.png"];
     [self.view addSubview:bottomView];
 }

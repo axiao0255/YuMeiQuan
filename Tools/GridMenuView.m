@@ -155,6 +155,10 @@
         UIImage *img = [UIImage imageNamed:imgdownname];
         float imgwidth = img.size.width;
         float imgheight = img.size.height;
+        
+        // 一下两行代码是为了考虑在 iphone 5 ，6 ，6+ 上同比放大
+        imgwidth = imgwidth*SCREEN_WIDTH/320;
+        imgheight = imgheight*SCREEN_WIDTH/320;
         //imgdis = imgdistance + imgwidth;
         float imgdis_w;
         if (perrownum <= 1) {

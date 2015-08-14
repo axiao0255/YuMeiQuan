@@ -30,7 +30,8 @@
 
 - (CGFloat)podcastTableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 180;
+//    return 180;
+    return SCREEN_WIDTH * 9 / 16.0;
 }
 
 - (UITableViewCell *)podcastTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

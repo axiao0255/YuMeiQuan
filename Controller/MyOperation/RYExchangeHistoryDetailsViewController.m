@@ -80,7 +80,7 @@
 {
     if ( indexPath.section == 0 ) {
         if ( indexPath.row == 0 ) {
-            return 190;
+            return 160*SCREEN_WIDTH/320+10;
         }
         else if ( indexPath.row == 1 ){
             NSString *subject = [self.exchangeDict getStringValueForKey:@"message" defaultValue:@""];

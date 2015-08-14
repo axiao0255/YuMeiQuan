@@ -226,10 +226,15 @@
                               success:(void(^)(id responseDic))success
                               failure:(void(^)(id errorString))failure;
 
-#pragma mark - 获取短信验证码
-+(void)getSMS_codeWithPhoneNumber:(NSString *)phone
+#pragma mark - 注册获取短信验证码
++(void)getRegSMS_codeWithPhoneNumber:(NSString *)phone
                           success:(void(^)(id responseDic))success
                           failure:(void(^)(id errorString))failure;
+#pragma mark - 找回密码获取短信验证码
++(void)getFindPasswordSMS_codeWithPhoneNumber:(NSString *)phone
+                             success:(void(^)(id responseDic))success
+                             failure:(void(^)(id errorString))failure;
+
 
 #pragma mark - 上传图片
 +(void)uploadImageWithImage:(UIImage *)image
@@ -341,6 +346,18 @@
                                     image:(UIImage *)_image
                                   success:(void(^)(id responseDic))success
                                   failure:(void(^)(id errorString))failure;
+
+#pragma mark -修改 密码 提交验证码
++(void)submitSecurityCodeWithPhone:(NSString *)_phone
+                              code:(NSString *)_code
+                           success:(void(^)(id responseDic))success
+                           failure:(void(^)(id errorString))failure;
+
+#pragma mark -修改密码
++(void)submitNewPasswordWithPhone:(NSString *)_phone
+                         password:(NSString *)_password
+                          success:(void(^)(id responseDic))success
+                          failure:(void(^)(id errorString))failure;
 
 
 

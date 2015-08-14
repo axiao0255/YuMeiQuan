@@ -23,6 +23,8 @@
 #import "RYCorporateHomePageViewController.h"
 #import "RYNavigationViewController.h"
 
+#import "RYEditInformationViewController.h"
+
 @interface RYHomepage ()<UISearchBarDelegate,UINavigationControllerDelegate>
 
 @end
@@ -62,7 +64,12 @@
     
     if ( self.listData.count ) {
         if ( [ShowBox isLogin] ) {
-            return 3;
+            if ( [[RYUserInfo sharedManager].groupid isEqualToString:@"42"] ) {
+                return 1;
+            }
+            else{
+                return 3;
+            }
         }
         else{
             return 1;
@@ -97,14 +104,32 @@
             return 50;
         }
         else if ( indexPath.row == 1 ) {
-            return 180;
+            return SCREEN_WIDTH * 9 / 16.0;
         }
         else{
             if ( [ShowBox isLogin] ) {
-                return 85;
+                if ( [[RYUserInfo sharedManager].groupid isEqualToString:@"42"] ) {
+                    NSLog(@"IS_IPHONE_5 : %d",IS_IPHONE_5);
+                    if ( IS_IPHONE_6 || IS_IPHONE_6P ) {
+                        return VIEW_HEIGHT - 100 - SCREEN_WIDTH*9/16;
+                    }
+                    else{
+                        return 220;
+                    }
+                }
+                else{
+                    return 85 * SCREEN_WIDTH / 320;
+                }
             }
             else{
-                return 220;
+                 NSLog(@"IS_IPHONE_6 : %d",IS_IPHONE_6);
+                if (  IS_IPHONE_6 || IS_IPHONE_6P ) {
+                    return VIEW_HEIGHT - 100 - SCREEN_WIDTH*9/16;
+                }
+                else{
+                    return 220;
+                }
+                
             }
         }
      }
@@ -157,7 +182,24 @@
         }
         else{
             if ( [ShowBox isLogin] ) {
-                return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
+                if ( [[RYUserInfo sharedManager].groupid isEqualToString:@"42"] ) {
+                    // 42 审核失败  提醒用户 重新上传资料
+                    NSString *edit_cell = @"edit_cell";
+                    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:edit_cell];
+                    if (!cell ) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:edit_cell];
+                        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+                        
+                        CGFloat height = [self homepageTableView:tableView heightForRowAtIndexPath:indexPath];
+                        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
+                        imgView.image = [UIImage imageNamed:@"ic_editInformation_background.png"];
+                        [cell.contentView addSubview:imgView];
+                    }
+                    return cell;
+                }
+                else{
+                    return [self loginTopCellTableView:tableView cellForRowAtIndexPath:indexPath];
+                }
             }
             else{
                 
@@ -167,7 +209,10 @@
                     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:log_cell];
                     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
                     
-                    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 220)];
+                    
+                    
+                    CGFloat height = [self homepageTableView:tableView heightForRowAtIndexPath:indexPath];
+                    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
                     imgView.image = [UIImage imageNamed:@"ic_log_cell.png"];
                     [cell.contentView addSubview:imgView];
                 }
@@ -277,8 +322,17 @@
                 [self.viewControll.navigationController pushViewController:vc animated:YES];
             }
         }
-        if ( ![ShowBox isLogin] && indexPath.row == 2 ) {
-            [self gotoLogin:nil];
+        if ( indexPath.row == 2 ) {
+            if ( [[RYUserInfo sharedManager].groupid isEqualToString:@"42"] ) {
+                // 审核失败  进入重新提交数据 界面
+                RYEditInformationViewController *vc = [[RYEditInformationViewController alloc] init];
+                [self.viewControll.navigationController pushViewController:vc animated:YES];
+            }
+            else{
+                if ( ![ShowBox isLogin] ) {
+                    [self gotoLogin:nil];
+                }
+            }
         }
     }
     if ( indexPath.section == 1 ) {
@@ -362,35 +416,35 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         // 左边
-        UIButton  *integralBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/2.0, 85)];
+        UIButton  *integralBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH/2.0, 85 * SCREEN_WIDTH/320)];
         [integralBtn addTarget:self action:@selector(integralBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [integralBtn setBackgroundImage:[UIImage imageNamed:@"ic_big_diamond.png"] forState:UIControlStateNormal];
         [cell.contentView addSubview:integralBtn];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(41, 60, 30, 14)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(41, integralBtn.height - 25, 30, 14)];
         label.font = [UIFont systemFontOfSize:14];
         label.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
         label.text = @"积分";
         [integralBtn addSubview:label];
         
-        UILabel *integralLabel = [[UILabel alloc] initWithFrame:CGRectMake(label.right + 5, 60 , 80, 14)];
+        UILabel *integralLabel = [[UILabel alloc] initWithFrame:CGRectMake(label.right + 5, label.top , 80, 14)];
         integralLabel.font = [UIFont boldSystemFontOfSize:14];
         integralLabel.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
         integralLabel.tag = 1212;
         [integralBtn addSubview:integralLabel];
 
         // 分界线
-        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(integralBtn.right, 0, 0.5, 85)];
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(integralBtn.right, 0, 0.5, integralBtn.height)];
         line.backgroundColor = [Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0];
         [cell.contentView addSubview:line];
         
         // 右边
-        UIButton *signInBtn = [[UIButton alloc] initWithFrame:CGRectMake(line.right, 0, SCREEN_WIDTH - line.right, 85)];
+        UIButton *signInBtn = [[UIButton alloc] initWithFrame:CGRectMake(line.right, 0, SCREEN_WIDTH - line.right, integralBtn.height)];
         [signInBtn addTarget:self action:@selector(signInBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [signInBtn setBackgroundImage:[UIImage imageNamed:@"ic_big_register.png"] forState:UIControlStateNormal];
         [cell.contentView addSubview:signInBtn];
         
-        UILabel *inviteSignInLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 60, signInBtn.width, 14)];
+        UILabel *inviteSignInLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, signInBtn.height - 25, signInBtn.width, 14)];
         inviteSignInLabel.font = [UIFont systemFontOfSize:14];
         inviteSignInLabel.textColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
         inviteSignInLabel.textAlignment = NSTextAlignmentCenter;

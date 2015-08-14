@@ -43,10 +43,11 @@
 {
     if ( _bottomBtn == nil ) {
         _bottomBtn = [[UIButton alloc] initWithFrame:CGRectZero];
-        _bottomBtn.width = 160;
+        _bottomBtn.width = SCREEN_WIDTH;
         _bottomBtn.top = 332;
         _bottomBtn.height = 40;
-        _bottomBtn.left = 80;
+        _bottomBtn.left = 0;
+        _bottomBtn.backgroundColor = [UIColor clearColor];
         [_bottomBtn.titleLabel setFont:[UIFont systemFontOfSize:16]];
         [_bottomBtn setTitleEdgeInsets:UIEdgeInsetsMake(-2, -20, 0, 0)];
         [_bottomBtn setTitleColor:[Utils getRGBColor:0x5c g:0x12 b:0x12 a:1.0] forState:UIControlStateNormal];

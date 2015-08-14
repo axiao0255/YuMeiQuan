@@ -54,7 +54,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
         
-        self.commonImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 265, 40)];
+        self.commonImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, IS_IPHONE_4_OR_LESS?(SCREEN_WIDTH-10):(SCREEN_WIDTH-55), 40*SCREEN_WIDTH/320)];
         self.commonImageView.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.commonImageView];
         
