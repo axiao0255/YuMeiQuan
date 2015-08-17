@@ -11,6 +11,7 @@
 #import "MJRefreshTableView.h"
 #import "RYArticleViewController.h"
 #import "RYLiteratureDetailsViewController.h"
+#import "RYSystemInformDetailsViewController.h"
 
 @interface RYMyInformListViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate>
 {
@@ -220,18 +221,30 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSDictionary *dict = [self.listData objectAtIndex:indexPath.row];
+    NSString *title = [dict getStringValueForKey:@"title" defaultValue:@""];
+    NSString *note = [dict getStringValueForKey:@"note" defaultValue:@""];
+    NSString *noteId = [dict getStringValueForKey:@"id" defaultValue:@""];
+    RYArticleData *articleData = [[RYArticleData alloc]init];
+    articleData.subject = title;
+    articleData.message = note;
+    articleData.authorId = noteId;
     
-    NSDictionary *dict = [self.listData objectAtIndex:indexPath.section];
-    NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@""];
-    NSString *tid = [dict getStringValueForKey:@"tid" defaultValue:@""];
-    if ( [fid isEqualToString:@"137"] ) {
-        RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:tid];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
-    else{
-        RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:tid];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
+    RYSystemInformDetailsViewController *vc = [[RYSystemInformDetailsViewController alloc] initWithArticleData:articleData];
+    [self.navigationController pushViewController:vc animated:YES];
+    
+    
+//    NSDictionary *dict = [self.listData objectAtIndex:indexPath.section];
+//    NSString *fid = [dict getStringValueForKey:@"fid" defaultValue:@""];
+//    NSString *tid = [dict getStringValueForKey:@"tid" defaultValue:@""];
+//    if ( [fid isEqualToString:@"137"] ) {
+//        RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:tid];
+//        [self.navigationController pushViewController:vc animated:YES];
+//    }
+//    else{
+//        RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:tid];
+//        [self.navigationController pushViewController:vc animated:YES];
+//    }
 }
 
 //-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section

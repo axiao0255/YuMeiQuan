@@ -61,7 +61,7 @@ static RYUserInfo * _userInfo;
 
 - (void)refreshUserInfoDataWithDict:(NSDictionary *)dict
 {
-    if ( dict == nil ) {
+    if ( dict == nil || [dict isKindOfClass:[NSNull class]] ) {
         [[RYUserInfo sharedManager] setSession:@""];
         [[RYUserInfo sharedManager] setGroupid:@""];
         [[RYUserInfo sharedManager] setStatus:@""];

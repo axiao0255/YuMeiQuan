@@ -79,7 +79,6 @@
     topBackground.image = [UIImage imageNamed:@"ic_leftVIew_background.png"];
     [self.view addSubview:topBackground];
     
-    
     theTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     [theTableView setScrollEnabled:NO];
     [theTableView setDelegate:self];

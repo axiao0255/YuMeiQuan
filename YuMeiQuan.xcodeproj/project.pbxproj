@@ -393,6 +393,7 @@
 		96D3BF5F1B5FC0FD00D71A61 /* LiteratureTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D3BF5E1B5FC0FD00D71A61 /* LiteratureTopView.m */; };
 		96D3C73C1B7D96AE0062F51C /* Default-HD@4x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D3C73B1B7D96AE0062F51C /* Default-HD@4x.png */; };
 		96D3C73E1B7D9AB40062F51C /* Default-LandscapeHD@4x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D3C73D1B7D9AB40062F51C /* Default-LandscapeHD@4x.png */; };
+		96D403421B819A2800783C2E /* RYSystemInformDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D403411B819A2800783C2E /* RYSystemInformDetailsViewController.m */; };
 		96D934A61B5CD7F60085F15B /* RYBillboardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D934A51B5CD7F60085F15B /* RYBillboardView.m */; };
 		96D934A81B5CDD700085F15B /* ic_billboard_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D934A71B5CDD700085F15B /* ic_billboard_background@2x.png */; };
 		96D9C9881AE49A7500997430 /* RYRegisterSpecialtyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D9C9871AE49A7500997430 /* RYRegisterSpecialtyViewController.m */; };
@@ -1078,6 +1079,8 @@
 		96D3BF5E1B5FC0FD00D71A61 /* LiteratureTopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiteratureTopView.m; sourceTree = "<group>"; };
 		96D3C73B1B7D96AE0062F51C /* Default-HD@4x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-HD@4x.png"; sourceTree = "<group>"; };
 		96D3C73D1B7D9AB40062F51C /* Default-LandscapeHD@4x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-LandscapeHD@4x.png"; sourceTree = "<group>"; };
+		96D403401B819A2800783C2E /* RYSystemInformDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYSystemInformDetailsViewController.h; sourceTree = "<group>"; };
+		96D403411B819A2800783C2E /* RYSystemInformDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYSystemInformDetailsViewController.m; sourceTree = "<group>"; };
 		96D934A41B5CD7F60085F15B /* RYBillboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYBillboardView.h; sourceTree = "<group>"; };
 		96D934A51B5CD7F60085F15B /* RYBillboardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYBillboardView.m; sourceTree = "<group>"; };
 		96D934A71B5CDD700085F15B /* ic_billboard_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_billboard_background@2x.png"; sourceTree = "<group>"; };
@@ -2086,6 +2089,8 @@
 				96CA432A1B564C2D005A7881 /* RYExchangeHistoryViewController.m */,
 				96CA432F1B565AB6005A7881 /* RYExchangeHistoryDetailsViewController.h */,
 				96CA43301B565AB6005A7881 /* RYExchangeHistoryDetailsViewController.m */,
+				96D403401B819A2800783C2E /* RYSystemInformDetailsViewController.h */,
+				96D403411B819A2800783C2E /* RYSystemInformDetailsViewController.m */,
 			);
 			path = MyOperation;
 			sourceTree = "<group>";
@@ -2845,6 +2850,7 @@
 				96C7ACB91AD611FA00FA2E22 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				96C4E59D1B0F094500AE3042 /* RYTokenView.m in Sources */,
 				96CFB3C81AF9FAE00078C225 /* RYMyLiteratureViewController.m in Sources */,
+				96D403421B819A2800783C2E /* RYSystemInformDetailsViewController.m in Sources */,
 				96C7ACB61AD611FA00FA2E22 /* AFURLResponseSerialization.m in Sources */,
 				96C3A9E41ADFB89A008011D3 /* SDWebImageManager.m in Sources */,
 				96C3A9B91ADFB84D008011D3 /* imgCollectionViewCell.m in Sources */,
@@ -3025,7 +3031,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-Objc";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "af265c71-ceb9-48f5-b176-e16988a84a0f";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
@@ -3065,7 +3071,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-Objc";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "af265c71-ceb9-48f5-b176-e16988a84a0f";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};

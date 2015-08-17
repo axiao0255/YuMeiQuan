@@ -87,7 +87,7 @@
     if ([predicate evaluateWithObject:urlstr]) {
 //        NSLog(@"%@",urlstr);
         
-        NSPredicate *p = [NSPredicate predicateWithFormat:@"SELF CONTAINS %@",@"121.40.151.63"];
+        NSPredicate *p = [NSPredicate predicateWithFormat:@"SELF CONTAINS %@",DOMAINNAME];
         // 判断是否来自医美圈的域名
         if ( [p evaluateWithObject:urlstr] ) {
             NSArray *array = [urlstr componentsSeparatedByString:@"?"];
