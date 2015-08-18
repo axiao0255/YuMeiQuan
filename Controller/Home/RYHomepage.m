@@ -421,7 +421,7 @@
         [integralBtn setBackgroundImage:[UIImage imageNamed:@"ic_big_diamond.png"] forState:UIControlStateNormal];
         [cell.contentView addSubview:integralBtn];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(41, integralBtn.height - 25, 30, 14)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(integralBtn.width/2-44, integralBtn.height - 25, 30, 14)];
         label.font = [UIFont systemFontOfSize:14];
         label.textColor = [Utils getRGBColor:0xff g:0xb3 b:0x00 a:1.0];
         label.text = @"积分";

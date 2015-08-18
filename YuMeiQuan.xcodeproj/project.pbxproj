@@ -187,6 +187,8 @@
 		96C7ACDC1AD683E500FA2E22 /* ShowBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C7ACDB1AD683E500FA2E22 /* ShowBox.m */; };
 		96C822371AFC6651000ED614 /* GlobleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C822361AFC6651000ED614 /* GlobleModel.m */; };
 		96C878851B2693FC00F81DBC /* RYCorporateSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C878841B2693FC00F81DBC /* RYCorporateSearchViewController.m */; };
+		96C8AC0A1B82C7CC00FF377F /* ic_Listening_background_6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C8AC091B82C7CC00FF377F /* ic_Listening_background_6@2x.png */; };
+		96C8AC0C1B82D09000FF377F /* ic_Listening_background_6p@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C8AC0B1B82D09000FF377F /* ic_Listening_background_6p@3x.png */; };
 		96CA43231B56117E005A7881 /* ic_add_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CA431F1B56117E005A7881 /* ic_add_disabled@2x.png */; };
 		96CA43241B56117E005A7881 /* ic_add_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CA43201B56117E005A7881 /* ic_add_normal@2x.png */; };
 		96CA43251B56117E005A7881 /* ic_reduce_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CA43211B56117E005A7881 /* ic_reduce_disabled@2x.png */; };
@@ -761,6 +763,8 @@
 		96C822361AFC6651000ED614 /* GlobleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobleModel.m; sourceTree = "<group>"; };
 		96C878831B2693FC00F81DBC /* RYCorporateSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RYCorporateSearchViewController.h; sourceTree = "<group>"; };
 		96C878841B2693FC00F81DBC /* RYCorporateSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RYCorporateSearchViewController.m; sourceTree = "<group>"; };
+		96C8AC091B82C7CC00FF377F /* ic_Listening_background_6@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_Listening_background_6@2x.png"; sourceTree = "<group>"; };
+		96C8AC0B1B82D09000FF377F /* ic_Listening_background_6p@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_Listening_background_6p@3x.png"; sourceTree = "<group>"; };
 		96CA431F1B56117E005A7881 /* ic_add_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_add_disabled@2x.png"; sourceTree = "<group>"; };
 		96CA43201B56117E005A7881 /* ic_add_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_add_normal@2x.png"; sourceTree = "<group>"; };
 		96CA43211B56117E005A7881 /* ic_reduce_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_reduce_disabled@2x.png"; sourceTree = "<group>"; };
@@ -2119,6 +2123,8 @@
 				96D003BC1B61EE5000EFAB00 /* ic_listenView_cancelBtn@2x.png */,
 				96D003BE1B620E6100EFAB00 /* ic_listenView_sendBtn@2x.png */,
 				96D003BA1B61E8BF00EFAB00 /* ic_Listening_background@2x.png */,
+				96C8AC091B82C7CC00FF377F /* ic_Listening_background_6@2x.png */,
+				96C8AC0B1B82D09000FF377F /* ic_Listening_background_6p@3x.png */,
 				96D003B31B61E15E00EFAB00 /* ic_recordBtn_Highlight@2x.png */,
 				96D003B41B61E15E00EFAB00 /* ic_recordBtn_normal@2x.png */,
 				96D3BF5B1B5F764500D71A61 /* ic_Billboard_share@2x.png */,
@@ -2577,7 +2583,9 @@
 				96CA43281B564AA9005A7881 /* ic_exchange_history@2x.png in Resources */,
 				96CA732C1B16BB0600FEC68F /* ic_big_diamond@2x.png in Resources */,
 				96C71D9A1B59061C00C3AFAD /* ic_company_toTop@2x.png in Resources */,
+				96C8AC0A1B82C7CC00FF377F /* ic_Listening_background_6@2x.png in Resources */,
 				96D3C73E1B7D9AB40062F51C /* Default-LandscapeHD@4x.png in Resources */,
+				96C8AC0C1B82D09000FF377F /* ic_Listening_background_6p@3x.png in Resources */,
 				96DAB9EF1B392D05009262D8 /* BPushConfig.plist in Resources */,
 				96CFB3BF1AF9C51C0078C225 /* ic_invite_share1@2x.png in Resources */,
 				96CC35541B0473CB00EFA27A /* ic_transparency@2x.png in Resources */,

@@ -58,8 +58,20 @@
         _playView = [[UIImageView alloc] initWithFrame:CGRectZero];
         _playView.left = 0;
         _playView.width = SCREEN_WIDTH;
-        _playView.height = 120;
-        _playView.image = [UIImage imageNamed:@"ic_Listening_background.png"];
+        
+        if ( IS_IPHONE_6P ) {
+            _playView.height = 134;
+            _playView.image = [UIImage imageNamed:@"ic_Listening_background_6p.png"];
+        }
+        else{
+            _playView.height = 120;
+            if ( IS_IPHONE_6 ) {
+                _playView.image = [UIImage imageNamed:@"ic_Listening_background_6.png"];
+            }
+            else{
+                _playView.image = [UIImage imageNamed:@"ic_Listening_background.png"];
+            }
+        }
         [_playView setUserInteractionEnabled:YES];
         _playView.top = SCREEN_HEIGHT;
     }
@@ -81,7 +93,7 @@
     [self setAudioPlayer];
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.playView.top = SCREEN_HEIGHT - 120;
+        self.playView.top = SCREEN_HEIGHT - self.playView.height;
     } completion:^(BOOL finished) {
         self.transparencyBtn.hidden = NO;
     }];
@@ -100,8 +112,20 @@
 - (UIButton *)cancelBtn
 {
     if ( _cancelBtn == nil ) {
-        _cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 120 - 53 - 13, 53, 53)];
-        [_cancelBtn setImage:[UIImage imageNamed:@"ic_listenView_cancelBtn.png"] forState:UIControlStateNormal];
+        _cancelBtn = [[UIButton alloc] initWithFrame:CGRectZero];
+        if ( IS_IPHONE_6P ) {
+            _cancelBtn.left = 16;
+            _cancelBtn.top = self.playView.height - 64 - 16;
+            _cancelBtn.height = 64;
+            _cancelBtn.width = 64;
+        }
+        else{
+            _cancelBtn.left = 15;
+            _cancelBtn.top = self.playView.height - 53 - (IS_IPHONE_6?15:13);
+            _cancelBtn.height = 53;
+            _cancelBtn.width = 53;
+        }
+        [_cancelBtn setBackgroundImage:[UIImage imageNamed:@"ic_listenView_cancelBtn.png"] forState:UIControlStateNormal];
         [_cancelBtn addTarget:self action:@selector(cancelBtnClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _cancelBtn;
@@ -110,8 +134,21 @@
 - (UIButton *)sendBtn
 {
     if (_sendBtn == nil) {
-        _sendBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 53 - 15, 120 - 53 - 13, 53, 53)];
-        [_sendBtn setImage:[UIImage imageNamed:@"ic_listenView_sendBtn.png"] forState:UIControlStateNormal];
+        _sendBtn = [[UIButton alloc] initWithFrame:CGRectZero];
+        if ( IS_IPHONE_6P ) {
+            _sendBtn.left = SCREEN_WIDTH-16-64;
+            _sendBtn.top = self.playView.height - 64 - 16;
+            _sendBtn.height = 64;
+            _sendBtn.width = 64;
+            
+        }
+        else{
+            _sendBtn.left = SCREEN_WIDTH-15-53;
+            _sendBtn.top = self.playView.height - 53 - (IS_IPHONE_6?15:13);
+            _sendBtn.height = 53;
+            _sendBtn.width = 53;
+        }
+        [_sendBtn setBackgroundImage:[UIImage imageNamed:@"ic_listenView_sendBtn.png"] forState:UIControlStateNormal];
         [_sendBtn addTarget:self action:@selector(sendBtnClick) forControlEvents:UIControlEventTouchUpInside];
     }
     return _sendBtn;
@@ -120,9 +157,9 @@
 - (UIButton *)playBtn
 {
     if ( _playBtn == nil ) {
-        _playBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-30, 4, 60, 60)];
-        [_playBtn setImage:[UIImage imageNamed:@"ic_listenView_startPlay.png"] forState:UIControlStateNormal];
-        [_playBtn setImage:[UIImage imageNamed:@"ic_listenView_stopPlay.png"] forState:UIControlStateSelected];
+        _playBtn = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-(IS_IPHONE_6P?33:30), IS_IPHONE_6P?5:4, IS_IPHONE_6P?66:60, IS_IPHONE_6P?66:60)];
+        [_playBtn setBackgroundImage:[UIImage imageNamed:@"ic_listenView_startPlay.png"] forState:UIControlStateNormal];
+        [_playBtn setBackgroundImage:[UIImage imageNamed:@"ic_listenView_stopPlay.png"] forState:UIControlStateSelected];
         [_playBtn addTarget:self action:@selector(playBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _playBtn;
@@ -131,7 +168,7 @@
 - (UILabel *)timeLabel
 {
     if ( _timeLabel == nil ) {
-        _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 25, 70, 50, 20)];
+        _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2 - 25, IS_IPHONE_6P?75:70, 50, 20)];
         _timeLabel.font = [UIFont systemFontOfSize:18];
         _timeLabel.textColor = [UIColor whiteColor];
         _timeLabel.textAlignment = NSTextAlignmentCenter;
@@ -188,7 +225,7 @@
 
 - (void)sendBtnClick
 {
-    NSLog(@"发送");
+//    NSLog(@"发送");
     if ([ShowBox checkCurrentNetwork] ) {
         __weak typeof(self) wSelf = self;
         [SVProgressHUD showWithStatus:@"正在发送..." maskType:SVProgressHUDMaskTypeBlack];
@@ -265,7 +302,7 @@
     CGFloat residueTime =  (self.audioPlayer.duration - self.audioPlayer.currentTime);
     NSInteger minutes = (NSInteger)residueTime/60;
     CGFloat seconds = residueTime - (minutes*60);
-    NSString *tiemStr = [NSString stringWithFormat:@"%ld:%0.0f",minutes,seconds];
+    NSString *tiemStr = [NSString stringWithFormat:@"%ld:%0.0f",(long)minutes,seconds];
     [self.timeLabel setText:tiemStr];
 }
 -(void)stopPlaying
@@ -278,7 +315,7 @@
 
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
-    NSLog(@"播放结束");
+//    NSLog(@"播放结束");
     [self.playBtn setSelected:NO];
     [self setTotalTime];
     [self.timer invalidate];

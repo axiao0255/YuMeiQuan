@@ -685,8 +685,15 @@
     
     
     recordBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    recordBtn.backgroundColor = [UIColor whiteColor];
     recordBtn.frame = textView.frame;
     [recordBtn setBackgroundImage:[UIImage imageNamed:@"ic_recordBtn_normal.png"] forState:UIControlStateNormal];
+    recordBtn.layer.cornerRadius = 5;
+    recordBtn.layer.masksToBounds = YES;
+    recordBtn.layer.borderWidth = 0.5;
+    recordBtn.layer.borderColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0].CGColor;
+    [recordBtn setTitle:@"按住 说话" forState:UIControlStateNormal];
+    [recordBtn setTitleColor:[Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0] forState:UIControlStateNormal];
     
     UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
                                              initWithTarget:self
@@ -704,12 +711,14 @@
         NSLog(@"Touch down");
         
         [recordBtn setBackgroundImage:[UIImage imageNamed:@"ic_recordBtn_Highlight.png"] forState:UIControlStateNormal];
+        [recordBtn setTitle:@"松开 结束" forState:UIControlStateNormal];
         [self recordStart:nil];
         
     }
     if (gesture.state == UIGestureRecognizerStateEnded) {
         
         NSLog(@"Long press Ended");
+        [recordBtn setTitle:@"按住 说话" forState:UIControlStateNormal];
         [recordBtn setBackgroundImage:[UIImage imageNamed:@"ic_recordBtn_normal.png"] forState:UIControlStateNormal];
         [self recordStop:nil];
         [self recordCancel:nil];
