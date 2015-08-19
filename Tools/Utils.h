@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 #import "GTMBase64.h"
 #import "ShowBox.h"
+#import "sys/utsname.h"
 
 @interface Utils : NSObject
 
@@ -83,7 +84,8 @@
 #pragma mark 获取音乐文件路径
 + (NSString *)getDocumnetsVoicePath;
 
-
+#pragma  mark 判断是否是模拟器
++(BOOL)DeviceIsSimulator;
 
 
 

@@ -331,7 +331,6 @@
     AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if (status == AVAuthorizationStatusDenied)
     {
-        [ShowBox showError:@"无法访问您的摄像头！请在设置->隐私->摄像机 中允许医美圈访问摄像头。"];
         return NO;
     }
     return YES;
@@ -349,5 +348,19 @@
     return docsDir;
 }
 
+#pragma  mark 判断是否是模拟器
++(BOOL)DeviceIsSimulator
+{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    NSString *tmpDevStr = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];;
+    if ([tmpDevStr isEqualToString:@"x86_64"]
+        || [tmpDevStr isEqualToString:@"i386"]
+        || [tmpDevStr isEqualToString:@"i586"]) {
+        return YES;
+    }
+    
+    return NO;
+}
 
 @end

@@ -8,13 +8,26 @@
 
 #import "RYBaseViewController.h"
 #import "ZBarSDK.h"
+#import <AVFoundation/AVFoundation.h>
 
-@interface RYQRcodeViewViewController : RYBaseViewController<UIAlertViewDelegate,ZBarReaderDelegate>
+@interface RYQRcodeViewViewController : RYBaseViewController<UIAlertViewDelegate,ZBarReaderDelegate,AVCaptureMetadataOutputObjectsDelegate>
 {
-    NSString *urlstr;
-    BOOL hasqrcode;
-    NSArray *QRarray;
-    ZBarReaderViewController *reader;
-    BOOL firstin;
+    NSString                 *urlstr;
+    NSArray                  *QRarray;
+//    ZBarReaderViewController *reader;
+//    ZBarReaderView           *readerView;
+//    BOOL                     firstin;
+    
+    int                       num;
+    BOOL                      upOrdown;
+    NSTimer                   *timer;
 }
+
+@property (strong,nonatomic)AVCaptureDevice            * device;
+@property (strong,nonatomic)AVCaptureDeviceInput       * input;
+@property (strong,nonatomic)AVCaptureMetadataOutput    * output;
+@property (strong,nonatomic)AVCaptureSession           * session;
+@property (strong,nonatomic)AVCaptureVideoPreviewLayer * preview;
+@property (nonatomic,retain)UIImageView                * line;
+
 @end

@@ -258,6 +258,8 @@
 		96CC39BD1AD4E3BB00D5D157 /* UIScrollView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39B11AD4E3BB00D5D157 /* UIScrollView+MJExtension.m */; };
 		96CC39BE1AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39B31AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m */; };
 		96CC39BF1AD4E3BB00D5D157 /* UIView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CC39B51AD4E3BB00D5D157 /* UIView+MJExtension.m */; };
+		96CC3EF81B845A900004F16F /* line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CC3EF61B845A900004F16F /* line@2x.png */; };
+		96CC3EF91B845A900004F16F /* pick_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CC3EF71B845A900004F16F /* pick_bg@2x.png */; };
 		96CCB38E1B12C0F50007C151 /* SelectLabelGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CCB38D1B12C0F50007C151 /* SelectLabelGroup.m */; };
 		96CCB3911B12C5880007C151 /* UIView+CJ_Extention.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CCB3901B12C5880007C151 /* UIView+CJ_Extention.m */; };
 		96CCB3941B12EC540007C151 /* RYMyAnswersRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CCB3931B12EC540007C151 /* RYMyAnswersRecordViewController.m */; };
@@ -867,6 +869,8 @@
 		96CC39B31AD4E3BB00D5D157 /* UIScrollView+MJRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+MJRefresh.m"; sourceTree = "<group>"; };
 		96CC39B41AD4E3BB00D5D157 /* UIView+MJExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MJExtension.h"; sourceTree = "<group>"; };
 		96CC39B51AD4E3BB00D5D157 /* UIView+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MJExtension.m"; sourceTree = "<group>"; };
+		96CC3EF61B845A900004F16F /* line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line@2x.png"; sourceTree = "<group>"; };
+		96CC3EF71B845A900004F16F /* pick_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pick_bg@2x.png"; sourceTree = "<group>"; };
 		96CCB38C1B12C0F50007C151 /* SelectLabelGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectLabelGroup.h; sourceTree = "<group>"; };
 		96CCB38D1B12C0F50007C151 /* SelectLabelGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectLabelGroup.m; sourceTree = "<group>"; };
 		96CCB38F1B12C5880007C151 /* UIView+CJ_Extention.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+CJ_Extention.h"; sourceTree = "<group>"; };
@@ -2113,6 +2117,8 @@
 		96F3213D1AD50A2700CAFC51 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				96CC3EF61B845A900004F16F /* line@2x.png */,
+				96CC3EF71B845A900004F16F /* pick_bg@2x.png */,
 				96B4B5981B79DF9F00915955 /* ic_left_article@2x.png */,
 				96E028F31B787AC00013B525 /* ic_editInformation_background@2x.png */,
 				96CB13C31B735C9A00D02C6E /* ic_uploadVIew_top@2x.png */,
@@ -2616,6 +2622,7 @@
 				96DAB7281B42697400565F30 /* ic_register_success@2x.png in Resources */,
 				96C77FDB1B54BE2C00545F0E /* ic_leftView_exit@2x.png in Resources */,
 				96C3E0E21B57966B00F0E273 /* ic_company_cancel@2x.png in Resources */,
+				96CC3EF91B845A900004F16F /* pick_bg@2x.png in Resources */,
 				96CAB6091AF1CE6D00ECD350 /* ic_highlighted_5@2x.png in Resources */,
 				96CFB3C01AF9C51C0078C225 /* ic_invite_share2@2x.png in Resources */,
 				96CAB60D1AF1CE6D00ECD350 /* ic_normalImage_1@2x.png in Resources */,
@@ -2642,6 +2649,7 @@
 				96C5AEEC1AF0744400F9195A /* ic_wasteBasket@2x.png in Resources */,
 				96D238111AF74AA000936721 /* register_company@2x.png in Resources */,
 				96C6E6CB1B1C11C900E9FD34 /* ic_home_head@2x.png in Resources */,
+				96CC3EF81B845A900004F16F /* line@2x.png in Resources */,
 				96CA732D1B16BB0600FEC68F /* ic_big_register@2x.png in Resources */,
 				96CAB60F1AF1CE6D00ECD350 /* ic_normalImage_3@2x.png in Resources */,
 				96B4B5991B79DF9F00915955 /* ic_left_article@2x.png in Resources */,
