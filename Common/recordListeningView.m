@@ -215,7 +215,7 @@
     [self dismissListeningView];
     [self stopPlaying];
     NSFileManager* fileManager=[NSFileManager defaultManager];
-    BOOL blDele= [fileManager removeItemAtURL:self.recordData.voiceURL error:nil];
+    BOOL blDele= [fileManager removeItemAtURL:self.soundURL error:nil];
     if (blDele) {
         NSLog(@"dele success");
     }else {
@@ -234,7 +234,7 @@
                                               pid:self.recordData.pid
                                          authorId:self.recordData.authorId
                                              word:self.recordData.word
-                                            voice:self.recordData.voiceURL
+                                            voice:self.soundURL
                                           success:^(id responseDic) {
                                               [SVProgressHUD dismiss];
                                               NSLog(@"上传录音 responseDic： %@",responseDic);

@@ -46,7 +46,7 @@
         }
     }
     else{
-        [ShowBox showError:@"无法访问您的摄像头！请在设置->隐私->相机 中允许医美圈访问摄像头。"];
+        [ShowBox showError:@"无法访问您的摄像头！请在设置->隐私->相机 中允许医美圈访问摄像头"];
     }
 }
 
@@ -109,7 +109,6 @@
     [bar addSubview:cancelBtn];
     [self.view addSubview:bar];
 
-    
     UILabel * labIntroudction= [[UILabel alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-scanWidth)/2, IS_IPHONE_4_OR_LESS?10:40, scanWidth, 50)];
     labIntroudction.backgroundColor = [UIColor clearColor];
     labIntroudction.numberOfLines=2;
@@ -134,7 +133,6 @@
 
 -(void)animation1
 {
-    
     if (upOrdown == NO) {
         num ++;
         _line.frame = CGRectMake(_line.left, lineOrigin+2*num, 220, 2);
@@ -149,7 +147,6 @@
             upOrdown = NO;
         }
     }
-    
 }
 
 - (void)setupCamera

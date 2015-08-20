@@ -18,7 +18,7 @@
  *  @param cafPath caf文件地址
  *  @param mp3Path mp3文件存放地址
  */
-+ (BOOL)cafToMp3:(NSString *)cafPath toMp3Path:(NSString *)mp3Path;
++ (void)cafToMp3:(NSString *)cafPath toMp3Path:(NSString *)mp3Path complete:(void(^)(BOOL success , NSString *mp3Path ))complete;
 
 
 

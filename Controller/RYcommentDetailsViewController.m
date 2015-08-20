@@ -933,15 +933,24 @@
             
             recording=YES;
             
-            NSDictionary *settings=[NSDictionary dictionaryWithObjectsAndKeys:
-                                    [NSNumber numberWithInt:kAudioFormatAppleIMA4],AVFormatIDKey,
-                                    [NSNumber numberWithFloat:44100.0],AVSampleRateKey,
-                                    [NSNumber numberWithInt:2],AVNumberOfChannelsKey,
-                                    [NSNumber numberWithInt:12800],AVEncoderBitRateKey,
-                                    [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
-                                    [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
-                                    nil];
-            
+//            NSDictionary *settings=[NSDictionary dictionaryWithObjectsAndKeys:
+//                                    [NSNumber numberWithInt:kAudioFormatAppleIMA4],AVFormatIDKey,
+//                                    [NSNumber numberWithFloat:44100.0],AVSampleRateKey,
+//                                    [NSNumber numberWithInt:2],AVNumberOfChannelsKey,
+//                                    [NSNumber numberWithInt:12800],AVEncoderBitRateKey,
+//                                    [NSNumber numberWithInt:16],AVLinearPCMBitDepthKey,
+//                                    [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
+//                                    nil];
+            NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+            //录音格式 无法使用
+            [settings setValue :[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey: AVFormatIDKey];
+            //采样率
+            [settings setValue :[NSNumber numberWithFloat:11025.0] forKey: AVSampleRateKey];//44100.0
+            //通道数
+            [settings setValue :[NSNumber numberWithInt:2] forKey: AVNumberOfChannelsKey];
+            //音频质量,采样质量
+            [settings setValue:[NSNumber numberWithInt:AVAudioQualityMin] forKey:AVEncoderAudioQualityKey];
+
             [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryRecord error: nil];
             [[AVAudioSession sharedInstance] setActive:YES error:nil];
             
@@ -997,45 +1006,80 @@
     [audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
     
     if ( _timeLen <= 2 ) {
-        NSFileManager* fileManager=[NSFileManager defaultManager];
-        BOOL blDele= [fileManager removeItemAtURL:pathURL error:nil];
-        pathURL = nil;
-        if (blDele) {
-            NSLog(@"dele success");
-        }else {
-            NSLog(@"dele fail");
-        }
+        [self removeCafFile];
         return;
     }
     
-//    NSString *docsDir = [Utils getDocumnetsVoicePath];
-//    docsDir = [docsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[RYUserInfo sharedManager].uid]];
-//    
-//    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//    formatter.dateFormat = @"yyyyMMddHHmmss";
-//    NSString *str = [formatter stringFromDate:[NSDate date]];
-//    NSString *mp3FilePath = [docsDir stringByAppendingFormat:@"%@.mp3",str];
-//    
-//    [CafToMp3 cafToMp3:pathURL.path toMp3Path:mp3FilePath];
+    NSString *docsDir = [Utils getDocumnetsVoicePath];
+    docsDir = [docsDir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",[RYUserInfo sharedManager].uid]];
     
-    if ( self.replyIndex != -1 ) {
-        NSDictionary *dict = [self.commentList objectAtIndex:self.replyIndex];
-        NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
-        self.commentData.tid = self.tid;
-        self.commentData.voiceURL = pathURL;
-        self.commentData.pid = pid;
-        self.commentData.authorId = [dict getStringValueForKey:@"authorid" defaultValue:nil];
-        self.commentData.word = nil;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyyMMddHHmmss";
+    NSString *str = [formatter stringFromDate:[NSDate date]];
+    NSString *mp3FilePath = [docsDir stringByAppendingFormat:@"%@.mp3",str];
+    
+    __weak typeof(self) wSelf = self;
+    // caf 转 mp3
+    [CafToMp3 cafToMp3:pathURL.path toMp3Path:mp3FilePath complete:^(BOOL success, NSString *mp3Path) {
+        [wSelf removeCafFile];
+        if ( !success ) {
+            [ShowBox showError:@"录音失败，请重新录音"];
+        }
+        else{
+            NSURL *mp3URL = [NSURL fileURLWithPath:mp3Path];
+            if ( wSelf.replyIndex != -1 ) {
+                NSDictionary *dict = [wSelf.commentList objectAtIndex:wSelf.replyIndex];
+                NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
+                wSelf.commentData.tid = wSelf.tid;
+                wSelf.commentData.voiceURL = mp3URL;
+                wSelf.commentData.pid = pid;
+                wSelf.commentData.authorId = [dict getStringValueForKey:@"authorid" defaultValue:nil];
+                wSelf.commentData.word = nil;
+            }
+            else{
+                wSelf.commentData.tid = wSelf.tid;
+                wSelf.commentData.voiceURL = mp3URL;
+                wSelf.commentData.pid = nil;
+                wSelf.commentData.authorId = nil;
+                wSelf.commentData.word = nil;
+            }
+            [wSelf dismissTextView];
+            [wSelf.listeningView showListeningViewWithRecordData:wSelf.commentData];
+        }
+    }];
+    
+
+//    if ( self.replyIndex != -1 ) {
+//        NSDictionary *dict = [self.commentList objectAtIndex:self.replyIndex];
+//        NSString *pid = [dict getStringValueForKey:@"pid" defaultValue:nil];
+//        self.commentData.tid = self.tid;
+//        self.commentData.voiceURL = pathURL;
+//        self.commentData.pid = pid;
+//        self.commentData.authorId = [dict getStringValueForKey:@"authorid" defaultValue:nil];
+//        self.commentData.word = nil;
+//    }
+//    else{
+//        self.commentData.tid = self.tid;
+//        self.commentData.voiceURL = pathURL;
+//        self.commentData.pid = nil;
+//        self.commentData.authorId = nil;
+//        self.commentData.word = nil;
+//    }
+//    [self dismissTextView];
+//    [self.listeningView showListeningViewWithRecordData:self.commentData];
+}
+
+// 删除本地的caf录音文件
+- (void)removeCafFile
+{
+    NSFileManager* fileManager=[NSFileManager defaultManager];
+    BOOL blDele= [fileManager removeItemAtURL:pathURL error:nil];
+    pathURL = nil;
+    if (blDele) {
+        NSLog(@"dele success");
+    }else {
+        NSLog(@"dele fail");
     }
-    else{
-        self.commentData.tid = self.tid;
-        self.commentData.voiceURL = pathURL;
-        self.commentData.pid = nil;
-        self.commentData.authorId = nil;
-        self.commentData.word = nil;
-    }
-    [self dismissTextView];
-    [self.listeningView showListeningViewWithRecordData:self.commentData];
 }
 
 -(void)recordCancel:(UIButton *)sender
