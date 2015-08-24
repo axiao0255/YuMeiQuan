@@ -518,27 +518,30 @@ static CGFloat kToolBarViewHeightLadnScape = 100;
 - (void)didStartViewingPageAtIndex:(NSUInteger)index
 {
     // Release images further away than +/-1
-    NSUInteger i;
-    if (index > 0) {
-        // Release anything < index - 1
-        for (i = 0; i < index-1; i++) {
-            id photo = [_photos objectAtIndex:i];
-            if (photo != [NSNull null]) {
-                [photo unloadUnderlyingImage];
-                [_photos replaceObjectAtIndex:i withObject:[NSNull null]];
-            }
-        }
-    }
-    if (index < [self numberOfPhotos] - 1) {
-        // Release anything > index + 1
-        for (i = index + 2; i < _photos.count; i++) {
-            id photo = [_photos objectAtIndex:i];
-            if (photo != [NSNull null]) {
-                [photo unloadUnderlyingImage];
-                [_photos replaceObjectAtIndex:i withObject:[NSNull null]];
-            }
-        }
-    }
+    /**
+     * 以下这段代码 暂时先注销   
+     */
+//    NSUInteger i;
+//    if (index > 0) {
+//        // Release anything < index - 1
+//        for (i = 0; i < index-1; i++) {
+//            id photo = [_photos objectAtIndex:i];
+//            if (photo != [NSNull null]) {
+//                [photo unloadUnderlyingImage];
+//                [_photos replaceObjectAtIndex:i withObject:[NSNull null]];
+//            }
+//        }
+//    }
+//    if (index < [self numberOfPhotos] - 1) {
+//        // Release anything > index + 1
+//        for (i = index + 2; i < _photos.count; i++) {
+//            id photo = [_photos objectAtIndex:i];
+//            if (photo != [NSNull null]) {
+//                [photo unloadUnderlyingImage];
+//                [_photos replaceObjectAtIndex:i withObject:[NSNull null]];
+//            }
+//        }
+//    }
     
     // Load adjacent images if needed and the photo is already
     // loaded. Also called after photo has been loaded in background
