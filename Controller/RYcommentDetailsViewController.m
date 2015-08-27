@@ -919,7 +919,7 @@
 
 -(void)recordStart:(UIButton *)sender
 {
-    
+    // 检查麦克风是否打开
     [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
         if (granted) {
             // 用户同意获取数据

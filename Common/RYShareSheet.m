@@ -50,11 +50,11 @@
 
 - (NSArray *)setIcons
 {
-    NSArray  *icons = [Utils getImageArrWithImgName:@"ic_invite_share" andMaxIndex:4];
+    NSArray  *icons = [Utils getImageArrWithImgName:@"ic_invite_share" andMaxIndex:5];
     
     NSMutableArray *tmpArr = [NSMutableArray array];
     [tmpArr addObject:[icons subarrayWithRange:NSMakeRange(0, 3)]];
-    [tmpArr addObject:[icons subarrayWithRange:NSMakeRange(3, 2)]];
+    [tmpArr addObject:[icons subarrayWithRange:NSMakeRange(3, 3)]];
     return tmpArr;
 }
 
@@ -144,7 +144,7 @@
         GridMenuView *share_View2 = [[GridMenuView alloc] initWithFrame:CGRectMake(62, CGRectGetMaxY(share_View1.frame) + 8, SCREEN_WIDTH - 124, 60)
                                                               imgUpArray:[self.shareIconArray objectAtIndex:1]
                                                             imgDownArray:[self.shareIconArray objectAtIndex:1]
-                                                               perRowNum:2];
+                                                               perRowNum:3];
         share_View2.tag = 200;
         share_View2.delegate = self;
         share_View2.backgroundColor = [UIColor clearColor];
@@ -181,11 +181,18 @@
         if ( btntag == 0 ) {
             index = 3;
         }
-        else{
+        else if ( btntag == 1 ){
             index = 4;
         }
+        else{
+            [self copyRUL];
+            [self dismissShareView];
+            [SVProgressHUD setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.7]];
+            [SVProgressHUD setForegroundColor:[UIColor whiteColor]];
+            [SVProgressHUD showSuccessWithStatus:@"复制成功"];
+            return;
+        }
     }
-    
     [self dismissShareView];
     __weak AppDelegate *_appDelegate;
     _appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -197,6 +204,14 @@
                          shareUrl:[self.shareDataDict getStringValueForKey:SHARE_URL defaultValue:@""]
                              thid:[self.shareDataDict getStringValueForKey:SHARE_TID defaultValue:@""]
              andPresentController:self.viewController];
+}
+
+
+- (void)copyRUL
+{
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    NSString *stringToCopy = [self.shareDataDict getStringValueForKey:SHARE_URL defaultValue:@""];
+    [pasteboard setString:stringToCopy];
 }
 
 

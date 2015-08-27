@@ -24,6 +24,7 @@
 #import "RYNavigationViewController.h"
 
 #import "RYEditInformationViewController.h"
+#import "RYRegisterSelectViewController.h"
 
 @interface RYHomepage ()<UISearchBarDelegate,UINavigationControllerDelegate>
 
@@ -109,7 +110,6 @@
         else{
             if ( [ShowBox isLogin] ) {
                 if ( [[RYUserInfo sharedManager].groupid isEqualToString:@"42"] ) {
-                    NSLog(@"IS_IPHONE_5 : %d",IS_IPHONE_5);
                     if ( IS_IPHONE_6 || IS_IPHONE_6P ) {
                         return VIEW_HEIGHT - 100 - SCREEN_WIDTH*9/16;
                     }
@@ -122,14 +122,12 @@
                 }
             }
             else{
-                 NSLog(@"IS_IPHONE_6 : %d",IS_IPHONE_6);
                 if (  IS_IPHONE_6 || IS_IPHONE_6P ) {
                     return VIEW_HEIGHT - 100 - SCREEN_WIDTH*9/16;
                 }
                 else{
-                    return 220;
+                    return 300;
                 }
-                
             }
         }
      }
@@ -202,21 +200,19 @@
                 }
             }
             else{
-                
-                NSString *log_cell = @"log_cell";
-                UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:log_cell];
-                if (!cell ) {
-                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:log_cell];
-                    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-                    
-                    
-                    
-                    CGFloat height = [self homepageTableView:tableView heightForRowAtIndexPath:indexPath];
-                    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
-                    imgView.image = [UIImage imageNamed:@"ic_log_cell.png"];
-                    [cell.contentView addSubview:imgView];
-                }
-                return cell;
+                return [self notloginCellWithTableView:tableView cellForRowAtIndexPath:indexPath];
+//                NSString *log_cell = @"log_cell";
+//                UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:log_cell];
+//                if (!cell ) {
+//                    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:log_cell];
+//                    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+//                    
+//                    CGFloat height = [self homepageTableView:tableView heightForRowAtIndexPath:indexPath];
+//                    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
+//                    imgView.image = [UIImage imageNamed:@"ic_log_cell.png"];
+//                    [cell.contentView addSubview:imgView];
+//                }
+//                return cell;
             }
         }
     }
@@ -330,7 +326,7 @@
             }
             else{
                 if ( ![ShowBox isLogin] ) {
-                    [self gotoLogin:nil];
+//                    [self gotoLogin:nil];
                 }
             }
         }
@@ -382,7 +378,6 @@
 
 - (UIView *)homepageTableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    
     if ( section == 1 || section == 2 ) {
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 23)];
         
@@ -397,14 +392,112 @@
             label.text = @"企业消息";
         }
         return view;
-        
     }
     else{
         return nil;
     }
 }
-
-
+/**
+ * 未登录时的cell
+ */
+- (UITableViewCell *)notloginCellWithTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *log_cell = @"log_cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:log_cell];
+    if (!cell ) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:log_cell];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        
+//        CGFloat height = [self homepageTableView:tableView heightForRowAtIndexPath:indexPath];
+//        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
+//        imgView.image = [UIImage imageNamed:@"ic_log_cell.png"];
+//        [cell.contentView addSubview:imgView];
+        UILabel *hanJoinLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, SCREEN_WIDTH, 16)];
+        hanJoinLabel.textColor = [Utils getRGBColor:0x22 g:0x9c b:0xf4 a:1.0];
+        hanJoinLabel.textAlignment = NSTextAlignmentCenter;
+        hanJoinLabel.font = [UIFont systemFontOfSize:16];
+        hanJoinLabel.text = @"加入我们，您将获得以下权限";
+        [cell.contentView addSubview:hanJoinLabel];
+        
+        UILabel *englishJoinLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, hanJoinLabel.bottom+5, SCREEN_WIDTH, 10)];
+        englishJoinLabel.textColor = [Utils getRGBColor:0x22 g:0x9c b:0xf4 a:1.0];
+        englishJoinLabel.textAlignment = NSTextAlignmentCenter;
+        englishJoinLabel.font = [UIFont systemFontOfSize:10];
+        englishJoinLabel.text = @"Join us,you will get the following permissions";
+        [cell.contentView addSubview:englishJoinLabel];
+        
+        UIImageView *line = [[UIImageView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH/2-160, englishJoinLabel.bottom+10, 320, 5)];
+        line.image = [UIImage imageNamed:@"ic_divider_home.png"];
+        [cell.contentView addSubview:line];
+        
+//        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(40, englishJoinLabel.bottom+10, SCREEN_WIDTH-80, 1.5)];
+//        line.backgroundColor = [Utils getRGBColor:0x56 g:0xbb b:0xff a:1.0];
+//        [cell.contentView addSubview:line];
+        
+        NSArray *titleArr = @[@"查询文献",@"阅读专家评论",@"浏览全站内容",@"桌面端同步阅读"];
+        for (NSInteger i = 0 ; i < titleArr.count ; i++) {
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(i%2 * (SCREEN_WIDTH/2), line.bottom + 20 + (i/2*20 + i/2*13), SCREEN_WIDTH/2, 13)];
+            label.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+            label.textAlignment = NSTextAlignmentCenter;
+            label.font = [UIFont systemFontOfSize:13];
+            label.text = [titleArr objectAtIndex:i];
+            [cell.contentView addSubview:label];
+        }
+        
+        NSArray *arr = @[@"注册",@"登录"];
+        CGFloat btnWidth = 133;
+        CGFloat btnHeight = 40;
+        if ( IS_IPHONE_6P ) {
+            btnWidth = 173;
+            btnHeight = 52;
+        }
+        else if ( IS_IPHONE_6 ){
+            btnWidth = 160;
+            btnHeight = 40;
+        }
+        for (NSInteger i = 0 ; i < 2; i ++ ) {
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(i%2 * (SCREEN_WIDTH/2), 152, SCREEN_WIDTH/2, btnHeight)];
+            UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake( view.width/2-btnWidth/2, 0, btnWidth, btnHeight)];
+            btn.layer.cornerRadius = 5;
+            btn.layer.borderColor = [Utils getRGBColor:0xe2 g:0xe2 b:0xe2 a:1.0].CGColor;
+            btn.layer.borderWidth = 1.0;
+            btn.titleLabel.font = [UIFont systemFontOfSize:16];
+            btn.layer.masksToBounds = 20;
+            btn.tag = 1400+i;
+            [btn setTitle:[arr objectAtIndex:i] forState:UIControlStateNormal];
+            if ( i == 0 ) {
+                [btn setTitleColor:[Utils getRGBColor:0x2c g:0xa2 b:0xf6 a:1.0] forState:UIControlStateNormal];
+            }
+            else{
+                [btn setTitleColor:[Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0] forState:UIControlStateNormal];
+            }
+            [btn addTarget:self action:@selector(registerOrLoginCilcked:) forControlEvents:UIControlEventTouchUpInside];
+            [view addSubview:btn];
+            [cell.contentView addSubview:view];
+        }
+        
+        
+        UILabel *bottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 172 + btnHeight, SCREEN_WIDTH-60, 60)];
+        
+        bottomLabel.textColor = [Utils getRGBColor:0xcc g:0xcc b:0xcc a:1.0];
+        bottomLabel.font = [UIFont systemFontOfSize:13];
+        bottomLabel.numberOfLines = 2;
+        
+        NSString *content = @"登录后，您的系统消息、有奖消息、企业消息、积分会显示在这里，您可以随时查看";
+        
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc]initWithString:content];;
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc]init];
+        [paragraphStyle setLineSpacing:10];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, content.length)];
+        
+        bottomLabel.attributedText = attributedString;
+        bottomLabel.textAlignment = NSTextAlignmentCenter;
+        [cell.contentView addSubview:bottomLabel];
+       
+        
+    }
+    return cell;
+}
 
 // 登录时的 top cell
 - (UITableViewCell *)loginTopCellTableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -497,7 +590,6 @@
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     [searchBar resignFirstResponder];
-    NSLog(@"点击搜索框");
 }
 
 -(void)gotoLogin:(id)sender
@@ -506,5 +598,17 @@
     [self.viewControll.navigationController pushViewController:vc animated:YES];
 }
 
+
+- (void)registerOrLoginCilcked:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+    NSInteger index = btn.tag - 1400;
+    if ( index == 0 ) {
+        RYRegisterSelectViewController *vc = [[RYRegisterSelectViewController alloc] init];
+        [self.viewControll.navigationController pushViewController:vc animated:YES];
+    }else{
+        [self gotoLogin:btn];
+    }
+}
 
 @end

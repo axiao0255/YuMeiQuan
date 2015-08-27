@@ -203,8 +203,10 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.activityCount = 0;
         
-        SVProgressHUDBackgroundColor = [UIColor whiteColor];
-        SVProgressHUDForegroundColor = [UIColor blackColor];
+//        SVProgressHUDBackgroundColor = [UIColor whiteColor];
+//        SVProgressHUDForegroundColor = [UIColor blackColor];
+        SVProgressHUDBackgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
+        SVProgressHUDForegroundColor = [UIColor whiteColor];
         if ([UIFont respondsToSelector:@selector(preferredFontForTextStyle:)]) {
           SVProgressHUDFont = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
         } else {
@@ -616,6 +618,9 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
     self.imageView.hidden = NO;
     
     self.stringLabel.text = string;
+    self.stringLabel.textColor = SVProgressHUDForegroundColor;
+    self.stringLabel.font = SVProgressHUDFont;
+
     [self updatePosition];
     [self.indefiniteAnimatedView removeFromSuperview];
     

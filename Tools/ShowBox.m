@@ -180,12 +180,13 @@
             break;
     }
     if (!isExistenceNetwork) {
-        UIAlertView *myalert = [[UIAlertView alloc] initWithTitle:@"网络错误"
-                                                          message:@"Whoops！网络不给力，快找个信号满满的地方再刷新一下吧！"
-                                                         delegate:self
-                                                cancelButtonTitle:@"确认"
-                                                otherButtonTitles:nil,nil];
-        [myalert show];
+//        UIAlertView *myalert = [[UIAlertView alloc] initWithTitle:@"网络错误"
+//                                                          message:@"Whoops！网络不给力，快找个信号满满的地方再刷新一下吧！"
+//                                                         delegate:self
+//                                                cancelButtonTitle:@"确认"
+//                                                otherButtonTitles:nil,nil];
+//        [myalert show];
+        [SVProgressHUD showErrorWithStatus:@"网络不给力!"];
     }
     return isExistenceNetwork;
 

@@ -720,7 +720,6 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSLog(@"request :: %@",request.URL);
-    
     if (navigationType == UIWebViewNavigationTypeLinkClicked) {
         NSString * requesturl = request.URL.absoluteString;
         if ([requesturl rangeOfString:@"mod=image"].location != NSNotFound
@@ -864,7 +863,6 @@
             RYAuthorArticleViewController *vc = [[RYAuthorArticleViewController alloc] initWithAuthorID:authorID];
             [self.navigationController pushViewController:vc animated:YES];
         }
-
     }
 }
 
@@ -944,13 +942,13 @@
                                               success:^(id responseDic) {
                                                   NSLog(@"取消收藏responseDic : %@",responseDic);
                                                   [wSelf cancelCollectWithDict:responseDic];
-                
             } failure:^(id errorString) {
                 NSLog(@"取消收藏 errorString : %@",errorString);
                 [ShowBox showError:@"取消收藏失败，请稍候重试"];
             }];
         }
-}}
+    }
+}
 
 - (void)cancelCollectWithDict:(NSDictionary *)responseDic
 {

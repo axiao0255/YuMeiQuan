@@ -179,15 +179,14 @@ static NetManager *_manager;
  */
 - (void)uploadFileWithUrl:(NSString *)urlStr filePath:(NSURL *)_filePath parameters:(id)parameters success:(void (^)(id responseObject))success fail:(void (^)(id error))fail
 {
-    NSLog(@"parameters :: %@",parameters);
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes =[NSSet setWithObject:@"text/html"];
     
     [manager POST:urlStr parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        NSLog(@"音乐文件路径 _filePath: %@ ",_filePath);
-        NSData *data = [NSData dataWithContentsOfURL:_filePath];
-        NSLog(@"data : %@", data);
+//        NSLog(@"音乐文件路径 _filePath: %@ ",_filePath);
+//        NSData *data = [NSData dataWithContentsOfURL:_filePath];
+//        NSLog(@"data : %@", data);
         if ( _filePath != nil ) {
             [formData appendPartWithFileURL:_filePath name:@"file" error:nil];
         }

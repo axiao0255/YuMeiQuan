@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>FEE77A02-F6F1-4B07-BE8F-F5228426D42F</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>YuMeiQuan</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>21B0FA3EA4933FA7C84A46115351AD285558BB76</key>
 		<string>https://github.com/axiao0255/YuMeiQuan.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>YuMeiQuan.xcodeproj/project.xcworkspace</string>
+	<string>YuMeiQuan.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>21B0FA3EA4933FA7C84A46115351AD285558BB76</key>
