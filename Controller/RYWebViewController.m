@@ -29,16 +29,22 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    [ShowBox checkCurrentNetwork];
     UIWebView* webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, VIEW_HEIGHT)];
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
     [webView setDelegate:self];
     webView.scalesPageToFit = YES;
     [self.view addSubview:webView];
-}
+ }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    [self showErrorView:webView];
 }
 
 /*

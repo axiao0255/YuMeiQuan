@@ -24,38 +24,40 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if ( self ) {
-        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, SCREEN_WIDTH - 30, 16)];
+        self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 20, SCREEN_WIDTH - 30, 16)];
         self.nameLabel.font = [UIFont systemFontOfSize:16];
-        self.nameLabel.textColor = [Utils getRGBColor:0x33 g:0x33 b:0x33 a:1.0];
+        self.nameLabel.textColor = [Utils getRGBColor:0x22 g:0x9c b:0xf4 a:1.0];
         [self.contentView addSubview:self.nameLabel];
         
+        // 设置时间
+        self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.nameLabel.bottom + 5, 150, 10)];
+        self.timeLabel.font = [UIFont systemFontOfSize:12];
+        self.timeLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+        [self.contentView addSubview:self.timeLabel];
+
         // 设置语音框
-        self.bubble =  [[FSVoiceBubble alloc] initWithFrame:CGRectMake(20, self.nameLabel.bottom + 5, 200, 40)];
-        self.bubble.waveColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
-        self.bubble.animatingWaveColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
+        self.bubble =  [[FSVoiceBubble alloc] initWithFrame:CGRectMake(15, self.timeLabel.bottom + 10, 200, 40)];
+        self.bubble.waveColor = [Utils getRGBColor:0x77 g:0xaa b:0x43 a:1.0];
+        self.bubble.animatingWaveColor = [Utils getRGBColor:0x77 g:0xaa b:0x43 a:1.0];
         self.bubble.invert = NO;
         self.bubble.exclusive = YES;
-        self.bubble.durationInsideBubble = YES;
+        self.bubble.durationInsideBubble = NO;
         [self.bubble setBubbleImage:[UIImage imageNamed:@"fs_cap_bg_0"]];
         [self.contentView addSubview:self.bubble];
         
         // 回复文字 label
-        self.commentLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.bubble.bottom + 5, SCREEN_WIDTH - 40, 50)];
+        self.commentLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.bubble.bottom + 10, SCREEN_WIDTH - 30, 50)];
         self.commentLabel.font = [UIFont systemFontOfSize:16];
         self.commentLabel.textColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
         self.commentLabel.numberOfLines = 0;
         [self.contentView addSubview:self.commentLabel];
         
-        // 设置时间
-        self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, self.commentLabel.bottom + 15, 150, 14)];
-        self.timeLabel.font = [UIFont systemFontOfSize:14];
-        self.timeLabel.textColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        [self.contentView addSubview:self.timeLabel];
         
         // 分享评论框
         self.replyMenu = [[replyView alloc]init];
         self.replyMenu.right = SCREEN_WIDTH - 15;
-        self.replyMenu.top = self.commentLabel.bottom + 10;
+//        self.replyMenu.top = self.commentLabel.bottom + 10;
+        self.replyMenu.top = 21;
         self.replyMenu.delegate = self;
         [self.contentView addSubview:self.replyMenu];
     }
@@ -89,15 +91,15 @@
         self.bubble.hidden = NO;
         self.bubble.height = 40;
         self.bubble.contentURL = [NSURL URLWithString:voice];
-        self.commentLabel.top = self.bubble.bottom + 5;
+        self.commentLabel.top = self.bubble.bottom + 10;
     }
     // 判断是否有文字
     NSString *word = [dict getStringValueForKey:@"word" defaultValue:@""];
     if ( [ShowBox isEmptyString:word] ) {
         self.commentLabel.height = 0;
         self.commentLabel.hidden = YES;
-        self.timeLabel.top = self.bubble.bottom + 15;
-        self.replyMenu.top = self.bubble.bottom + 10;
+//        self.timeLabel.top = self.bubble.bottom + 15;
+//        self.replyMenu.top = self.bubble.bottom + 10;
     }
     else{
         
@@ -109,8 +111,8 @@
         self.commentLabel.height = rect.size.height;
         self.commentLabel.text = word;
         self.commentLabel.hidden = NO;
-        self.timeLabel.top = self.commentLabel.bottom + 15;
-        self.replyMenu.top = self.commentLabel.bottom + 10;
+//        self.timeLabel.top = self.commentLabel.bottom + 15;
+//        self.replyMenu.top = self.commentLabel.bottom + 10;
     }
     
     self.timeLabel.text = [dict getStringValueForKey:@"time" defaultValue:@""];
@@ -165,27 +167,29 @@
         [self.contentView addSubview:self.praiseLael];
         
         self.replyBtn = [[UIButton alloc] initWithFrame:CGRectZero];
-        self.replyBtn.width = 56;
-        self.replyBtn.height = 28;
-        self.replyBtn.right = SCREEN_WIDTH - 15;
-        self.replyBtn.layer.cornerRadius = 15;
-        self.replyBtn.layer.masksToBounds = YES;
-        self.replyBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
-        [self.replyBtn setTitle:@"评论" forState:UIControlStateNormal];
-        self.replyBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        [self.replyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.replyBtn.width = 68;
+        self.replyBtn.height = 33;
+        self.replyBtn.right = SCREEN_WIDTH - 5;
+//        self.replyBtn.layer.cornerRadius = 15;
+//        self.replyBtn.layer.masksToBounds = YES;
+//        self.replyBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
+//        [self.replyBtn setTitle:@"评论" forState:UIControlStateNormal];
+//        self.replyBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+//        [self.replyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.replyBtn setImage:[UIImage imageNamed:@"ic_comment_huifu.png"] forState:UIControlStateNormal];
         [self.contentView addSubview:self.replyBtn];
         
         self.praiseBtn = [[UIButton alloc] initWithFrame:CGRectZero];
-        self.praiseBtn.width = 56;
-        self.praiseBtn.height = 28;
-        self.praiseBtn.right = self.replyBtn.left - 10;
-        self.praiseBtn.layer.cornerRadius = 15;
-        self.praiseBtn.layer.masksToBounds = YES;
-        self.praiseBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
-        [self.praiseBtn setTitle:@"赞" forState:UIControlStateNormal];
-        self.praiseBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-        [self.praiseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.praiseBtn.width = 68;
+        self.praiseBtn.height = 33;
+        self.praiseBtn.right = self.replyBtn.left;
+//        self.praiseBtn.layer.cornerRadius = 15;
+//        self.praiseBtn.layer.masksToBounds = YES;
+//        self.praiseBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
+//        [self.praiseBtn setTitle:@"赞" forState:UIControlStateNormal];
+//        self.praiseBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+//        [self.praiseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.praiseBtn setImage:[UIImage imageNamed:@"ic_comment_light_zan.png"] forState:UIControlStateNormal];
         [self.contentView addSubview:self.praiseBtn];
     }
     return self;
@@ -206,13 +210,13 @@
                                              options:NSStringDrawingUsesLineFragmentOrigin
                                           attributes:praiseAttributes
                                              context:nil];
-    self.praiseLael.top = self.titleLabel.bottom + 20;
+    self.praiseLael.top = self.titleLabel.bottom + 10;
     self.praiseLael.height = praiseRect.size.height;
     self.praiseLael.text = praise;
     
     if ( [ShowBox isEmptyString:praise] ) {
-        self.praiseBtn.top = self.titleLabel.bottom + 20;
-        self.replyBtn.top = self.titleLabel.bottom + 20;
+        self.praiseBtn.top = self.titleLabel.bottom + 10;
+        self.replyBtn.top = self.titleLabel.bottom + 10;
     }
     else{
         self.praiseBtn.top = self.praiseLael.bottom + 10;

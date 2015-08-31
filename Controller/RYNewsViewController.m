@@ -387,6 +387,14 @@
 
 -(void)freshContentTableWithCurrentPage:(NSInteger)currentPage andTableIndex:(NSInteger)aIndex isHead:(BOOL)isHead
 {
+    if ( ![ShowBox checkCurrentNetwork] ) {
+        NSArray *arr = [scrollPageView.dataSources objectAtIndex:aIndex];
+        if ( [arr count] == 0  ) {
+            [self showErrorView:[scrollPageView.contentItems objectAtIndex:aIndex]];
+        }
+        [self tableViewRefreshEndAtTableViewIndex:aIndex isHeadRefresh:isHead];
+        return;
+    }
     __weak typeof(self) sSelf = self;
     RYNewsViewController *wSelf = sSelf;
     if ( aIndex == 0 ) {

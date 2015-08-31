@@ -18,7 +18,7 @@
 
 @property (nonatomic,strong)UITableView         *tableView;        //
 @property (nonatomic,strong)ZFTokenField        *tokenField;
-@property (strong,nonatomic) NSString           *articleID;        // 文章id
+@property (strong,nonatomic)NSString            *articleID;        // 文章id
 @property (nonatomic,strong)NSMutableArray      *tokens;
 
 @property (nonatomic,strong)NSString            *tid;              // 文章id

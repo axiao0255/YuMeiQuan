@@ -132,7 +132,8 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.delegateRefersh = self;
-        [Utils setExtraCellLineHidden:_tableView];
+//        [Utils setExtraCellLineHidden:_tableView];
+        _tableView.separatorStyle = UITableViewCellSelectionStyleNone;
     }
     return _tableView;
 }
@@ -324,7 +325,7 @@
                                                      context:nil];
             height = height + praiseRect.size.height + 10;
         }
-        height = height + 20 + 28 + 10;
+        height = height + 33 + 10;
         
         return height;
     }
@@ -336,10 +337,11 @@
             NSString *voice = [dict getStringValueForKey:@"voice" defaultValue:nil];
             CGFloat height = 0;
             if ( ![ShowBox isEmptyString:voice] ) {
-                height = 16 + 5 + 40 + 10;
+//                height = 16 + 5 + 40 + 10;
+                height = 20 + 16 + 5 + 12 + 10 + 40 + 10;
             }
             else{
-                height = 16 + 10;
+                height = 20 + 16 + 5 + 12 + 10;
             }
             NSString *word = [dict getStringValueForKey:@"word" defaultValue:nil];
             if ( ![ShowBox isEmptyString:word] ) {
@@ -348,9 +350,9 @@
                                                          options:NSStringDrawingUsesLineFragmentOrigin
                                                       attributes:praiseAttributes
                                                          context:nil];
-                height = height + 5 + praiseRect.size.height;
+                height = height + praiseRect.size.height;
             }
-            return height + 10 + 24 + 6;
+            return height;
         }
         else{
             return 0;
@@ -366,17 +368,29 @@
         if ( !cell ) {
             cell = [[RYcommentTopCellTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:top_cell];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            
+           
+            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 1)];
+            line.backgroundColor = [Utils getRGBColor:0xf2 g:0xf2 b:0xf2 a:1.0];
+            line.tag = 1200;
+            [cell.contentView addSubview:line];
         }
+        
+        CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
+        UIView *line = [cell.contentView viewWithTag:1200];
+        line.top = height-1;
         [cell setValueWithDict:self.topDict];
         [cell.replyBtn addTarget:self action:@selector(replyBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [cell.praiseBtn addTarget:self action:@selector(praiseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         if ( self.myzanmessage ) {
             [cell.praiseBtn setEnabled:NO];
-            cell.praiseBtn.backgroundColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
+//            cell.praiseBtn.backgroundColor = [Utils getRGBColor:0x00 g:0x91 b:0xea a:1.0];
+            [cell.praiseBtn setImage:[UIImage imageNamed:@"ic_comment_disabled_zan.png"] forState:UIControlStateNormal];
         }
         else{
             [cell.praiseBtn setEnabled:YES];
-            cell.praiseBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
+//            cell.praiseBtn.backgroundColor = [Utils getRGBColor:0x66 g:0x66 b:0x66 a:1.0];
+            [cell.praiseBtn setImage:[UIImage imageNamed:@"ic_comment_light_zan.png"] forState:UIControlStateNormal];
         }
         return cell;
     }
@@ -411,40 +425,40 @@
     [self dismissTextView];
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    if ( section == 0 ) {
-        return 30;
-    }
-    else{
-        return 0;
-    }
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 0;
-}
-
--(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    if ( section == 0 && self.commentList.count ) {
-        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30)];
-        view.backgroundColor = [UIColor whiteColor];
-        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
-        line.backgroundColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
-        [view addSubview:line];
-        
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 14, SCREEN_WIDTH - 30, 16)];
-        label.textColor = [Utils getRGBColor:0xf6 g:0x31 b:0x56 a:1.0];
-        label.font = [UIFont systemFontOfSize:16];
-        label.text = @"精彩评论";
-        [view addSubview:label];
-        
-        return view;
-    }
-    return nil;
-}
+//-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+//{
+//    if ( section == 0 ) {
+//        return 30;
+//    }
+//    else{
+//        return 0;
+//    }
+//}
+//
+//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 0;
+//}
+//
+//-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+//{
+//    if ( section == 0 && self.commentList.count ) {
+//        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30)];
+//        view.backgroundColor = [UIColor whiteColor];
+//        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.5)];
+//        line.backgroundColor = [Utils getRGBColor:0x99 g:0x99 b:0x99 a:1.0];
+//        [view addSubview:line];
+//        
+//        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 14, SCREEN_WIDTH - 30, 16)];
+//        label.textColor = [Utils getRGBColor:0xf6 g:0x31 b:0x56 a:1.0];
+//        label.font = [UIFont systemFontOfSize:16];
+//        label.text = @"精彩评论";
+//        [view addSubview:label];
+//        
+//        return view;
+//    }
+//    return nil;
+//}
 
 #pragma mark RYcommentTableViewCellDelegate
 

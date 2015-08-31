@@ -170,7 +170,7 @@ static RYUserInfo * _userInfo;
     }
     
     [NetRequestAPI userLoginWithUserName:userName password:password success:^(id responseDic) {
-//        NSLog(@"responseDic : %@",responseDic);
+        NSLog(@"responseDic : %@",responseDic);
         
         NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
         BOOL su = [meta getBoolValueForKey:@"success" defaultValue:NO];

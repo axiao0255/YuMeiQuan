@@ -62,7 +62,7 @@
 -(UIButton *)shareBtn
 {
     if ( !_shareBtn ) {
-        _shareBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+        _shareBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
         _shareBtn.tag = 0;
         [_shareBtn setImage:[UIImage imageNamed:@"ic_comment_share"] forState:UIControlStateNormal];
         [_shareBtn addTarget:self action:@selector(menuBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -73,7 +73,7 @@
 -(UIButton *)replyBtn
 {
     if ( !_replyBtn ) {
-        _replyBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+        _replyBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
         _replyBtn.tag = 1;
         [_replyBtn setImage:[UIImage imageNamed:@"ic_comment_reply"] forState:UIControlStateNormal];
         [_replyBtn addTarget:self action:@selector(menuBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -84,7 +84,7 @@
 -(UIButton *)deleBtn
 {
     if ( !_deleBtn ) {
-        _deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 24, 24)];
+        _deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
         _deleBtn.tag = 2;
         [_deleBtn setImage:[UIImage imageNamed:@"ic_comment_dele"] forState:UIControlStateNormal];
         [_deleBtn addTarget:self action:@selector(menuBtnClick:) forControlEvents:UIControlEventTouchUpInside];
