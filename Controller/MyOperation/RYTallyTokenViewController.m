@@ -46,6 +46,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
+    self.title = @"编辑标签";
     [self.view addSubview:self.tokenField];
     [self.view addSubview:self.tableView];
     [self.view addSubview:self.submitBtn];

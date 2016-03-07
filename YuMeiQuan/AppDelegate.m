@@ -215,6 +215,7 @@
  */
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
+//     NSLog(@"url 2 %@ ", url);
     return  [UMSocialSnsService handleOpenURL:url];
 }
 - (BOOL)application:(UIApplication *)application
@@ -222,6 +223,8 @@
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation
 {
+    
+//    NSLog(@"url 1 %@ ", url);
     return  [UMSocialSnsService handleOpenURL:url];
 }
 

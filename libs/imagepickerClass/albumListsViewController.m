@@ -79,7 +79,7 @@
     }
     ALAssetsGroup* group = [_albumLists objectAtIndex:indexPath.row];
     [cell.name setText:[NSString stringWithFormat:@"%@",[group valueForProperty:ALAssetsGroupPropertyName]]];
-    [cell.imgNum setText:[NSString stringWithFormat:@"%d张图片",group.numberOfAssets]];
+    [cell.imgNum setText:[NSString stringWithFormat:@"%ld张图片",(long)group.numberOfAssets]];
     __weak albumListsViewController *wself = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         CGImageRef cg = [group posterImage];

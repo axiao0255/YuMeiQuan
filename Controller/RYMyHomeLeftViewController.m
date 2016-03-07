@@ -246,7 +246,6 @@
         [RYUserInfo logout];
         islogin = NO;
         [theTableView reloadData];
-
     }
 }
 

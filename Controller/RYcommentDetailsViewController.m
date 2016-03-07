@@ -956,7 +956,7 @@
 //                                    [NSNumber numberWithInt:AVAudioQualityHigh],AVEncoderAudioQualityKey,
 //                                    nil];
             NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
-            //录音格式 无法使用
+            //录音格式
             [settings setValue :[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey: AVFormatIDKey];
             //采样率
             [settings setValue :[NSNumber numberWithFloat:11025.0] forKey: AVSampleRateKey];//44100.0

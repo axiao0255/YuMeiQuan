@@ -15,7 +15,7 @@
 #import "RYArticleViewController.h"
 
 
-@interface RYCorporateHomePageViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,RYCorporateProductCategoryViewControllerDelegate,UIAlertViewDelegate,RYCorporateViewControllerDelegate>
+@interface RYCorporateHomePageViewController ()<UITableViewDelegate,UITableViewDataSource,MJRefershTableViewDelegate,RYCorporateProductCategoryViewControllerDelegate,UIAlertViewDelegate,RYCorporateViewControllerDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic,strong) MJRefreshTableView       *tableView;
 
@@ -25,6 +25,8 @@
 @property (nonatomic,strong) NSString                 *corporateFid;     // 类别 id
 @property (nonatomic,strong) UIButton                 *bottomView;
 @property (nonatomic,assign) BOOL                     notStretch;
+
+@property (nonatomic, strong)   id               InteractiveTransition;// 隐藏导航 返回手势的代理
 
 @end
 
@@ -43,6 +45,15 @@
 {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+   
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // 解决隐藏导航栏时 返回手势被关闭
+    self.InteractiveTransition = self.navigationController.interactivePopGestureRecognizer.delegate;
+    self.navigationController.interactivePopGestureRecognizer.delegate = (id) self;
 }
 
 - (void)viewDidLoad {
@@ -51,10 +62,13 @@
     [self.view addSubview:self.tableView];
     [self.tableView headerBeginRefreshing];
     [self.view addSubview:self.bottomView];
+    self.view.userInteractionEnabled = YES;
 }
+
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];    
+    [super viewWillDisappear:animated];
+    self.navigationController.interactivePopGestureRecognizer.delegate = self.InteractiveTransition;
     UIViewController *vc = [self.navigationController.viewControllers lastObject];
     if ( ![vc isKindOfClass:[RYArticleViewController class]] ) {
         [self.navigationController setNavigationBarHidden:NO animated:YES];
@@ -64,6 +78,12 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark- TapGestureRecognizer
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
 }
 
 -(void)getDataWithIsHeaderReresh:(BOOL)isHeaderReresh andCurrentPage:(NSInteger)currentPage
@@ -466,7 +486,7 @@
     __weak typeof(self) wSelf = self;
     RYLoginViewController *nextVC = [[RYLoginViewController alloc] initWithFinishBlock:^(BOOL isLogin, NSError *error) {
         if ( isLogin ) {
-            NSLog(@"登录完成"); // 重新获取数据  由于本ViewController中有注册通知，登录成功后通知能重新刷新数据，所有在此不做任何操作
+//            NSLog(@"登录完成"); // 重新获取数据  由于本ViewController中有注册通知，登录成功后通知能重新刷新数据，所有在此不做任何操作
             wSelf.notStretch = YES;
             wSelf.tableView.currentPage = 0;
             wSelf.tableView.totlePage = 1;

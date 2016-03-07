@@ -285,13 +285,13 @@
     if ( originalArray.count == 0) {
         return nil;
     }
-    // 1、对数组按firstcharter排序
+    // 1、对数组按firstcharter排序 升序排列
     NSArray *sortDesc = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"firstcharter" ascending:YES]];
     NSArray *sortedArr = [originalArray sortedArrayUsingDescriptors:sortDesc];
 //    NSLog(@"排序后的数组:%@",sortedArr);
     
     // 2、对数组进行分组，按firstcharter
-    // 遍历,创建组数组,组数组中的每一个元素是一个模型数组
+    // 遍历,创建组数组,_groupArr数组中的每一个元素是一个模型数组
     NSMutableArray *_groupArr = [NSMutableArray array];
     NSMutableArray *currentArr = [NSMutableArray array];
 //    NSLog(@"class--%@",[currentArr class]);

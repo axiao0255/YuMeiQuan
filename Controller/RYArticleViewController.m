@@ -69,6 +69,7 @@
 
 @property (nonatomic, assign)   BOOL             isCanNnswer;       // 有答题权限
 
+@property (nonatomic, strong)   id               InteractiveTransition;// 隐藏导航 返回手势的代理
 
 @end
 
@@ -89,7 +90,6 @@
 //    self.title = @"文章";
     showButtomView = YES;
     [self setup];
-    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(collectStateChange:) name:@"collectStateChange" object:nil];
 }
 
@@ -97,6 +97,10 @@
 {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+
+    // 解决隐藏导航栏时 返回手势被关闭
+    self.InteractiveTransition = self.navigationController.interactivePopGestureRecognizer.delegate;
+    self.navigationController.interactivePopGestureRecognizer.delegate = (id) self;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -108,11 +112,13 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    self.navigationController.interactivePopGestureRecognizer.delegate = self.InteractiveTransition;
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     UIViewController *vc = [self.navigationController.viewControllers lastObject];
     if ( ![vc isKindOfClass:[RYCorporateHomePageViewController class]] ) {
         [self.navigationController setNavigationBarHidden:NO animated:YES];
     }
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    
 }
 
 - (BOOL)prefersStatusBarHidden

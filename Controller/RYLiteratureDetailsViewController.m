@@ -77,6 +77,8 @@
 
 @property (nonatomic, strong)   UIView            *toobar;    // 下边工具条
 
+@property (nonatomic, strong)   id               InteractiveTransition;// 隐藏导航 返回手势的代理
+
 @end
 
 @implementation RYLiteratureDetailsViewController
@@ -94,6 +96,8 @@
 {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+    self.InteractiveTransition = self.navigationController.interactivePopGestureRecognizer.delegate;
+    self.navigationController.interactivePopGestureRecognizer.delegate = (id) self;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -105,13 +109,12 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
+    self.navigationController.interactivePopGestureRecognizer.delegate = self.InteractiveTransition;
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     UIViewController *vc = [self.navigationController.viewControllers lastObject];
     if ( ![vc isKindOfClass:[RYCorporateHomePageViewController class]] ) {
         [self.navigationController setNavigationBarHidden:NO animated:YES];
     }
-     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    
 }
 
 

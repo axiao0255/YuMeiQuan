@@ -74,7 +74,6 @@
                                                success:^(id responseDic) {
                                                    NSLog(@"编辑数据 responseDic： %@",responseDic);
                                                     [wSelf analysisDataWithDict:responseDic];
-            
         } failure:^(id errorString) {
               NSLog(@"编辑数据 errorString： %@",errorString);
             [wSelf showErrorView:wSelf.tableView];
@@ -105,7 +104,6 @@
     registerData.ordinaryPositionArray = @[@"营销总监",@"销售人员",@"市场人员",@"其他职务"];
     registerData.QualificationsArray = @[@"住院医师",@"主治医师",@"副主任医师",@"主任医师",@"其他职称"];
 
-    
     // 用户名字
     registerData.userName = [info getStringValueForKey:@"realname" defaultValue:@""];
     // 单位名称

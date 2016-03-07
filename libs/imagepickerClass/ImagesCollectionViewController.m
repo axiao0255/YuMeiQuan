@@ -12,11 +12,11 @@
 #import "imgCollectionViewCell.h"
 #import "imagesLoader.h"
 @interface ImagesCollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>{
-    int folkSection;
+    NSInteger folkSection;
     BOOL isfolk;
     completeBlock comBlock;
     UIImagePickerController* takephotoPickerl;
-    int maxNum;
+    NSInteger maxNum;
     CGPoint fixY;
 }
 @property   (nonatomic,strong,getter=collectionView)  UICollectionView*  collectionView;
@@ -82,8 +82,8 @@
     if (self.navigationItem.rightBarButtonItem) {
         UIBarButtonItem *item = self.navigationItem.rightBarButtonItem;
         UIButton* btn = (UIButton*)item.customView;
-        int num = _selectedArray.count;
-        NSString* str = num==0?@"完成":[NSString stringWithFormat:@"完成(%d)",num];
+        NSInteger num = _selectedArray.count;
+        NSString* str = num==0?@"完成":[NSString stringWithFormat:@"完成(%ld)",(long)num];
         [btn setTitle:str forState:UIControlStateNormal];
 //        [btn setEnabled:num>0];
 //        if (num == 0) {

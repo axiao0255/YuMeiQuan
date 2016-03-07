@@ -30,10 +30,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    NSLog(@"VIEW_HEIGHT :%f",VIEW_HEIGHT);
-    NSLog(@"VIEW_HEIGHT / 2: %f",VIEW_HEIGHT / 2);
-    NSLog(@"a : %f",(VIEW_HEIGHT - self.subView.height));
-    NSLog(@"b : %f",(VIEW_HEIGHT - self.subView.height)/2);
+//    NSLog(@"VIEW_HEIGHT :%f",VIEW_HEIGHT);
+//    NSLog(@"VIEW_HEIGHT / 2: %f",VIEW_HEIGHT / 2);
+//    NSLog(@"a : %f",(VIEW_HEIGHT - self.subView.height));
+//    NSLog(@"b : %f",(VIEW_HEIGHT - self.subView.height)/2);
     self.subView.top = (VIEW_HEIGHT - self.subView.height)/2;
     [self.view addSubview:self.subView];
 }

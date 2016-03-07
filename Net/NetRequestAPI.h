@@ -359,6 +359,13 @@
                           success:(void(^)(id responseDic))success
                           failure:(void(^)(id errorString))failure;
 
+#pragma mark -验证微博接口 可以删除
++(void)testWeiboAPIWithUrl:(NSString *)url
+                    appKey:(NSString *)_appKey
+              redirect_uri:(NSString *)_redirect_uri
+                   success:(void(^)(id responseDic))success
+                   failure:(void(^)(id errorString))failure;
+
 
 
 @end

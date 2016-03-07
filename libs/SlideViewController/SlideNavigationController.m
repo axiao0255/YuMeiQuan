@@ -141,7 +141,6 @@ static SlideNavigationController *singletonInstance;
     // When menu open we disable user interaction
     // When rotates we want to make sure that userInteraction is enabled again
     [self enableTapGestureToCloseMenu:NO];
-    
     if (self.menuNeedsLayout)
     {
         [self updateMenuFrameAndTransformAccordingToOrientation];
@@ -498,7 +497,6 @@ static SlideNavigationController *singletonInstance;
 - (void)closeMenuWithDuration:(float)duration andCompletion:(void (^)())completion
 {
 	[self enableTapGestureToCloseMenu:NO];
-    
      Menu menu = (self.horizontalLocation > 0) ? MenuLeft : MenuRight;
 	
 	[UIView animateWithDuration:duration

@@ -36,7 +36,7 @@ static NetManager *_manager;
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.requestSerializer.HTTPShouldHandleCookies = YES;
-    [manager.requestSerializer setValue:@"V5" forHTTPHeaderField:@"Accept"];
+//    [manager.requestSerializer setValue:@"V5" forHTTPHeaderField:@"Accept"];
     
     __weak typeof(self) wSelf = self;
     @synchronized(wSelf){
@@ -47,7 +47,7 @@ static NetManager *_manager;
 //    NSDictionary *dict = @{@"format": @"json"};
     // 网络访问是异步的,回调是主线程的,因此程序员不用管在主线程更新UI的事情
     [manager GET:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
+        NSLog ( @"operation: %@" , operation. responseString );
         /**
          *  需要将该请求移除队列
          */
@@ -99,7 +99,7 @@ static NetManager *_manager;
     
     [manager POST:urlStr parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
 //        NSString *result = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-        
+        NSLog ( @"operation: %@" , operation. responseString );
         /**
          *  需要将该请求移除队列
          */

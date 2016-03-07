@@ -67,6 +67,9 @@
 @property (assign, nonatomic) CGFloat          scrollLastOffsetY;
 @property (assign, nonatomic) BOOL             notStretch;         // 不是上下啦刷新。 用于自动登录 ， 避免试图上移引起bug
 
+@property (assign, nonatomic) BOOL             isNaked;
+
+
 @end
 
 @implementation RYNewsViewController
@@ -88,6 +91,17 @@
     [self.navigationController setNavigationBarHidden:NO];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.isNaked = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    self.isNaked = NO;
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -708,6 +722,7 @@
             
             // 取列表
             NSArray *dataArray = [info getArrayValueForKey:@"artfromwritermessage" defaultValue:nil];
+            NSLog(@"dataArray :: %@",dataArray);
             if ( dataArray.count ) {
                 if ( isHead ) { // 下拉刷新 头部 ， 需要清空数组
                     [[scrollPageView.dataSources objectAtIndex:aIndex] removeAllObjects];
@@ -1162,7 +1177,12 @@
 #pragma mark    滑出侧边拦，需要实现该代理方法
 -(BOOL)slideNavigationControllerShouldDisplayLeftMenu
 {
-   return YES;
+    if ( self.isNaked ) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 
 #pragma mark MJScrollPageView 手势代理

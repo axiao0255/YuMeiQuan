@@ -26,6 +26,8 @@
 #import "RYEditInformationViewController.h"
 #import "RYRegisterSelectViewController.h"
 
+#import <SafariServices/SafariServices.h>
+
 @interface RYHomepage ()<UISearchBarDelegate,UINavigationControllerDelegate>
 
 @end
@@ -294,29 +296,47 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ( indexPath.section == 0 ) {
         if ( indexPath.row == 1 ){
-            // 广告点击
-            NSString *type = [self.advmessage getStringValueForKey:@"type" defaultValue:@""];
-            NSString *content = [self.advmessage getStringValueForKey:@"content" defaultValue:@""];
-            if ( [type isEqualToString:@"url"] ) {
-                // 网页打开
-                RYWebViewController *vc = [[RYWebViewController alloc] initWithUrl:content];
-                [self.viewControll.navigationController pushViewController:vc animated:YES];
-            }
-            else if ( [type isEqualToString:@"137"] ){
-                // 进入文献
-                RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:content];
-                [self.viewControll.navigationController pushViewController:vc animated:YES];
-            }
-            else if ( [type isEqualToString:@"136"] ){
-                // 进入文章
-                RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:content];
-                [self.viewControll.navigationController pushViewController:vc animated:YES];
-            }
-            else if ( [type isEqualToString:@"company"] ){
-                // 进入企业微主页
-                RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] initWithCorporateID:content];
-                [self.viewControll.navigationController pushViewController:vc animated:YES];
-            }
+//            // 广告点击
+//            NSString *type = [self.advmessage getStringValueForKey:@"type" defaultValue:@""];
+//            NSString *content = [self.advmessage getStringValueForKey:@"content" defaultValue:@""];
+//            if ( [type isEqualToString:@"url"] ) {
+//                // 网页打开
+//                RYWebViewController *vc = [[RYWebViewController alloc] initWithUrl:content];
+//                [self.viewControll.navigationController pushViewController:vc animated:YES];
+//            }
+//            else if ( [type isEqualToString:@"137"] ){
+//                // 进入文献
+//                RYLiteratureDetailsViewController *vc = [[RYLiteratureDetailsViewController alloc] initWithTid:content];
+//                [self.viewControll.navigationController pushViewController:vc animated:YES];
+//            }
+//            else if ( [type isEqualToString:@"136"] ){
+//                // 进入文章
+//                RYArticleViewController *vc = [[RYArticleViewController alloc] initWithTid:content];
+//                [self.viewControll.navigationController pushViewController:vc animated:YES];
+//            }
+//            else if ( [type isEqualToString:@"company"] ){
+//                // 进入企业微主页
+//                RYCorporateHomePageViewController *vc = [[RYCorporateHomePageViewController alloc] initWithCorporateID:content];
+//                [self.viewControll.navigationController pushViewController:vc animated:YES];
+//            }
+            
+#warning 验证safari
+//            NSString *url = @"http://news.sohu.com/20151111/n425994082.shtml";
+            NSString *url = @"http://f.hd.baofeng.com/detail/276/detail-106776.html?fid=1379";
+            SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:[NSURL URLWithString:url] entersReaderIfAvailable:YES];
+            [self.viewControll presentViewController:safariVC animated:YES completion:nil];
+//#warning 验证微博接口
+//            [NetRequestAPI testWeiboAPIWithUrl:@"https://api.weibo.com/oauth2/authorize"
+//                                        appKey:@"3850180031"
+//                                  redirect_uri:@"http://yimeiquan.cn/index.php"
+//                                       success:^(id responseDic) {
+//                                           NSLog(@"responseDic :%@",responseDic);
+//                
+//            } failure:^(id errorString) {
+//                NSLog(@"errorString :%@",errorString);
+//            }];
+//            
+            
         }
         if ( indexPath.row == 2 ) {
             if ( [[RYUserInfo sharedManager].groupid isEqualToString:@"42"] ) {

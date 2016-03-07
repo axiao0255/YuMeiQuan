@@ -31,7 +31,7 @@ return __singleton__; \
 #define ISLOGIN   @"islogin"
 
 #define RELEASEADDRESS @""            // 正式服地址
-#define DEBUGADDRESS   @"http://121.40.151.63"            // 测试服地址
+#define DEBUGADDRESS    @"http://appi.ymq.net.cn/ios.php"            // 测试服地址
 
 #define DOMAINNAME     @"121.40.151.63"
 

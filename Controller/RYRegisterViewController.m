@@ -682,7 +682,6 @@
     vc.delegate = self;
     vc.view.tag = tag;
     [self.navigationController pushViewController:vc animated:YES];
-
 }
 // 是否医生按钮点击
 - (void)segmentSelectedControl:(NYSegmentedControl *)sender
@@ -736,7 +735,7 @@
     if ( [ShowBox checkCurrentNetwork] ) {
         [NetRequestAPI getRegSMS_codeWithPhoneNumber:registerData.userPhone
                                              success:^(id responseDic) {
-                                                 NSLog(@"获取短信验证码：responseDic  %@",responseDic);
+//                                                 NSLog(@"获取短信验证码：responseDic  %@",responseDic);
                                                  [wSelf startRuntime];
                                                  NSDictionary *meta = [responseDic getDicValueForKey:@"meta" defaultValue:nil];
                                                  BOOL success = [meta getBoolValueForKey:@"success" defaultValue:NO];
@@ -745,7 +744,7 @@
                                                  }
             
         } failure:^(id errorString) {
-            NSLog(@"获取短信验证码：errorString  %@",errorString);
+//            NSLog(@"获取短信验证码：errorString  %@",errorString);
             [wSelf startRuntime];
         }];
     }
