@@ -197,7 +197,10 @@
     [MobClick setBackgroundTaskEnabled:NO];
     [UMSocialWechatHandler setWXAppId:@"wxed55f1b1544af9d0" appSecret:@"34a68e0b156af2cc96dda2de53e03702" url:nil];
     [UMSocialQQHandler setQQWithAppId:@"1101846072" appKey:@"yNSk5taezBe4HUOB" url:nil];
+    
     [UMSocialSinaHandler openSSOWithRedirectURL:nil];
+    
+    
     [UMSocialQQHandler setSupportWebView:YES];
     
     
