@@ -306,12 +306,10 @@
 		96CE2A171B43C7A3004FA4BF /* ic_praise_hl@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A141B43C7A3004FA4BF /* ic_praise_hl@2x.png */; };
 		96CE2A181B43C7A3004FA4BF /* ic_praise_nm@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A151B43C7A3004FA4BF /* ic_praise_nm@2x.png */; };
 		96CE2A2F1B43DB78004FA4BF /* fs_cap_bg_0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A2E1B43DB78004FA4BF /* fs_cap_bg_0@2x.png */; };
-		96CE2A3F1B43F0AD004FA4BF /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A341B43F0AD004FA4BF /* .gitkeep */; };
 		96CE2A401B43F0AD004FA4BF /* fs_chat_bubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A351B43F0AD004FA4BF /* fs_chat_bubble@2x.png */; };
 		96CE2A411B43F0AD004FA4BF /* fs_icon_wave_0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A361B43F0AD004FA4BF /* fs_icon_wave_0@2x.png */; };
 		96CE2A421B43F0AD004FA4BF /* fs_icon_wave_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A371B43F0AD004FA4BF /* fs_icon_wave_1@2x.png */; };
 		96CE2A431B43F0AD004FA4BF /* fs_icon_wave_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A381B43F0AD004FA4BF /* fs_icon_wave_2@2x.png */; };
-		96CE2A441B43F0AD004FA4BF /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 96CE2A3A1B43F0AD004FA4BF /* .gitkeep */; };
 		96CE2A451B43F0AD004FA4BF /* FSVoiceBubble.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE2A3C1B43F0AD004FA4BF /* FSVoiceBubble.m */; };
 		96CE2A461B43F0AD004FA4BF /* UIImage+FSExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 96CE2A3E1B43F0AD004FA4BF /* UIImage+FSExtension.m */; };
 		96CEFEE61B94627200D0ADD8 /* ic_comment_disabled_zan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96CEFEE31B94627200D0ADD8 /* ic_comment_disabled_zan@2x.png */; };
@@ -2484,6 +2482,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				"zh-Hans",
@@ -2527,7 +2526,6 @@
 				96D1A2F91B8B14DD00F73A04 /* Icon-Small@2x.png in Resources */,
 				96E028F41B787AC00013B525 /* ic_editInformation_background@2x.png in Resources */,
 				96CFB3BE1AF9C51C0078C225 /* ic_invite_share0@2x.png in Resources */,
-				96CE2A441B43F0AD004FA4BF /* .gitkeep in Resources */,
 				96DAB72C1B42979D00565F30 /* ic_comment@2x.png in Resources */,
 				9667D8201B00600F0099C424 /* UMSCommentInputController.xib in Resources */,
 				96C7ACCF1AD679F200FA2E22 /* back_btn_icon@2x.png in Resources */,
@@ -2547,7 +2545,6 @@
 				96C4E59F1B0F2C9400AE3042 /* ic_token_close@2x.png in Resources */,
 				96D1A2F41B8B14DD00F73A04 /* Icon-60@3x.png in Resources */,
 				96D120771B0CA04200BF8062 /* ic_answer_normal@2x.png in Resources */,
-				96CE2A3F1B43F0AD004FA4BF /* .gitkeep in Resources */,
 				96C404CF1B019EAD0066E5D4 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
 				96C5AEEB1AF0744400F9195A /* ic_edit@2x.png in Resources */,
 				96C7ACCE1AD679F200FA2E22 /* back_btn_icon_sel@2x.png in Resources */,
@@ -3078,7 +3075,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/YuMeiQuanTests/PrefixHeader.pch";
 				INFOPLIST_FILE = YuMeiQuan/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3120,7 +3117,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/YuMeiQuanTests/PrefixHeader.pch";
 				INFOPLIST_FILE = YuMeiQuan/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
